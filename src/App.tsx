@@ -1,9 +1,12 @@
+import { Route } from 'react-router-dom'
+
 import Login from './pages/LoginPage/Login'
+import Dashboard from './pages/Dashboard/Dashboard'
 
 function App() {
   return (
     <>
-      <Login/>
+      <Dashboard/>
     </>
   )
 }

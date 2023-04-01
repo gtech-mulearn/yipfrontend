@@ -1,3 +1,4 @@
+
 :root {
   line-height: 1.5;
   font-family: 'Montserrat', sans-serif;
@@ -13,4 +14,15 @@
 }
 a,a:visited{
   text-decoration: none;
+  color: black;
+}
+ol,ul,li{
+  list-style-type: none;
+}
+select{
+  background-color: transparent;
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid gray;
 }

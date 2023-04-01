@@ -3,7 +3,7 @@ import YIPlogo from '../../assets/logo.png'
 import './Login.css'
 
 function Login() {
-  const [errorStatus,setErrorStatus] = useState<boolean>(true)
+  const [errorStatus,setErrorStatus] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
 
@@ -15,19 +15,21 @@ function Login() {
     setShowPassword(event.target.checked)
   }
   return (
-    <div className='login-container'>
-      <img src={YIPlogo} alt="YIP-Logo"/>
-        <h2>Login</h2>
-        <form>
-            <input id="username" name="username" type="text" placeholder="User ID"/>
-            <input id="password" name="password" type={showPassword?"text":"password"} placeholder="Password" onChange={passHandleChange}/>
-            <div className="show-password">
-                <input type="checkbox" name="password" id="showpass" checked={showPassword} onChange={passShowEvent}/>
-                <label>Show Password</label>
-            </div>
-            <button id="submitBtn" type="button">Login</button>
-            {errorStatus? <ErrorBox/> : <></>}
-        </form>
+    <div className="login-background">
+      <div className='login-container'>
+        <img src={YIPlogo} alt="YIP-Logo"/>
+          <h2>Login</h2>
+          <form>
+              <input id="username" name="username" type="text" placeholder="User ID"/>
+              <input id="password" name="password" type={showPassword?"text":"password"} placeholder="Password" onChange={passHandleChange}/>
+              <div className="show-password">
+                  <input type="checkbox" name="password" id="showpass" checked={showPassword} onChange={passShowEvent}/>
+                  <label>Show Password</label>
+              </div>
+              <button id="submitBtn" type="button">Login</button>
+              {errorStatus? <ErrorBox/> : <></>}
+          </form>
+      </div>
     </div>
   )
 }

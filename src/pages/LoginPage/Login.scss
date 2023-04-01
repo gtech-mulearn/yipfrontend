@@ -1,7 +1,7 @@
 @use "../../abstracts/functions";
 @use "../../abstracts/colors";
 
-body{
+.login-background{
     @include functions.flex-center();
     height: 100vh;
     background: url("../../assets/login-background.svg");
