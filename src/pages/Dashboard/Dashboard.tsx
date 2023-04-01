@@ -4,6 +4,8 @@ import LeftDrawer from '../../components/LeftDrawer/LeftDrawer'
 import BannerImg from '../../assets/Study abroad-pana.png'
 
 import Setup from '../../components/SetupBox/Setup'
+import TableBox from '../../components/TableBox/TableBox'
+import BottomTab from '../../components/BottomTab/BottomTab'
 
 const Dashboard = ()=> {
 
@@ -19,7 +21,11 @@ const Dashboard = ()=> {
       <div className="dash-container">
         <Banner/>
         <Setup activeItem={currentOption}/>
+        <TableBox/>
       </div>
+        <div className="bottom-tab-container">
+          <BottomTab/>
+        </div>
     </>
   )
 }

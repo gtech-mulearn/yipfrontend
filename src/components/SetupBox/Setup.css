@@ -69,4 +69,16 @@
 .setup-img img {
   width: 80%;
   height: auto;
+}
+
+@media only screen and (max-width: 900px) {
+  .setup-club {
+    flex-flow: column;
+  }
+  .setup-img {
+    display: none;
+  }
+  .setup-filter {
+    width: 100%;
+  }
 }/*# sourceMappingURL=Setup.css.map */

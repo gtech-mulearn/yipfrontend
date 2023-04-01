@@ -1,0 +1,39 @@
+.white-container{
+    height: auto;
+    position: relative;
+    background-color: white;
+    margin-top: 30px;
+    border-radius:20px ;
+    padding: 20px;
+    overflow:hidden;
+}
+.table-list{
+    margin-top: 30px;
+    min-width:400px;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    ul{
+        display: grid;
+        grid-template-columns: 1fr 4fr 4fr 4fr 8fr;
+        align-items: center;
+        border-bottom: 1px solid lightgray;
+        li{
+            min-width:120px;
+        }
+    }
+}
+.table-title .title{
+    color: gray;
+    padding: 10px 0;
+}
+.table-content{
+    height: 20rem;
+    .value{
+        min-width:120px;
+        padding: 14px 0;
+        font-weight: 500;
+        font-size: 14px;
+        gap:10px;
+        display: flex;
+    }
+}
