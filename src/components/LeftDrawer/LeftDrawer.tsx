@@ -10,11 +10,16 @@ interface MenuItemProps{
     isActive: boolean;
 }
 
-const LeftDrawer:React.FC = ()=> {
-    const [activeItem, setActiveItem] = useState('')
+interface LeftDrawerProps {
+    onValueChange: (value: string) => void;
+  }
+
+const LeftDrawer:React.FC<LeftDrawerProps> = ({onValueChange})=> {
+    const [activeItem, setActiveItem] = useState('Model School')
 
     const handleItemClick = (itemName: string) => {
         setActiveItem(itemName);
+        onValueChange(itemName)
       }
 
     return (

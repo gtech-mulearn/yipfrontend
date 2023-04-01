@@ -6,6 +6,7 @@
   flex-direction: column;
   align-items: center;
   z-index: 150;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 .left-menu img {
   width: 60%;
@@ -69,4 +70,10 @@
   font-weight: 600;
   color: white !important;
   background-color: #FB6962;
+}
+
+@media only screen and (max-width: 1200px) {
+  .left-menu {
+    display: none;
+  }
 }/*# sourceMappingURL=LeftDrawer.css.map */
