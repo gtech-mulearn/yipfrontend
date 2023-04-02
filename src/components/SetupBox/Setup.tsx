@@ -22,7 +22,6 @@ const SelectItem: React.FC<SelectItemProps> = ({ item }) => {
 
 const Setup = ({ activeItem }: { activeItem: string }) => {
     let itemsToRender: string[] = [];
-    console.log("this is ",activeItem)
     if (activeItem === "Model School") {
         itemsToRender = schoolItems
     }else{
@@ -35,7 +34,7 @@ const Setup = ({ activeItem }: { activeItem: string }) => {
                 <div className="setup-filter">
                     <div className="select-container club">
                     {itemsToRender.map((school, i) => (
-                            <SelectItem item={school} />
+                            <SelectItem key={i} item={school} />
                         ))}
                         <button id="create_btn" className="black-btn" >Create</button>
                     </div>

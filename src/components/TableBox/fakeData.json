@@ -1,0 +1,122 @@
+[
+    {
+      "place_name": "Central Park",
+      "region": "New York",
+      "city": "New York City",
+      "status": "active"
+    },
+    {
+      "place_name": "Golden Gate Bridge",
+      "region": "California",
+      "city": "San Francisco",
+      "status": "active"
+    },
+    {
+      "place_name": "Eiffel Tower",
+      "region": "Île-de-France",
+      "city": "Paris",
+      "status": "active"
+    },
+    {
+      "place_name": "Statue of Liberty",
+      "region": "New York",
+      "city": "New York City",
+      "status": "active"
+    },
+    {
+      "place_name": "Sydney Opera House",
+      "region": "New South Wales",
+      "city": "Sydney",
+      "status": "active"
+    },
+    {
+      "place_name": "Grand Canyon",
+      "region": "Arizona",
+      "city": "Flagstaff",
+      "status": "active"
+    },
+    {
+      "place_name": "Niagara Falls",
+      "region": "Ontario",
+      "city": "Niagara Falls",
+      "status": "active"
+    },
+    {
+      "place_name": "Mount Everest",
+      "region": "Khumbu",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Machu Picchu",
+      "region": "Cusco",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Great Barrier Reef",
+      "region": "Queensland",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Taj Mahal",
+      "region": "Uttar Pradesh",
+      "city": "Agra",
+      "status": "active"
+    },
+    {
+      "place_name": "Angkor Wat",
+      "region": "Siem Reap",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Victoria Falls",
+      "region": "Matabeleland North",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Uluru",
+      "region": "Northern Territory",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Petra",
+      "region": "Ma'an",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Sagrada Familia",
+      "region": "Catalonia",
+      "city": "Barcelona",
+      "status": "active"
+    },
+    {
+      "place_name": "Yellowstone National Park",
+      "region": "Wyoming",
+      "city": "Yellowstone",
+      "status": "active"
+    },
+    {
+      "place_name": "Chichen Itza",
+      "region": "Yucatan",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "The Great Wall of China",
+      "region": "Beijing",
+      "city": "",
+      "status": "active"
+    },
+    {
+      "place_name": "Christ the Redeemer",
+      "region": "Rio de Janeiro",
+      "city": "",
+      "status": "active"
+    }
+  ]

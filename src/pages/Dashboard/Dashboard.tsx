@@ -23,9 +23,9 @@ const Dashboard = ()=> {
         <Setup activeItem={currentOption}/>
         <TableBox/>
       </div>
-        <div className="bottom-tab-container">
-          <BottomTab/>
-        </div>
+      <div className="bottom-tab-container">
+        <BottomTab/>
+      </div>
     </>
   )
 }

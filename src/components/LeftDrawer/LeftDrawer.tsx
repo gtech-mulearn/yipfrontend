@@ -27,6 +27,12 @@ const LeftDrawer:React.FC<LeftDrawerProps> = ({onValueChange})=> {
             <img src={YIPlogo} alt="logo" />
             <div className="menu-items">
                 <MenuItem 
+                    item_icon='fa-solid fa-user' 
+                    item_name='Users'
+                    onItemClick={() => handleItemClick('Users')}
+                    isActive={activeItem === 'Users'}
+                />
+                <MenuItem 
                     item_icon='fa-sharp fa-solid fa-school' 
                     item_name='Model School'
                     onItemClick={() => handleItemClick('Model School')}
