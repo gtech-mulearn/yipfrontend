@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from 'react-select';
 import './Setup.css'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
 
@@ -9,16 +10,27 @@ interface SelectItemProps{
     item: string 
 }
 
+const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+    { value: 'option5', label: 'Option 5' },
+  ];
+  
 const SelectItem: React.FC<SelectItemProps> = ({ item }) => {
     return (
-        <div className="setup-item" id="district">
-            <p>{item}</p>
-            <select id="district_select">
-                <option value="{{district.id}}">Select Value</option>
-            </select>
-        </div>
+      <div className="setup-item" id="district">
+        <p>{item}</p>
+        <Select
+          options={options}
+          isSearchable={true}
+          isClearable={true}
+          placeholder={`Select a ${item}`}
+        />
+      </div>
     );
-};
+  };
 
 const Setup = ({ activeItem }: { activeItem: string }) => {
     let itemsToRender: string[] = [];
