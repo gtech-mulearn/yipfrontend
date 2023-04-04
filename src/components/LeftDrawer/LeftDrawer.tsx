@@ -1,7 +1,8 @@
 import React from 'react'
-import './LeftDrawer.css'
+import './LeftDrawer.scss'
 import YIPlogo from '../../assets/logo.png'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 interface MenuItemProps{
     item_icon: string;
@@ -52,13 +53,19 @@ const LeftDrawer:React.FC<LeftDrawerProps> = ({onValueChange})=> {
 }
 
 const MenuItem:React.FC<MenuItemProps> = ({item_name,item_icon,onItemClick,isActive}) => {
+    let linkitem:string = ""
+    if(item_name == 'Model School'){
+        linkitem = '/yip/school-dashboard'
+    }else{
+        linkitem = '/yip/club-dashboard'
+    }
     return (
         <div className='menu-item-container' onClick={onItemClick}>
             <li className="menu-item">
                 <div className={`menu-icon ${isActive ? 'active' : ''}`}>
                     <i className={item_icon}></i>
                 </div>
-                <a href="#">{item_name}</a>
+                <Link to={linkitem}>{item_name}</Link>
             </li>
         </div>
     )
