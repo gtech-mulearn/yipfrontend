@@ -1,5 +1,5 @@
 import React from 'react'
-import './TableBox.css'
+import './TableBox.scss'
 import fakeData from './fakeData.json'
 
 // interface Item {
@@ -24,6 +24,9 @@ const TableBox = () => {
                         <ul>
                             <li className="title">SL</li>
                             <li className="title">Center</li>
+                            <li className="title">Region</li>
+                            <li className="title">City</li>
+                            <li className="title">Status</li>
                             <li className="title">Region</li>
                             <li className="title">City</li>
                             <li className="title">Status</li>
