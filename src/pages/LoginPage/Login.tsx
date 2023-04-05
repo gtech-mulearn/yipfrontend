@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import YIPlogo from '../../assets/logo.png'
 import './Login.css'
+import { Link } from 'react-router-dom'
 
 function Login() {
   const [errorStatus,setErrorStatus] = useState<boolean>(false)
@@ -26,7 +27,7 @@ function Login() {
                   <input type="checkbox" name="password" id="showpass" checked={showPassword} onChange={passShowEvent}/>
                   <label>Show Password</label>
               </div>
-              <button id="submitBtn" type="button">Login</button>
+              <Link to="/yip/school-dashboard" id="submitBtn" type="button">Login</Link>
               {errorStatus? <ErrorBox/> : <></>}
           </form>
       </div>

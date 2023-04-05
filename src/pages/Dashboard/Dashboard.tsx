@@ -1,13 +1,13 @@
 import React,{useState} from 'react'
-import './Dashboard.css'
+import './Dashboard.scss'
 import LeftDrawer from '../../components/LeftDrawer/LeftDrawer'
 import BannerImg from '../../assets/Study abroad-pana.png'
 
-import Setup from '../../components/SetupBox/Setup'
+import SchoolSetup from '../../components/SetupBox/SchoolSetup'
 import TableBox from '../../components/TableBox/TableBox'
 import BottomTab from '../../components/BottomTab/BottomTab'
 
-const Dashboard = ()=> {
+const Dashboard = (props:any)=> {
 
   const[currentOption,setCurrentOption] = useState<string>("Model School")
 
@@ -20,7 +20,7 @@ const Dashboard = ()=> {
       <LeftDrawer onValueChange={handleOptionChange}/>
       <div className="dash-container">
         <Banner/>
-        <Setup activeItem={currentOption}/>
+        {props.children}
         <TableBox/>
       </div>
       <div className="bottom-tab-container">

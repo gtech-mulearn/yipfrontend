@@ -1,5 +1,5 @@
 import React from 'react'
-import './BottomTab.css'
+import './BottomTab.scss'
 
 const BottomTab = () => {
     return (

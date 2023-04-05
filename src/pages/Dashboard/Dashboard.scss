@@ -28,7 +28,7 @@
     margin-top: 30px;
     border-radius:20px ;
     padding: 20px;
-    overflow:hidden;
+    // overflow:hidden;
 }
 .banner-container{
     position: relative;
@@ -82,9 +82,6 @@
     gap: 20px;
 }
 .bottom-tab-container{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     display: none;
 }
 @media only screen and (max-width: 1200px){
@@ -95,5 +92,8 @@
     }
     .bottom-tab-container{
         display: block;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
     }
 }

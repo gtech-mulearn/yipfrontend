@@ -1,14 +1,4 @@
 @use '../../abstracts/functions';
-
-.white-container{
-    height: auto;
-    position: relative;
-    margin-top: 30px;
-    border-radius:20px ;
-    padding: 20px;
-    overflow:hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
 .setup-club{
     width: 100%;
     display: flex;
