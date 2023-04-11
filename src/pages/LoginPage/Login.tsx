@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import YIPlogo from '../../assets/logo.png'
-import './Login.css'
+import './Login.scss'
 import { Link } from 'react-router-dom'
 
 function Login() {

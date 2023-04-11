@@ -1,0 +1,71 @@
+{
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+        "general": []
+    },
+    "response": {
+        "legislativeAssembly": [
+            {
+                "id": "1",
+                "name": "Thiruvali",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "1"
+            },
+            {
+                "id": "2",
+                "name": "Manjeri",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "1"
+            },
+            {
+                "id": "3",
+                "name": "Alappuzha",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "2"
+            },
+            {
+                "id": "4",
+                "name": "Chengannur",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "2"
+            },
+            {
+                "id": "5",
+                "name": "Kasaragod",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "3"
+            },
+            {
+                "id": "6",
+                "name": "Kannur",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "3"
+            },
+            {
+                "id": "7",
+                "name": "Kozhikode North",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "4"
+            },
+            {
+                "id": "8",
+                "name": "Kozhikode South",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "4"
+            },
+            {
+                "id": "9",
+                "name": "Neyyattinkara",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "5"
+            },
+            {
+                "id": "10",
+                "name": "Attingal",
+                "created_at": "2022-04-21T00:00:00Z",
+                "district": "5"
+            }
+        ]
+    }
+}

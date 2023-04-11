@@ -1,37 +1,39 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import Select from 'react-select';
 import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
 
-const schoolItems = ['D1','D2','D3','D4']
-const club = ['C1','C2','C3','C4','C5']
+const club = ['District','College']
 
-interface SelectItemProps{
-    item: string 
+interface SelectItemProps {
+  item: string;
+  list: any;
 }
 
-const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
-    { value: 'option5', label: 'Option 5' },
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
-    { value: 'option5', label: 'Option 5' },
-  ];
-  
-const ClubItem: React.FC<SelectItemProps> = ({ item }) => {
+interface DistrictProps {
+  id: string;
+  name: string;
+}
+
+
+
+const ClubItem: React.FC<SelectItemProps> = ({ item,list }) => {
+    const [selectedValue, setSelectedValue] = useState("helo");
+
+    const handleChange = (e:any)=> {
+      setSelectedValue(e.id);
+    }
     return (
       <div className="setup-item" id="district">
         <p>{item}</p>
         <Select
-          options={options}
+          options={item == 'District' ? list : []}
           isSearchable={true}
           isClearable={true}
           placeholder={`Select a ${item}`}
+          getOptionValue={(option: any) => option.id}
+          getOptionLabel={(option: any) => option.name}
+          onChange={handleChange}
         />
       </div>
     );
@@ -44,14 +46,37 @@ const ClubSetup = () => {
     // }else{
     //     itemsToRender = club
     // }
+    const [districts, setDistricts] = useState<DistrictProps[]>([])
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            'https://dev.mulearn.org/api/v1/yip/district/'
+          )
+          const data = await response.json()
+          const dataItems = data.response.districts.map(
+            (item: any) => ({
+              id:item.id,
+              name: item.name,
+            })
+          )
+          setDistricts(dataItems)
+          console.log(dataItems)
+        } catch (error) {
+          console.error(error)
+        }
+      };
+      fetchData();
+    }, []);
     return (
         <div className="white-container">
             <h3>Setup a new School</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                    {club.map((school, i) => (
-                            <ClubItem key={i} item={school} />
+                    {club.map((club, i) => (
+                            <ClubItem key={i} item={club} list={districts} />
                         ))}
                         <button id="create_btn" className="black-btn" >Create</button>
                     </div>
