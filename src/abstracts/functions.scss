@@ -1,0 +1,13 @@
+@mixin flex-center(){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin btn(){
+        padding: 6px 30px;
+        border-radius: 8px;
+        height:max-content;
+        font-size: 12px;
+        font-weight: 600;
+}
