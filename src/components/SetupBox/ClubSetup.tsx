@@ -15,44 +15,30 @@ interface DistrictProps {
   name: string;
 }
 
-
-
-const ClubItem: React.FC<SelectItemProps> = ({ item,list }) => {
-    const [selectedValue, setSelectedValue] = useState("helo");
-
-    const handleChange = (e:any)=> {
-      setSelectedValue(e.id);
-    }
-    return (
-      <div className="setup-item" id="district">
-        <p>{item}</p>
-        <Select
-          options={item == 'District' ? list : []}
-          isSearchable={true}
-          isClearable={true}
-          placeholder={`Select a ${item}`}
-          getOptionValue={(option: any) => option.id}
-          getOptionLabel={(option: any) => option.name}
-          onChange={handleChange}
-        />
-      </div>
-    );
-  };
+interface CollegeProps {
+  id: string;
+  title: string;
+}
 
 const ClubSetup = () => {
-    // let itemsToRender: string[] = [];
-    // if (activeItem === "Model School") {
-    //     itemsToRender = schoolItems
-    // }else{
-    //     itemsToRender = club
-    // }
     const [districts, setDistricts] = useState<DistrictProps[]>([])
+    const [college,setCollege] = useState<CollegeProps[]>([])
+    const [districtSelected, setDistrictSelected] = useState("");
+    const [districtName,setDistrictName] = useState("")
+    const [collegeSelected,setCollegeSelected] = useState("")
+    const [collegeName,setCollegeName] = useState("")
 
     useEffect(() => {
+      const requestOptions = {
+        method: "GET",
+        headers: { 
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          "Content-Type": "application/json" },
+      };
       const fetchData = async () => {
         try {
           const response = await fetch(
-            'https://dev.mulearn.org/api/v1/yip/district/'
+            'https://dev.mulearn.org/api/v1/yip/district/',requestOptions
           )
           const data = await response.json()
           const dataItems = data.response.districts.map(
@@ -69,16 +55,115 @@ const ClubSetup = () => {
       };
       fetchData();
     }, []);
+
+    useEffect(() => {
+      const reqData:any = {
+        district: districtName
+      }
+      console.log(districtSelected)
+      if (districtSelected) {
+        console.log("req data : ",JSON.stringify(reqData))
+        const requestOptions = {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json" },
+          body: JSON.stringify(reqData)
+        };
+        const fetchSchool = async () => {
+          try {
+            const response = await fetch(
+              `https://dev.mulearn.org/api/v1/organisation/institutes/College/`,requestOptions
+            );
+            const data = await response.json();
+            console.log("college: ",data)
+            console.log(data.response.institutions);
+            setCollege(data.response.institutions);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchSchool();
+      }
+    }, [districtSelected]);
+
+    const sendData = ():any =>{
+      const postData:any = {
+        club_name: collegeName,
+        institute_type : "College",
+        institute_id : collegeSelected,
+        district_id: districtSelected,
+      }
+      const postOptions = {
+        method: "POST",
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          "Content-Type": "application/json"},
+        body: JSON.stringify(postData)
+      };
+      
+      const createData = async () => {
+        try {
+          console.log(postOptions)
+          const response = await fetch(
+            `https://dev.mulearn.org/api/v1/yip/create-college-club/`,postOptions
+          );
+          console.log(response)
+          const data = await response.json();
+          console.log("response : ",data)   
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      createData();
+      console.log("data send!!")
+    }
+
+    const handleDistrict = (data:any) => {
+      setDistrictSelected(data.id);
+      console.log("dist selected : ",data)
+      setDistrictName(data.name)   
+    };
+
     return (
         <div className="white-container">
-            <h3>Setup a new School</h3>
+            <h3>Setup a new Club</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                    {club.map((club, i) => (
-                            <ClubItem key={i} item={club} list={districts} />
-                        ))}
-                        <button id="create_btn" className="black-btn" >Create</button>
+                    <div className="setup-item" id="district">
+                        <p>District</p>
+                        <Select
+                          options={districts}
+                          isSearchable={true}
+                          isClearable={true}
+                          placeholder={`Select a District`}
+                          getOptionValue={(option: any) => option.id}
+                          getOptionLabel={(option: any) => option.name}
+                          onChange={handleDistrict}
+                        />
+                    </div>
+                    <div className="setup-item" id="district">
+                        <p>College</p>
+                        <Select
+                          options={college}
+                          isSearchable={true}
+                          isClearable={true}
+                          placeholder={`Select a College`}
+                          getOptionValue={(option: any) => option.id}
+                          getOptionLabel={(option: any) => option.title}
+                          onChange={(data:any)=>{
+                            setCollegeSelected(data.id)
+                            setCollegeName(data.title)
+                            console.log(collegeName)
+                          }}
+                        />
+                      </div>
+                        <button 
+                          id="create_btn" 
+                          className="black-btn"
+                          onClick={()=>{
+                            sendData();
+                          }} >Create</button>
                     </div>
                 </div>
                 <div className="setup-img">
