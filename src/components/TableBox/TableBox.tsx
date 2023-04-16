@@ -78,7 +78,7 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
     
         const fetchData = async () => {
           try {
-            const response = await fetch(`https://dev.mulearn.org/api/v1/yip/${link_item}/`,requestOptions);
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/${link_item}/`,requestOptions);
             const data = await response.json();
             setTableData(data.response.clubs);
           } catch (error) {
@@ -97,7 +97,7 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
           };
         const fetchData = async () => {
           try {
-            const response = await fetch(`https://dev.mulearn.org/api/v1/yip/district/`,requestOptions);
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/district/`,requestOptions);
             const data = await response.json();
             console.log("districts for filter:",data.response.districts);
             setDistricts(data.response.districts)

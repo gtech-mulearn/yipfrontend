@@ -4,7 +4,7 @@ import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
 import axios from 'axios';
 
-const mu_api = "https://dev.mulearn.org"
+
 
 interface SelectItemProps {
   item: string;
@@ -96,7 +96,7 @@ const SchoolSetup = () => {
       };
       const fetchData = async () => {
         try {
-          const response = await fetch(`${mu_api}/api/v1/yip/district/`,requestOptions);
+          const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/district/`,requestOptions);
           const data = await response.json();
           console.log("districts:",data);
           setDistricts(data.response.districts);
@@ -120,7 +120,7 @@ const SchoolSetup = () => {
         const fetchLegislativeAssemblies = async () => {
           try {
             const response = await fetch(
-              `${mu_api}/api/v1/yip/get-legislative-assembly/${districtSelected}/`,requestOptions
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/get-legislative-assembly/${districtSelected}/`,requestOptions
             );
             const data = await response.json();
             console.log(data)
@@ -148,7 +148,7 @@ const SchoolSetup = () => {
         const fetchBRC = async () => {
           try {
             const response = await fetch(
-              `https://dev.mulearn.org/api/v1/yip/get-blocks/${districtSelected}/`,requestOptions
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/get-blocks/${districtSelected}/`,requestOptions
             );
             const data = await response.json();
             console.log(data)
@@ -180,7 +180,7 @@ const SchoolSetup = () => {
         const fetchSchool = async () => {
           try {
             const response = await fetch(
-              `${mu_api}/api/v1/organisation/institutes/School/`,requestOptions
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/organisation/institutes/School/`,requestOptions
             );
             const data = await response.json();
             console.log("school: ",data)
@@ -221,7 +221,7 @@ const SchoolSetup = () => {
       const createData = async () => {
         try {
           const response = await fetch(
-            `${mu_api}/api/v1/yip/create-club/`,postOptions
+            import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/create-club/`,postOptions
           );
           console.log(response)
           const data = await response.json();

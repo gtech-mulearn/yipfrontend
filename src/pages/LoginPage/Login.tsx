@@ -36,7 +36,7 @@ function Login() {
     const createData = async () => {
       try {
         const response = await fetch(
-          `https://dev.mulearn.org/api/v1/yip/login/`,postOptions
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/login/`,postOptions
         );
         console.log(response)
         const data = await response.json();
