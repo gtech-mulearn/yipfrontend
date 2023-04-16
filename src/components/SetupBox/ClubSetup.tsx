@@ -38,7 +38,7 @@ const ClubSetup = () => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            'https://dev.mulearn.org/api/v1/yip/district/',requestOptions
+            import.meta.env.VITE_BACKEND_URL+'/api/v1/yip/district/',requestOptions
           )
           const data = await response.json()
           const dataItems = data.response.districts.map(
@@ -72,7 +72,7 @@ const ClubSetup = () => {
         const fetchSchool = async () => {
           try {
             const response = await fetch(
-              `https://dev.mulearn.org/api/v1/organisation/institutes/College/`,requestOptions
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/organisation/institutes/College/`,requestOptions
             );
             const data = await response.json();
             console.log("college: ",data)
@@ -105,7 +105,7 @@ const ClubSetup = () => {
         try {
           console.log(postOptions)
           const response = await fetch(
-            `https://dev.mulearn.org/api/v1/yip/create-college-club/`,postOptions
+            import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/create-college-club/`,postOptions
           );
           console.log(response)
           const data = await response.json();
