@@ -1,20 +1,51 @@
-import React from 'react'
+import React,{useState} from 'react'
 import './BottomTab.scss'
+import { Link } from 'react-router-dom'
 
-const BottomTab = () => {
+
+interface BottomDrawerProps {
+    onValueChange : (value: string) => void
+}
+
+const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
+    const [activeItem,setActiveItem] = useState("User")
+
+    const handleItemClick = (itemName:string) =>{
+        setActiveItem(itemName)
+        onValueChange(itemName)
+    }
     return (
         <div className="tab-nav">
             <div className="tab-nav-container">
-                <div className="tab blue">
-                    <i className="fa-solid fa-people-group"></i>
-                    <p>Club</p>
-                </div>
-                <div className="tab blue">
-                    <i className="fa-sharp fa-solid fa-school"></i>
-                    <p>School</p>
-                </div>
-                <div className="tab red blue">
-                    <a href="/logout" className="fa-solid fa-right-from-bracket"></a>
+                <Link to={'/yip/user'}>
+                    <div 
+                        className={`tab ${activeItem === "User" ? "active" : ""} `}
+                        onClick = {()=>{handleItemClick('User')}}
+                    >
+                        <i className="fa-solid fa-user"></i>
+                        <h3 className={`tab-text ${activeItem === "User" ? "visible" : ""}`} >User</h3>
+                    </div>
+                </Link>
+                <Link to={'/yip/school-dashboard'}>
+                    <div 
+                        className={`tab ${activeItem === "Model School" ? "active" : ""} `}
+                        onClick = {()=>{handleItemClick('Model School')}}
+                    >
+                        <i className="fa-solid fa-people-group"></i>
+                        <h3 className={`tab-text ${activeItem === "Model School" ? "visible" : ""}`} >Model School</h3>
+                    </div>
+                </Link>
+                <Link to={'/yip/club-dashboard'}>
+                    <div 
+                        className={`tab ${activeItem === "YIP Club" ? "active" : ""} `}
+                        onClick = {()=>{handleItemClick('YIP Club')}}
+                    >
+                        <i className="fa-solid fa-people-group"></i>
+                        <h3 className={`tab-text ${activeItem === "YIP Club" ? "visible" : ""}`} >YIP Club</h3>
+                    </div>
+                </Link>
+                <div className="tab red">
+                    <a href="/yip/" className="fa-solid fa-right-from-bracket"></a>
                     <p>Logout</p>
                 </div>
             </div>

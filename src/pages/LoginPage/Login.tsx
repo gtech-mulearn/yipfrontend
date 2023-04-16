@@ -1,19 +1,59 @@
 import React,{useState} from 'react'
 import YIPlogo from '../../assets/logo.png'
-import './Login.css'
+import './Login.scss'
 import { Link } from 'react-router-dom'
 
 function Login() {
   const [errorStatus,setErrorStatus] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
+  const [email,setEmail] = useState("")
+  const [accessToken, setAccessToken] = useState('');
 
   const passHandleChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
     setPassword(event.target.value)
   }
 
+  const emailHandleChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
+    setEmail(event.target.value)
+  }
+
   const passShowEvent = (event:React.ChangeEvent<HTMLInputElement>)=>{
     setShowPassword(event.target.checked)
+  }
+
+  const sendLogin = ()=>{
+    const postData:any = {
+      email: email,
+      password: password,
+    }
+    const postOptions = {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(postData)
+    };
+    console.log(postData)
+    const createData = async () => {
+      try {
+        const response = await fetch(
+          `https://dev.mulearn.org/api/v1/yip/login/`,postOptions
+        );
+        console.log(response)
+        const data = await response.json();
+        console.log("response : ",data)
+        if(data.statusCode === 400){
+          setErrorStatus(true)
+        }else{
+          setErrorStatus(false) 
+          window.open("/yip/school-dashboard")
+        }
+        localStorage.setItem('accessToken', data.response.accessToken);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    createData();
+    console.log("data send!!")
   }
   return (
     <div className="login-background">
@@ -21,13 +61,25 @@ function Login() {
         <img src={YIPlogo} alt="YIP-Logo"/>
           <h2>Login</h2>
           <form>
-              <input id="username" name="username" type="text" placeholder="User ID"/>
+              <input 
+                id="email" 
+                name="email" 
+                type="text" placeholder="Email ID"
+                onChange={emailHandleChange}/>
               <input id="password" name="password" type={showPassword?"text":"password"} placeholder="Password" onChange={passHandleChange}/>
               <div className="show-password">
                   <input type="checkbox" name="password" id="showpass" checked={showPassword} onChange={passShowEvent}/>
                   <label>Show Password</label>
               </div>
-              <Link to="/yip/school-dashboard" id="submitBtn" type="button">Login</Link>
+              {/* <Link 
+                to={errorStatus?"":"/yip/school-dashboard"}
+                id="submitBtn" 
+                type="button">Login</Link> */}
+              <button 
+                type='button'
+                id='submitBtn'
+                onClick={()=>sendLogin()}
+             >Login</button>
               {errorStatus? <ErrorBox/> : <></>}
           </form>
       </div>

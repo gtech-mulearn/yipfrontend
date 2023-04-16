@@ -16,7 +16,7 @@ interface LeftDrawerProps {
   }
 
 const LeftDrawer:React.FC<LeftDrawerProps> = ({onValueChange})=> {
-    const [activeItem, setActiveItem] = useState('Model School')
+    const [activeItem, setActiveItem] = useState("Model School")
 
     const handleItemClick = (itemName: string) => {
         setActiveItem(itemName);
@@ -46,8 +46,14 @@ const LeftDrawer:React.FC<LeftDrawerProps> = ({onValueChange})=> {
                     isActive={activeItem === 'YIP Club'}
                 />
             </div>
-            <a className="logout" href="/logout">
-                <i className="fa-solid fa-right-from-bracket"></i> Logout</a>
+            {/* <a className="logout" href="/yip/"> */}
+            <button 
+                className='logout'
+                onClick={()=>{
+                    localStorage.removeItem('accessToken');
+                    window.location.href = "/yip/"
+                }}>Logout</button>
+                {/* <i className="fa-solid fa-right-from-bracket"></i> Logout</a> */}
         </div>
     )
 }
@@ -56,18 +62,22 @@ const MenuItem:React.FC<MenuItemProps> = ({item_name,item_icon,onItemClick,isAct
     let linkitem:string = ""
     if(item_name == 'Model School'){
         linkitem = '/yip/school-dashboard'
-    }else{
+    }else if(item_name == 'YIP Club'){
         linkitem = '/yip/club-dashboard'
+    }else{
+        linkitem = '/yip/user'
     }
     return (
-        <div className='menu-item-container' onClick={onItemClick}>
-            <li className="menu-item">
-                <div className={`menu-icon ${isActive ? 'active' : ''}`}>
-                    <i className={item_icon}></i>
-                </div>
-                <Link to={linkitem}>{item_name}</Link>
-            </li>
-        </div>
+            <div className='menu-item-container' onClick={onItemClick}>
+                <Link className='link-item' to={linkitem}>
+                <li className="menu-item">
+                    <div className={`menu-icon ${isActive ? 'active' : ''}`}>
+                        <i className={item_icon}></i>
+                    </div>
+                    <h5>{item_name}</h5>
+                </li>
+                </Link>
+            </div>
     )
 }
 

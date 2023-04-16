@@ -32,6 +32,15 @@
         background-color: aliceblue;
     }
 }
+.link-item{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    h5{
+        margin-left: 10px;
+        font-size: 15px;
+    }
+}
 .menu-item{
     display: flex;
     align-items: center;
@@ -51,7 +60,16 @@
     transition: transform 0.3s ease-in;
 }
 .active{
-    background-color: colors.$theme-color-blue;
+    background-color: colors.$theme-color-blue !important; 
+}
+.tab-text{
+    display: none;
+    font-size: 13px;
+    margin-left: 4px;
+    font-weight: 600;
+}
+.visible{
+    display: block !important;
 }
 .logout{
     @include functions.btn();
