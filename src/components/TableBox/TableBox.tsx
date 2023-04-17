@@ -43,6 +43,9 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
     const [showSortBox, setShowSortBox] = useState(false);
     const [districts,setDistricts] = useState([])
     const [tableData,setTableData] = useState<tableBoxProps[]>([])
+    const [modalTrigger, setModalTrigger] = useState(false)
+    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [deleteId, setDeleteId] = useState("")
 
     let tableTitle = []
     if(current_option === "Model School"){
@@ -117,7 +120,50 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
         setShowSortBox(!showSortBox);
         setShowFilterBox(false);
     }
+
+    const handleDelete = (schoolId: any) => {
+        const requestOptions = {
+            method: "DELETE",
+            headers: { 
+              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+              "Content-Type": "application/json" }
+          };
+        const deleteData = async () => {
+          try {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/delete-model-schools/${schoolId}/`,requestOptions);
+            const data = await response.json();
+            console.log("delete response:",data);
+            window.location.reload();
+          } catch (error) {
+            console.error("this is error",error);
+          }
+        };
+
+        deleteData();
+    }
+
+    useEffect(()=>{
+        if(confirmDelete){
+            handleDelete(deleteId)
+        }
+        setModalTrigger(false)
+        setConfirmDelete(false)
+    },[confirmDelete])
+
+
     return (
+        <>
+
+        {modalTrigger && <div className="modal-overlay">
+        <div className="modal">
+            <p>Are you sure you want to delete this item?</p>
+            <div className="modal-buttons">
+            <button onClick={()=>{setConfirmDelete(true)}} className="confirm-delete">Delete</button>
+            <button onClick={()=>{setConfirmDelete(false); setModalTrigger(false)}} className="cancel-delete">Cancel</button>
+            </div>
+        </div>
+        </div>}
+
         <div className='white-container'>
             <div className="table-top">
                 <h3>Table List</h3>
@@ -192,8 +238,9 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                                             {item.block && <li className="value">{item.block}</li>}
                                             {item.club_status && <li className="value editable">
                                                 <a className="table-btn completed" href="#">{item.club_status}</a>
-                                                <a id="edit">
-                                                    <i className="fa-solid fa-pen-to-square"></i>Edit</a>
+                                              
+                                                <a onClick={()=>{setModalTrigger(true); setDeleteId(item.id)}} id="delete">
+                                                <i className="fa-solid fa-trash"></i>Delete</a>
                                             </li>}
                                         </ul>
                                     </>
@@ -214,8 +261,9 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                                         {item.block && <li className="value">{item.block}</li>}
                                         {item.club_status && <li className="value editable">
                                             <a className="table-btn completed" href="#">{item.club_status}</a>
-                                            <a id="edit">
-                                                <i className="fa-solid fa-pen-to-square"></i>Edit</a>
+                                            
+                                            <a onClick={()=>{setModalTrigger(true); setDeleteId(item.id)}} id="delete">
+                                                <i className="fa-solid fa-trash"></i>Delete</a>
                                         </li>}
                                     </ul>
                                 </>
@@ -226,6 +274,7 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
