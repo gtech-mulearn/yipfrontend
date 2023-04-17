@@ -44,6 +44,15 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
                         <h3 className={`tab-text ${activeItem === "YIP Club" ? "visible" : ""}`} >YIP Club</h3>
                     </div>
                 </Link>
+                <Link to={'/yip/block'}>
+                    <div 
+                        className={`tab ${activeItem === "Block Management" ? "active" : ""} `}
+                        onClick = {()=>{handleItemClick('Block')}}
+                    >
+                        <i className="fa-solid fa-people-group"></i>
+                        <h3 className={`tab-text ${activeItem === "Block" ? "visible" : ""}`} >Block</h3>
+                    </div>
+                </Link>
                 <div className="tab red">
                     <a href="/yip/" className="fa-solid fa-right-from-bracket"></a>
                     <p>Logout</p>
