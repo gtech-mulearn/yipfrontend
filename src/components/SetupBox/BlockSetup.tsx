@@ -69,7 +69,7 @@ const BlockSetup = () => {
         const createData = async () => {
           try {
             const response = await fetch(
-              import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/create-block/`,postOptions
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/create-block/`,postOptions
             );
             console.log(response)
             const data = await response.json();

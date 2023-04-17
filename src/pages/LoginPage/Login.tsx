@@ -36,7 +36,7 @@ function Login() {
     const createData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/login/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/login/`,
           postOptions
         )
         console.log(response)
@@ -46,7 +46,7 @@ function Login() {
           setErrorStatus(true)
         } else {
           setErrorStatus(false)
-          window.location.replace("/yip/school-dashboard")
+          window.location.replace("/school-dashboard")
         }
         localStorage.setItem("accessToken", data.response.accessToken)
       } catch (error) {
@@ -87,7 +87,7 @@ function Login() {
             <label>Show Password</label>
           </div>
           {/* <Link 
-                to={errorStatus?"":"/yip/school-dashboard"}
+                to={errorStatus?"":"/school-dashboard"}
                 id="submitBtn" 
                 type="button">Login</Link> */}
           <button type="button" id="submitBtn" onClick={() => sendLogin()}>

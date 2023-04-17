@@ -58,12 +58,12 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
           isActive={activeItem === "Legislative Assembly"}
         /> */}
       </div>
-      {/* <a className="logout" href="/yip/"> */}
+      {/* <a className="logout" href="/"> */}
       <button
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-          window.location.href = "/yip/"
+          window.location.href = "/"
         }}
       >
         Logout
@@ -81,16 +81,16 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
   let linkitem: string = ""
   if (item_name == "Model School") {
-    linkitem = "/yip/school-dashboard"
+    linkitem = "/school-dashboard"
   } else if (item_name == "YIP Club") {
-    linkitem = "/yip/club-dashboard"
+    linkitem = "/club-dashboard"
   }
   // }else if(item_name == 'Users'){
-  //     linkitem = '/yip/user'
+  //     linkitem = '/user'
   // }else if (item_name == "Block Management"){
-  //     linkitem = '/yip/block-management'
+  //     linkitem = '/block-management'
   // }else if (item_name == "Legislative Assembly Management"){
-  //     linkitem = '/yip/legislative-assembly-management'
+  //     linkitem = '/legislative-assembly-management'
   // }
   return (
     <div className="menu-item-container" onClick={onItemClick}>

@@ -46,7 +46,7 @@ const UserSetup = () => {
   //   const fetchData = async () => {
   //     try {
   //       const response = await fetch(
-  //         'https://dev.mulearn.org/api/v1/yip/district/'
+  //         'https://dev.mulearn.org/api/v1/district/'
   //       )
   //       const data = await response.json()
   //       const dataItems = data.response.districts.map(
@@ -110,7 +110,7 @@ const UserSetup = () => {
   //     try {
   //       console.log(postOptions)
   //       const response = await fetch(
-  //         `https://dev.mulearn.org/api/v1/yip/create-college-club/`,postOptions
+  //         `https://dev.mulearn.org/api/v1/create-college-club/`,postOptions
   //       );
   //       console.log(response)
   //       const data = await response.json();
@@ -171,7 +171,7 @@ const UserSetup = () => {
     const createData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-user/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/create-user/`,
           postOptions
         )
         console.log(response)
