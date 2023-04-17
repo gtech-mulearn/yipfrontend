@@ -79,7 +79,7 @@ const MenuItem:React.FC<MenuItemProps> = ({item_name,item_icon,onItemClick,isAct
     }else if(item_name == 'Users'){
         linkitem = '/yip/user'
     }else if (item_name == "Block Management"){
-        linkitem = '/yip/block'
+        linkitem = '/yip/block-management'
     }else if (item_name == "Legislative Assembly Management"){
         linkitem = '/yip/legislative-assembly-management'
     }

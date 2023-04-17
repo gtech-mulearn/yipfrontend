@@ -179,7 +179,7 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                     <div className="table-content">
                         {
                             filterItem === "all"
-                            ? tableData
+                            ? tableData && tableData
                                   .map((item: any, i: number) => {
                                       return (
                                         <>
