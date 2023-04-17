@@ -58,7 +58,7 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
           isActive={activeItem === "Legislative Assembly"}
         /> */}
       </div>
-      {/* <a className="logout" href="/"> */}
+      {/* <a className="logout" href="/yip/"> */}
       <button
         className="logout"
         onClick={() => {
@@ -86,11 +86,11 @@ const MenuItem: React.FC<MenuItemProps> = ({
     linkitem = "/club-dashboard"
   }
   // }else if(item_name == 'Users'){
-  //     linkitem = '/user'
+  //     linkitem = '/yip/user'
   // }else if (item_name == "Block Management"){
-  //     linkitem = '/block-management'
+  //     linkitem = '/yip/block-management'
   // }else if (item_name == "Legislative Assembly Management"){
-  //     linkitem = '/legislative-assembly-management'
+  //     linkitem = '/yip/legislative-assembly-management'
   // }
   return (
     <div className="menu-item-container" onClick={onItemClick}>

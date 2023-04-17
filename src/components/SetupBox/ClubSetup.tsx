@@ -39,7 +39,7 @@ const ClubSetup = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + "/api/v1/district/",
+          import.meta.env.VITE_BACKEND_URL + "/api/v1/yip/district/",
           requestOptions
         )
         const data = await response.json()
@@ -75,7 +75,7 @@ const ClubSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/list-colleges/`,
+              `/api/v1/yip/list-colleges/`,
             requestOptions
           )
           const data = await response.json()
@@ -110,7 +110,7 @@ const ClubSetup = () => {
       try {
         console.log(postOptions)
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/create-college-club/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-college-club/`,
           postOptions
         )
         console.log(response)

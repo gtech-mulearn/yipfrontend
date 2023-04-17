@@ -97,7 +97,7 @@ const SchoolSetup = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/district/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/district/`,
           requestOptions
         )
         const data = await response.json()
@@ -124,7 +124,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/get-legislative-assembly/${districtSelected}/`,
+              `/api/v1/yip/get-legislative-assembly/${districtSelected}/`,
             requestOptions
           )
           const data = await response.json()
@@ -153,7 +153,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/get-blocks/${districtSelected}/`,
+              `/api/v1/yip/get-blocks/${districtSelected}/`,
             requestOptions
           )
           const data = await response.json()
@@ -187,7 +187,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/list-model-schools/`,
+              `/api/v1/yip/list-model-schools/`,
             requestOptions
           )
           const data = await response.json()
@@ -229,7 +229,7 @@ const SchoolSetup = () => {
     const createData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/create-club/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-club/`,
           postOptions
         )
         console.log(response)

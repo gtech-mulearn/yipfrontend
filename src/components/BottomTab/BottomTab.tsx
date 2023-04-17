@@ -17,7 +17,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
     return (
         <div className="tab-nav">
             <div className="tab-nav-container">
-                {/* <Link to={'/user'}>
+                {/* <Link to={'/yip/user'}>
                     <div 
                         className={`tab ${activeItem === "User" ? "active" : ""} `}
                         onClick = {()=>{handleItemClick('User')}}
@@ -44,7 +44,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
                         <h3 className={`tab-text ${activeItem === "YIP Club" ? "visible" : ""}`} >YIP Club</h3>
                     </div>
                 </Link>
-                {/* <Link to={'/block-management'}>
+                {/* <Link to={'/yip/block-management'}>
                     <div 
                         className={`tab ${activeItem === "Block Management" ? "active" : ""} `}
                         onClick = {()=>{handleItemClick('Block')}}

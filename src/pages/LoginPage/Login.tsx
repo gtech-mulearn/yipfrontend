@@ -36,7 +36,7 @@ function Login() {
     const createData = async () => {
       try {
         const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/login/`,
+          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/login/`,
           postOptions
         )
         console.log(response)
