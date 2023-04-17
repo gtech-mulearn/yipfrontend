@@ -27,7 +27,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm install --base=/yip/
+      run: npm install
 
     # - name: Run the tests
     #   run: npm run test
@@ -35,7 +35,7 @@ jobs:
     - name: Build
       env:
         VITE_BACKEND_URL: ${{ secrets.DEV_DOMAIN }}
-      run: npm run build --base=/yip/
+      run: npm run build --base='/yip/'
     
     - name: Configure SSH key
       uses: webfactory/ssh-agent@v0.4.1
