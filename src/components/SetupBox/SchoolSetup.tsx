@@ -268,7 +268,7 @@ const SchoolSetup = () => {
                 options={legislativeAssemblies}
                 isSearchable={true}
                 isClearable={true}
-                placeholder={`Select a District`}
+                placeholder={`Select a Legislative Assembly`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.name}
                 onChange={(data: any) => {
@@ -298,7 +298,7 @@ const SchoolSetup = () => {
                 options={school}
                 isSearchable={true}
                 isClearable={true}
-                placeholder={`Select a District`}
+                placeholder={`Select a School`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.title}
                 onChange={(data: any) => {
