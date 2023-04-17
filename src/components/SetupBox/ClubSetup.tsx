@@ -66,6 +66,7 @@ const ClubSetup = () => {
       const requestOptions = {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(reqData),
@@ -74,7 +75,7 @@ const ClubSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/organisation/institutes/College/`,
+              `/api/v1/yip/list-colleges/`,
             requestOptions
           )
           const data = await response.json()
