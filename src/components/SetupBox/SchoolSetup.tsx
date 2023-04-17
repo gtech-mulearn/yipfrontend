@@ -187,7 +187,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/organisation/institutes/School/`,
+              `/api/v1/yip/list-model-schools/`,
             requestOptions
           )
           const data = await response.json()
