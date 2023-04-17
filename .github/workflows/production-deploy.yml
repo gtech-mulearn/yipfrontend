@@ -35,7 +35,7 @@ jobs:
     - name: Build
       env:
         VITE_BACKEND_URL: ${{ secrets.PROD_DOMAIN }}
-      run: npm run build --base='/yip/'
+      run: npm run build
     
     - name: Configure SSH key
       uses: webfactory/ssh-agent@v0.4.1
