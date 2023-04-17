@@ -6,6 +6,7 @@ import BannerImg from '../../assets/Study abroad-pana.png'
 import SchoolSetup from '../../components/SetupBox/SchoolSetup'
 import TableBox from '../../components/TableBox/TableBox'
 import BottomTab from '../../components/BottomTab/BottomTab'
+import UserTableBox from '../../components/TableBox/UserTablebox'
 
 
 
@@ -13,9 +14,16 @@ import BottomTab from '../../components/BottomTab/BottomTab'
 const Dashboard = (props:any)=> {
 
   const[currentOption,setCurrentOption] = useState<string>("Model School")
-
+  const[isUser,setIsUser] = useState(false)
+  
   const handleOptionChange = (value:string) => {
     setCurrentOption(value);
+    if (value == "User"){
+      setIsUser(true)
+    }else if(value == "Block"){
+      setIsUser(false)
+    }
+
     console.log("current selected: ",value)
   };
 
@@ -25,7 +33,7 @@ const Dashboard = (props:any)=> {
       <div className="dash-container">
         <Banner/>
         {props.children}
-        <TableBox current_option={currentOption}/>
+       <h1>het</h1>
       </div>
       <div className="bottom-tab-container">
         <BottomTab onValueChange={handleOptionChange}/>

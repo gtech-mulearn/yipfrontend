@@ -18,6 +18,8 @@ const roles = [
   ],
 ]
 
+
+
 // const club = ['District','College']
 
 // interface SelectItemProps {
@@ -36,6 +38,11 @@ const roles = [
 // }
 
 const UserSetup = () => {
+    const [name, setName] = useState("")
+    const [email,setEmail] = useState("")
+    const [phoneNumber,setPhoneNumber] = useState("")
+    const [role,setRole] = useState("")
+    const [password,setPassword] = useState("")
 
     // useEffect(() => {
     //   const fetchData = async () => {
@@ -123,24 +130,86 @@ const UserSetup = () => {
     //   console.log("dist selected : ",data)
     //   setDistrictName(data.name)   
     // };
+    const onNameChange = (e:any)=>{
+        setName(e.target.value)
+    }
+
+    const onEmailChange = (e:any)=>{
+        setEmail(e.target.value)
+    }
+
+    const onPhoneNumberChange = (e:any)=>{
+        setPhoneNumber(e.target.value)
+    }
+
+    const onRoleChange = (e:any)=>{
+        console.log(e[1])
+        setRole(e[1])
+    }
+
+    const onPasswordChange = (e:any)=>{
+        setPassword(e.target.value)
+    }
+
+    const [errorStatus,setErrorStatus] = useState<boolean>(false)
+
+    const sendData = ():any =>{
+        const postData:any = {
+            name: name,
+            email : email,
+            phone : phoneNumber,
+            role : role,
+            password: password,
+        }
+        const postOptions = {
+          method: "POST",
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            "Content-Type": "application/json"},
+          body: JSON.stringify(postData)
+        };
+        
+        const createData = async () => {
+          try {
+            const response = await fetch(
+              import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/create-user/`,postOptions
+            );
+            console.log(response)
+            const data = await response.json();
+            if(data.statusCode == 400){
+                setErrorStatus(true)
+            }else{
+                setErrorStatus(false)
+            }
+            console.log("response : ",data)
+            
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        createData();
+        console.log("data send!!")
+      }
+
 
     return (
         <div className="white-container">
-            <h3>Setup a new User</h3>
+            <h3>Create a new User</h3>
+            {errorStatus? <ErrorBox/> : <></>}
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
                     <div className="setup-item" id="district">
                         <p>Name</p>
-                        <input type="text" name="name" placeholder='Type User Name' id="username" />
+                        <input type="text" name="name" placeholder='Name' id="name" onChange={onNameChange}/>
                     </div>
                     <div className="setup-item" id="district">
                         <p>Email</p>
-                        <input type="email" name="email" placeholder='Type Email Address' id="email" />
+                        <input type="email" name="email" placeholder='Email Address' id="email" onChange={onEmailChange} />
                     </div>
                     <div className="setup-item" id="district">
                         <p>Phone Number</p>
-                        <input type='number' name="phone" placeholder='Type Phone Number' id="phone" />
+                        <input type='number' name="phone" placeholder='Phone Number' id="phone" onChange={onPhoneNumberChange} />
                     </div>
                     <div className="setup-item" id="district">
                         <p>Role</p>
@@ -148,20 +217,21 @@ const UserSetup = () => {
                           options={roles}
                           isSearchable={true}
                           isClearable={true}
-                          placeholder={`Select a District`}
-                          getOptionValue={(option:any) => option[0]}
+                          placeholder={`Select a Role`}
+                          getOptionValue={(option:any) => option[1]}
                           getOptionLabel={(option:any) => option[1]}
+                          onChange={onRoleChange}
                         />
                     </div>
                     <div className="setup-item" id="district">
                         <p>Password</p>
-                        <input type="password" name="password" placeholder='Type Password' id="password" />
+                        <input type="password" name="password" placeholder='Password' id="password" onChange={onPasswordChange}/>
                     </div>
                         <button 
                           id="create_btn" 
                           className="black-btn"
                           onClick={()=>{
-                            // sendData();
+                            sendData();
                           }} >Create</button>
                     </div>
                 </div>
@@ -172,5 +242,11 @@ const UserSetup = () => {
         </div>
     )
 }
+
+const ErrorBox = ()=>{
+    return(
+      <div id="login-error" className="login-error"><p>Error: Email Already Exists!</p></div>
+    )
+  }
 
 export default UserSetup
