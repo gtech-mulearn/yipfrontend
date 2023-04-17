@@ -151,6 +151,7 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                             className='black-btn'
                             onClick={()=>{
                                 setShowFilterBox(false);
+                                setFilterItem("all")
                             }}
                             >Close</button>
                     </div>
@@ -187,13 +188,13 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                                             <li id="sl_no" className="value">{i + 1}</li>
                                             <li id="club_id" className="value" value="{{club.id}}">{item.name}</li>
                                             <li className="value" value="{{club.id}}">{item.district}</li>
-                                            <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>
-                                            <li className="value">{item.block}</li>
-                                            <li className="value editable">
+                                            {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                                            {item.block && <li className="value">{item.block}</li>}
+                                            {item.club_status && <li className="value editable">
                                                 <a className="table-btn completed" href="#">{item.club_status}</a>
                                                 <a id="edit">
                                                     <i className="fa-solid fa-pen-to-square"></i>Edit</a>
-                                            </li>
+                                            </li>}
                                         </ul>
                                     </>
                                       );
@@ -209,13 +210,13 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                                         <li id="sl_no" className="value">{i + 1}</li>
                                         <li id="club_id" className="value" value="{{club.id}}">{item.name}</li>
                                         <li className="value" value="{{club.id}}">{item.district}</li>
-                                        <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>
-                                        <li className="value">{item.block}</li>
-                                        <li className="value editable">
+                                        {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                                        {item.block && <li className="value">{item.block}</li>}
+                                        {item.club_status && <li className="value editable">
                                             <a className="table-btn completed" href="#">{item.club_status}</a>
                                             <a id="edit">
                                                 <i className="fa-solid fa-pen-to-square"></i>Edit</a>
-                                        </li>
+                                        </li>}
                                     </ul>
                                 </>
                                   );

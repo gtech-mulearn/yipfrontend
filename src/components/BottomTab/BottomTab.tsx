@@ -17,7 +17,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
     return (
         <div className="tab-nav">
             <div className="tab-nav-container">
-                <Link to={'/yip/user'}>
+                {/* <Link to={'/yip/user'}>
                     <div 
                         className={`tab ${activeItem === "User" ? "active" : ""} `}
                         onClick = {()=>{handleItemClick('User')}}
@@ -25,7 +25,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
                         <i className="fa-solid fa-user"></i>
                         <h3 className={`tab-text ${activeItem === "User" ? "visible" : ""}`} >User</h3>
                     </div>
-                </Link>
+                </Link> */}
                 <Link to={'/yip/school-dashboard'}>
                     <div 
                         className={`tab ${activeItem === "Model School" ? "active" : ""} `}
@@ -44,7 +44,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
                         <h3 className={`tab-text ${activeItem === "YIP Club" ? "visible" : ""}`} >YIP Club</h3>
                     </div>
                 </Link>
-                <Link to={'/yip/block-management'}>
+                {/* <Link to={'/yip/block-management'}>
                     <div 
                         className={`tab ${activeItem === "Block Management" ? "active" : ""} `}
                         onClick = {()=>{handleItemClick('Block')}}
@@ -52,7 +52,7 @@ const BottomTab:React.FC<BottomDrawerProps> = ({onValueChange}) => {
                         <i className="fa-solid fa-people-group"></i>
                         <h3 className={`tab-text ${activeItem === "Block" ? "visible" : ""}`} >Block</h3>
                     </div>
-                </Link>
+                </Link> */}
                 <div className="tab red">
                     <a href="/yip/" className="fa-solid fa-right-from-bracket"></a>
                     <p>Logout</p>
