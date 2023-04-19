@@ -124,7 +124,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/yip/get-legislative-assembly/${districtSelected}/`,
+            `/api/v1/yip/get-legislative-assembly/${districtSelected}/`,
             requestOptions
           )
           const data = await response.json()
@@ -153,7 +153,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/yip/get-blocks/${districtSelected}/`,
+            `/api/v1/yip/get-blocks/${districtSelected}/`,
             requestOptions
           )
           const data = await response.json()
@@ -187,7 +187,7 @@ const SchoolSetup = () => {
         try {
           const response = await fetch(
             import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/yip/list-model-schools/`,
+            `/api/v1/yip/list-model-schools/`,
             requestOptions
           )
           const data = await response.json()
@@ -308,13 +308,12 @@ const SchoolSetup = () => {
                 required
               />
             </div>
-            <button id="create_btn" className="black-btn" onClick={sendData}>
-              Create
-            </button>
+            <div className="create_btn_cntr">
+              <button id="create_btn" className="black-btn" onClick={sendData}>
+                Create
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="setup-img">
-          <img src={setupImg} alt="HI" />
         </div>
       </div>
     </div>

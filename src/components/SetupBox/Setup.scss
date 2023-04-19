@@ -8,12 +8,14 @@
     text-align: left;
 }
 .setup-filter{
-    width: 50%;
+    width: 100%;
     display: flex;
     padding: 20px 0;
 }
 .setup-filter .select-container{
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
@@ -22,7 +24,7 @@
 .setup-item{
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 40%;
     gap: 2px;
     margin-bottom: 8px;
     p{
@@ -33,13 +35,18 @@
 }
 .black-btn{
     @include functions.btn();
-    width: 100%;
+    width: 50%;
     background-color: black;
     color: white;
     font-weight: 300;
     font-size: 16px;
     margin-top: 12px;
 
+}
+.create_btn_cntr{
+    display: flex;
+    width: 100%;
+    justify-content: center;
 }
 .setup-img{
     width: 50%;
@@ -53,13 +60,7 @@
 }
 
 @media only screen and (max-width: 900px){
-    .setup-club{
-        flex-flow: column;
-    }
-    .setup-img{
-        display: none;
-    }
-    .setup-filter{
+    .setup-item{
         width: 100%;
     }
 }
