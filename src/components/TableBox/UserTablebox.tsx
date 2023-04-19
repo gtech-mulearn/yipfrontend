@@ -3,9 +3,9 @@ import './TableBox.scss'
 import fakeData from './fakeData.json'
 import Select from 'react-select';
 
-const schoolTableTitle = ["SL","Name","District","Legislative Assembly","Block","Status"]
-const clubTableTitle = ["SL","Name","District","Status"]
-const userTableTitle = ["SL","Name","Email","Phone","Role","Status"]
+const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status"]
+const clubTableTitle = ["SL", "Name", "District", "Status"]
+const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
 // interface Item {
 //     place_name: string;
@@ -25,82 +25,79 @@ const userTableTitle = ["SL","Name","Email","Phone","Role","Status"]
 
 
 interface tableProps {
-    current_option:string
+    current_option: string
 }
 
-interface tableBoxProps{
-    id : string,
-    name : string,
-    institute_type : string,
-    legislative_assembly : string,
+interface tableBoxProps {
+    id: string,
+    name: string,
+    institute_type: string,
+    legislative_assembly: string,
     status: boolean,
-  }
+}
 
 
-const UserTableBox: React.FC<tableProps> = ({current_option}) => {
+const UserTableBox: React.FC<tableProps> = ({ current_option }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
-    const [filterItem,setFilterItem] = useState("all")
+    const [filterItem, setFilterItem] = useState("all")
     const [showSortBox, setShowSortBox] = useState(false);
-    const [districts,setDistricts] = useState([])
-    const [tableData,setTableData] = useState<tableBoxProps[]>([])
+    const [districts, setDistricts] = useState([])
+    const [tableData, setTableData] = useState<tableBoxProps[]>([])
 
-    let tableTitle:any = []
-    if(current_option === "Model School"){
+    let tableTitle: any = []
+    if (current_option === "Model School") {
         tableTitle = schoolTableTitle
-    }else if(current_option === "YIP Club"){
+    } else if (current_option === "YIP Club") {
         tableTitle = clubTableTitle
-    }else if(current_option === "Users"){
+    } else if (current_option === "Users") {
         tableTitle = userTableTitle
     }
 
-    useEffect(()=>{
+    useEffect(() => {
 
         console.log(current_option)
 
-        
         let link_item = "get-users"
-
-
-    
-        const requestOptions = {
-          method: "GET",
-          headers: { 
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            "Content-Type": "application/json" }
-        };
-    
-        const fetchData = async () => {
-          try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/${link_item}/`,requestOptions);
-            const data = await response.json();
-            setTableData(data.response);
-            console.log('Hello',tableData)
-          } catch (error) {
-            console.error("this is error",error);
-          }
-        };
-        fetchData();
-      },[current_option])
-
-    useEffect(()=>{ 
         const requestOptions = {
             method: "GET",
-            headers: { 
-              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-              "Content-Type": "application/json" }
-          };
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+
         const fetchData = async () => {
-          try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/district/`,requestOptions);
-            const data = await response.json();
-            console.log("districts for filter:",data.response.districts);
-            setDistricts(data.response.districts)
-          } catch (error) {
-            console.error("this is error",error);
-          }
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/${link_item}/`, requestOptions);
+                const data = await response.json();
+                setTableData(data.response);
+            } catch (error) {
+                console.error("this is error", error);
+            }
         };
         fetchData();
-      },[])
+    }, [current_option])
+
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+        const fetchData = async () => {
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/district/`, requestOptions);
+                const data = await response.json();
+                // console.log("districts for filter:", data.response.districts);
+                setDistricts(data.response.districts)
+            } catch (error) {
+                console.error("this is error", error);
+            }
+        };
+        fetchData();
+    }, [])
 
     const handleFilterClick = () => {
         setShowFilterBox(!showFilterBox);
@@ -127,26 +124,26 @@ const UserTableBox: React.FC<tableProps> = ({current_option}) => {
                 </div>
             </div>
             <div className="filter-container">
-                {showFilterBox && ( 
+                {showFilterBox && (
                     <div className="filter-box">
                         <Select
                             options={districts}
                             isSearchable={true}
                             isClearable={true}
                             placeholder={`Select a District`}
-                            getOptionValue={(option: any) => option.id}
-                            getOptionLabel={(option: any) => option.name}
-                            onChange={(data:any)=>{
+                            getOptionValue={(option: any) => option}
+                            getOptionLabel={(option: any) => option}
+                            onChange={(data: any) => {
                                 setFilterItem(data.name)
                                 console.log(data.name)
                             }}
                         />
-                        <button 
+                        <button
                             className='black-btn'
-                            onClick={()=>{
+                            onClick={() => {
                                 setShowFilterBox(false);
                             }}
-                            >Close</button>
+                        >Close</button>
                     </div>
                 )}
                 {/* {showSortBox && (
@@ -164,7 +161,7 @@ const UserTableBox: React.FC<tableProps> = ({current_option}) => {
                     <div className="table-title">
                         <ul>
                             {
-                                tableTitle.map((item:any,index:number)=>{
+                                tableTitle.map((item: any, index: number) => {
                                     return <li key={index}>{item}</li>
                                 })
                             }
@@ -172,23 +169,23 @@ const UserTableBox: React.FC<tableProps> = ({current_option}) => {
                     </div>
                     <div className="table-content">
                         {tableData.map((item: any, i: number) => {
-                                      return (
-                                    <>
-                                        <ul id="clubs_listed">
-                                            <li id="sl_no" className="value">{i + 1}</li>
-                                            <li id="club_id" className="value" value="">{item.name}</li>
-                                            <li className="value" value="">{item.email}</li>
-                                            <li className="value" value="">{item.phone}</li>
-                                            <li className="value">{item.role}</li>
-                                            <li className="value editable">
-                                                <a className="table-btn completed" href="#">status</a>
-                                                <a id="edit">
-                                                    <i className="fa-solid fa-pen-to-square"></i>Edit</a>
-                                            </li>
-                                        </ul>
-                                    </>
-                                    );
-                                  })
+                            return (
+                                <>
+                                    <ul id="clubs_listed">
+                                        <li id="sl_no" className="value">{i + 1}</li>
+                                        <li id="club_id" className="value" value="">{item.name}</li>
+                                        <li className="value" value="">{item.email}</li>
+                                        <li className="value" value="">{item.phone}</li>
+                                        <li className="value">{item.role}</li>
+                                        <li className="value editable">
+                                            <a className="table-btn completed" href="#">status</a>
+                                            <a id="edit">
+                                                <i className="fa-solid fa-pen-to-square"></i>Edit</a>
+                                        </li>
+                                    </ul>
+                                </>
+                            );
+                        })
                         }
                     </div>
                 </div>

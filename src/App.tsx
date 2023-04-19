@@ -10,11 +10,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/'  element={<Login />} />
-        <Route path='/user' element={<Dashboard><UserSetup/></Dashboard>}/>
-        <Route path='/school-dashboard' element={<Dashboard><SchoolSetup/></Dashboard>}/>
-        <Route path='/club-dashboard' element={<Dashboard><ClubSetup/></Dashboard>}/>
-        <Route path='/block-management' element={<Dashboard><BlockSetup/></Dashboard>}/>
+        <Route path='/' element={<Login />} />
+        <Route path='/user' element={<Dashboard><UserSetup /></Dashboard>} />
+        <Route path='/school-dashboard' element={<Dashboard><SchoolSetup /></Dashboard>} />
+        <Route path='/club-dashboard' element={<Dashboard><ClubSetup /></Dashboard>} />
+        <Route path='/block-management' element={<Dashboard><BlockSetup /></Dashboard>} />
       </Routes>
     </Router>
   );
