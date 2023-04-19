@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
 import fakeData from './fakeData.json'
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
+import { optionCSS } from 'react-select/dist/declarations/src/components/Option';
 
-const schoolTableTitle = ["SL","Name","District","Legislative Assembly","Block","Status"]
-const clubTableTitle = ["SL","Name","District","Status"]
-const userTableTitle = ["SL","Name","Email","Phone","Role","Status"]
+const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block", "Manage"]
+const clubTableTitle = ["SL", "Name", "Status", "District"]
+const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
 // interface Item {
 //     place_name: string;
@@ -25,92 +26,151 @@ const userTableTitle = ["SL","Name","Email","Phone","Role","Status"]
 
 
 interface tableProps {
-    current_option:string
+    current_option: string
 }
 
-interface tableBoxProps{
-    id : string,
-    name : string,
-    institute_type : string,
-    legislative_assembly : string,
+interface tableBoxProps {
+    id: string,
+    name: string,
+    institute_type: string,
+    legislative_assembly: string,
     status: boolean,
-  }
+}
 
 
-const TableBox: React.FC<tableProps> = ({current_option}) => {
+const TableBox: React.FC<tableProps> = ({ current_option }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
-    const [filterItem,setFilterItem] = useState("all")
+    const [filterItem, setFilterItem] = useState("all")
     const [showSortBox, setShowSortBox] = useState(false);
-    const [districts,setDistricts] = useState([])
-    const [tableData,setTableData] = useState<tableBoxProps[]>([])
+    const [districts, setDistricts] = useState([])
+    const [tableData, setTableData] = useState<tableBoxProps[]>([])
     const [modalTrigger, setModalTrigger] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [deleteId, setDeleteId] = useState("")
+    const [deleteData, setDelete] = useState([])
+    const [status, setStatus] = useState([])
+    const [errorStatus, setErrorStatus] = useState<boolean>(false)
 
     let tableTitle = []
-    if(current_option === "Model School"){
+    if (current_option === "Model School") {
         tableTitle = schoolTableTitle
-    }else if(current_option === "YIP Club"){
+    } else if (current_option === "YIP Club") {
         tableTitle = clubTableTitle
-    }else{
+    } else {
         tableTitle = userTableTitle
     }
+    const sendData = (club_id: string, club_status: string): any => {
+        const postData: any = {
+            club_id: club_id,
+            club_status: club_status
+        }
+        const postOptions = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(postData),
+        }
 
-    useEffect(()=>{
+        const updateStatus = async () => {
+            try {
+                const response = await fetch(
+                    import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/update-club/`,
+                    postOptions
+                )
+                console.log(response)
+                const data = await response.json()
+                if (data.statusCode == 400) {
+                    setErrorStatus(true)
+                } else {
+                    setErrorStatus(false)
+                }
+                console.log("response : ", data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        updateStatus()
+        console.log("data send!!")
+    }
+    useEffect(() => {
 
-        console.log(current_option)
+        // console.log(current_option)
 
         let link_item = ""
-        
-        if(current_option === "Model School"){
+
+        if (current_option === "Model School") {
             link_item = "get-model-schools"
-        }else if(current_option === "YIP Club"){
+        } else if (current_option === "YIP Club") {
             link_item = "get-colleges"
-        }else{
+        } else {
             link_item = "get-users"
         }
 
 
-    
-        const requestOptions = {
-          method: "GET",
-          headers: { 
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            "Content-Type": "application/json" }
-        };
-    
-        const fetchData = async () => {
-          try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/${link_item}/`,requestOptions);
-            const data = await response.json();
-            setTableData(data.response.clubs);
-          } catch (error) {
-            console.error("this is error",error);
-          }
-        };
-        fetchData();
-      },[current_option])
 
-    useEffect(()=>{ 
         const requestOptions = {
             method: "GET",
-            headers: { 
-              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-              "Content-Type": "application/json" }
-          };
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+
         const fetchData = async () => {
-          try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/district/`,requestOptions);
-            const data = await response.json();
-            console.log("districts for filter:",data.response.districts);
-            setDistricts(data.response.districts)
-          } catch (error) {
-            console.error("this is error",error);
-          }
+            try {
+
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/${link_item}/`, requestOptions);
+                const data = await response.json();
+                // console.log("schools for filter:", data);
+                setTableData(data.response.clubs);
+            } catch (error) {
+                console.error("this is error", error);
+            }
         };
         fetchData();
-      },[])
+    }, [current_option])
 
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+        const fetchData = async () => {
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/district/`, requestOptions);
+                const data = await response.json();
+                setDistricts(data.response.districts)
+            } catch (error) {
+                console.error("this is error", error);
+            }
+        };
+        fetchData();
+    }, [])
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+        const fetchData = async () => {
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/list-clubs-status/`, requestOptions);
+                const data = await response.json();
+                console.log(data.response.club_status);
+                setStatus(data.response.club_status)
+            } catch (error) {
+                console.error("this is error", error);
+            }
+        };
+        fetchData();
+    }, [])
     const handleFilterClick = () => {
         setShowFilterBox(!showFilterBox);
         setShowSortBox(false);
@@ -124,85 +184,111 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
     const handleDelete = (schoolId: any) => {
         const requestOptions = {
             method: "DELETE",
-            headers: { 
-              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-              "Content-Type": "application/json" }
-          };
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
         const deleteData = async () => {
-          try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/api/v1/yip/delete-model-schools/${schoolId}/`,requestOptions);
-            const data = await response.json();
-            console.log("delete response:",data);
-            window.location.reload();
-          } catch (error) {
-            console.error("this is error",error);
-          }
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/delete-model-schools/${schoolId}/`, requestOptions);
+                const data = await response.json();
+                console.log("delete response:", data);
+                window.location.reload();
+            } catch (error) {
+                console.error("this is error", error);
+            }
         };
 
         deleteData();
     }
 
-    useEffect(()=>{
-        if(confirmDelete){
+    useEffect(() => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            }
+        };
+        const fetchData = async () => {
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/list-clubs-status/`, requestOptions);
+                const data = await response.json();
+                const status = data.response.club_status
+                const optionsArray = status.map((item: string, id: number) => {
+                    return { id: id, name: item };
+                });
+                console.log(optionsArray);
+                setStatus(optionsArray)
+            } catch (error) {
+                console.error("this is error", error);
+            }
+        }
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        if (confirmDelete) {
             handleDelete(deleteId)
         }
         setModalTrigger(false)
         setConfirmDelete(false)
-    },[confirmDelete])
-
+    }, [confirmDelete])
 
     return (
         <>
 
-        {modalTrigger && <div className="modal-overlay">
-        <div className="modal">
-            <p>Are you sure you want to delete this item?</p>
-            <div className="modal-buttons">
-            <button onClick={()=>{setConfirmDelete(true)}} className="confirm-delete">Delete</button>
-            <button onClick={()=>{setConfirmDelete(false); setModalTrigger(false)}} className="cancel-delete">Cancel</button>
-            </div>
-        </div>
-        </div>}
-
-        <div className='white-container'>
-            <div className="table-top">
-                <h3>Table List</h3>
-                <div className='table-fn'>
-                    <div className="table-fn-btn" onClick={handleFilterClick}>
-                        <i className="fa-solid fa-filter"></i>
-                        <p>Filter</p>
+            {modalTrigger && <div className="modal-overlay">
+                <div className="modal">
+                    <div>{ }</div>
+                    <p>Are you sure you want to delete this item?</p>
+                    <div className="modal-buttons">
+                        <button onClick={() => { setConfirmDelete(true) }} className="confirm-delete">Delete</button>
+                        <button onClick={() => { setConfirmDelete(false); setModalTrigger(false) }} className="cancel-delete">Cancel</button>
                     </div>
-                    {/* <div className="table-fn-btn">
+                </div>
+            </div>}
+
+            <div className='white-container'>
+                <div className="table-top">
+                    <h3>Table List</h3>
+                    <div className='table-fn'>
+                        <div className="table-fn-btn" onClick={handleFilterClick}>
+                            <i className="fa-solid fa-filter"></i>
+                            <p>Filter</p>
+                        </div>
+                        {/* <div className="table-fn-btn">
                         <i className="fa-solid fa-sort" onClick={handleSortClick}></i>
                         <p>Sort</p>
                     </div> */}
-                </div>
-            </div>
-            <div className="filter-container">
-                {showFilterBox && ( 
-                    <div className="filter-box">
-                        <Select
-                            options={districts}
-                            isSearchable={true}
-                            isClearable={true}
-                            placeholder={`Select a District`}
-                            getOptionValue={(option: any) => option.id}
-                            getOptionLabel={(option: any) => option.name}
-                            onChange={(data:any)=>{
-                                setFilterItem(data.name)
-                                console.log(data.name)
-                            }}
-                        />
-                        <button 
-                            className='black-btn'
-                            onClick={()=>{
-                                setShowFilterBox(false);
-                                setFilterItem("all")
-                            }}
-                            >Close</button>
                     </div>
-                )}
-                {/* {showSortBox && (
+                </div>
+                <div className="filter-container">
+                    {showFilterBox && (
+                        <div className="filter-box">
+                            <Select
+                                options={districts}
+                                isSearchable={true}
+                                isClearable={true}
+                                placeholder={`Select a District`}
+                                getOptionValue={(option: any) => option.id}
+                                getOptionLabel={(option: any) => option.name}
+                                onChange={(data: any) => {
+                                    setFilterItem(data.name)
+                                    // console.
+                                }}
+                            />
+                            <button
+                                className='black-btn'
+                                onClick={() => {
+                                    setShowFilterBox(false);
+                                    setFilterItem("all")
+                                }}
+                            >Close</button>
+                        </div>
+                    )}
+                    {/* {showSortBox && (
                             <div className="sort-box">
                                 <div className="sort">
                                     <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
@@ -211,69 +297,96 @@ const TableBox: React.FC<tableProps> = ({current_option}) => {
                                 </div>
                             </div>
                         )} */}
-            </div>
-            <div id="table-container" className="table-container">
-                <div className="table-list">
+                </div>
+                <div id="table-container" className="table-container">
                     <div className="table-title">
                         <ul>
                             {
-                                tableTitle.map((item:any,index:number)=>{
-                                    return <li key={index}>{item}</li>
+                                tableTitle.map((item: any, index: number) => {
+                                    return <li className={`value assembly`} key={index}>{item}</li>
                                 })
                             }
                         </ul>
                     </div>
-                    <div className="table-content">
-                        {
-                            filterItem === "all"
-                            ? tableData && tableData
-                                  .map((item: any, i: number) => {
-                                      return (
-                                        <>
-                                        <ul id="clubs_listed">
-                                            <li id="sl_no" className="value">{i + 1}</li>
-                                            <li id="club_id" className="value" value="{{club.id}}">{item.name}</li>
-                                            <li className="value" value="{{club.id}}">{item.district}</li>
-                                            {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                                            {item.block && <li className="value">{item.block}</li>}
-                                            {item.club_status && <li className="value editable">
-                                                <a className="table-btn completed" href="#">{item.club_status}</a>
-                                              
-                                                <a onClick={()=>{setModalTrigger(true); setDeleteId(item.id)}} id="delete">
-                                                <i className="fa-solid fa-trash"></i>Delete</a>
-                                            </li>}
-                                        </ul>
-                                    </>
-                                      );
-                                  })
-                            : tableData
-                            .filter((item: any) => {
-                                return item.district === filterItem;
-                            })
-                            .map((item: any, i: number) => {
-                                  return (
-                                    <>
-                                    <ul id="clubs_listed">
-                                        <li id="sl_no" className="value">{i + 1}</li>
-                                        <li id="club_id" className="value" value="{{club.id}}">{item.name}</li>
-                                        <li className="value" value="{{club.id}}">{item.district}</li>
-                                        {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                                        {item.block && <li className="value">{item.block}</li>}
-                                        {item.club_status && <li className="value editable">
-                                            <a className="table-btn completed" href="#">{item.club_status}</a>
-                                            
-                                            <a onClick={()=>{setModalTrigger(true); setDeleteId(item.id)}} id="delete">
-                                                <i className="fa-solid fa-trash"></i>Delete</a>
-                                        </li>}
-                                    </ul>
-                                </>
-                                  );
-                              })
-                        }
+                    <div className="table-list">
+
+                        <div className="table-content">
+
+                            {
+                                filterItem === "all"
+                                    ? tableData && tableData
+                                        .map((item: any, i: number) => {
+                                            return (
+                                                <>
+
+                                                    <ul id="clubs_listed">
+                                                        <li id="sl_no" className="value">{i + 1}</li>
+                                                        <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
+                                                        {item.club_status && <li className="value editable status">
+                                                            <Select
+                                                                options={status}
+                                                                isSearchable={false}
+                                                                placeholder={item.club_status}
+                                                                getOptionValue={(option: any) => option.id}
+                                                                getOptionLabel={(option: any) => option.name}
+                                                                onChange={(data: any) => {
+                                                                    sendData(item.id, data.name)
+                                                                }}
+                                                            />
+                                                        </li>}
+                                                        <li className="value" value="{{club.id}}">{item.district}</li>
+                                                        {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                                                        {item.block && <li className="value">{(item.block)}
+                                                        </li>}
+                                                        {item.club_status && <li className="value editable">
+                                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
+                                                                <i className="fa-solid fa-trash"></i>Delete</a>
+                                                        </li>}
+                                                    </ul>
+                                                </>
+                                            );
+                                        })
+                                    : tableData
+                                        .filter((item: any) => {
+                                            return item.district === filterItem;
+                                        })
+                                        .map((item: any, i: number) => {
+                                            return (
+                                                <>
+                                                    <ul id="clubs_listed">
+                                                        <li id="sl_no" className="value">{i + 1}</li>
+                                                        <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
+                                                        {item.club_status && <li className="value editable status">
+                                                            <Select
+                                                                options={status}
+                                                                isSearchable={false}
+                                                                isClearable={true}
+                                                                isLoading={true}
+                                                                placeholder={item.club_status}
+                                                                getOptionValue={(option: any) => option.id}
+                                                                getOptionLabel={(option: any) => option.name}
+                                                                onChange={(data: any) => {
+                                                                    sendData(item.id, data.name)
+                                                                }}
+                                                            />
+                                                        </li>}
+                                                        <li className="value" value="{{club.id}}">{item.district}</li>
+                                                        {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                                                        {item.block && <li className="value">{(item.block)}
+                                                        </li>}
+                                                        {item.club_status && <li className="value editable">
+                                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
+                                                                <i className="fa-solid fa-trash"></i>Delete</a>
+                                                        </li>}
+                                                    </ul>
+                                                </>
+                                            );
+                                        })
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </>
     )
 }
