@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
-import fakeData from './fakeData.json'
 import Select from 'react-select';
+import { ClubTableData } from './TableRow';
 
 const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status"]
 const clubTableTitle = ["SL", "Name", "District", "Status"]
@@ -108,6 +108,13 @@ const UserTableBox: React.FC<tableProps> = ({ current_option }) => {
         setShowSortBox(!showSortBox);
         setShowFilterBox(false);
     }
+
+    const SchoolTableData = (item: any, i: number) => {
+        return (
+            <p>No data</p>
+        );
+      };
+
     return (
         <div className='white-container'>
             <div className="table-top">

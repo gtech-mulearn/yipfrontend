@@ -10,7 +10,7 @@ import UserTableBox from "../../components/TableBox/UserTablebox"
 
 const Dashboard = (props: any) => {
   const [currentOption, setCurrentOption] = useState<string>("Model School")
-  const [isUser, setIsUser] = useState(false)
+  const [isUser, setIsUser] = useState(true)
   const [modelSchool, setModelSchool] = useState([])
   const handleOptionChange = (value: string) => {
     setCurrentOption(value)
@@ -45,12 +45,12 @@ const Dashboard = (props: any) => {
     <>
       <LeftDrawer onValueChange={handleOptionChange} />
       <div className="dash-container">
-        <Banner />
+        {/* <Banner /> */}
         {props.children}
         {isUser ? (
-          <UserTableBox current_option={currentOption} />
-        ) : (
           <TableBox current_option={currentOption} />
+          ) : (
+          <UserTableBox current_option={currentOption} />
         )}
       </div>
       <div className="bottom-tab-container">
