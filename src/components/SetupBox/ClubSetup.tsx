@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react"
 import Select from "react-select"
 import "./Setup.scss"
 import setupImg from "../../assets/Kindergarten student-bro 1.png"
-
-const club = ["District", "College"]
+import apiGateway from "../../service/apiGateway"
 
 interface SelectItemProps {
   item: string
