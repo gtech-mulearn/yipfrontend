@@ -45,7 +45,7 @@ const Dashboard = (props: any) => {
     <>
       <LeftDrawer onValueChange={handleOptionChange} />
       <div className="dash-container">
-        <Banner />
+        {/* <Banner /> */}
         {props.children}
         {isUser ? (
           <UserTableBox current_option={currentOption} />

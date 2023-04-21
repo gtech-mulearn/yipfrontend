@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
-import fakeData from './fakeData.json'
 import Select from 'react-select';
+import { SchoolTableData,ClubTableData } from './TableRow';
 
 const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status"]
 const clubTableTitle = ["SL", "Name", "District", "Status"]
