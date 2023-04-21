@@ -351,13 +351,13 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
                                             return item.district === filterItem;
                                         })
                                         .map((item: any, i: number) => {
-                                            return (
+                                            return ( 
                                                 <>
                                                     <ul id="clubs_listed">
                                                         <li id="sl_no" className="value">{i + 1}</li>
                                                         <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
                                                         {item.club_status && <li className="value editable status">
-                                                            <Select
+                                                            <Select 
                                                                 options={status}
                                                                 isSearchable={false}
                                                                 isClearable={true}

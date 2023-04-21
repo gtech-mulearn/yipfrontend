@@ -10,7 +10,7 @@ export const SchoolTableData = (data: any, key: number) => {
       <li id="district" className="value">{data.data.district}</li>
       <li className="value">{data.data.legislative_assembly}</li>
       <li className="value">{data.data.block}</li>
-      <li className="value editable">
+      <li className="value editable"> 
         <a className="table-btn completed" href="#">
           {data.data.club_status}
         </a>
