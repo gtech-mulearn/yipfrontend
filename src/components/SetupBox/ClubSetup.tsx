@@ -19,6 +19,7 @@ interface CollegeProps {
   title: string
 }
 
+
 const ClubSetup = () => {
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [college, setCollege] = useState<CollegeProps[]>([])
@@ -27,30 +28,21 @@ const ClubSetup = () => {
   const [collegeSelected, setCollegeSelected] = useState("")
   const [collegeName, setCollegeName] = useState("")
 
+const handleDistrict = (data: any) => {
+  setDistrictSelected(data.id)
+  console.log("dist selected : ", data)
+  setDistrictName(data.name)
+}
+
   useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-    }
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + "/api/v1/yip/district/",
-          requestOptions
-        )
-        const data = await response.json()
-        const dataItems = data.response.districts.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-        }))
-        setDistricts(dataItems)
-        console.log(dataItems)
-      } catch (error) {
-        console.error(error)
-      }
+      apiGateway.get(`/api/v1/yip/district/`)
+        .then(({ data }) => {
+          const { districts } = data.response;
+          console.log("districts-axios :", districts);
+          setDistricts(districts);
+        })
+        .catch(error => console.error(error));
     }
     fetchData()
   }, [])
@@ -61,31 +53,16 @@ const ClubSetup = () => {
     }
     console.log(districtSelected)
     if (districtSelected) {
-      console.log("req data : ", JSON.stringify(reqData))
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqData),
+      const fetchData = async () => {
+        apiGateway.post(`/api/v1/yip/list-colleges/`,reqData)
+          .then(({ data }) => {
+            const { institutions } = data.response;
+            console.log("institutions-axios :", data.response);
+            setCollege(institutions);
+          })
+          .catch(error => console.error(error));
       }
-      const fetchSchool = async () => {
-        try {
-          const response = await fetch(
-            import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/yip/list-colleges/`,
-            requestOptions
-          )
-          const data = await response.json()
-          console.log("college: ", data)
-          console.log(data.response.institutions)
-          setCollege(data.response.institutions)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      fetchSchool()
+      fetchData()
     }
   }, [districtSelected])
 
@@ -96,38 +73,16 @@ const ClubSetup = () => {
       institute_id: collegeSelected,
       district_id: districtSelected,
     }
-    const postOptions = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    }
-
     const createData = async () => {
-      try {
-        console.log(postOptions)
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-college-club/`,
-          postOptions
-        )
-        console.log(response)
-        const data = await response.json()
-        window.location.href = "/club-dashboard"
-        console.log("response : ", data)
-      } catch (error) {
-        console.error(error)
-      }
+      apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
+        .then((response) => {
+          console.log("axios-response :", response);
+          window.location.reload()
+        })
+        .catch(error => console.error(error));
     }
     createData()
     console.log("data send!!")
-  }
-
-  const handleDistrict = (data: any) => {
-    setDistrictSelected(data.id)
-    console.log("dist selected : ", data)
-    setDistrictName(data.name)
   }
 
   return (
@@ -164,20 +119,16 @@ const ClubSetup = () => {
                 }}
               />
             </div>
-            <button
-              id="create_btn"
-              className="black-btn"
-              onClick={() => {
-                sendData()
-              }}
-            >
-              Create
-            </button>
+            <div className="create_btn_cntr">
+              <button id="create_btn" className="black-btn" onClick={sendData}>
+                Create
+              </button>
+            </div>
           </div>
         </div>
-        <div className="setup-img">
+        {/* <div className="setup-img">
           <img src={setupImg} alt="HI" />
-        </div>
+        </div> */}
       </div>
     </div>
   )

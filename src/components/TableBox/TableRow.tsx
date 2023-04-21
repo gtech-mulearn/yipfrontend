@@ -3,23 +3,41 @@ import Select from "react-select/dist/declarations/src/Select";
 
 let statusOptions = ["Orientation Scheduled","Connection established","Identified"]
 
-export const ClubTableData = (data:any,key:number) => {
-    return (
-      <ul id="clubs_listed">
-        <li id="sl_no" className="value">1</li>
-        <li id="club_id" className="value">{data.data.name}</li>
-        <li id="district" className="value">{data.data.district}</li>
-        <li className="value editable">
-          <a className="table-btn completed" href="#">
-            {data.data.club_status}
-          </a>
-          <a id="edit">
-            <i className="fa-solid fa-pen-to-square"></i>Edit
-          </a>
-        </li>
-      </ul>
-    );
-  };
+const sendData = (club_id: string, club_status: string): any => {
+  const postData: any = {
+      club_id: club_id,
+      club_status: club_status
+  }
+  const postOptions = {
+      method: "PUT",
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+  }
+
+  const updateStatus = async () => {
+      try {
+          const response = await fetch(
+              import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/update-club/`,
+              postOptions
+          )
+          console.log(response)
+          const data = await response.json()
+          // if (data.statusCode == 400) {
+          //     setErrorStatus(true)
+          // } else {
+          //     setErrorStatus(false)
+          // }
+          console.log("response : ", data)
+      } catch (error) {
+          console.error(error)
+      }
+  }
+  updateStatus()
+  console.log("data send!!")
+}
 
   export const UserTableData = (data:any)=> {
     return(
