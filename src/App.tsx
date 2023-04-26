@@ -11,12 +11,12 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path='/yip'  element={<Login />} />
-        <Route path='/yip/user' element={<Dashboard><UserSetup/></Dashboard>}/>
-        <Route path='/yip/school-dashboard' element={<Dashboard><SchoolSetup/></Dashboard>}/>
-        <Route path='/yip/club-dashboard' element={<Dashboard><ClubSetup/></Dashboard>}/>
-        <Route path='/yip/block' element={<Dashboard><BlockSetup/></Dashboard>}/>
-        <Route path='/yip/legislative-assembly' element={<Dashboard><LegislativeSetup/></Dashboard>}/>
+        <Route path='/yip' element={<Login />} />
+        {/* <Route path='/yip/user' element={<Dashboard><UserSetup/></Dashboard>}/> */}
+        <Route path='/yip/school-dashboard' element={<Dashboard Content="Model School"><SchoolSetup /></Dashboard>} />
+        <Route path='/yip/club-dashboard' element={<Dashboard Content="YIP Club"><ClubSetup /></Dashboard>} />
+        {/* <Route path='/yip/block' element={<Dashboard><BlockSetup/></Dashboard>}/> */}
+        {/* <Route path='/yip/legislative-assembly' element={<Dashboard><LegislativeSetup/></Dashboard>}/> */}
       </Routes>
     </Router>
   );

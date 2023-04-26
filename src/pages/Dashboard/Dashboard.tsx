@@ -9,7 +9,7 @@ import BottomTab from "../../components/BottomTab/BottomTab"
 import UserTableBox from "../../components/TableBox/UserTablebox"
 
 const Dashboard = (props: any) => {
-  const [currentOption, setCurrentOption] = useState<string>("Model School")
+  const [currentOption, setCurrentOption] = useState<string>(props.Content)
   const [isUser, setIsUser] = useState(true)
   const [modelSchool, setModelSchool] = useState([])
   const handleOptionChange = (value: string) => {
@@ -43,13 +43,13 @@ const Dashboard = (props: any) => {
   }, [])
   return (
     <>
-      <LeftDrawer onValueChange={handleOptionChange} />
+      <LeftDrawer onValueChange={handleOptionChange} currentOption={currentOption} />
       <div className="dash-container">
-        {/* <Banner /> */}
+        <Banner />
         {props.children}
         {isUser ? (
           <TableBox current_option={currentOption} />
-          ) : (
+        ) : (
           <UserTableBox current_option={currentOption} />
         )}
       </div>
