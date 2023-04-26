@@ -30,7 +30,6 @@ const Dashboard = (props: any) => {
   }
   const update = () => {
     setUpdate(prev => !prev)
-
   }
   useEffect(() => {
     const fetchData = async () => {

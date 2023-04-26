@@ -63,7 +63,7 @@ const ClubSetup = (props: any) => {
       }
       fetchData()
     }
-  }, [districtSelected])
+  }, [districtSelected, props.dataUpdate])
 
   const sendData = (): any => {
     const postData: any = {
@@ -93,6 +93,7 @@ const ClubSetup = (props: any) => {
               <p>District</p>
               <Select
                 options={districts}
+                noOptionsMessage={() => `Districts are Loading`}
                 isSearchable={true}
                 isClearable={true}
                 placeholder={`Select a District`}
@@ -105,6 +106,8 @@ const ClubSetup = (props: any) => {
               <p>College</p>
               <Select
                 options={college}
+                noOptionsMessage={() => districts.length > 0 ? `College is Loading` : `Select a District First`}
+
                 isSearchable={true}
                 isClearable={true}
                 placeholder={`Select a College`}
