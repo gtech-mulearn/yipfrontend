@@ -30,7 +30,7 @@ interface SchoolProps {
   title: string
 }
 
-const SchoolSetup = () => {
+const SchoolSetup = (props: any) => {
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [legislativeAssemblies, setLegislativeAssemblies] = useState<LegislativeAssemblyProps[]>([])
   const [school, setSchool] = useState<SchoolProps[]>([])
@@ -45,7 +45,7 @@ const SchoolSetup = () => {
 
   const handleDistrict = (data: any) => {
     setDistrictSelected(data.id)
-    console.log("dist selected : ", data)
+    //console.log("dist selected : ", data)
     setDistrictName(data.name)
   }
 
@@ -57,7 +57,7 @@ const SchoolSetup = () => {
       apiGateway.get(`/api/v1/yip/district/`)
         .then(({ data }) => {
           const { districts } = data.response;
-          console.log("districts-axios :", districts);
+          //console.log("districts-axios :", districts);
           setDistricts(districts);
         })
         .catch(error => console.error(error));
@@ -67,13 +67,13 @@ const SchoolSetup = () => {
 
   // Fetch Legislative Assembly Data
   useEffect(() => {
-    console.log("dist selected:", districtSelected)
+    //console.log("dist selected:", districtSelected)
     if (districtSelected) {
       const fetchData = async () => {
         apiGateway.get(`/api/v1/yip/get-legislative-assembly/${districtSelected}/`)
           .then(({ data }) => {
             const { legislativeAssembly } = data.response;
-            console.log("leg-axios :", legislativeAssembly);
+            //console.log("leg-axios :", legislativeAssembly);
             setLegislativeAssemblies(legislativeAssembly)
           })
           .catch(error => console.error(error));
@@ -89,7 +89,7 @@ const SchoolSetup = () => {
         apiGateway.get(`/api/v1/yip/get-blocks/${districtSelected}/`)
           .then(({ data }) => {
             const { block } = data.response;
-            console.log("block-axios :", block);
+            //console.log("block-axios :", block);
             setBlocks(block)
           })
           .catch(error => console.error(error));
@@ -108,7 +108,7 @@ const SchoolSetup = () => {
         apiGateway.post(`/api/v1/yip/list-model-schools/`, reqData)
           .then(({ data }) => {
             const { institutions } = data.response;
-            console.log("school-axios :", institutions);
+            //console.log("school-axios :", institutions);
             setSchool(institutions)
           })
           .catch(error => console.error(error));
@@ -132,13 +132,13 @@ const SchoolSetup = () => {
     const createData = async () => {
       apiGateway.post(`/api/v1/yip/create-club/`, postData)
         .then((response) => {
-          console.log("axios-response :", response);
-          window.location.reload()
+          props.setUpdateData((prev: any) => !prev)
+
         })
         .catch(error => console.error(error));
     }
     createData()
-    console.log("data send!!")
+    //console.log("data send!!")
   }
 
 

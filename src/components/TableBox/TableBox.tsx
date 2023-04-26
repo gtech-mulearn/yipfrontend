@@ -12,6 +12,8 @@ const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
 interface tableProps {
     current_option: string
+    institutions: any
+    update: any
 }
 
 interface tableBoxProps {
@@ -23,7 +25,7 @@ interface tableBoxProps {
 }
 
 
-const TableBox: React.FC<tableProps> = ({ current_option }) => {
+const TableBox: React.FC<tableProps> = ({ current_option, institutions, update }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("all")
     const [showSortBox, setShowSortBox] = useState(false);
@@ -44,14 +46,13 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-              .then((response) => {
-                console.log("axios-response :", response);
-              })
-              .catch(error => console.error(error));
-          }
+                .then((response) => {
+                })
+                .catch(error => console.error(error));
+        }
         updateStatus()
-        console.log("data send!!")
-    }
+        //console.log("data send!!")
+    }
 
 
     let tableTitle = []
@@ -76,42 +77,42 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
         }
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/${link_item}/`)
-              .then(({ data }) => {
-                console.log("statsu: ",data.response)
-                const { clubs } = data.response;
-                console.log("-axios :", clubs);
-                setTableData(clubs);
-              })
-              .catch(error => console.error(error));
-          }
-          fetchData()
+                .then(({ data }) => {
+                    //console.log("statsu: ", data.response)
+                    const { clubs } = data.response;
+                    //console.log("-axios :", clubs);
+                    setTableData(clubs);
+                })
+                .catch(error => console.error(error));
+        }
+        fetchData()
     }, [current_option])
 
     useEffect(() => {
         const fetchData = async () => {
-          apiGateway.get(`/api/v1/yip/district/`)
-            .then(({ data }) => {
-              const { districts } = data.response;
-              console.log("districts-axios :", districts);
-              setDistricts(districts);
-            })
-            .catch(error => console.error(error));
+            apiGateway.get(`/api/v1/yip/district/`)
+                .then(({ data }) => {
+                    const { districts } = data.response;
+                    //console.log("districts-axios :", districts);
+                    setDistricts(districts);
+                })
+                .catch(error => console.error(error));
         }
         fetchData()
-      }, [])
+    }, [])
 
 
     useEffect(() => {
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-              .then(({ data }) => {
-                const { club_status } = data.response;
-                console.log("club-status-axios :", club_status);
-                setDistricts(club_status);
-              })
-              .catch(error => console.error(error));
-          }
-          fetchData()
+                .then(({ data }) => {
+                    const { club_status } = data.response;
+                    //console.log("club-status-axios :", club_status);
+                    setDistricts(club_status);
+                })
+                .catch(error => console.error(error));
+        }
+        fetchData()
     }, [])
 
 
@@ -128,12 +129,9 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
     const handleDelete = (schoolId: any) => {
         const fetchData = async () => {
             apiGateway.delete(`/api/v1/yip/delete-model-schools/${schoolId}/`)
-              .then(({ data }) => {
-                console.log("delete-status-axios :", data.response);
-                window.location.reload();
-              })
-              .catch(error => console.error(error));
-          }
+                .then(res => update())
+                .catch(error => console.error(error));
+        }
         fetchData()
     }
 
@@ -153,7 +151,7 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
         //         const optionsArray = status.map((item: string, id: number) => {
         //             return { id: id, name: item };
         //         });
-        //         console.log(optionsArray);
+        //         //console.log(optionsArray);
         //         setStatus(optionsArray)
         //     } catch (error) {
         //         console.error("this is error", error);
@@ -162,14 +160,14 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
         // fetchData()
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-              .then(({ data }) => {
-                const { club_status } = data.response;
-                console.log("delete-status-axios :", data.response);
-              })
-              .catch(error => console.error(error));
-          }
-          fetchData()
-    },[])
+                .then(({ data }) => {
+                    const { club_status } = data.response;
+                    // //console.log("delete-status-axios :", data.response);
+                })
+                .catch(error => console.error(error));
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         if (confirmDelete) {
@@ -180,66 +178,66 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
     }, [confirmDelete])
 
 
-    const SchoolTableData = (props:{item: any, index: number}) => {
-        const { item, index } = props;
-        return (
-          <ul id="clubs_listed">
-          <li id="sl_no" className="value">{index + 1}</li>
-          <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-          {item.club_status && <li className="value editable status">
-              <Select
-                  options={status}
-                  isSearchable={false}
-                  placeholder={item.club_status}
-                  getOptionValue={(option: any) => option.id}
-                  getOptionLabel={(option: any) => option.name}
-                  onChange={(status: any) => {
-                      sendData(item.id,status.name)
-                  }}
-              />
-          </li>}
-          <li className="value" value="{{club.id}}">{item.district}</li>
-          {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-          {item.block && <li className="value">{(item.block)}
-          </li>}
-          {item.club_status && <li className="value editable">
-              <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                  <i className="fa-solid fa-trash"></i>Delete</a>
-          </li>}
-      </ul>
-        );
-      };
-
-
-    const ClubTableData = (props:{item:any,index:number}) => {
+    const SchoolTableData = (props: { item: any, index: number }) => {
         const { item, index } = props;
         return (
             <ul id="clubs_listed">
-            <li id="sl_no" className="value">{index + 1}</li>
-            <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-            {item.club_status && <li className="value editable status">
-                <Select
-                    options={status}
-                    isSearchable={false}
-                    placeholder={item.club_status}
-                    getOptionValue={(option: any) => option.id}
-                    getOptionLabel={(option: any) => option.name}
-                    onChange={(status: any) => {
-                        sendData(item.id,status.name)
-                    }}
-                />
-            </li>}
-            <li className="value" value="{{club.id}}">{item.district}</li>
-            {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-            {item.block && <li className="value">{(item.block)}
-            </li>}
-            {item.club_status && <li className="value editable">
-                <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                    <i className="fa-solid fa-trash"></i>Delete</a>
-            </li>}
-        </ul>
+                <li id="sl_no" className="value">{index + 1}</li>
+                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
+                {item.club_status && <li className="value editable status">
+                    <Select
+                        options={status}
+                        isSearchable={false}
+                        placeholder={item.club_status}
+                        getOptionValue={(option: any) => option.id}
+                        getOptionLabel={(option: any) => option.name}
+                        onChange={(status: any) => {
+                            sendData(item.id, status.name)
+                        }}
+                    />
+                </li>}
+                <li className="value" value="{{club.id}}">{item.district}</li>
+                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                {item.block && <li className="value">{(item.block)}
+                </li>}
+                {item.club_status && <li className="value editable">
+                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
+                        <i className="fa-solid fa-trash"></i>Delete</a>
+                </li>}
+            </ul>
         );
-      };
+    };
+
+
+    const ClubTableData = (props: { item: any, index: number }) => {
+        const { item, index } = props;
+        return (
+            <ul id="clubs_listed">
+                <li id="sl_no" className="value">{index + 1}</li>
+                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
+                {item.club_status && <li className="value editable status">
+                    <Select
+                        options={status}
+                        isSearchable={false}
+                        placeholder={item.club_status}
+                        getOptionValue={(option: any) => option.id}
+                        getOptionLabel={(option: any) => option.name}
+                        onChange={(status: any) => {
+                            sendData(item.id, status.name)
+                        }}
+                    />
+                </li>}
+                <li className="value" value="{{club.id}}">{item.district}</li>
+                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                {item.block && <li className="value">{(item.block)}
+                </li>}
+                {item.club_status && <li className="value editable">
+                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
+                        <i className="fa-solid fa-trash"></i>Delete</a>
+                </li>}
+            </ul>
+        );
+    };
 
     return (
         <>
@@ -249,7 +247,7 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
                     <div>{ }</div>
                     <p>Are you sure you want to delete this item?</p>
                     <div className="modal-buttons">
-                        <button onClick={() => { setConfirmDelete(true) }} className="confirm-delete">Delete</button>
+                        <button onClick={() => { setConfirmDelete(true); update() }} className="confirm-delete">Delete</button>
                         <button onClick={() => { setConfirmDelete(false); setModalTrigger(false) }} className="cancel-delete">Cancel</button>
                     </div>
                 </div>
@@ -319,34 +317,26 @@ const TableBox: React.FC<tableProps> = ({ current_option }) => {
 
                             {
                                 filterItem === "all"
-                                    ? tableData && tableData
-                                        .map((item: any, index:any) => {
+                                    ? institutions && institutions
+                                        .map((item: any, index: any) => {
                                             if (current_option === "Model School") {
-                                                return <SchoolTableData item={item} index={index} key={index}/>
-                                            }else if(current_option === "YIP Club"){
-                                                return <ClubTableData item={item} index={index} key={index}/>
+                                                return <SchoolTableData item={item} index={index} key={index} />
+                                            } else if (current_option === "YIP Club") {
+                                                return <ClubTableData item={item} index={index} key={index} />
                                             }
-                                            // else if(current_option === "Users"){
-                                            //     return <UserTableData data={item} key={index}/>
-                                            // }else if(current_option === "Block"){
-                                            //     return <BlockTableData data={item} key={index}/>
-                                            // }
-                                            // else{
-                                            //     return <LegislativeTableData data={item} key={index}/>
-                                            // }
                                         })
                                     : tableData
                                         .filter((item: any) => {
                                             return item.district === filterItem;
                                         })
                                         .map((item: any, i: number) => {
-                                            return ( 
+                                            return (
                                                 <>
                                                     <ul id="clubs_listed">
                                                         <li id="sl_no" className="value">{i + 1}</li>
                                                         <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
                                                         {item.club_status && <li className="value editable status">
-                                                            <Select 
+                                                            <Select
                                                                 options={status}
                                                                 isSearchable={false}
                                                                 isClearable={true}

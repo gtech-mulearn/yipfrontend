@@ -20,7 +20,7 @@ interface CollegeProps {
 }
 
 
-const ClubSetup = () => {
+const ClubSetup = (props: any) => {
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [college, setCollege] = useState<CollegeProps[]>([])
   const [districtSelected, setDistrictSelected] = useState("")
@@ -28,18 +28,17 @@ const ClubSetup = () => {
   const [collegeSelected, setCollegeSelected] = useState("")
   const [collegeName, setCollegeName] = useState("")
 
-const handleDistrict = (data: any) => {
-  setDistrictSelected(data.id)
-  console.log("dist selected : ", data)
-  setDistrictName(data.name)
-}
+  const handleDistrict = (data: any) => {
+    setDistrictSelected(data.id)
+    setDistrictName(data.name)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       apiGateway.get(`/api/v1/yip/district/`)
         .then(({ data }) => {
           const { districts } = data.response;
-          console.log("districts-axios :", districts);
+          //console.log("districts-axios :", districts);
           setDistricts(districts);
         })
         .catch(error => console.error(error));
@@ -51,13 +50,13 @@ const handleDistrict = (data: any) => {
     const reqData: any = {
       district: districtName,
     }
-    console.log(districtSelected)
+    //console.log(districtSelected)
     if (districtSelected) {
       const fetchData = async () => {
-        apiGateway.post(`/api/v1/yip/list-colleges/`,reqData)
+        apiGateway.post(`/api/v1/yip/list-colleges/`, reqData)
           .then(({ data }) => {
             const { institutions } = data.response;
-            console.log("institutions-axios :", data.response);
+            //console.log("institutions-axios :", data.response);
             setCollege(institutions);
           })
           .catch(error => console.error(error));
@@ -76,13 +75,12 @@ const handleDistrict = (data: any) => {
     const createData = async () => {
       apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
         .then((response) => {
-          console.log("axios-response :", response);
-          window.location.reload()
+          props.setUpdateData((prev: any) => !prev)
         })
-        .catch(error => console.error(error));
+        .catch(error => console.log(error));
     }
     createData()
-    console.log("data send!!")
+    //console.log("data send!!")
   }
 
   return (
@@ -115,7 +113,7 @@ const handleDistrict = (data: any) => {
                 onChange={(data: any) => {
                   setCollegeSelected(data.id)
                   setCollegeName(data.title)
-                  console.log(collegeName)
+                  //console.log(collegeName)
                 }}
               />
             </div>
