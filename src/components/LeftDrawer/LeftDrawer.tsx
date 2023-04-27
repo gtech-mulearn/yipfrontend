@@ -13,10 +13,11 @@ interface MenuItemProps {
 
 interface LeftDrawerProps {
   onValueChange: (value: string) => void
+  currentOption: string
 }
 
-const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
-  const [activeItem, setActiveItem] = useState("Users")
+const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption }) => {
+  const [activeItem, setActiveItem] = useState(currentOption)
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName)
@@ -27,25 +28,25 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
     <div className="left-menu">
       <img src={YIPlogo} alt="logo" />
       <div className="menu-items">
-                <MenuItem
+        {/* <MenuItem
                     item_icon='fa-solid fa-user'
                     item_name='Users'
                     onItemClick={() => handleItemClick('Users')}
                     isActive={activeItem === 'Users'}
-                />
-                <MenuItem
-                    item_icon='fa-sharp fa-solid fa-school'
-                    item_name='Model School'
-                    onItemClick={() => handleItemClick('Model School')}
-                    isActive={activeItem === 'Model School'}
-                />
-                <MenuItem
-                    item_icon='fa-solid fa-people-group'
-                    item_name='YIP Club'
-                    onItemClick={() => handleItemClick('YIP Club')}
-                    isActive={activeItem === 'YIP Club'}
-                />
-                <MenuItem
+                /> */}
+        <MenuItem
+          item_icon='fa-sharp fa-solid fa-school'
+          item_name='Model School'
+          onItemClick={() => handleItemClick('Model School')}
+          isActive={activeItem === 'Model School'}
+        />
+        <MenuItem
+          item_icon='fa-solid fa-people-group'
+          item_name='YIP Club'
+          onItemClick={() => handleItemClick('YIP Club')}
+          isActive={activeItem === 'YIP Club'}
+        />
+        {/* <MenuItem
                     item_icon='fa-solid fa-people-group'
                     item_name='Block'
                     onItemClick={() => handleItemClick('Block')}
@@ -56,14 +57,14 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
                     item_name='Legislative Assembly'
                     onItemClick={() => handleItemClick('Legislative Assembly')}
                     isActive={activeItem === 'Legislative Assembly'}
-                />
-            </div>
+                /> */}
+      </div>
       {/* <a className="logout" href="/yip/"> */}
       <button
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-          window.location.href = "/"
+          window.location.href = "/yip"
         }}
       >
         Logout
@@ -82,17 +83,17 @@ const MenuItem: React.FC<MenuItemProps> = ({
   let linkitem: string = ""
   if (item_name == 'Model School') {
     linkitem = '/yip/school-dashboard'
-} else if (item_name == 'YIP Club') {
+  } else if (item_name == 'YIP Club') {
     linkitem = '/yip/club-dashboard'
-} else if(item_name == 'Block'){
+  } else if (item_name == 'Block') {
     linkitem = '/yip/block'
-} else if(item_name == 'Legislative Assembly'){
+  } else if (item_name == 'Legislative Assembly') {
     linkitem = '/yip/legislative-assembly'
-} else if(item_name == 'Users'){
+  } else if (item_name == 'Users') {
     linkitem = '/yip/user'
-} else{
+  } else {
     console.log("errorrrrrr")
-}
+  }
   return (
     <div className="menu-item-container" onClick={onItemClick}>
       <Link className="link-item" to={linkitem}>
