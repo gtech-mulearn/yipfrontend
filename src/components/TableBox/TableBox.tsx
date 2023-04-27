@@ -46,8 +46,9 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-                .then((response) => {
-                })
+                .then((response) =>
+                    response
+                )
                 .catch(error => console.error(error));
         }
         updateStatus()
@@ -105,10 +106,9 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     useEffect(() => {
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-                .then(({ data }) => {
-                    const { club_status } = data.response;
-                    //console.log("club-status-axios :", club_status);
-                    setDistricts(club_status);
+                .then((res) => {
+
+                    setStatus(res.data.response.club_status.map((item: string, id: number) => { return { id: id, name: item } }));
                 })
                 .catch(error => console.error(error));
         }
@@ -286,7 +286,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                 getOptionLabel={(option: any) => option.name}
                                 onChange={(data: any) => {
                                     setFilterItem(data.name)
-                                    // console.
+
                                 }}
                             />
                             <button
@@ -323,52 +323,40 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                         <div className="table-content">
 
                             {
-                                filterItem === "all"
-                                    ? institutions && institutions
-                                        .map((item: any, index: any) => {
-                                            if (current_option === "Model School") {
-                                                return <SchoolTableData item={item} index={index} key={index} />
-                                            } else if (current_option === "YIP Club") {
-                                                return <ClubTableData item={item} index={index} key={index} />
-                                            }
-                                        })
-                                    : tableData
-                                        .filter((item: any) => {
-                                            return item.district === filterItem;
-                                        })
-                                        .map((item: any, i: number) => {
-                                            return (
-                                                <>
-                                                    <ul id="clubs_listed">
-                                                        <li id="sl_no" className="value">{i + 1}</li>
-                                                        <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                                                        {item.club_status && <li className="value editable status">
-                                                            <Select
-                                                                options={status}
-                                                                isSearchable={false}
-                                                                isClearable={true}
-                                                                isLoading={true}
-                                                                placeholder={item.club_status}
-                                                                getOptionValue={(option: any) => option.id}
-                                                                getOptionLabel={(option: any) => option.name}
-                                                                onChange={(data: any) => {
-                                                                    sendData(item.id, data.name)
-                                                                }}
-                                                            />
-                                                        </li>}
-                                                        <li className="value" value="{{club.id}}">{item.district}</li>
-                                                        {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                                                        {item.block && <li className="value">{(item.block)}
-                                                        </li>}
-                                                        {item.club_status && <li className="value editable">
-                                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                                                                <i className="fa-solid fa-trash"></i>Delete</a>
-                                                        </li>}
-                                                    </ul>
-                                                </>
-                                            );
-                                        })
+                                institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)
+                                    .map((item: any, i: number) => {
+                                        return (
+                                            <>
+                                                <ul id="clubs_listed">
+                                                    <li id="sl_no" className="value">{i + 1}</li>
+                                                    <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
+                                                    {item.club_status && <li className="value editable status">
+                                                        <Select
+                                                            options={status}
+                                                            isSearchable={false}
+                                                            isClearable={true}
+                                                            placeholder={item.club_status}
+                                                            getOptionValue={(option: any) => option.id}
+                                                            getOptionLabel={(option: any) => option.name}
+                                                            onChange={(data: any) => {
+                                                                sendData(item.id, data.name)
+                                                            }}
+                                                        />
+                                                    </li>}
+                                                    <li className="value" value="{{club.id}}">{item.district}</li>
+                                                    {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
+                                                    {item.block && <li className="value">{(item.block)}
+                                                    </li>}
+                                                    {item.club_status && <li className="value editable">
+                                                        <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
+                                                            <i className="fa-solid fa-trash"></i>Delete</a>
+                                                    </li>}
+                                                </ul>
+                                            </>
+                                        );
+                                    })
                             }
+
                         </div>
                     </div>
                 </div>

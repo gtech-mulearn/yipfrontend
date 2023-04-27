@@ -35,7 +35,7 @@ const Dashboard = (props: any) => {
     const fetchData = async () => {
       apiGateway.get(`/api/v1/yip/${currentOption === "Model School" ? "get-model-schools" : "get-colleges"}/`)
         .then(res => {
-          currentOption === "Model School" ? setData(res.data.response) : setData(res.data.response.clubs)
+          currentOption === "Model School" ? setData(res.data.response.clubs) : setData(res.data.response.clubs)
         }).catch(error => console.log(error))
     }
     fetchData()

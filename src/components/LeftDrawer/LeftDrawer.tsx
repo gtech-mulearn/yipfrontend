@@ -64,7 +64,7 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption })
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-          window.location.href = "/"
+          window.location.href = "/yip"
         }}
       >
         Logout
