@@ -290,7 +290,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                 }}
                             />
                             <button
-                                className='black-btn'
+                                className='black-btn btn'
                                 onClick={() => {
                                     setShowFilterBox(false);
                                     setFilterItem("all")

@@ -133,7 +133,7 @@ const SchoolSetup = (props: any) => {
       apiGateway.post(`/api/v1/yip/create-club/`, postData)
         .then((response) => {
           console.log("response :", response.data)
-          setVisible(false)
+          setVisible(true)
           props.setUpdateData((prev: any) => !prev)
 
         })
@@ -150,6 +150,7 @@ const SchoolSetup = (props: any) => {
           setSchoolSelectedName("")
           setTimeout(() => {
             props.setCreate(false)
+            setVisible(false)
           }, 3000)
 
         })
@@ -159,19 +160,21 @@ const SchoolSetup = (props: any) => {
   }
 
   const [error, setError] = useState("");
-  return (props.create &&
+  return (
+
+    props.create &&
     <div className="white-container">
       <h3>Setup a new School</h3>
       {error && <div className="setup-error">
         {error}
       </div>}
       {
-        !visible && <div className="setup-filter">
+        visible && <div className="setup-filter">
           Club Created Successfully
         </div>
       }
       <div className="setup-club">
-        {visible && <div className="setup-filter">
+        <div className="setup-filter">
           <div className="select-container club">
 
             <>
@@ -266,7 +269,7 @@ const SchoolSetup = (props: any) => {
               </button>
             </div>
           </div>
-        </div>}
+        </div>
       </div>
     </div >
   )

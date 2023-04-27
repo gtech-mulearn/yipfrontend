@@ -48,6 +48,9 @@
     padding: 20px;
     border-radius: 5px;
 }
+.btn{
+    width: 50%;
+}
 .grey-btn{
     @include functions.btn();
     width: 25%;
