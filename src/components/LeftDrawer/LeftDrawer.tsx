@@ -13,10 +13,11 @@ interface MenuItemProps {
 
 interface LeftDrawerProps {
   onValueChange: (value: string) => void
+  currentOption: string
 }
 
-const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
-  const [activeItem, setActiveItem] = useState("Model School")
+const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption }) => {
+  const [activeItem, setActiveItem] = useState(currentOption)
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName)
@@ -28,42 +29,42 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange }) => {
       <img src={YIPlogo} alt="logo" />
       <div className="menu-items">
         {/* <MenuItem
-          item_icon="fa-solid fa-user"
-          item_name="Users"
-          onItemClick={() => handleItemClick("Users")}
-          isActive={activeItem === "Users"}
-        /> */}
+                    item_icon='fa-solid fa-user'
+                    item_name='Users'
+                    onItemClick={() => handleItemClick('Users')}
+                    isActive={activeItem === 'Users'}
+                /> */}
         <MenuItem
-          item_icon="fa-sharp fa-solid fa-school"
-          item_name="Model School"
-          onItemClick={() => handleItemClick("Model School")}
-          isActive={activeItem === "Model School"}
+          item_icon='fa-sharp fa-solid fa-school'
+          item_name='Model School'
+          onItemClick={() => handleItemClick('Model School')}
+          isActive={activeItem === 'Model School'}
         />
         <MenuItem
-          item_icon="fa-solid fa-people-group"
-          item_name="YIP Club"
-          onItemClick={() => handleItemClick("YIP Club")}
-          isActive={activeItem === "YIP Club"}
+          item_icon='fa-solid fa-people-group'
+          item_name='YIP Club'
+          onItemClick={() => handleItemClick('YIP Club')}
+          isActive={activeItem === 'YIP Club'}
         />
         {/* <MenuItem
-          item_icon="fa-solid fa-people-group"
-          item_name="Block Management"
-          onItemClick={() => handleItemClick("Block")}
-          isActive={activeItem === "Block"}
-        />
-        <MenuItem
-          item_icon="fa-solid fa-people-group"
-          item_name="Legislative Assembly Management"
-          onItemClick={() => handleItemClick("Legislative Assembly")}
-          isActive={activeItem === "Legislative Assembly"}
-        /> */}
+                    item_icon='fa-solid fa-people-group'
+                    item_name='Block'
+                    onItemClick={() => handleItemClick('Block')}
+                    isActive={activeItem === 'Block'}
+                />
+                <MenuItem
+                    item_icon='fa-solid fa-people-group'
+                    item_name='Legislative Assembly'
+                    onItemClick={() => handleItemClick('Legislative Assembly')}
+                    isActive={activeItem === 'Legislative Assembly'}
+                /> */}
       </div>
       {/* <a className="logout" href="/yip/"> */}
       <button
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-          window.location.href = "/"
+          window.location.href = "/yip"
         }}
       >
         Logout
@@ -80,18 +81,19 @@ const MenuItem: React.FC<MenuItemProps> = ({
   isActive,
 }) => {
   let linkitem: string = ""
-  if (item_name == "Model School") {
-    linkitem = "/school-dashboard"
-  } else if (item_name == "YIP Club") {
-    linkitem = "/club-dashboard"
+  if (item_name == 'Model School') {
+    linkitem = '/yip/school-dashboard'
+  } else if (item_name == 'YIP Club') {
+    linkitem = '/yip/club-dashboard'
+  } else if (item_name == 'Block') {
+    linkitem = '/yip/block'
+  } else if (item_name == 'Legislative Assembly') {
+    linkitem = '/yip/legislative-assembly'
+  } else if (item_name == 'Users') {
+    linkitem = '/yip/user'
+  } else {
+    console.log("errorrrrrr")
   }
-  // }else if(item_name == 'Users'){
-  //     linkitem = '/yip/user'
-  // }else if (item_name == "Block Management"){
-  //     linkitem = '/yip/block-management'
-  // }else if (item_name == "Legislative Assembly Management"){
-  //     linkitem = '/yip/legislative-assembly-management'
-  // }
   return (
     <div className="menu-item-container" onClick={onItemClick}>
       <Link className="link-item" to={linkitem}>
