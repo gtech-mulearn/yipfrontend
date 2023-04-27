@@ -64,7 +64,8 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption })
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-          window.location.href = "/yip"
+
+          window.location.href = "/"
         }}
       >
         Logout
@@ -82,15 +83,15 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
   let linkitem: string = ""
   if (item_name == 'Model School') {
-    linkitem = '/yip/school-dashboard'
+    linkitem = '/school-dashboard'
   } else if (item_name == 'YIP Club') {
-    linkitem = '/yip/club-dashboard'
+    linkitem = '/club-dashboard'
   } else if (item_name == 'Block') {
-    linkitem = '/yip/block'
+    linkitem = '/block'
   } else if (item_name == 'Legislative Assembly') {
-    linkitem = '/yip/legislative-assembly'
+    linkitem = '/legislative-assembly'
   } else if (item_name == 'Users') {
-    linkitem = '/yip/user'
+    linkitem = '/user'
   } else {
     console.log("errorrrrrr")
   }
