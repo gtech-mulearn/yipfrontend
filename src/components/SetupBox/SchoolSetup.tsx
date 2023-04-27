@@ -132,25 +132,40 @@ const SchoolSetup = (props: any) => {
     const createData = async () => {
       apiGateway.post(`/api/v1/yip/create-club/`, postData)
         .then((response) => {
+          console.log("response :", response.data)
+          setVisible(false)
+
           props.setUpdateData((prev: any) => !prev)
 
         })
-        .catch(error => console.error(error));
+        .catch(error => setVisible(false)
+        )
+        .finally(() => {
+          {
+            setTimeout(() => {
+              setVisible(true)
+            }, 3000)
+          }
+        })
     }
     createData()
     //console.log("data send!!")
   }
 
-
-
+  const [visible, setVisible] = useState(true);
+  const [error, setError] = useState("");
   return (
     <div className="white-container">
       <h3>Setup a new School</h3>
+      {error && <div className="setup-error">
+        {error}
+      </div>}
       <div className="setup-club">
         <div className="setup-filter">
-          <div className="select-container club">
+          {visible ? <div className="select-container club">
             <div className="setup-item">
               <p>District</p>
+
               <Select
                 options={districts}
                 isSearchable={true}
@@ -162,7 +177,7 @@ const SchoolSetup = (props: any) => {
                 required
               />
             </div>
-            <div className="setup-item">
+            {districtName && <div className="setup-item">
               <p>Legislative Assembly</p>
               <Select
                 options={legislativeAssemblies}
@@ -176,8 +191,8 @@ const SchoolSetup = (props: any) => {
                 }}
                 required
               />
-            </div>
-            <div className="setup-item">
+            </div>}
+            {legSelectedId && <div className="setup-item">
               <p>BRC</p>
               <Select
                 options={blocks}
@@ -191,8 +206,8 @@ const SchoolSetup = (props: any) => {
                 }}
                 required
               />
-            </div>
-            <div className="setup-item">
+            </div>}
+            {blockSelectedId && <div className="setup-item">
               <p>School</p>
               <Select
                 options={school}
@@ -207,13 +222,35 @@ const SchoolSetup = (props: any) => {
                 }}
                 required
               />
-            </div>
+            </div>}
             <div className="create_btn_cntr">
-              <button id="create_btn" className="black-btn" onClick={sendData}>
-                Create
+              <button id="create_btn" className={`${blockSelectedId ? 'black-btn' : 'grey-btn'}`}
+                onClick={() => {
+                  if (!districtName) {
+                    setError("Select a District")
+                  }
+                  else if (!legSelectedId) {
+                    setError("Select a Legislative Assembly")
+                  }
+                  else if (!blockSelectedId) {
+                    setError("Select a Block")
+                  }
+                  else if (!schoolSelectedId) {
+                    setError("Select a School")
+                  }
+                  else {
+                    sendData()
+                  }
+                  setTimeout(() => {
+                    setError("")
+                  }, 3000)
+                }
+                }>Create
               </button>
             </div>
-          </div>
+          </div> :
+            <div> <p>Club Created Successfully</p></div>
+          }
         </div>
       </div>
     </div>

@@ -51,27 +51,28 @@ const UserSetup = () => {
             role: role,
             password: password
         }
-          const postOptions = {
+        const postOptions = {
             method: "POST",
             headers: {
-                   'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                "Content-Type": "application/json"},
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(postData)
-          };
+        };
 
-          const createData = async () => {
+        const createData = async () => {
             try {
-              console.log(postOptions)
-              const response = await fetch(
-                `https://dev.mulearn.org/api/v1/yip/create-user/`,postOptions
-              );
-              const data = await response.json();
-              console.log("user response : ",data)   
+                console.log(postOptions)
+                const response = await fetch(
+                    `https://dev.mulearn.org/api/v1/yip/create-user/`, postOptions
+                );
+                const data = await response.json();
+                console.log("user response : ", data)
             } catch (error) {
-              console.error(error);
+                console.error(error);
             }
-          };
-          createData();
+        };
+        createData();
     }
 
     return (
@@ -117,7 +118,6 @@ const UserSetup = () => {
                                 country="US"
                                 value={phone}
                                 onChange={setPhone} />
-
                         </div>
                         <div className="setup-item" id="district">
                             <p>Role</p>

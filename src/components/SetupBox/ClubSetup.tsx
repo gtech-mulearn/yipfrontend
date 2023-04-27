@@ -27,8 +27,10 @@ const ClubSetup = (props: any) => {
   const [districtName, setDistrictName] = useState("")
   const [collegeSelected, setCollegeSelected] = useState("")
   const [collegeName, setCollegeName] = useState("")
-
+  const [actions, setActions] = useState("")
+  const [error, setError] = useState("")
   const handleDistrict = (data: any) => {
+    console.log("dist selected : ", data)
     setDistrictSelected(data.id)
     setDistrictName(data.name)
   }
@@ -56,7 +58,6 @@ const ClubSetup = (props: any) => {
         apiGateway.post(`/api/v1/yip/list-colleges/`, reqData)
           .then(({ data }) => {
             const { institutions } = data.response;
-            //console.log("institutions-axios :", data.response);
             setCollege(institutions);
           })
           .catch(error => console.error(error));
@@ -76,19 +77,32 @@ const ClubSetup = (props: any) => {
       apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
         .then((response) => {
           props.setUpdateData((prev: any) => !prev)
+          setActions("Club created " + " " + collegeName + " " + "IN" + " " + districtName)
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error)
+          setActions("Club already exits")
+        })
+        .finally(() => {
+          setDistrictSelected("")
+          setDistrictName("")
+          setTimeout(() => {
+            setActions("")
+          }, 3000)
+        })
     }
     createData()
-    //console.log("data send!!")
   }
 
   return (
     <div className="white-container">
       <h3>Setup a new Club</h3>
+      {error && <div className="setup-error">
+        {error}
+      </div>}
       <div className="setup-club">
         <div className="setup-filter">
-          <div className="select-container club">
+          {!actions ? <div className="select-container club">
             <div className="setup-item" id="district">
               <p>District</p>
               <Select
@@ -96,18 +110,17 @@ const ClubSetup = (props: any) => {
                 noOptionsMessage={() => `Districts are Loading`}
                 isSearchable={true}
                 isClearable={true}
-                placeholder={`Select a District`}
+                placeholder={districtName ? districtName : `Select a District`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.name}
                 onChange={handleDistrict}
               />
             </div>
-            <div className="setup-item" id="district">
+            {districtSelected && <div className="setup-item" id="district">
               <p>College</p>
               <Select
                 options={college}
                 noOptionsMessage={() => districts.length > 0 ? `College is Loading` : `Select a District First`}
-
                 isSearchable={true}
                 isClearable={true}
                 placeholder={`Select a College`}
@@ -119,19 +132,35 @@ const ClubSetup = (props: any) => {
                   //console.log(collegeName)
                 }}
               />
-            </div>
+            </div>}
             <div className="create_btn_cntr">
-              <button id="create_btn" className="black-btn" onClick={sendData}>
+              <button id="create_btn" className={`${collegeName ? 'black-btn' : 'grey-btn'}`}
+                onClick={() => {
+                  if (!districtName) {
+                    setError("Select a District")
+                  }
+                  else if (!collegeName) {
+                    setError("Select a College")
+                  }
+                  else {
+                    sendData()
+                  }
+                  setTimeout(() => {
+                    setError("")
+                  }, 3000)
+                }
+                }>
                 Create
               </button>
             </div>
           </div>
+            : <div className="actions">{actions}</div>}
         </div>
         {/* <div className="setup-img">
           <img src={setupImg} alt="HI" />
         </div> */}
       </div>
-    </div>
+    </div >
   )
 }
 

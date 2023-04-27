@@ -43,6 +43,22 @@
     margin-top: 12px;
 
 }
+.setup-error{
+    background-color: rgba(255, 0, 0, 0.20);
+    padding: 20px;
+    border-radius: 5px;
+}
+.grey-btn{
+    @include functions.btn();
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.162);
+
+    border: none;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: 300;
+    font-size: 16px;
+    margin-top: 12px;
+}
 .create_btn_cntr{
     display: flex;
     width: 100%;

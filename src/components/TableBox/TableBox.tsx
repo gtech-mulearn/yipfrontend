@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
 import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
-import { optionCSS } from 'react-select/dist/declarations/src/components/Option';
 import apiGateway from '../../service/apiGateway';
 
 const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block", "Manage"]
