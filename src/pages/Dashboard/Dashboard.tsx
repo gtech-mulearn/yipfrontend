@@ -46,10 +46,10 @@ const Dashboard = (props: any) => {
       <div className="dash-container">
         <Banner currentOption={currentOption} updateOption={updateOption} dataUpdate={props.dataUpdate} />
         {props.children}
-        <TableBox current_option={currentOption} institutions={data} update={update} setCreate={props.setCreate} />
+        <TableBox current_option={currentOption} institutions={data} update={update} setCreate={props.setCreate} setUpdateData={props.setUpdateData} />
       </div>
       <div className="bottom-tab-container">
-        <BottomTab onValueChange={handleOptionChange} />
+        <BottomTab onValueChange={handleOptionChange} currentOption={currentOption} />
       </div>
     </>
   )

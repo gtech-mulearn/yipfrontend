@@ -14,6 +14,7 @@ interface tableProps {
     institutions: any
     update: any
     setCreate: any
+    setUpdateData: any
 }
 
 interface tableBoxProps {
@@ -25,7 +26,7 @@ interface tableBoxProps {
 }
 
 
-const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, setCreate }) => {
+const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, setCreate, setUpdateData }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("all")
     const [showSortBox, setShowSortBox] = useState(false);
@@ -46,8 +47,10 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-                .then((response) =>
-                    response
+                .then((response) => {
+                    setUpdateData((prev: any) => !prev)
+                    console.log("status updated!!")
+                }
                 )
                 .catch(error => console.error(error));
         }

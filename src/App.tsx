@@ -17,10 +17,10 @@ function App() {
         <Route path='/yip' element={<Login />} />
         {/* <Route path='/yip/user' element={<Dashboard><UserSetup/></Dashboard>}/> */}
         <Route path='/yip/school-dashboard' element={
-          <Dashboard Content="Model School" dataUpdate={dataUpdate} setCreate={setCreate}>
+          <Dashboard Content="Model School" dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData}>
             <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /></Dashboard>} />
         <Route path='/yip/club-dashboard' element={
-          <Dashboard Content="YIP Club" dataUpdate={dataUpdate} setCreate={setCreate}>
+          <Dashboard Content="YIP Club" dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} >
             <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
           </Dashboard>} />
         {/* <Route path='/yip/block' element={<Dashboard><BlockSetup/></Dashboard>}/> */}
