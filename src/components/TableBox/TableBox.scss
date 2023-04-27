@@ -157,7 +157,7 @@ ul {
     align-items: center;
   }
   
-  .modal-buttons button {
+  .modal-buttons{ button {
     background: #f44336;
     color: #fff;
     border: none;
@@ -166,6 +166,15 @@ ul {
     border-radius: 5px;
     cursor: pointer;
   }
+  .cancel-delete{
+    background: #8dc0ff;
+
+  }
+  .cancel-delete:hover{
+    background: #4f9dfb;
+  }
+}
+
   
   .modal-buttons button:hover {
     background: #ff6659;

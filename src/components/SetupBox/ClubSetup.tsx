@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react"
 import Select from "react-select"
 import "./Setup.scss"
 import setupImg from "../../assets/Kindergarten student-bro 1.png"
-
-const club = ["District", "College"]
+import apiGateway from "../../service/apiGateway"
 
 interface SelectItemProps {
   item: string
@@ -20,38 +19,31 @@ interface CollegeProps {
   title: string
 }
 
-const ClubSetup = () => {
+
+const ClubSetup = (props: any) => {
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [college, setCollege] = useState<CollegeProps[]>([])
   const [districtSelected, setDistrictSelected] = useState("")
   const [districtName, setDistrictName] = useState("")
   const [collegeSelected, setCollegeSelected] = useState("")
   const [collegeName, setCollegeName] = useState("")
+  const [actions, setActions] = useState("")
+  const [error, setError] = useState("")
+  const handleDistrict = (data: any) => {
+    console.log("dist selected : ", data)
+    setDistrictSelected(data.id)
+    setDistrictName(data.name)
+  }
 
   useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-    }
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + "/api/v1/yip/district/",
-          requestOptions
-        )
-        const data = await response.json()
-        const dataItems = data.response.districts.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-        }))
-        setDistricts(dataItems)
-        console.log(dataItems)
-      } catch (error) {
-        console.error(error)
-      }
+      apiGateway.get(`/api/v1/yip/district/`)
+        .then(({ data }) => {
+          const { districts } = data.response;
+          //console.log("districts-axios :", districts);
+          setDistricts(districts);
+        })
+        .catch(error => console.error(error));
     }
     fetchData()
   }, [])
@@ -60,35 +52,19 @@ const ClubSetup = () => {
     const reqData: any = {
       district: districtName,
     }
-    console.log(districtSelected)
+    //console.log(districtSelected)
     if (districtSelected) {
-      console.log("req data : ", JSON.stringify(reqData))
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqData),
+      const fetchData = async () => {
+        apiGateway.post(`/api/v1/yip/list-colleges/`, reqData)
+          .then(({ data }) => {
+            const { institutions } = data.response;
+            setCollege(institutions);
+          })
+          .catch(error => console.error(error));
       }
-      const fetchSchool = async () => {
-        try {
-          const response = await fetch(
-            import.meta.env.VITE_BACKEND_URL +
-              `/api/v1/yip/list-colleges/`,
-            requestOptions
-          )
-          const data = await response.json()
-          console.log("college: ", data)
-          console.log(data.response.institutions)
-          setCollege(data.response.institutions)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      fetchSchool()
+      fetchData()
     }
-  }, [districtSelected])
+  }, [districtSelected, props.dataUpdate])
 
   const sendData = (): any => {
     const postData: any = {
@@ -97,62 +73,58 @@ const ClubSetup = () => {
       institute_id: collegeSelected,
       district_id: districtSelected,
     }
-    const postOptions = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    }
-
     const createData = async () => {
-      try {
-        console.log(postOptions)
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-college-club/`,
-          postOptions
-        )
-        console.log(response)
-        const data = await response.json()
-        window.location.href = "/club-dashboard"
-        console.log("response : ", data)
-      } catch (error) {
-        console.error(error)
-      }
+      apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
+        .then((response) => {
+          props.setUpdateData((prev: any) => !prev)
+          setActions("Club created " + " " + collegeName + " " + "IN" + " " + districtName)
+        })
+        .catch(error => {
+          console.log(error)
+          setActions("Club already exits")
+        })
+        .finally(() => {
+          setDistrictSelected("")
+          setDistrictName("")
+          setCollegeSelected("")
+          setCollegeName("")
+          setTimeout(() => {
+            setActions("")
+            props.setCreate(false)
+          }, 3000)
+        })
     }
     createData()
-    console.log("data send!!")
-  }
-
-  const handleDistrict = (data: any) => {
-    setDistrictSelected(data.id)
-    console.log("dist selected : ", data)
-    setDistrictName(data.name)
   }
 
   return (
+    props.create &&
     <div className="white-container">
       <h3>Setup a new Club</h3>
+      {error && <div className="setup-error">
+        {error}
+      </div>}
       <div className="setup-club">
         <div className="setup-filter">
-          <div className="select-container club">
+          {!actions ? <div className="select-container club">
             <div className="setup-item" id="district">
               <p>District</p>
               <Select
                 options={districts}
+                noOptionsMessage={() => `Districts are Loading`}
                 isSearchable={true}
                 isClearable={true}
-                placeholder={`Select a District`}
+                placeholder={districtName ? districtName : `Select a District`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.name}
                 onChange={handleDistrict}
               />
             </div>
-            <div className="setup-item" id="district">
+            {districtSelected && <div className="setup-item" id="district">
               <p>College</p>
               <Select
                 options={college}
+                noOptionsMessage={() => districts.length > 0 ? `College is Loading` : `Select a District First`}
                 isSearchable={true}
                 isClearable={true}
                 placeholder={`Select a College`}
@@ -161,26 +133,42 @@ const ClubSetup = () => {
                 onChange={(data: any) => {
                   setCollegeSelected(data.id)
                   setCollegeName(data.title)
-                  console.log(collegeName)
+                  //console.log(collegeName)
                 }}
               />
+            </div>}
+            <div className="create_btn_cntr">
+              <button id="create_btn" className={`${collegeName ? 'black-btn' : 'grey-btn'}`}
+                onClick={() => {
+                  if (!districtName) {
+                    setError("Select a District")
+                  }
+                  else if (!collegeName) {
+                    setError("Select a College")
+                  }
+                  else {
+                    sendData()
+                  }
+                  setTimeout(() => {
+                    setError("")
+                  }, 3000)
+                }
+                }>
+                Create
+              </button>
+              <button className="black-btn" onClick={() => props.setCreate(false)}>
+                Cancel
+              </button>
             </div>
-            <button
-              id="create_btn"
-              className="black-btn"
-              onClick={() => {
-                sendData()
-              }}
-            >
-              Create
-            </button>
+
           </div>
+            : <div className="actions">{actions}</div>}
         </div>
-        <div className="setup-img">
+        {/* <div className="setup-img">
           <img src={setupImg} alt="HI" />
-        </div>
+        </div> */}
       </div>
-    </div>
+    </div >
   )
 }
 

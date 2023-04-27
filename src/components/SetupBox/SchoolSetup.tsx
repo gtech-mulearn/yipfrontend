@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Select from "react-select"
 import "./Setup.scss"
-import setupImg from "../../assets/Kindergarten student-bro 1.png"
-import axios from "axios"
+import apiGateway from "../../service/apiGateway"
 
 interface SelectItemProps {
   item: string
@@ -31,52 +30,9 @@ interface SchoolProps {
   title: string
 }
 
-const SelectItem: React.FC<SelectItemProps> = ({ item, list, onData }) => {
-  const [selectedDistrict, setSelectedDistrict] = useState("")
-  const [renderList, setRenderList] = useState([])
-  const handleChange = (e: any) => {
-    setSelectedDistrict(e.id)
-    console.log(e.id)
-    const handleData: any = {
-      id: e.id,
-      name: e.name,
-    }
-    console.log(handleData)
-    onData(handleData)
-  }
-
-  // const filteredList = list.filter((option: any) => {
-  //   if (item === "District") {
-  //     return true
-  //   } else if (item === "Legislative Assembly") {
-  //     return option.district === selectedDistrict;
-  //   }
-  //   return false;
-  // });
-
-  return (
-    <div className="setup-item" id="district">
-      <p>{item}</p>
-      <Select
-        options={list}
-        isSearchable={true}
-        isClearable={true}
-        placeholder={`Select a ${item}`}
-        getOptionValue={(option: any) => option.id}
-        getOptionLabel={(option: any) =>
-          item === "School" ? option.title : option.name
-        }
-        onChange={handleChange}
-      />
-    </div>
-  )
-}
-
-const SchoolSetup = () => {
+const SchoolSetup = (props: any) => {
   const [districts, setDistricts] = useState<DistrictProps[]>([])
-  const [legislativeAssemblies, setLegislativeAssemblies] = useState<
-    LegislativeAssemblyProps[]
-  >([])
+  const [legislativeAssemblies, setLegislativeAssemblies] = useState<LegislativeAssemblyProps[]>([])
   const [school, setSchool] = useState<SchoolProps[]>([])
   const [blocks, setBlocks] = useState<SchoolProps[]>([])
   const [districtSelected, setDistrictSelected] = useState("")
@@ -85,129 +41,85 @@ const SchoolSetup = () => {
   const [blockSelectedId, setBlockSelectedId] = useState("")
   const [schoolSelectedId, setSchoolSelectedId] = useState("")
   const [schoolSelectedName, setSchoolSelectedName] = useState("")
+  const [visible, setVisible] = useState(false)
 
+  const handleDistrict = (data: any) => {
+    setDistrictSelected(data.id)
+    //console.log("dist selected : ", data)
+    setDistrictName(data.name)
+  }
+
+
+
+  // Fetch District Data
   useEffect(() => {
-    const requestOptions = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    }
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/district/`,
-          requestOptions
-        )
-        const data = await response.json()
-        console.log("districts:", data)
-        setDistricts(data.response.districts)
-      } catch (error) {
-        console.error("this is error", error)
-      }
+      apiGateway.get(`/api/v1/yip/district/`)
+        .then(({ data }) => {
+          const { districts } = data.response;
+          //console.log("districts-axios :", districts);
+          setDistricts(districts);
+        })
+        .catch(error => console.error(error));
     }
     fetchData()
   }, [])
 
+  // Fetch Legislative Assembly Data
   useEffect(() => {
-    console.log("dist selected:", districtSelected)
-    const requestOptions = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    }
+    //console.log("dist selected:", districtSelected)
     if (districtSelected) {
-      const fetchLegislativeAssemblies = async () => {
-        try {
-          const response = await fetch(
-            import.meta.env.VITE_BACKEND_URL +
-            `/api/v1/yip/get-legislative-assembly/${districtSelected}/`,
-            requestOptions
-          )
-          const data = await response.json()
-          console.log(data)
-          console.log(data.response.legislativeAssembly)
-          setLegislativeAssemblies(data.response.legislativeAssembly)
-        } catch (error) {
-          console.error(error)
-        }
+      const fetchData = async () => {
+        apiGateway.get(`/api/v1/yip/get-legislative-assembly/${districtSelected}/`)
+          .then(({ data }) => {
+            const { legislativeAssembly } = data.response;
+            //console.log("leg-axios :", legislativeAssembly);
+            setLegislativeAssemblies(legislativeAssembly)
+          })
+          .catch(error => console.error(error));
       }
-      fetchLegislativeAssemblies()
+      fetchData()
     }
   }, [districtSelected])
 
+  // Fetch Block Data
   useEffect(() => {
-    console.log("block selected:", blockSelectedId)
-    const requestOptions = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    }
     if (districtSelected) {
-      const fetchBRC = async () => {
-        try {
-          const response = await fetch(
-            import.meta.env.VITE_BACKEND_URL +
-            `/api/v1/yip/get-blocks/${districtSelected}/`,
-            requestOptions
-          )
-          const data = await response.json()
-          console.log(data)
-          console.log(data.response.block)
-          setBlocks(data.response.block)
-        } catch (error) {
-          console.error(error)
-        }
+      const fetchData = async () => {
+        apiGateway.get(`/api/v1/yip/get-blocks/${districtSelected}/`)
+          .then(({ data }) => {
+            const { block } = data.response;
+            //console.log("block-axios :", block);
+            setBlocks(block)
+          })
+          .catch(error => console.error(error));
       }
-      fetchBRC()
+      fetchData()
     }
   }, [districtSelected])
 
+  // Fetch Institute Data
   useEffect(() => {
     const reqData: any = {
       district: districtName,
     }
     if (districtSelected) {
-      console.log("req data : ", JSON.stringify(reqData))
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqData),
+      const fetchData = async () => {
+        apiGateway.post(`/api/v1/yip/list-model-schools/`, reqData)
+          .then(({ data }) => {
+            const { institutions } = data.response;
+            //console.log("school-axios :", institutions);
+            setSchool(institutions)
+          })
+          .catch(error => console.error(error));
       }
-
-      const fetchSchool = async () => {
-        try {
-          const response = await fetch(
-            import.meta.env.VITE_BACKEND_URL +
-            `/api/v1/yip/list-model-schools/`,
-            requestOptions
-          )
-          const data = await response.json()
-          console.log("school: ", data)
-          console.log(data.response.institutions)
-          setSchool(data.response.institutions)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      fetchSchool()
+      fetchData()
     }
   }, [districtSelected])
 
-  const handleDistrict = (data: any) => {
-    setDistrictSelected(data.id)
-    console.log("dist selected : ", data)
-    setDistrictName(data.name)
-  }
 
+
+  // Function for sending Data
   const sendData = (): any => {
     const postData: any = {
       club_name: schoolSelectedName,
@@ -217,106 +129,149 @@ const SchoolSetup = () => {
       district_id: districtSelected,
       block_id: blockSelectedId,
     }
-    const postOptions = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    }
-
     const createData = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/create-club/`,
-          postOptions
-        )
-        console.log(response)
-        const data = await response.json()
-        window.location.reload()
-        console.log("response : ", data)
-      } catch (error) {
-        console.error(error)
-      }
+      apiGateway.post(`/api/v1/yip/create-club/`, postData)
+        .then((response) => {
+          console.log("response :", response.data)
+          setVisible(true)
+          props.setUpdateData((prev: any) => !prev)
+
+        })
+        .catch(error => {
+          console.log(error)
+          setError(error.data.response.message)
+        })
+        .finally(() => {
+          setDistrictSelected("")
+          setDistrictName("")
+          setLegSelectedId("")
+          setBlockSelectedId("")
+          setSchoolSelectedId("")
+          setSchoolSelectedName("")
+          setTimeout(() => {
+            props.setCreate((prev: any) => !prev)
+            setVisible(false)
+          }, 3000)
+
+        })
     }
     createData()
-    console.log("data send!!")
+    //console.log("data send!!")
   }
+
+  const [error, setError] = useState("");
   return (
+
+    props.create &&
     <div className="white-container">
       <h3>Setup a new School</h3>
+      {error && <div className="setup-error">
+        {error}
+      </div>}
+      {
+        visible && <div className="setup-filter">
+          Club Created Successfully
+        </div>
+      }
       <div className="setup-club">
         <div className="setup-filter">
           <div className="select-container club">
-            <div className="setup-item">
-              <p>District</p>
-              <Select
-                options={districts}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a District`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={handleDistrict}
-                required
-              />
-            </div>
-            <div className="setup-item">
-              <p>Legislative Assembly</p>
-              <Select
-                options={legislativeAssemblies}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a Legislative Assembly`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={(data: any) => {
-                  setLegSelectedId(data.id)
-                }}
-                required
-              />
-            </div>
-            <div className="setup-item">
-              <p>BRC</p>
-              <Select
-                options={blocks}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a Block`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={(data: any) => {
-                  setBlockSelectedId(data.id)
-                }}
-                required
-              />
-            </div>
-            <div className="setup-item">
-              <p>School</p>
-              <Select
-                options={school}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a School`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.title}
-                onChange={(data: any) => {
-                  setSchoolSelectedId(data.id)
-                  setSchoolSelectedName(data.title)
-                }}
-                required
-              />
-            </div>
+
+            <>
+              <div className="setup-item">
+                <p>District</p>
+
+                <Select
+                  options={districts}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a District`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={handleDistrict}
+                  required
+                />
+              </div>
+              {districtName && <div className="setup-item">
+                <p>Legislative Assembly</p>
+                <Select
+                  options={legislativeAssemblies}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a Legislative Assembly`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={(data: any) => {
+                    setLegSelectedId(data.id)
+                  }}
+                  required
+                />
+              </div>}
+              {legSelectedId && <div className="setup-item">
+                <p>BRC</p>
+                <Select
+                  options={blocks}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a Block`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={(data: any) => {
+                    setBlockSelectedId(data.id)
+                  }}
+                  required
+                />
+              </div>}
+              {blockSelectedId && <div className="setup-item">
+                <p>School</p>
+                <Select
+                  options={school}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a School`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.title}
+                  onChange={(data: any) => {
+                    setSchoolSelectedId(data.id)
+                    setSchoolSelectedName(data.title)
+                  }}
+                  required
+                />
+              </div>}
+            </>
+
             <div className="create_btn_cntr">
-              <button id="create_btn" className="black-btn" onClick={sendData}>
-                Create
+              <button id="create_btn" className={`${blockSelectedId ? 'black-btn' : 'grey-btn'}`}
+                onClick={() => {
+                  if (!districtName) {
+                    setError("Select a District")
+                  }
+                  else if (!legSelectedId) {
+                    setError("Select a Legislative Assembly")
+                  }
+                  else if (!blockSelectedId) {
+                    setError("Select a Block")
+                  }
+                  else if (!schoolSelectedId) {
+                    setError("Select a School")
+                  }
+                  else {
+                    sendData()
+                  }
+                  setTimeout(() => {
+                    setError("")
+                  }, 3000)
+                }
+                }>Create
+              </button >
+              <button className="black-btn" onClick={() => props.setCreate(false)}>
+                Cancel
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

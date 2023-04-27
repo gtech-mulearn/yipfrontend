@@ -138,10 +138,6 @@ const BlockSetup = () => {
                     </div>
                 </div>
 
-                <div className="setup-img">
-                    <img src={setupImg} alt="HI" />
-                </div>
-
             </div>
         </div>
     )
