@@ -41,7 +41,7 @@ const SchoolSetup = (props: any) => {
   const [blockSelectedId, setBlockSelectedId] = useState("")
   const [schoolSelectedId, setSchoolSelectedId] = useState("")
   const [schoolSelectedName, setSchoolSelectedName] = useState("")
-
+  const [visible, setVisible] = useState(false)
 
   const handleDistrict = (data: any) => {
     setDistrictSelected(data.id)
@@ -134,25 +134,30 @@ const SchoolSetup = (props: any) => {
         .then((response) => {
           console.log("response :", response.data)
           setVisible(false)
-
           props.setUpdateData((prev: any) => !prev)
 
         })
-        .catch(error => setVisible(false)
-        )
+        .catch(error => {
+          console.log(error)
+          setError(error.data.response.message)
+        })
         .finally(() => {
-          {
-            setTimeout(() => {
-              setVisible(true)
-            }, 3000)
-          }
+          setDistrictSelected("")
+          setDistrictName("")
+          setLegSelectedId("")
+          setBlockSelectedId("")
+          setSchoolSelectedId("")
+          setSchoolSelectedName("")
+          setTimeout(() => {
+            props.setCreate(false)
+          }, 3000)
+
         })
     }
     createData()
     //console.log("data send!!")
   }
 
-  const [visible, setVisible] = useState(true);
   const [error, setError] = useState("");
   return (props.create &&
     <div className="white-container">
@@ -160,69 +165,78 @@ const SchoolSetup = (props: any) => {
       {error && <div className="setup-error">
         {error}
       </div>}
+      {
+        !visible && <div className="setup-filter">
+          Club Created Successfully
+        </div>
+      }
       <div className="setup-club">
-        <div className="setup-filter">
-          {visible ? <div className="select-container club">
-            <div className="setup-item">
-              <p>District</p>
+        {visible && <div className="setup-filter">
+          <div className="select-container club">
 
-              <Select
-                options={districts}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a District`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={handleDistrict}
-                required
-              />
-            </div>
-            {districtName && <div className="setup-item">
-              <p>Legislative Assembly</p>
-              <Select
-                options={legislativeAssemblies}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a Legislative Assembly`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={(data: any) => {
-                  setLegSelectedId(data.id)
-                }}
-                required
-              />
-            </div>}
-            {legSelectedId && <div className="setup-item">
-              <p>BRC</p>
-              <Select
-                options={blocks}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a Block`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.name}
-                onChange={(data: any) => {
-                  setBlockSelectedId(data.id)
-                }}
-                required
-              />
-            </div>}
-            {blockSelectedId && <div className="setup-item">
-              <p>School</p>
-              <Select
-                options={school}
-                isSearchable={true}
-                isClearable={true}
-                placeholder={`Select a School`}
-                getOptionValue={(option: any) => option.id}
-                getOptionLabel={(option: any) => option.title}
-                onChange={(data: any) => {
-                  setSchoolSelectedId(data.id)
-                  setSchoolSelectedName(data.title)
-                }}
-                required
-              />
-            </div>}
+            <>
+              <div className="setup-item">
+                <p>District</p>
+
+                <Select
+                  options={districts}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a District`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={handleDistrict}
+                  required
+                />
+              </div>
+              {districtName && <div className="setup-item">
+                <p>Legislative Assembly</p>
+                <Select
+                  options={legislativeAssemblies}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a Legislative Assembly`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={(data: any) => {
+                    setLegSelectedId(data.id)
+                  }}
+                  required
+                />
+              </div>}
+              {legSelectedId && <div className="setup-item">
+                <p>BRC</p>
+                <Select
+                  options={blocks}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a Block`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.name}
+                  onChange={(data: any) => {
+                    setBlockSelectedId(data.id)
+                  }}
+                  required
+                />
+              </div>}
+              {blockSelectedId && <div className="setup-item">
+                <p>School</p>
+                <Select
+                  options={school}
+                  isSearchable={true}
+                  isClearable={true}
+                  placeholder={`Select a School`}
+                  getOptionValue={(option: any) => option.id}
+                  getOptionLabel={(option: any) => option.title}
+                  onChange={(data: any) => {
+                    setSchoolSelectedId(data.id)
+                    setSchoolSelectedName(data.title)
+                  }}
+                  required
+                />
+              </div>}
+            </>
+
             <div className="create_btn_cntr">
               <button id="create_btn" className={`${blockSelectedId ? 'black-btn' : 'grey-btn'}`}
                 onClick={() => {
@@ -251,12 +265,10 @@ const SchoolSetup = (props: any) => {
                 Cancel
               </button>
             </div>
-          </div> :
-            <div> <p>Club Created Successfully</p></div>
-          }
-        </div>
+          </div>
+        </div>}
       </div>
-    </div>
+    </div >
   )
 }
 

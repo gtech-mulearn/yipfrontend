@@ -13,6 +13,7 @@ interface tableProps {
     current_option: string
     institutions: any
     update: any
+    setCreate: any
 }
 
 interface tableBoxProps {

@@ -86,8 +86,11 @@ const ClubSetup = (props: any) => {
         .finally(() => {
           setDistrictSelected("")
           setDistrictName("")
+          setCollegeSelected("")
+          setCollegeName("")
           setTimeout(() => {
             setActions("")
+            props.setCreate(false)
           }, 3000)
         })
     }
