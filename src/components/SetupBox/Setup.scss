@@ -35,7 +35,7 @@
 }
 .black-btn{
     @include functions.btn();
-    width: 50%;
+    width: 25%;
     background-color: black;
     color: white;
     font-weight: 300;
@@ -50,7 +50,7 @@
 }
 .grey-btn{
     @include functions.btn();
-    width: 50%;
+    width: 25%;
     background-color: rgba(0, 0, 0, 0.162);
 
     border: none;
@@ -62,7 +62,8 @@
 .create_btn_cntr{
     display: flex;
     width: 100%;
-    justify-content: center;
+    gap: px;  
+    justify-content: space-around;
 }
 .setup-img{
     width: 50%;

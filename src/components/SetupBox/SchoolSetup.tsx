@@ -154,7 +154,7 @@ const SchoolSetup = (props: any) => {
 
   const [visible, setVisible] = useState(true);
   const [error, setError] = useState("");
-  return (
+  return (props.create &&
     <div className="white-container">
       <h3>Setup a new School</h3>
       {error && <div className="setup-error">
@@ -246,6 +246,9 @@ const SchoolSetup = (props: any) => {
                   }, 3000)
                 }
                 }>Create
+              </button >
+              <button className="black-btn" onClick={() => props.setCreate(false)}>
+                Cancel
               </button>
             </div>
           </div> :

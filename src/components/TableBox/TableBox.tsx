@@ -24,7 +24,7 @@ interface tableBoxProps {
 }
 
 
-const TableBox: React.FC<tableProps> = ({ current_option, institutions, update }) => {
+const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, setCreate }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("all")
     const [showSortBox, setShowSortBox] = useState(false);
@@ -254,8 +254,15 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update }
 
             <div className='white-container'>
                 <div className="table-top">
-                    <h3>Table List</h3>
+                    <h3>{current_option} List</h3>
+
                     <div className='table-fn'>
+                        <div className="table-fn-btn" onClick={() => {
+                            setCreate(true)
+                        }}>
+                            <i className="fa-solid fa-plus"></i>
+                            <p>Add {current_option}</p>
+                        </div>
                         <div className="table-fn-btn" onClick={handleFilterClick}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>

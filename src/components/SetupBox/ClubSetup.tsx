@@ -95,6 +95,7 @@ const ClubSetup = (props: any) => {
   }
 
   return (
+    props.create &&
     <div className="white-container">
       <h3>Setup a new Club</h3>
       {error && <div className="setup-error">
@@ -152,7 +153,11 @@ const ClubSetup = (props: any) => {
                 }>
                 Create
               </button>
+              <button className="black-btn" onClick={() => props.setCreate(false)}>
+                Cancel
+              </button>
             </div>
+
           </div>
             : <div className="actions">{actions}</div>}
         </div>

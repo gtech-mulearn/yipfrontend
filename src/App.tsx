@@ -16,8 +16,13 @@ function App() {
       <Routes>
         <Route path='/yip' element={<Login />} />
         {/* <Route path='/yip/user' element={<Dashboard><UserSetup/></Dashboard>}/> */}
-        <Route path='/yip/school-dashboard' element={<Dashboard Content="Model School" dataUpdate={dataUpdate}><SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} /></Dashboard>} />
-        <Route path='/yip/club-dashboard' element={<Dashboard Content="YIP Club" dataUpdate={dataUpdate}><ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} /></Dashboard>} />
+        <Route path='/yip/school-dashboard' element={
+          <Dashboard Content="Model School" dataUpdate={dataUpdate} setCreate={setCreate}>
+            <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /></Dashboard>} />
+        <Route path='/yip/club-dashboard' element={
+          <Dashboard Content="YIP Club" dataUpdate={dataUpdate} setCreate={setCreate}>
+            <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
+          </Dashboard>} />
         {/* <Route path='/yip/block' element={<Dashboard><BlockSetup/></Dashboard>}/> */}
         {/* <Route path='/yip/legislative-assembly' element={<Dashboard><LegislativeSetup/></Dashboard>}/> */}
       </Routes>
