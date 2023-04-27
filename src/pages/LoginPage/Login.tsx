@@ -46,7 +46,7 @@ function Login() {
           setErrorStatus(true)
         } else {
           setErrorStatus(false)
-          window.location.replace("yip/school-dashboard")
+          window.location.replace("/school-dashboard")
         }
         localStorage.setItem("accessToken", data.response.accessToken)
       } catch (error) {

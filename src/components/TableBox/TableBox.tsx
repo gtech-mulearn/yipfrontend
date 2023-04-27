@@ -3,8 +3,8 @@ import './TableBox.scss'
 import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
-
-const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block", "Manage"]
+import DataTable from 'react-data-table-component';
+const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block"]
 const clubTableTitle = ["SL", "Name", "Status", "District"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
@@ -16,7 +16,17 @@ interface tableProps {
     setCreate: any
     setUpdateData: any
 }
-
+// const schoolTableTitle: any = [
+//     { name: 'Name', selector: 'name', sortable: true },
+//     { name: 'District', selector: 'district', sortable: true },
+//     { name: 'Legislative Assembly', selector: 'legislative_assembly', sortable: true },
+//     { name: 'Block', selector: 'block', sortable: true },
+// ]
+// const clubTableTitle: any = [
+//     { name: 'Name', selector: 'name', sortable: true },
+//     { name: 'Status', selector: 'status', sortable: true },
+//     { name: 'District', selector: 'district', sortable: true },
+// ]
 interface tableBoxProps {
     id: string,
     name: string,
@@ -212,6 +222,21 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     };
 
 
+    const StatusCell = (props: any) => {
+        const [selectedOption, setSelectedOption] = useState<any>(null);
+        return (
+            <Select
+                value={selectedOption}
+                options={props.status}
+                onChange={(data: any) => {
+
+                    sendData(props.item.id, data.name)
+                }}
+                isClearable
+            />
+        );
+    };
+
     const ClubTableData = (props: { item: any, index: number }) => {
         const { item, index } = props;
         return (
@@ -311,6 +336,13 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                             </div>
                         )} */}
                 </div>
+
+                {/* <DataTable
+                    pagination={true}
+
+                    columns={current_option === "YIP Club" ? clubTableTitle : schoolTableTitle}
+                    data={institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)}
+                /> */}
                 <div id="table-container" className="table-container">
                     <div className="table-title">
                         <ul>
