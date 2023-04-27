@@ -10,12 +10,12 @@ import { useEffect, useState } from 'react';
 function App() {
   const [dataUpdate, setUpdateData] = useState(true)
   const [create, setCreate] = useState(false)
-
+  const [accessToken, setAccessToken] = useState('')
   return (
     <Router>
       <Routes>
         <Route path='/' element={<Login />} />
-        {/* <Route path='/user' element={<Dashboard><UserSetup/></Dashboard>}/> */}
+
         <Route path='/school-dashboard' element={
           <Dashboard Content="Model School" dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData}>
             <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /></Dashboard>} />
