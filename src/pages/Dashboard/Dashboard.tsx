@@ -35,7 +35,7 @@ const Dashboard = (props: any) => {
     const fetchData = async () => {
       apiGateway.get(`/api/v1/yip/${currentOption === "Model School" ? "get-model-schools" : "get-colleges"}/`)
         .then(res => {
-          currentOption === "Model School" ? setData(res.data.response.clubs) : setData(res.data.response.clubs)
+          setData(res.data.response.clubs)
         }).catch(error => console.log(error))
     }
     fetchData()
@@ -46,7 +46,7 @@ const Dashboard = (props: any) => {
       <div className="dash-container">
         <Banner currentOption={currentOption} updateOption={updateOption} dataUpdate={props.dataUpdate} />
         {props.children}
-        <TableBox current_option={currentOption} institutions={data} update={update} setCreate={props.setCreate} setUpdateData={props.setUpdateData} />
+        <TableBox current_option={currentOption} institutions={data} update={update} dataUpdate={props.dataUpdate} setCreate={props.setCreate} setUpdateData={props.setUpdateData} />
       </div>
       <div className="bottom-tab-container">
         <BottomTab onValueChange={handleOptionChange} currentOption={currentOption} />

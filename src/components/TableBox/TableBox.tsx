@@ -3,9 +3,8 @@ import './TableBox.scss'
 import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
-import DataTable from 'react-data-table-component';
-const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block"]
-const clubTableTitle = ["SL", "Name", "Status", "District"]
+const schoolTableTitle = ["SL", "Name", "District", "Status", "Legislative Assembly", "Block"]
+const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
 
@@ -15,18 +14,9 @@ interface tableProps {
     update: any
     setCreate: any
     setUpdateData: any
+    dataUpdate: any
 }
-// const schoolTableTitle: any = [
-//     { name: 'Name', selector: 'name', sortable: true },
-//     { name: 'District', selector: 'district', sortable: true },
-//     { name: 'Legislative Assembly', selector: 'legislative_assembly', sortable: true },
-//     { name: 'Block', selector: 'block', sortable: true },
-// ]
-// const clubTableTitle: any = [
-//     { name: 'Name', selector: 'name', sortable: true },
-//     { name: 'Status', selector: 'status', sortable: true },
-//     { name: 'District', selector: 'district', sortable: true },
-// ]
+
 interface tableBoxProps {
     id: string,
     name: string,
@@ -36,9 +26,9 @@ interface tableBoxProps {
 }
 
 
-const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, setCreate, setUpdateData }) => {
+const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, dataUpdate, setCreate, setUpdateData }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
-    const [filterItem, setFilterItem] = useState("all")
+    const [filterItem, setFilterItem] = useState("All")
     const [showSortBox, setShowSortBox] = useState(false);
     const [districts, setDistricts] = useState([])
     const [tableData, setTableData] = useState<tableBoxProps[]>([])
@@ -47,8 +37,27 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     const [deleteId, setDeleteId] = useState("")
     const [deleteData, setDelete] = useState([])
     const [status, setStatus] = useState([])
-    const [errorStatus, setErrorStatus] = useState<boolean>(false)
+    const [statusFilter, setStatusFilter] = useState("All")
 
+    useEffect(() => {
+        setPagination(1)
+        if (statusFilter === "All" && filterItem === "All") {
+            setTableData(institutions)
+        }
+        else if (statusFilter !== "All" && filterItem !== "All") {
+            setTableData(institutions.filter((item: any) => {
+                return item.club_status === statusFilter && item.district === filterItem
+            }))
+        }
+        else if (filterItem !== "All" && statusFilter === "All") {
+            setTableData(institutions.filter((item: any) => item.district === filterItem && true))
+        }
+        else if (statusFilter !== "All" && filterItem === "All") {
+
+            setTableData(institutions.filter((item: any) => item.club_status === statusFilter && true))
+            console.log(institutions.filter((item: any) => item.club_status === statusFilter && true))
+        }
+    }, [filterItem, statusFilter])
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -57,17 +66,11 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-                .then((response) => {
-                    setUpdateData((prev: any) => !prev)
-                    console.log("status updated!!")
-                }
-                )
-                .catch(error => console.error(error));
+                .then((res) => setUpdateData((prev: any) => !prev))
+                .catch(error => console.error(error))
         }
         updateStatus()
-        //console.log("data send!!")
     }
-
 
     let tableTitle = []
     if (current_option === "Model School") {
@@ -92,9 +95,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/${link_item}/`)
                 .then(({ data }) => {
-                    //console.log("statsu: ", data.response)
                     const { clubs } = data.response;
-                    //console.log("-axios :", clubs);
                     setTableData(clubs);
                 })
                 .catch(error => console.error(error));
@@ -107,10 +108,9 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
             apiGateway.get(`/api/v1/yip/district/`)
                 .then(({ data }) => {
                     const { districts } = data.response;
-                    //console.log("districts-axios :", districts);
-                    setDistricts(districts);
+                    setDistricts(districts)
                 })
-                .catch(error => console.error(error));
+                .catch(error => console.log(error));
         }
         fetchData()
     }, [])
@@ -120,7 +120,6 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         const fetchData = async () => {
             apiGateway.get(`/api/v1/yip/list-clubs-status/`)
                 .then((res) => {
-
                     setStatus(res.data.response.club_status.map((item: string, id: number) => { return { id: id, name: item } }));
                 })
                 .catch(error => console.error(error));
@@ -148,39 +147,13 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         fetchData()
     }
 
-    useEffect(() => {
-        const requestOptions = {
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                "Content-Type": "application/json"
-            }
-        };
-        // const fetchData = async () => {
-        //     try {
-        //         const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/list-clubs-status/`, requestOptions);
-        //         const data = await response.json();
-        //         const status = data.response.club_status
-        //         const optionsArray = status.map((item: string, id: number) => {
-        //             return { id: id, name: item };
-        //         });
-        //         //console.log(optionsArray);
-        //         setStatus(optionsArray)
-        //     } catch (error) {
-        //         console.error("this is error", error);
-        //     }
-        // }
-        // fetchData()
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-                .then(({ data }) => {
-                    const { club_status } = data.response;
-                    // //console.log("delete-status-axios :", data.response);
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [])
+    const [page, setPagination] = useState(1)
+
+    function paginateArray<T>(array: T[], page: number): T[] {
+        const startIndex = (page - 1) * 10;
+        const endIndex = startIndex + 10;
+        return array.slice(startIndex, endIndex);
+    }
 
     useEffect(() => {
         if (confirmDelete) {
@@ -189,83 +162,6 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         setModalTrigger(false)
         setConfirmDelete(false)
     }, [confirmDelete])
-
-
-    const SchoolTableData = (props: { item: any, index: number }) => {
-        const { item, index } = props;
-        return (
-            <ul id="clubs_listed">
-                <li id="sl_no" className="value">{index + 1}</li>
-                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                {item.club_status && <li className="value editable status">
-                    <Select
-                        options={status}
-                        isSearchable={false}
-                        placeholder={item.club_status}
-                        getOptionValue={(option: any) => option.id}
-                        getOptionLabel={(option: any) => option.name}
-                        onChange={(status: any) => {
-                            sendData(item.id, status.name)
-                        }}
-                    />
-                </li>}
-                <li className="value" value="{{club.id}}">{item.district}</li>
-                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                {item.block && <li className="value">{(item.block)}
-                </li>}
-                {item.club_status && <li className="value editable">
-                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                        <i className="fa-solid fa-trash"></i>Delete</a>
-                </li>}
-            </ul>
-        );
-    };
-
-
-    const StatusCell = (props: any) => {
-        const [selectedOption, setSelectedOption] = useState<any>(null);
-        return (
-            <Select
-                value={selectedOption}
-                options={props.status}
-                onChange={(data: any) => {
-
-                    sendData(props.item.id, data.name)
-                }}
-                isClearable
-            />
-        );
-    };
-
-    const ClubTableData = (props: { item: any, index: number }) => {
-        const { item, index } = props;
-        return (
-            <ul id="clubs_listed">
-                <li id="sl_no" className="value">{index + 1}</li>
-                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                {item.club_status && <li className="value editable status">
-                    <Select
-                        options={status}
-                        isSearchable={false}
-                        placeholder={item.club_status}
-                        getOptionValue={(option: any) => option.id}
-                        getOptionLabel={(option: any) => option.name}
-                        onChange={(status: any) => {
-                            sendData(item.id, status.name)
-                        }}
-                    />
-                </li>}
-                <li className="value" value="{{club.id}}">{item.district}</li>
-                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                {item.block && <li className="value">{(item.block)}
-                </li>}
-                {item.club_status && <li className="value editable">
-                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                        <i className="fa-solid fa-trash"></i>Delete</a>
-                </li>}
-            </ul>
-        );
-    };
 
     return (
         <>
@@ -281,7 +177,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                 </div>
             </div>}
 
-            <div className='white-container'>
+            <div className='white-container container-table'>
                 <div className="table-top">
                     <h3>{current_option} List</h3>
 
@@ -296,102 +192,131 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>
                         </div>
-                        {/* <div className="table-fn-btn">
-                        <i className="fa-solid fa-sort" onClick={handleSortClick}></i>
-                        <p>Sort</p>
-                    </div> */}
+                        {showFilterBox && <button
+                            className='table-fn-btn '
+                            onClick={() => {
+                                setShowFilterBox(false);
+                                setFilterItem("All")
+                                setStatusFilter("All")
+                            }}
+                        >Close</button>}
                     </div>
                 </div>
-                <div className="filter-container">
-                    {showFilterBox && (
-                        <div className="filter-box">
-                            <Select
-                                options={districts}
-                                isSearchable={true}
-                                isClearable={true}
-                                placeholder={`Select a District`}
-                                getOptionValue={(option: any) => option.id}
-                                getOptionLabel={(option: any) => option.name}
-                                onChange={(data: any) => {
+
+                {showFilterBox && <div className="filter-container">
+
+                    <div className="filter-box">
+                        <Select
+                            styles={{
+                                control: (baseStyles, state) => ({
+                                    ...baseStyles,
+                                    minWidth: "200px",
+                                }),
+                            }}
+                            options={districts}
+                            isSearchable={true}
+                            isClearable={true}
+                            placeholder={`Select a District`}
+                            getOptionValue={(option: any) => option.id}
+                            getOptionLabel={(option: any) => option.name}
+                            onChange={(data: any) => {
+                                try {
                                     setFilterItem(data.name)
+                                } catch (error) {
+                                    setFilterItem("All")
+                                }
+                            }}
+                        />
+                        <Select
+                            styles={{
+                                control: (baseStyles, state) => ({
+                                    ...baseStyles,
+                                    minWidth: "200px",
+                                }),
+                            }}
+                            options={status}
+                            isSearchable={true}
+                            isClearable={true}
+                            placeholder={`Select a Status`}
+                            getOptionValue={(option: any) => option.id}
+                            getOptionLabel={(option: any) => option.name}
+                            onChange={(data: any) => {
+                                try {
+                                    setStatusFilter(data.name)
+                                } catch (error) {
+                                    setStatusFilter("All")
+                                }
+                            }}
+                        />
 
-                                }}
-                            />
-                            <button
-                                className='black-btn btn'
-                                onClick={() => {
-                                    setShowFilterBox(false);
-                                    setFilterItem("all")
-                                }}
-                            >Close</button>
-                        </div>
-                    )}
-                    {/* {showSortBox && (
-                            <div className="sort-box">
-                                <div className="sort">
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                </div>
-                            </div>
-                        )} */}
-                </div>
+                    </div>
 
-                {/* <DataTable
-                    pagination={true}
+                </div>}
 
-                    columns={current_option === "YIP Club" ? clubTableTitle : schoolTableTitle}
-                    data={institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)}
-                /> */}
-                <div id="table-container" className="table-container">
-                    <div className="table-title">
-                        <ul>
+                <table>
+                    <thead>
+                        <tr>
                             {
                                 tableTitle.map((item: any, index: number) => {
-                                    return <li className={`value assembly`} key={index}>{item}</li>
+                                    return <th key={index}>{item}</th>
                                 })
                             }
-                        </ul>
-                    </div>
-                    <div className="table-list">
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            (paginateArray(tableData, page))
+                                .map((item: any, i: number) => (
+                                    <tr key={i}>
+                                        <td >{(page - 1) * 10 + i + 1}</td>
+                                        <td >{item.name}</td>
 
-                        <div className="table-content">
+                                        <td >{item.district}</td>
+                                        {item.club_status && <td >
+                                            <Select
+                                                className="react-select-container"
+                                                classNamePrefix="react-select"
+                                                options={status}
+                                                isSearchable={true}
+                                                placeholder={item.club_status}
+                                                getOptionValue={(option: any) => option.id}
+                                                getOptionLabel={(option: any) => option.name}
+                                                onChange={(data: any) => {
+                                                    sendData(item.id, data.name)
+                                                }}
+                                            />
+                                        </td>}
+                                        {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
+                                        {item.block && <td >{item.block}</td>}
+                                        {item.club_status && <td >
+                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }}>
+                                                <i className="fas fa-trash"></i>Delete
+                                            </a>
+                                        </td>}
+                                    </tr>
+                                ))
+                        }
+                    </tbody>
+                </table>
+                {!(tableData.length) && <div className="no-data-table">
+                    No data available{filterItem !== 'All' ? ` for district ${filterItem}` : ''} {statusFilter !== 'All' ? ` for status ${statusFilter}` : ''}
+                </div>}
+                <div className='paginator'>
+                    <div>
+                        <div onClick={() => { setPagination(1) }}>
+                            <i   >{"<<"}</i>
+                        </div>
+                        <div onClick={() => { setPagination(page > 1 ? page - 1 : 1) }}>
+                            <i >{"|<"}</i>
+                        </div>
 
-                            {
-                                institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)
-                                    .map((item: any, i: number) => {
-                                        return (
-                                            <>
-                                                <ul id="clubs_listed">
-                                                    <li id="sl_no" className="value">{i + 1}</li>
-                                                    <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                                                    {item.club_status && <li className="value editable status">
-                                                        <Select
-                                                            options={status}
-                                                            isSearchable={false}
-                                                            isClearable={true}
-                                                            placeholder={item.club_status}
-                                                            getOptionValue={(option: any) => option.id}
-                                                            getOptionLabel={(option: any) => option.name}
-                                                            onChange={(data: any) => {
-                                                                sendData(item.id, data.name)
-                                                            }}
-                                                        />
-                                                    </li>}
-                                                    <li className="value" value="{{club.id}}">{item.district}</li>
-                                                    {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                                                    {item.block && <li className="value">{(item.block)}
-                                                    </li>}
-                                                    {item.club_status && <li className="value editable">
-                                                        <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                                                            <i className="fa-solid fa-trash"></i>Delete</a>
-                                                    </li>}
-                                                </ul>
-                                            </>
-                                        );
-                                    })
-                            }
-
+                        <input type="text" value={`${page} / ${Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)}`} min={1} max={tableData.length / 10 + (tableData.length % 10 ? 0 : 1)} onChange={(e) => {
+                            setPagination(Number(e.target.value))
+                        }} />
+                        <div onClick={() => { if (page < tableData.length / 10 + (tableData.length % 10 ? 0 : 1)) setPagination(page + 1) }}>
+                            <i >{">|"}</i></div>
+                        <div onClick={() => { setPagination(Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)) }}>
+                            <i >{">>|"}</i>
                         </div>
                     </div>
                 </div>

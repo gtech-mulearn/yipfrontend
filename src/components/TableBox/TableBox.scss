@@ -1,5 +1,11 @@
 .white-container{
     max-width: 1055px;
+    border: none;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+.container-table{
+    margin-bottom: 25px;
+
 }
 @media screen and (max-width:770px){
     .white-container{
@@ -51,9 +57,7 @@ ul {
     background-color: red !important;
     padding: 3px 12px;
     border-radius: 5px;
-    i {
-        margin-right: 5px;
-    }
+
 }
 .value{
     font-size: 13px;
@@ -105,25 +109,30 @@ ul {
     &:hover {
         background-color: rgb(41, 43, 43);
     }
-    i {
-        font-size: 10px;
-    }
+
     p {
         margin-left: 6px;
         font-size: 12px;
     }
 }
 .filter-container {
+    font-size: 12px;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
+    margin: 20px 0;
+    background-color:#373e42;
+    border-radius: 10px;
+    padding: 10px;  
+
+    .filter-box {
+        display: flex;
+        gap: 10px;
+    }
+    .filter-box.show {
+        max-height: 200px;
+    }
 }
-.filter-box {
-    width: 15rem;
-    margin: 20px;
-}
-.filter-box.show {
-    max-height: 200px;
-}
+
 
 .modal-overlay {
     position: fixed;
@@ -177,6 +186,86 @@ ul {
 
   
   .modal-buttons button:hover {
-    background: #ff6659;
+    background: #ff1500;
   }
   
+  table{
+    margin:20px 0;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    .no-data-table{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: large;
+
+    }
+   
+    th{
+        border-bottom: 1px solid #ddd;
+    }
+    td,th{
+        padding: 3px 5px;
+        text-align: left;
+
+        a{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ff0000;
+            color: white;
+            border-radius: 5px;
+            width: 100%;
+            padding: 5px;
+            gap: 5px;
+        }
+    }
+   
+  }
+  .no-data-table{
+    text-align: center;  
+    width: 100%;
+    font-size: 15px;
+
+}
+  .paginator{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    div{
+        display: flex;
+        gap:0 15px;
+        div{
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        i{
+            height: 20px;
+            display: flex;
+            align-items: center;
+            background-color: rgb(190, 190, 190);
+            padding:0 15px ;
+            border-radius: 10px;
+            font-size: 10px;
+            
+        }
+        input{
+            display: flex;
+            align-items: center;
+            margin: 0;
+            text-align: center; 
+            width: 30px;
+            border: 1px solid rgba(153, 153, 153, 0.368);
+
+            &:focus{
+                border: 1px solid rgb(0, 0, 0);
+            }
+        }
+        
+    }
+  }
+
