@@ -4,22 +4,19 @@ class YIP {
     modelSchools: any
     yipClubs: any
     clubStatus: any
-    refresh: any
-    update: boolean
+    page: string
 
 
     constructor() {
         this.modelSchools = []
         this.yipClubs = []
-        this.refresh = function () { console.log("update not updated") }
-        this.update = false
+        this.page = "Model School"
     }
     fetchDistrict = async () => {
         try {
             const response = await apiGateway.get(`/api/v1/yip/district/`)
             const { districts } = response.data.response
             this.district = districts
-            this.refresh((prev: any) => !prev)
             return districts
         } catch (error) {
             console.error(error)
@@ -79,6 +76,14 @@ class YIP {
         }
     }
 
+    createInstitution = async (body: any, setUpdateData: any) => {
+        try {
+            const response = apiGateway.post(`/api/v1/yip/create-club/`, body)
+            setUpdateData((prev: any) => !prev)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }
 
 const yip = new YIP()

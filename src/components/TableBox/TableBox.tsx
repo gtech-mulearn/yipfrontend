@@ -124,7 +124,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
 
             {modalTrigger && <div className="modal-overlay">
                 <div className="modal">
-                    <div>{ }</div>
+
                     <p>Are you sure you want to delete this item?</p>
                     <div className="modal-buttons">
                         <button onClick={() => { setConfirmDelete(true); update() }} className="confirm-delete">Delete</button>
@@ -226,13 +226,12 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                     <tr key={i}>
                                         <td >{(page - 1) * 10 + i + 1}</td>
                                         <td >{item.name}</td>
-
                                         <td >{item.district}</td>
                                         {item.club_status && <td >
                                             <Select
                                                 className="react-select-container"
                                                 classNamePrefix="react-select"
-                                                options={status}
+                                                options={yip.clubStatus}
                                                 isSearchable={true}
                                                 placeholder={item.club_status}
                                                 getOptionValue={(option: any) => option.id}
@@ -260,7 +259,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                 <div className='paginator'>
                     <div>
                         <div onClick={() => { setPagination(1) }}>
-                            <i   >{"<<"}</i>
+                            <i   >{"|<<"}</i>
                         </div>
                         <div onClick={() => { setPagination(page > 1 ? page - 1 : 1) }}>
                             <i >{"|<"}</i>

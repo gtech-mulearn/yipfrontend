@@ -3,6 +3,7 @@ import "./LeftDrawer.scss"
 import YIPlogo from "../../assets/logo.png"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import yip from "../../service/dataHandler"
 
 interface MenuItemProps {
   item_icon: string
@@ -20,6 +21,7 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption })
   const [activeItem, setActiveItem] = useState(currentOption)
 
   const handleItemClick = (itemName: string) => {
+    yip.page = itemName
     setActiveItem(itemName)
     onValueChange(itemName)
   }

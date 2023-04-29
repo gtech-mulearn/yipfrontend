@@ -34,7 +34,7 @@ const Dashboard = (props: any) => {
   }
   useEffect(() => {
     const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/${currentOption === "Model School" ? "get-model-schools" : "get-colleges"}/`)
+      apiGateway.get(`/api/v1/yip/${yip.page === "Model School" ? "get-model-schools" : "get-colleges"}/`)
         .then(res => {
           setData(res.data.response.clubs)
         }).catch(error => console.log(error))
