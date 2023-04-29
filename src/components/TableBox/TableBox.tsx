@@ -3,6 +3,7 @@ import './TableBox.scss'
 import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
+import yip from '../../service/dataHandler';
 const schoolTableTitle = ["SL", "Name", "District", "Status", "Legislative Assembly", "Block"]
 const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
@@ -57,7 +58,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
             setTableData(institutions.filter((item: any) => item.club_status === statusFilter && true))
             console.log(institutions.filter((item: any) => item.club_status === statusFilter && true))
         }
-    }, [filterItem, statusFilter])
+    }, [filterItem, statusFilter, update])
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -81,53 +82,6 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         tableTitle = userTableTitle
     }
 
-    useEffect(() => {
-
-        let link_item = ""
-
-        if (current_option === "Model School") {
-            link_item = "get-model-schools"
-        } else if (current_option === "YIP Club") {
-            link_item = "get-colleges"
-        } else {
-            link_item = "get-users"
-        }
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/${link_item}/`)
-                .then(({ data }) => {
-                    const { clubs } = data.response;
-                    setTableData(clubs);
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [current_option])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/district/`)
-                .then(({ data }) => {
-                    const { districts } = data.response;
-                    setDistricts(districts)
-                })
-                .catch(error => console.log(error));
-        }
-        fetchData()
-    }, [])
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-                .then((res) => {
-                    setStatus(res.data.response.club_status.map((item: string, id: number) => { return { id: id, name: item } }));
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [])
-
-
     const handleFilterClick = () => {
         setShowFilterBox(!showFilterBox);
         setShowSortBox(false);
@@ -141,7 +95,9 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     const handleDelete = (schoolId: any) => {
         const fetchData = async () => {
             apiGateway.delete(`/api/v1/yip/delete-model-schools/${schoolId}/`)
-                .then(res => update())
+                .then(res => {
+                    setUpdateData((prev: any) => !prev)
+                })
                 .catch(error => console.error(error));
         }
         fetchData()
@@ -213,7 +169,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                     minWidth: "200px",
                                 }),
                             }}
-                            options={districts}
+                            options={yip.district}
                             isSearchable={true}
                             isClearable={true}
                             placeholder={`Select a District`}
@@ -234,7 +190,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                     minWidth: "200px",
                                 }),
                             }}
-                            options={status}
+                            options={yip.clubStatus}
                             isSearchable={true}
                             isClearable={true}
                             placeholder={`Select a Status`}

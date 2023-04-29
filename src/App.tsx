@@ -7,10 +7,19 @@ import UserSetup from './components/SetupBox/UserSetup';
 import BlockSetup from './components/SetupBox/BlockSetup';
 import LegislativeSetup from './components/SetupBox/LegislativeSetup';
 import { useEffect, useState } from 'react';
+import yip from './service/dataHandler';
+
 function App() {
   const [dataUpdate, setUpdateData] = useState(true)
   const [create, setCreate] = useState(false)
-  const [accessToken, setAccessToken] = useState('')
+  useEffect(() => {
+    yip.fetchStatus()
+    yip.fetchDistrict()
+  }, [])
+
+  useEffect(() => { yip.fetchModelSchools() }, [yip.modelSchools.length === 0])
+  useEffect(() => { yip.fetchYIPClubs() }, [yip.yipClubs.length === 0])
+
   return (
     <Router>
       <Routes>

@@ -8,6 +8,7 @@ import TableBox from "../../components/TableBox/TableBox"
 import BottomTab from "../../components/BottomTab/BottomTab"
 import UserTableBox from "../../components/TableBox/UserTablebox"
 import apiGateway from "../../service/apiGateway"
+import yip from "../../service/dataHandler"
 const Dashboard = (props: any) => {
   const [currentOption, setCurrentOption] = useState<string>(props.Content)
   const [updateOption, setUpdate] = useState(true)
