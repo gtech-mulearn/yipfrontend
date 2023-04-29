@@ -7,6 +7,9 @@
     margin-bottom: 25px;
 
 }
+.react-select-container{
+    width: 200px;
+}
 @media screen and (max-width:770px){
     .white-container{
         max-width: 100%;
@@ -115,6 +118,9 @@ ul {
         font-size: 12px;
     }
 }
+.name-table-tab{
+    max-width: 00px;
+}
 .filter-container {
     font-size: 12px;
     display: flex;
@@ -145,49 +151,83 @@ ul {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .modal {
-    background: #fff;
-    padding: 20px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    border-radius: 5px;
-  }
-  
-  .modal p {
-    margin: 0 0 20px;
-  }
-  
-  .modal-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-buttons{ button {
-    background: #f44336;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .cancel-delete{
-    background: #8dc0ff;
+    table{
+        all:unset;
+        background-color: white;
+        border-radius: 10px;
+        padding: 25px;
+        width: fit-content;
+        font-size: 12px;
+        p{
+            font-size: 12px;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .btn-update{
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            color: black;   
+            background-color: #75c3ff;
 
-  }
-  .cancel-delete:hover{
-    background: #4f9dfb;
-  }
-}
+        }
+        .btn-disabled{
+            user-select: none;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            color: rgba(0, 0, 0, 0.514);
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+        
+        .close{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;  
+            div{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+              &:hover{
+                    cursor: pointer;
+                    color: white;
+                    background-color: #57b3dd;
+                }
+            }
+        }
+        td{
+            padding:15px;
+           &:nth-child(2){
+                width: 300px;
+            }
+        }
+        
+        .modal-buttons{
+            display: flex;
+            justify-content: center;
+             button {
+            background: #00aefe;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
 
-  
-  .modal-buttons button:hover {
-    background: #ff1500;
+          }
+          .confirm-delete{
+            background-color: #ff2a00;
+        }
+        }
+       
+    }
   }
+  
   
   table{
     margin:20px 0;
@@ -199,27 +239,50 @@ ul {
         justify-content: center;
         width: 100%;
         font-size: large;
-
     }
-   
+    
     th{
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #dddddd;
     }
+    
+    
     td,th{
         padding: 3px 5px;
         text-align: left;
-
+        word-wrap: break-word;
         a{
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #ff0000;
+            background-color: #100f0f;
             color: white;
             border-radius: 5px;
-            width: 100%;
+            width: 50px;
             padding: 5px;
             gap: 5px;
+            cursor: pointer;
+            &:hover{
+                background-color: #007db7;  
+            }
         }
+    }
+
+    .status{
+        all: unset;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        margin: 10px;
+        color: white;
+        background-color: #4de455;
+        border-radius: 15px; 
+        width: 130px;
+        user-select: none;
+    }
+    .stat{
+        text-align: center;
+        width: 130px;
     }
    
   }
@@ -247,7 +310,7 @@ ul {
             height: 20px;
             display: flex;
             align-items: center;
-            background-color: rgb(190, 190, 190);
+            background-color: rgb(86, 159, 255);
             padding:0 15px ;
             border-radius: 10px;
             font-size: 10px;

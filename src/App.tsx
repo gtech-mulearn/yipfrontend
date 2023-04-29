@@ -27,11 +27,13 @@ function App() {
 
         <Route path='/school-dashboard' element={
           <Dashboard Content="Model School" dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData}>
-            <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /></Dashboard>} />
+            <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
+          </Dashboard>} />
         <Route path='/club-dashboard' element={
           <Dashboard Content="YIP Club" dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} >
             <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
-          </Dashboard>} />
+          </Dashboard>
+        } />
         {/* <Route path='/yip/block' element={<Dashboard><BlockSetup/></Dashboard>}/> */}
         {/* <Route path='/yip/legislative-assembly' element={<Dashboard><LegislativeSetup/></Dashboard>}/> */}
       </Routes>

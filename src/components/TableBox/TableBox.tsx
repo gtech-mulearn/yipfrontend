@@ -4,7 +4,7 @@ import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
 import yip from '../../service/dataHandler';
-const schoolTableTitle = ["SL", "Name", "District", "Status", "Legislative Assembly", "Block"]
+const schoolTableTitle = ["SL", "Name", "District", "Status", "Legislative Assembly", "Block", "Manage"]
 const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
@@ -36,10 +36,10 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     const [modalTrigger, setModalTrigger] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [deleteId, setDeleteId] = useState("")
-    const [deleteData, setDelete] = useState([])
+    const [deleteData, setDelete] = useState<boolean>(false)
     const [status, setStatus] = useState([])
     const [statusFilter, setStatusFilter] = useState("All")
-
+    const [selectedData, setSelectedData] = useState<any>({})
     useEffect(() => {
         setPagination(1)
         if (statusFilter === "All" && filterItem === "All") {
@@ -59,6 +59,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
             console.log(institutions.filter((item: any) => item.club_status === statusFilter && true))
         }
     }, [filterItem, statusFilter, update])
+    const [club, setClub] = useState<any>({})
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -67,7 +68,10 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-                .then((res) => setUpdateData((prev: any) => !prev))
+                .then((res) => {
+                    setClub({})
+                    setUpdateData((prev: any) => !prev)
+                })
                 .catch(error => console.error(error))
         }
         updateStatus()
@@ -123,14 +127,74 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         <>
 
             {modalTrigger && <div className="modal-overlay">
-                <div className="modal">
 
-                    <p>Are you sure you want to delete this item?</p>
-                    <div className="modal-buttons">
-                        <button onClick={() => { setConfirmDelete(true); update() }} className="confirm-delete">Delete</button>
-                        <button onClick={() => { setConfirmDelete(false); setModalTrigger(false) }} className="cancel-delete">Cancel</button>
+                <table className="modal">
+                    <div className='close'>
+                        <div onClick={() => { setConfirmDelete(false); setModalTrigger(false) }}>x</div>
                     </div>
-                </div>
+                    <tbody className='outer'>
+                        <tr className='inner'>
+                            <td>{yip.page}</td>
+                            <td>{selectedData.name}</td>
+                        </tr>
+                        <tr className='inner'>
+                            <td className=''>District</td>
+                            <td>{selectedData.district}</td>
+                        </tr>
+                        {selectedData.legislative_assembly &&
+                            <tr className='inner'>
+                                <td className=''>Legislative Assembly</td>
+                                <td>{selectedData.legislative_assembly}</td>
+                            </tr>
+                        }
+                        {selectedData.block &&
+                            <tr className='inner'>
+                                <td className=''>BRC</td>
+                                <td>{selectedData.block}</td>
+                            </tr>
+                        }
+                        <tr className='inner'>
+                            <td><Select
+                                className="react-select-container"
+                                classNamePrefix="react-select"
+                                options={yip.clubStatus}
+                                isSearchable={true}
+                                placeholder={selectedData.club_status}
+                                getOptionValue={(option: any) => option.id}
+                                getOptionLabel={(option: any) => option.name}
+                                onChange={(data: any) => {
+                                    setClub({ id: selectedData.id, status: data.name })
+                                }}
+                            />
+                            </td>
+                            <td>
+                                <div className={`${(club.status && selectedData.club_status !== club.status) ? 'btn-update ' : 'btn-disabled'}`}
+                                    onClick={() => {
+                                        if (club) {
+                                            sendData(club.id, club.status)
+                                            setModalTrigger(false)
+                                        }
+                                    }}>
+                                    Update Status
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                    {deleteData && <p>Are you sure you want to delete this item?</p>}
+                    <div className="modal-buttons">
+                        {deleteData ?
+                            <button onClick={() => {
+                                handleDelete(selectedData.id)
+                                setSelectedData('')
+                                setDelete(false)
+                                setModalTrigger(false)
+                                update()
+                            }} className="confirm-delete">Delete</button>
+                            : <button onClick={() => { setDelete(true) }} className="confirm-delete">Delete</button>}
+                        <button onClick={() => { setConfirmDelete(false); setModalTrigger(false); selectedData({}) }} className="cancel-delete">Cancel</button>
+                    </div>
+                </table>
             </div>}
 
             <div className='white-container container-table'>
@@ -214,7 +278,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                         <tr>
                             {
                                 tableTitle.map((item: any, index: number) => {
-                                    return <th key={index}>{item}</th>
+                                    return <th key={index} className={`${item === 'Status' ? 'stat' : ''}`} > {item}</th>
                                 })
                             }
                         </tr>
@@ -225,27 +289,16 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                                 .map((item: any, i: number) => (
                                     <tr key={i}>
                                         <td >{(page - 1) * 10 + i + 1}</td>
-                                        <td >{item.name}</td>
-                                        <td >{item.district}</td>
-                                        {item.club_status && <td >
-                                            <Select
-                                                className="react-select-container"
-                                                classNamePrefix="react-select"
-                                                options={yip.clubStatus}
-                                                isSearchable={true}
-                                                placeholder={item.club_status}
-                                                getOptionValue={(option: any) => option.id}
-                                                getOptionLabel={(option: any) => option.name}
-                                                onChange={(data: any) => {
-                                                    sendData(item.id, data.name)
-                                                }}
-                                            />
+                                        <td className='name'>{item.name}</td>
+                                        <td className='district'>{item.district}</td>
+                                        {item.club_status && <td className='status' >
+                                            {item.club_status}
                                         </td>}
                                         {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
                                         {item.block && <td >{item.block}</td>}
                                         {item.club_status && <td >
-                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }}>
-                                                <i className="fas fa-trash"></i>Delete
+                                            <a onClick={() => { setModalTrigger(true); setDeleteId(item.id); setSelectedData(item) }}>
+                                                <i className="fas fa-trash"></i>Edit
                                             </a>
                                         </td>}
                                     </tr>
@@ -268,14 +321,14 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                         <input type="text" value={`${page} / ${Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)}`} min={1} max={tableData.length / 10 + (tableData.length % 10 ? 0 : 1)} onChange={(e) => {
                             setPagination(Number(e.target.value))
                         }} />
-                        <div onClick={() => { if (page < tableData.length / 10 + (tableData.length % 10 ? 0 : 1)) setPagination(page + 1) }}>
+                        <div onClick={() => { if (page < tableData.length / 10 + (tableData.length % 10 ? 1 : 0)) setPagination(page + 1) }}>
                             <i >{">|"}</i></div>
                         <div onClick={() => { setPagination(Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)) }}>
                             <i >{">>|"}</i>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

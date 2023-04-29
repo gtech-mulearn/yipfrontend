@@ -21,7 +21,6 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption })
   const [activeItem, setActiveItem] = useState(currentOption)
 
   const handleItemClick = (itemName: string) => {
-    yip.page = itemName
     setActiveItem(itemName)
     onValueChange(itemName)
   }
