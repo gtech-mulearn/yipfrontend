@@ -3,6 +3,7 @@ import "./LeftDrawer.scss"
 import YIPlogo from "../../assets/logo.png"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import yip from "../../service/dataHandler"
 
 interface MenuItemProps {
   item_icon: string

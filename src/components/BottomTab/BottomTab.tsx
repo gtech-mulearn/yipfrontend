@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './BottomTab.scss'
 import { Link } from 'react-router-dom'
-
+import yip from '../../service/dataHandler'
 interface BottomDrawerProps {
     onValueChange: (value: string) => void
     currentOption: string
@@ -17,16 +17,7 @@ const BottomTab: React.FC<BottomDrawerProps> = ({ onValueChange, currentOption }
     return (
         <div className="tab-nav">
             <div className="tab-nav-container">
-                {/* <Link to={'/yip/user'}>
-                    <div 
-                        className={`tab ${activeItem === "User" ? "active" : ""} `}
-                        onClick = {()=>{handleItemClick('User')}}
-                    >
-                        <i className="fa-solid fa-user"></i>
-                        <h3 className={`tab-text ${activeItem === "User" ? "visible" : ""}`} >User</h3>
-                    </div>
-                </Link> */}
-                <Link to=''>
+                <Link to='/school-dashboard'>
                     <div
                         className={`tab ${activeItem === "Model School" ? "active" : ""} `}
                         onClick={() => { handleItemClick('Model School') }}
@@ -35,7 +26,7 @@ const BottomTab: React.FC<BottomDrawerProps> = ({ onValueChange, currentOption }
                         <h3 className={`tab-text ${activeItem === "Model School" ? "visible" : ""}`} >Model School</h3>
                     </div>
                 </Link>
-                <Link to={''}>
+                <Link to={'/club-dashboard'}>
                     <div
                         className={`tab ${activeItem === "YIP Club" ? "active" : ""} `}
                         onClick={() => { handleItemClick('YIP Club') }}
@@ -44,17 +35,10 @@ const BottomTab: React.FC<BottomDrawerProps> = ({ onValueChange, currentOption }
                         <h3 className={`tab-text ${activeItem === "YIP Club" ? "visible" : ""}`} >YIP Club</h3>
                     </div>
                 </Link>
-                {/* <Link to={'/yip/block-management'}>
-                    <div 
-                        className={`tab ${activeItem === "Block Management" ? "active" : ""} `}
-                        onClick = {()=>{handleItemClick('Block')}}
-                    >
-                        <i className="fa-solid fa-people-group"></i>
-                        <h3 className={`tab-text ${activeItem === "Block" ? "visible" : ""}`} >Block</h3>
-                    </div>
-                </Link> */}
                 <div className="tab red">
-                    <a href="/" className="fa-solid fa-right-from-bracket"></a>
+                    <a href="/" className="fa-solid fa-right-from-bracket" onClick={() => {
+                        localStorage.removeItem("accessToken")
+                    }}></a>
                     <p>Logout</p>
                 </div>
             </div>
