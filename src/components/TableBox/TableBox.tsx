@@ -309,28 +309,33 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                 {!(tableData.length) && <div className="no-data-table">
                     No data available{filterItem !== 'All' ? ` for district ${filterItem}` : ''} {statusFilter !== 'All' ? ` for status ${statusFilter}` : ''}
                 </div>}
-                <div className='paginator'>
-                    <div>
-                        <div onClick={() => { setPagination(1) }}>
-                            <i   >{"|<<"}</i>
-                        </div>
-                        <div onClick={() => { setPagination(page > 1 ? page - 1 : 1) }}>
-                            <i >{"|<"}</i>
-                        </div>
+                <Paginator setPagination={setPagination} page={page} tableData={tableData} />
 
-                        <input type="text" value={`${page} / ${Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)}`} min={1} max={tableData.length / 10 + (tableData.length % 10 ? 0 : 1)} onChange={(e) => {
-                            setPagination(Number(e.target.value))
-                        }} />
-                        <div onClick={() => { if (page < tableData.length / 10 + (tableData.length % 10 ? 1 : 0)) setPagination(page + 1) }}>
-                            <i >{">|"}</i></div>
-                        <div onClick={() => { setPagination(Math.trunc(tableData.length / 10) + (tableData.length % 10 ? 1 : 0)) }}>
-                            <i >{">>|"}</i>
-                        </div>
-                    </div>
-                </div>
             </div >
         </>
     )
 }
+const Paginator = (props: any) => {
+    return (
+        <div className='paginator'>
+            <div>
+                <div onClick={() => { props.setPagination(1) }}>
+                    <i   >{"|<<"}</i>
+                </div>
+                <div onClick={() => { props.setPagination(props.page > 1 ? props.page - 1 : 1) }}>
+                    <i >{"|<"}</i>
+                </div>
 
+                <input type="text" value={`${props.page} / ${Math.trunc(props.tableData.length / 10) + (props.tableData.length % 10 ? 1 : 0)}`} min={1} max={props.tableData.length / 10 + (props.tableData.length % 10 ? 0 : 1)} onChange={(e) => {
+                    props.setPagination(Number(e.target.value))
+                }} />
+                <div onClick={() => { if (props.page < Math.trunc(props.tableData.length / 10) + (props.tableData.length % 10 ? 1 : 0)) props.setPagination(props.page + 1) }}>
+                    <i >{">|"}</i></div>
+                <div onClick={() => { props.setPagination(Math.trunc(props.tableData.length / 10) + (props.tableData.length % 10 ? 1 : 0)) }}>
+                    <i >{">>|"}</i>
+                </div>
+            </div>
+        </div>
+    )
+}
 export default TableBox
