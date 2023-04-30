@@ -12,6 +12,22 @@ class YIP {
         this.yipClubs = []
         this.page = "Model School"
     }
+    setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: []) => {
+        if (statusFilter === "All" && filterItem === "All") {
+            setTableData(institutions)
+        }
+        else if (statusFilter !== "All" && filterItem !== "All") {
+            setTableData(institutions.filter((item: any) => {
+                return item.club_status === statusFilter && item.district === filterItem
+            }))
+        }
+        else if (filterItem !== "All" && statusFilter === "All") {
+            setTableData(institutions.filter((item: any) => item.district === filterItem && true))
+        }
+        else if (statusFilter !== "All" && filterItem === "All") {
+            setTableData(institutions.filter((item: any) => item.club_status === statusFilter && true))
+        }
+    }
     fetchDistrict = async () => {
         try {
             const response = await apiGateway.get(`/api/v1/yip/district/`)
@@ -47,18 +63,7 @@ class YIP {
             return []
         }
     }
-    fetchYIPClubs = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/get-colleges/`)
-            const { clubs } = response.data.response
-            this.yipClubs = clubs
-            return clubs
-        } catch (error) {
-            console.error(error)
-            this.yipClubs = []
-            return []
-        }
-    }
+
 
     deleteInstitution = async (institutionId: string, currentOption: string, index: number, setUpdateData: any) => {
         try {

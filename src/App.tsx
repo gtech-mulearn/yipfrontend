@@ -17,9 +17,6 @@ function App() {
     yip.fetchDistrict()
   }, [])
 
-  useEffect(() => { yip.fetchModelSchools() }, [yip.modelSchools.length === 0])
-  useEffect(() => { yip.fetchYIPClubs() }, [yip.yipClubs.length === 0])
-
   return (
     <Router>
       <Routes>
