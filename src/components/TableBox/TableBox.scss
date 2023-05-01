@@ -17,7 +17,21 @@
     } 
 }
 
-
+.ruby{
+    &:hover{
+        cursor: pointer;
+        user-select: none;
+        border-radius: 20px;
+    }
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        .color{
+            color: rgb(0, 102, 255);
+        }
+    }
+}
 
 #delete {
     color: white;
@@ -62,6 +76,19 @@
 .table-fn {
     display: flex;
     gap: 10px;
+    .search-box{
+        display: flex;
+        border-radius: 10px;
+        
+        border: 0.1px solid rgba(0, 0, 0, 0.15);
+        padding: 2.5px;
+        padding-left:10px;
+        .search-bar{
+            all: unset;
+            font-size: 12px;
+            
+        }
+    }
 }
 
 .table-fn-btn {
@@ -213,81 +240,7 @@
             }
         }
     }
-    table{
-        all:unset;
-        background-color: white;
-        border-radius: 10px;
-        padding: 25px;
-        width: fit-content;
-        font-size: 12px;
-        p{
-            font-size: 12px;
-            text-align: center;
-            padding-bottom: 20px;
-        }
-        .btn-update{
-            padding: 10px;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-            color: black;   
-            background-color: #75c3ff;
-
-        }
-        .btn-disabled{
-            user-select: none;
-            padding: 10px;
-            text-align: center;
-            border-radius: 15px;
-            color: rgba(0, 0, 0, 0.514);
-            background-color: rgba(0, 0, 0, 0.25);
-        }
-        
-        .close{
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;  
-            div{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 5px;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-              &:hover{
-                    cursor: pointer;
-                    color: white;
-                    background-color: #57b3dd;
-                }
-            }
-        }
-        td{
-            padding:15px;
-           &:nth-child(2){
-                width: 300px;
-            }
-        }
-        
-        .modal-buttons{
-            display: flex;
-            justify-content: center;
-             button {
-            background: #00aefe;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 5px;
-            cursor: pointer;
-
-          }
-          .confirm-delete{
-            background-color: #ff2a00;
-        }
-        }
-       
-    }
+    
   }
   
   
@@ -296,38 +249,60 @@
     border-collapse: collapse;
     width: 100%;
     font-size: 12px;
+    // box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     .no-data-table{
         display: flex;
         justify-content: center;
         width: 100%;
         font-size: large;
     }
-    
-    th{
-        border-bottom: 1px solid #dddddd;
-    }
-    
-    
-    td,th{
-        padding: 3px 5px;
-        text-align: left;
-        word-wrap: break-word;
-        a{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #100f0f;
-            color: white;
-            border-radius: 5px;
-            width: 50px;
-            padding: 5px;
-            gap: 5px;
+    tr{
+        &:hover{
             cursor: pointer;
-            &:hover{
-                background-color: #007db7;  
+            user-select: none;
+            border-radius: 20px;
+        }
+        .header{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            .color{
+                color: rgb(0, 102, 255);
+            }
+        }
+        th{
+                // border-left:1px solid rgba(0, 0, 0, 0.2) ;
+                border-bottom:1px solid rgba(0, 0, 0, 0.1) ;            
+        }
+         th:nth-child(1){
+            border-left: 0px;
+        }
+        
+        td,th{
+            padding: 3px 5px;
+            text-align: left;
+            word-wrap: break-word;
+            
+            a{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #100f0f;
+                color: white;
+                border-radius: 5px;
+                width: 50px;
+                padding: 5px;
+                gap: 5px;
+                cursor: pointer;
+                &:hover{
+                    background-color: #007db7;  
+                }
             }
         }
     }
+    
 
     .status{
         all: unset;
@@ -345,6 +320,7 @@
     .stat{
         text-align: center;
         width: 130px;
+        
     }
    
   }
@@ -383,7 +359,7 @@
             align-items: center;
             margin: 0;
             text-align: center; 
-            width: 30px;
+            width: 50px;
             border: 1px solid rgba(153, 153, 153, 0.368);
 
             &:focus{

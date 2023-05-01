@@ -1,16 +1,33 @@
 import apiGateway from "./apiGateway"
+interface institutionProps {
+    id: string,
+    name: string
+    district: string
+    club_status: string
+    legislative_assembly: string
+    block: string
+}
+interface districtProps {
+    id: string,
+    name: string
+}
+export interface conditionProps {
+    updater: Boolean
+    name: string
+}
+interface cLubStatusProps {
+    id: string
+    name: string
+}
 class YIP {
-    district: any
-    modelSchools: any
-    yipClubs: any
-    clubStatus: any
-    page: string
-
+    district: districtProps[]
+    clubStatus: []
+    updateSortedTable: Function
 
     constructor() {
-        this.modelSchools = []
-        this.yipClubs = []
-        this.page = "Model School"
+        this.district = []
+        this.clubStatus = []
+        this.updateSortedTable = () => { console.log() }
     }
     setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: []) => {
         if (statusFilter === "All" && filterItem === "All") {
@@ -28,6 +45,43 @@ class YIP {
             setTableData(institutions.filter((item: any) => item.club_status === statusFilter && true))
         }
     }
+    sortStatusUpdater = (value: string) => {
+        switch (value) {
+            case "Unsorted": return 'Sorted:ASC'
+            case "Sorted:ASC": return 'Sorted:DESC'
+            case "Sorted:DESC": return 'Sorted:ASC'
+        }
+
+    }
+
+    sort = (setTableData: Function, sortBy: string, tableData: institutionProps[], setCondition: Function, condition: conditionProps) => {
+        if (sortBy !== 'Manage' && sortBy !== 'SL') {
+            let newTable: institutionProps[] = []
+            sortBy = sortBy.toLowerCase().replace(' ', '_')
+            if (sortBy !== 'status') {
+                newTable = tableData
+                newTable.sort((a: any, b: any) => {
+                    if (a[sortBy] < b[sortBy]) return (condition.name === "Unsorted" || condition.name === "Sorted:DESC") ? -1 : 1
+                    if (a[sortBy] > b[sortBy]) return (condition.name === "Unsorted" || condition.name === "Sorted:DESC") ? 1 : -1
+                    return 0
+                })
+            }
+            else {
+                newTable = []
+                const clubStatus = condition.name === "Unsorted" ? this.clubStatus : this.clubStatus.reverse()
+                clubStatus.map((status: cLubStatusProps) => {
+                    newTable.push(...tableData.filter((item: institutionProps) => {
+                        return item.club_status === status.name
+                    }))
+                })
+            }
+            setTableData(newTable)
+            setCondition((prev: conditionProps) => {
+                return { updater: !prev.updater, name: this.sortStatusUpdater(condition.name) }
+            })
+
+        }
+    }
     fetchDistrict = async () => {
         try {
             const response = await apiGateway.get(`/api/v1/yip/district/`)
@@ -39,18 +93,7 @@ class YIP {
             return []
         }
     }
-    fetchModelSchools = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/get-model-schools/`)
-            const { clubs } = response.data.response
-            this.modelSchools = clubs
-            return clubs
-        } catch (error) {
-            console.error(error)
-            this.modelSchools = []
-            return []
-        }
-    }
+
     fetchStatus = async () => {
         try {
             const response = await apiGateway.get(`/api/v1/yip/list-clubs-status/`)
@@ -61,23 +104,6 @@ class YIP {
             console.error(error)
             this.clubStatus = []
             return []
-        }
-    }
-
-
-    deleteInstitution = async (institutionId: string, currentOption: string, index: number, setUpdateData: any) => {
-        try {
-            const response = await apiGateway.delete(`/api/v1/yip/delete-model-schools/${institutionId}/`)
-            if (currentOption === "Model School") {
-                this.modelSchools.splice(index, 1)
-                setUpdateData((prev: any) => !prev)
-            }
-            else if (currentOption === "YIP Club") {
-                this.yipClubs.splice(index, 1)
-                setUpdateData((prev: any) => !prev)
-            }
-        } catch (error) {
-            console.error(error)
         }
     }
 
@@ -94,3 +120,4 @@ class YIP {
 const yip = new YIP()
 
 export default yip
+
