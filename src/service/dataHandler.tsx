@@ -1,5 +1,5 @@
 import apiGateway from "./apiGateway"
-interface institutionProps {
+export interface institutionProps {
     id: string,
     name: string
     district: string
@@ -23,27 +23,44 @@ class YIP {
     district: districtProps[]
     clubStatus: []
     updateSortedTable: Function
-
+    setTableData: Function
+    institutions: institutionProps[]
+    collegeSearchValue: string
     constructor() {
         this.district = []
         this.clubStatus = []
-        this.updateSortedTable = () => { console.log() }
+        this.updateSortedTable = () => { console.log("not working") }
+        this.setTableData = () => { console.log("not working") }
+        this.institutions = []
+        this.collegeSearchValue = ""
     }
-    setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: []) => {
+    collegeSearch = (search: string) => {
+        this.collegeSearchValue = search
+        let itemName = ""
+        this.setTableData(this.institutions.filter((item: institutionProps) => {
+            itemName = item.name.toLowerCase().replaceAll(' ', '').replaceAll('.', '')
+            return itemName.includes(search.toLowerCase())
+        }))
+    }
+    setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: institutionProps[]) => {
+
         if (statusFilter === "All" && filterItem === "All") {
-            setTableData(institutions)
+            yip.institutions = institutions
         }
         else if (statusFilter !== "All" && filterItem !== "All") {
-            setTableData(institutions.filter((item: any) => {
+            yip.institutions = institutions.filter((item: any) => {
                 return item.club_status === statusFilter && item.district === filterItem
-            }))
+            })
         }
         else if (filterItem !== "All" && statusFilter === "All") {
-            setTableData(institutions.filter((item: any) => item.district === filterItem && true))
+            yip.institutions = institutions.filter((item: any) => item.district === filterItem && true)
         }
         else if (statusFilter !== "All" && filterItem === "All") {
-            setTableData(institutions.filter((item: any) => item.club_status === statusFilter && true))
+            yip.institutions = institutions.filter((item: any) => item.club_status === statusFilter && true)
         }
+        setTableData(yip.institutions)
+        this.collegeSearch(this.collegeSearchValue)
+
     }
     sortStatusUpdater = (value: string) => {
         switch (value) {

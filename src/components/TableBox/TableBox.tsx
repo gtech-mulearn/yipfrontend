@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
-import yip, { conditionProps } from '../../service/dataHandler';
+import yip, { conditionProps, institutionProps } from '../../service/dataHandler';
 const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status", "Manage"]
 const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
@@ -17,30 +17,22 @@ interface tableProps {
     dataUpdate: any
 }
 
-interface tableBoxProps {
-    id: string,
-    name: string,
-    institute_type: string,
-    legislative_assembly: string,
-    status: boolean,
-}
+
 
 
 const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, dataUpdate, setCreate, setUpdateData }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("All")
     const [showSortBox, setShowSortBox] = useState(false);
-    const [districts, setDistricts] = useState([])
-    const [tableData, setTableData] = useState<tableBoxProps[]>([])
+    const [tableData, setTableData] = useState<institutionProps[]>([])
     const [modalTrigger, setModalTrigger] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [deleteId, setDeleteId] = useState("")
     const [deleteData, setDelete] = useState<boolean>(false)
-    const [status, setStatus] = useState([])
     const [statusFilter, setStatusFilter] = useState("All")
     const [selectedData, setSelectedData] = useState<any>({})
     const [club, setClub] = useState<any>({})
-    const [sort, setSort] = useState<boolean>(false)
+    yip.setTableData = setTableData
     useEffect(() => {
         setPagination(1)
         yip.setFilter(filterItem, statusFilter, setTableData, institutions)
@@ -222,7 +214,7 @@ const FilterHeader = (props: any) => {
             <h3>{props.current_option} List</h3>
 
             <div className='table-fn'>
-                {/* <Search /> */}
+                <Search />
                 <div className="table-fn-btn" onClick={() => {
                     props.setCreate(true)
                 }}>
@@ -233,22 +225,31 @@ const FilterHeader = (props: any) => {
                     <i className="fa-solid fa-filter"></i>
                     <p>Filter</p>
                 </div>
-                {props.showFilterBox && <button
-                    className='table-fn-btn '
+                {props.showFilterBox && <i
+                    className='table-fn-btn fa fa-close '
                     onClick={() => {
                         props.setShowFilterBox(false);
                         props.setFilterItem("All")
                         props.setStatusFilter("All")
                     }}
-                >Close</button>}
+                ></i>}
             </div>
         </div>
     )
 }
-const Search = (props: any) => {
+const Search = () => {
+    const [search, setSearch] = useState("")
+    useEffect(() => {
+        yip.collegeSearch(search)
+    }, [search])
     return (
         <div className='search-box'>
-            <input className='search-bar' type="text" placeholder="Search College   " />
+            <input className='search-bar' type="text" value={search} placeholder="Search College" onChange={e => {
+                setSearch(e.target.value)
+            }} />
+            {search && <li className='fas fa-close' onClick={() => {
+                setSearch('')
+            }}></li>}
         </div>
     )
 }

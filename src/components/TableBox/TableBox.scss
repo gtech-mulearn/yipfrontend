@@ -17,21 +17,7 @@
     } 
 }
 
-.ruby{
-    &:hover{
-        cursor: pointer;
-        user-select: none;
-        border-radius: 20px;
-    }
-    .header{
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        .color{
-            color: rgb(0, 102, 255);
-        }
-    }
-}
+
 
 #delete {
     color: white;
@@ -78,37 +64,47 @@
     gap: 10px;
     .search-box{
         display: flex;
-        border-radius: 10px;
-        
+        border-radius: 8px;
+        justify-content: center;
+        align-items: center;
         border: 0.1px solid rgba(0, 0, 0, 0.15);
-        padding: 2.5px;
-        padding-left:10px;
+        
+        padding:2.5px 10px;
         .search-bar{
             all: unset;
             font-size: 12px;
             
         }
+        .fa-close{
+            cursor: pointer;
+            color: #cbcbcb;
+            &:hover{
+                color: rgba(0, 0, 0, 0.697);
+            }
+        }
     }
+    .table-fn-btn {
+        width: max-content;
+        display: flex;
+        align-items: center;
+        background-color: rgb(24, 25, 25);
+        padding: 1px 10px;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: rgb(41, 43, 43);
+        }
+    
+        p {
+            margin-left: 6px;
+            font-size: 12px;
+        }
+    }
+    
 }
 
-.table-fn-btn {
-    width: max-content;
-    display: flex;
-    align-items: center;
-    background-color: rgb(24, 25, 25);
-    padding: 1px 10px;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    &:hover {
-        background-color: rgb(41, 43, 43);
-    }
-
-    p {
-        margin-left: 6px;
-        font-size: 12px;
-    }
-}
 .name-table-tab{
     max-width: 00px;
 }
@@ -274,11 +270,16 @@
         }
         th{
                 // border-left:1px solid rgba(0, 0, 0, 0.2) ;
-                border-bottom:1px solid rgba(0, 0, 0, 0.1) ;            
+                border-bottom:1px solid rgba(0, 0, 0, 0.1) ; 
+               &:hover{
+                color: rgb(0, 102, 255);
+               }
+               &:first-child,&:last-child:hover{
+                   color: black;
+                   cursor:default;
+               }
         }
-         th:nth-child(1){
-            border-left: 0px;
-        }
+        
         
         td,th{
             padding: 3px 5px;
