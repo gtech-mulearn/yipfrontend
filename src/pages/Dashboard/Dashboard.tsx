@@ -41,6 +41,7 @@ const Dashboard = (props: any) => {
     }
     fetchData()
   }, [currentOption, updateOption, props.dataUpdate])
+
   return (
     <>
       <LeftDrawer onValueChange={handleOptionChange} currentOption={currentOption} />
