@@ -7,16 +7,13 @@
     margin-bottom: 25px;
 
 }
-.react-select-container{
-    width: 200px;
-}
+
 @media screen and (max-width:770px){
     .white-container{
         max-width: 100%;
         overflow-x: scroll;
     } 
 }
-
 
 
 #delete {
@@ -121,6 +118,25 @@
     .filter-box {
         display: flex;
         gap: 10px;
+        .table-fn-btn {
+            width: max-content;
+            display: flex;
+            align-items: center;
+            background-color: rgb(255, 255, 255);
+            padding: 1px 10px;
+            color: rgba(0, 0, 0, 0.506);
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            &:hover {
+                color: #000;
+            }
+            p {
+                margin-left: 6px;
+                width: 45px;
+                font-size: 9px;
+            }
+        }
     }
     .filter-box.show {
         max-height: 200px;

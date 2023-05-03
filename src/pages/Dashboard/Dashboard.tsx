@@ -14,7 +14,7 @@ const Dashboard = (props: any) => {
   const [updateOption, setUpdate] = useState(true)
   const [data, setData] = useState([])
   const [districts, setDistricts] = useState([])
-
+  yip.currentPage = props.Content
   useEffect(() => {
     const fetchData = async () => {
       apiGateway.get(`/api/v1/yip/district/`)

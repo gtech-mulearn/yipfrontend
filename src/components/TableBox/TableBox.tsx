@@ -32,15 +32,33 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     const [statusFilter, setStatusFilter] = useState("All")
     const [selectedData, setSelectedData] = useState<any>({})
     const [club, setClub] = useState<any>({})
+
     yip.setTableData = setTableData
+    yip.institutionsData = institutions
+    yip.updateTable = updateTable
+
     useEffect(() => {
         setPagination(1)
-        yip.setFilter(filterItem, statusFilter, setTableData, institutions)
+        yip.statusFilter = statusFilter
+        yip.districtFilter = filterItem
+        yip.setFilter()
     }, [filterItem, statusFilter, update])
     useEffect(() => {
         setPagination(1)
 
     }, [])
+    useEffect(() => {
+        setFilterItem("All")
+        setStatusFilter("All")
+        yip.assemblyFilter = "All"
+        yip.statusFilter = "All"
+        yip.districtFilter = "All"
+        setShowFilterBox(false)
+    }, [current_option])
+
+    function updateTable() {
+        setUpdateData((prev: any) => !prev)
+    }
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -231,6 +249,9 @@ const FilterHeader = (props: any) => {
                         props.setShowFilterBox(false);
                         props.setFilterItem("All")
                         props.setStatusFilter("All")
+                        yip.assemblyFilter = 'All'
+                        yip.blockFilter = 'All'
+                        yip.updateTable()
                     }}
                 ></i>}
             </div>
@@ -254,9 +275,69 @@ const Search = () => {
     )
 }
 const FilterTable = (props: any) => {
+    const [assemblyFilter, setAssemblyFilter] = useState('All')
+    const [switchAssembly, setSwitchAssembly] = useState(true)
     return (
         <div className="filter-container">
             <div className="filter-box">
+                {yip.currentPage === 'Model School' && <>
+                    <div className="table-fn-btn" onClick={() => {
+                        if (switchAssembly)
+                            yip.assemblyFilter = "All"
+                        else
+                            yip.blockFilter = "All"
+                        setSwitchAssembly((prev: boolean) => !prev)
+                        yip.updateTable()
+                    }}>
+                        <i className="fa-solid fa-repeat"></i>
+                        <p>{`Filter By ${switchAssembly ? 'block' : 'Assembly'}`}</p>
+                    </div>
+                    {switchAssembly && <Select
+                        styles={{
+                            control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                minWidth: "230px",
+                            }),
+                        }}
+                        options={yip.filteredAssembly}
+                        isSearchable={true}
+                        isClearable={true}
+                        placeholder={`Select a Legislative Assembly`}
+                        getOptionValue={(option: any) => option.id}
+                        getOptionLabel={(option: any) => option.name}
+                        onChange={(data: any) => {
+                            try {
+                                yip.assemblyFilter = data.name
+                            } catch (error) {
+                                yip.assemblyFilter = "All"
+                            }
+                            yip.updateTable()
+                        }}
+                    />}
+                    {!switchAssembly && <Select
+                        styles={{
+                            control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                minWidth: "230px",
+                            }),
+                        }}
+                        options={yip.filteredBlocks}
+                        isSearchable={true}
+                        isClearable={true}
+                        placeholder={`Select a Block`}
+                        getOptionValue={(option: any) => option.id}
+                        getOptionLabel={(option: any) => option.name}
+                        onChange={(data: any) => {
+                            try {
+                                yip.blockFilter = data.name
+
+                            } catch (error) {
+                                yip.blockFilter = "All"
+                            }
+                            yip.updateTable()
+                        }}
+                    />}
+                </>}
                 <Select
                     styles={{
                         control: (baseStyles, state) => ({
@@ -302,7 +383,7 @@ const FilterTable = (props: any) => {
 
             </div>
 
-        </div>
+        </div >
     )
 }
 interface condition {

@@ -19,6 +19,12 @@ interface cLubStatusProps {
     id: string
     name: string
 }
+
+interface legislativeProps {
+    id: string
+    name: string
+    district: string
+}
 class YIP {
     district: districtProps[]
     clubStatus: []
@@ -26,14 +32,39 @@ class YIP {
     setTableData: Function
     institutions: institutionProps[]
     collegeSearchValue: string
+    legislative_assembly: legislativeProps[]
+    filteredAssembly: legislativeProps[]
+    assemblyFilter: string
+    institutionsData: institutionProps[]
+    statusFilter: string
+    districtFilter: string
+    updateTable: Function
+    currentPage: string
+    blockFilter: string
+    blocks: legislativeProps[]
+    filteredBlocks: legislativeProps[]
+
     constructor() {
+        this.institutionsData = []
         this.district = []
         this.clubStatus = []
+        this.legislative_assembly = []
+        this.filteredAssembly = []
         this.updateSortedTable = () => { console.log("not working") }
         this.setTableData = () => { console.log("not working") }
         this.institutions = []
         this.collegeSearchValue = ""
+        this.assemblyFilter = "All"
+        this.statusFilter = 'All'
+        this.districtFilter = 'All'
+        this.updateTable = () => { console.log("not working") }
+        this.currentPage = ""
+        this.blockFilter = "All"
+        this.blocks = []
+        this.filteredBlocks = []
     }
+
+
     collegeSearch = (search: string) => {
         this.collegeSearchValue = search
         let itemName = "", searchItem = ""
@@ -43,26 +74,39 @@ class YIP {
             return itemName.includes(searchItem)
         }))
     }
-    setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: institutionProps[]) => {
 
-        if (statusFilter === "All" && filterItem === "All") {
-            yip.institutions = institutions
-        }
-        else if (statusFilter !== "All" && filterItem !== "All") {
-            yip.institutions = institutions.filter((item: any) => {
-                return item.club_status === statusFilter && item.district === filterItem
+    setFilter = () => {
+        this.filteredAssembly = this.legislative_assembly
+        this.filteredBlocks = this.blocks
+        this.institutions = this.institutionsData
+        if (this.statusFilter !== "All") {
+            this.institutions = this.institutions.filter((item: any) => {
+                return item.club_status === this.statusFilter
             })
         }
-        else if (filterItem !== "All" && statusFilter === "All") {
-            yip.institutions = institutions.filter((item: any) => item.district === filterItem && true)
+        if (this.districtFilter !== "All") {
+            this.filteredAssembly = this.legislative_assembly.filter((item: legislativeProps) => item.district === this.districtFilter)
+            this.filteredBlocks = this.blocks.filter((item: legislativeProps) => item.district === this.districtFilter)
+            this.institutions = this.institutions.filter((item: institutionProps) => {
+                return item.district === this.districtFilter
+            })
         }
-        else if (statusFilter !== "All" && filterItem === "All") {
-            yip.institutions = institutions.filter((item: any) => item.club_status === statusFilter && true)
+        if (this.assemblyFilter !== "All") {
+            this.institutions = this.institutions.filter((item: any) => {
+                return item.legislative_assembly === this.assemblyFilter
+            })
         }
-        setTableData(yip.institutions)
+        if (this.blockFilter !== "All") {
+            this.institutions = this.institutions.filter((item: any) => {
+                return item.block === this.blockFilter
+            })
+        }
+
+        this.setTableData(this.institutions)
         this.collegeSearch(this.collegeSearchValue)
 
     }
+
     sortStatusUpdater = (value: string) => {
         switch (value) {
             case "Unsorted": return 'Sorted:ASC'
@@ -128,14 +172,57 @@ class YIP {
     createInstitution = async (body: any, setUpdateData: any) => {
         try {
             const response = apiGateway.post(`/api/v1/yip/create-club/`, body)
+            console.log('this is working well')
             setUpdateData((prev: any) => !prev)
         } catch (error) {
             console.error(error)
         }
     }
+    fetchLegislativeAssemblies = async () => {
+        try {
+            const response = await apiGateway.get(`/api/v1/yip/list-legislative-assembly/`)
+            this.legislative_assembly = response.data.response
+            this.filteredAssembly = response.data.response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    fetchBlocks = async () => {
+        try {
+            const response = await apiGateway.get(`/api/v1/yip/list-blocks/`)
+            this.blocks = response.data.response
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 }
-
 const yip = new YIP()
+
+export class InstituteCreate {
+    legislative_assembly: legislativeProps[]
+    institutions: institutionProps[]
+    filteredAssembly: legislativeProps[]
+    districtFilter: string
+    assemblyFilter: string
+
+    constructor(legislative_assembly: legislativeProps[]) {
+        this.legislative_assembly = legislative_assembly
+        this.filteredAssembly = []
+        this.institutions = []
+        this.districtFilter = "All"
+        this.assemblyFilter = "All"
+    }
+
+    setFilter = () => {
+        if (this.districtFilter !== "All") {
+            this.filteredAssembly = this.legislative_assembly.filter((item: any) => item.district === this.districtFilter)
+        }
+        else {
+            this.filteredAssembly = this.legislative_assembly
+        }
+    }
+}
 
 export default yip
 
