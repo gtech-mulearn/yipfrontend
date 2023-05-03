@@ -36,10 +36,11 @@ class YIP {
     }
     collegeSearch = (search: string) => {
         this.collegeSearchValue = search
-        let itemName = ""
+        let itemName = "", searchItem = ""
         this.setTableData(this.institutions.filter((item: institutionProps) => {
-            itemName = item.name.toLowerCase().replaceAll(' ', '').replaceAll('.', '')
-            return itemName.includes(search.toLowerCase())
+            itemName = item.name.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
+            searchItem = search.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
+            return itemName.includes(searchItem)
         }))
     }
     setFilter = (filterItem: string, statusFilter: string, setTableData: Function, institutions: institutionProps[]) => {
