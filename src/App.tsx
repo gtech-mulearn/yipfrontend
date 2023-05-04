@@ -15,6 +15,8 @@ function App() {
   useEffect(() => {
     yip.fetchStatus()
     yip.fetchDistrict()
+    yip.fetchLegislativeAssemblies()
+    yip.fetchBlocks()
   }, [])
 
   return (
