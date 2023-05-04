@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './TableBox.scss'
-import fakeData from './fakeData.json'
 import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
-import yip from '../../service/dataHandler';
-const schoolTableTitle = ["SL", "Name", "District", "Status", "Legislative Assembly", "Block", "Manage"]
+import yip, { conditionProps, institutionProps } from '../../service/dataHandler';
+const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status", "Manage"]
 const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
 const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
 
@@ -18,34 +17,30 @@ interface tableProps {
     dataUpdate: any
 }
 
-interface tableBoxProps {
-    id: string,
-    name: string,
-    institute_type: string,
-    legislative_assembly: string,
-    status: boolean,
-}
+
 
 
 const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, dataUpdate, setCreate, setUpdateData }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("All")
     const [showSortBox, setShowSortBox] = useState(false);
-    const [districts, setDistricts] = useState([])
-    const [tableData, setTableData] = useState<tableBoxProps[]>([])
+    const [tableData, setTableData] = useState<institutionProps[]>([])
     const [modalTrigger, setModalTrigger] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [deleteId, setDeleteId] = useState("")
     const [deleteData, setDelete] = useState<boolean>(false)
-    const [status, setStatus] = useState([])
     const [statusFilter, setStatusFilter] = useState("All")
     const [selectedData, setSelectedData] = useState<any>({})
     const [club, setClub] = useState<any>({})
-
+    yip.setTableData = setTableData
     useEffect(() => {
         setPagination(1)
         yip.setFilter(filterItem, statusFilter, setTableData, institutions)
     }, [filterItem, statusFilter, update])
+    useEffect(() => {
+        setPagination(1)
+
+    }, [])
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -61,9 +56,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                 .catch(error => console.error(error))
         }
         updateStatus()
-
     }
-
     let tableTitle = []
     if (current_option === "Model School") {
         tableTitle = schoolTableTitle
@@ -118,15 +111,19 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
                 current_option={current_option}
             />}
             <div className='white-container container-table'>
+
                 <FilterHeader current_option={current_option} setCreate={setCreate} handleFilterClick={handleFilterClick} showFilterBox={showFilterBox}
                     setShowFilterBox={setShowFilterBox} setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />
                 {showFilterBox && <FilterTable setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />}
+
                 <InstitutionsTable tableTitle={tableTitle} paginateArray={paginateArray} page={page} tableData={tableData}
-                    setModalTrigger={setModalTrigger} setSelectedData={setSelectedData} setDeleteId={setDeleteId} />
+                    setModalTrigger={setModalTrigger} setSelectedData={setSelectedData} setDeleteId={setDeleteId}
+                    institutions={institutions} setTableData={setTableData} />
                 {!(tableData.length) &&
                     <div className="no-data-table">
                         No data available{filterItem !== 'All' ? ` for district ${filterItem}` : ''} {statusFilter !== 'All' ? ` for status ${statusFilter}` : ''}
                     </div>}
+
                 <Paginator setPagination={setPagination} page={page} tableData={tableData} />
             </div >
         </>
@@ -217,6 +214,7 @@ const FilterHeader = (props: any) => {
             <h3>{props.current_option} List</h3>
 
             <div className='table-fn'>
+                <Search />
                 <div className="table-fn-btn" onClick={() => {
                     props.setCreate(true)
                 }}>
@@ -227,15 +225,31 @@ const FilterHeader = (props: any) => {
                     <i className="fa-solid fa-filter"></i>
                     <p>Filter</p>
                 </div>
-                {props.showFilterBox && <button
-                    className='table-fn-btn '
+                {props.showFilterBox && <i
+                    className='table-fn-btn fa fa-close '
                     onClick={() => {
                         props.setShowFilterBox(false);
                         props.setFilterItem("All")
                         props.setStatusFilter("All")
                     }}
-                >Close</button>}
+                ></i>}
             </div>
+        </div>
+    )
+}
+const Search = () => {
+    const [search, setSearch] = useState("")
+    useEffect(() => {
+        yip.collegeSearch(search)
+    }, [search])
+    return (
+        <div className='search-box'>
+            <input className='search-bar' type="text" value={search} placeholder="Search College" onChange={e => {
+                setSearch(e.target.value)
+            }} />
+            {search && <li className='fas fa-close' onClick={() => {
+                setSearch('')
+            }}></li>}
         </div>
     )
 }
@@ -291,33 +305,82 @@ const FilterTable = (props: any) => {
         </div>
     )
 }
+interface condition {
+    updater: boolean, name: string, district: string, club_status: string, legislative_assembly: string, block: string
+}
 const InstitutionsTable = (props: any) => {
+    const [condition, setCondition] = useState<conditionProps>({ updater: false, name: "Unsorted" })
+    const [styleThis, setStyler] = useState<string>('')
+    useEffect(() => {
+
+    }, [condition])
+    function getStyles(value: string) {
+        if (value === 'SL' || value === 'Manage') {
+        }
+        else if (value === 'Status') {
+            if (value === styleThis) {
+                switch (condition.name) {
+                    case 'Sorted:ASC': return 'fa-arrow-up-short-wide color'
+                        break;
+                    case 'Sorted:DESC': return 'fa-arrow-up-wide-short color'
+                        break
+                }
+            }
+            else return 'fa-arrow-up-short-wide'
+        }
+        else if (value === styleThis) {
+            switch (condition.name) {
+                case 'Sorted:ASC':
+                    return 'fa-arrow-up-a-z color'
+                    break
+                case 'Sorted:DESC':
+                    return 'fa-arrow-up-z-a color'
+                    break
+            }
+        }
+        else return 'fa-arrow-up-a-z'
+    }
     return (
         <table>
             <thead>
                 <tr>
                     {
-                        props.tableTitle.map((item: any, index: number) => {
-                            return <th key={index} className={`${item === 'Status' ? 'stat' : ''}`} > {item}</th>
-                        })
+                        props.tableTitle.map((item: string, index: number) =>
+                        (
+                            <th key={index} className={`${item === 'Status' ? 'stat' : ''}`}
+                                onClick={() => {
+                                    if (!(item === 'SL' || item === 'Manage')) {
+                                        setStyler(item)
+                                        yip.sort(props.setTableData, item, props.tableData, setCondition, condition)
+                                    }
+                                }}
+                            >
+                                <div className='header'>
+                                    <div>{item}</div>
+                                    <div>
+                                        <i className={`fa-solid ${getStyles(item)}`}></i>
+                                    </div>
+                                </div>
+                            </th>)
+                        )
                     }
                 </tr>
             </thead>
-            <tbody>
-                {
-                    (props.paginateArray(props.tableData, props.page))
-                        .map((item: any, i: number) => (
-                            <tr key={i}>
-                                <td >{(props.page - 1) * 10 + i + 1}</td>
-                                <td className='name'>{item.name}</td>
-                                <td className='district'>{item.district}</td>
-                                {item.club_status && <td className='status' >
-                                    {item.club_status}
-                                </td>}
-                                {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
-                                {item.block && <td >{item.block}</td>}
-                                {
-                                    item.club_status && <td >
+            {
+                props.tableData && <tbody>
+                    {
+                        (props.paginateArray(props.tableData, props.page))
+                            .map((item: any, i: number) => (
+                                <tr key={i}>
+                                    <td >{(props.page - 1) * 10 + i + 1}</td>
+                                    <td className='name'>{item.name}</td>
+                                    <td className='district'>{item.district}</td>
+                                    {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
+                                    {item.block && <td >{item.block}</td>}
+                                    {item.club_status && <td className='status' >
+                                        {item.club_status}
+                                    </td>}
+                                    <td >
                                         <a onClick={() => {
                                             props.setModalTrigger(true)
                                             props.setDeleteId(item.id)
@@ -326,12 +389,12 @@ const InstitutionsTable = (props: any) => {
                                             <i className="fas fa-trash"></i>Edit
                                         </a>
                                     </td>
-                                }
-                            </tr>
-                        ))
-                }
-            </tbody>
-        </table>
+                                </tr>
+                            ))
+                    }
+                </tbody>
+            }
+        </table >
     )
 }
 const Paginator = (props: any) => {
