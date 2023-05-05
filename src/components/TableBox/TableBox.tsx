@@ -17,9 +17,6 @@ interface tableProps {
     dataUpdate: any
 }
 
-
-
-
 const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, dataUpdate, setCreate, setUpdateData }) => {
     const [showFilterBox, setShowFilterBox] = useState(false);
     const [filterItem, setFilterItem] = useState("All")
@@ -54,7 +51,7 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         yip.statusFilter = "All"
         yip.districtFilter = "All"
         setShowFilterBox(false)
-    }, [current_option])
+    }, [yip.currentPage])
 
     function updateTable() {
         setUpdateData((prev: any) => !prev)
@@ -126,11 +123,10 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
             {modalTrigger && <Modal setConfirmDelete={setConfirmDelete} setModalTrigger={setModalTrigger} selectedData={selectedData}
                 setDelete={setDelete} club={club} sendData={sendData} setClub={setClub}
                 deleteData={deleteData} handleDelete={handleDelete} setSelectedData={setSelectedData} update={update}
-                current_option={current_option}
+
             />}
             <div className='white-container container-table'>
-
-                <FilterHeader current_option={current_option} setCreate={setCreate} handleFilterClick={handleFilterClick} showFilterBox={showFilterBox}
+                <FilterHeader setCreate={setCreate} handleFilterClick={handleFilterClick} showFilterBox={showFilterBox}
                     setShowFilterBox={setShowFilterBox} setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />
                 {showFilterBox && <FilterTable setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />}
 
@@ -159,7 +155,7 @@ const Modal = (props: any) => {
         <div className="modal-overlay">
             <div className='modal'>
                 <div className='heading'>
-                    <div className="title">Manage {props.current_option}</div>
+                    <div className="title">Manage {yip.currentPage}</div>
                     <div className="close-btn" onClick={closeModal}><i className="fa fa-close"></i>
                     </div>
                 </div>
@@ -229,7 +225,7 @@ const Modal = (props: any) => {
 const FilterHeader = (props: any) => {
     return (
         <div className="table-top">
-            <h3>{props.current_option} List</h3>
+            <h3>{yip.currentPage} List</h3>
 
             <div className='table-fn'>
                 <Search />
@@ -237,7 +233,7 @@ const FilterHeader = (props: any) => {
                     props.setCreate(true)
                 }}>
                     <i className="fa-solid fa-plus"></i>
-                    <p>Add {props.current_option}</p>
+                    <p>Add {yip.currentPage}</p>
                 </div>
                 <div className="table-fn-btn" onClick={props.handleFilterClick}>
                     <i className="fa-solid fa-filter"></i>
@@ -467,7 +463,7 @@ const InstitutionsTable = (props: any) => {
                                             props.setDeleteId(item.id)
                                             props.setSelectedData(item)
                                         }}>
-                                            <i className="fas fa-trash"></i>Edit
+                                            <i className="fas fa-edit"></i>Edit
                                         </a>
                                     </td>
                                 </tr>

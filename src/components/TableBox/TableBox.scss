@@ -272,7 +272,6 @@
     }
     tr{
         &:hover{
-            cursor: pointer;
             user-select: none;
             border-radius: 20px;
         }
@@ -281,14 +280,15 @@
             justify-content: space-between;
             align-items: flex-end;
             .color{
-                color: rgb(0, 102, 255);
+                color: rgb(58, 53, 53);
             }
         }
         th{
                 // border-left:1px solid rgba(0, 0, 0, 0.2) ;
                 border-bottom:1px solid rgba(0, 0, 0, 0.1) ; 
                &:hover{
-                color: rgb(0, 102, 255);
+                color: rgb(85, 153, 255);
+                cursor: pointer;
                }
                &:first-child,&:last-child:hover{
                    color: black;
@@ -314,7 +314,7 @@
                 gap: 5px;
                 cursor: pointer;
                 &:hover{
-                    background-color: #007db7;  
+                    background-color: #2d353d;  
                 }
             }
         }
@@ -364,8 +364,9 @@
         i{
             height: 20px;
             display: flex;
+            color: white;
             align-items: center;
-            background-color: rgb(86, 159, 255);
+            background-color: rgb(80, 75, 75);
             padding:0 15px ;
             border-radius: 10px;
             font-size: 10px;

@@ -26,10 +26,13 @@ interface legislativeProps {
     district: string
 }
 class YIP {
+    currentPage: string
+
+    setTableData: Function
+    updateTable: Function
+
     district: districtProps[]
     clubStatus: []
-    updateSortedTable: Function
-    setTableData: Function
     institutions: institutionProps[]
     collegeSearchValue: string
     legislative_assembly: legislativeProps[]
@@ -38,30 +41,35 @@ class YIP {
     institutionsData: institutionProps[]
     statusFilter: string
     districtFilter: string
-    updateTable: Function
-    currentPage: string
+
     blockFilter: string
     blocks: legislativeProps[]
     filteredBlocks: legislativeProps[]
 
     constructor() {
+
+        this.currentPage = ""
+
+        this.setTableData = () => { console.log("not working") }
+        this.updateTable = () => { console.log("not working") }
+        this.institutions = []
         this.institutionsData = []
+
         this.district = []
+        this.districtFilter = 'All'
+
         this.clubStatus = []
+        this.statusFilter = 'All'
+
         this.legislative_assembly = []
         this.filteredAssembly = []
-        this.updateSortedTable = () => { console.log("not working") }
-        this.setTableData = () => { console.log("not working") }
-        this.institutions = []
-        this.collegeSearchValue = ""
         this.assemblyFilter = "All"
-        this.statusFilter = 'All'
-        this.districtFilter = 'All'
-        this.updateTable = () => { console.log("not working") }
-        this.currentPage = ""
+
         this.blockFilter = "All"
         this.blocks = []
         this.filteredBlocks = []
+
+        this.collegeSearchValue = ""
     }
 
 
@@ -69,8 +77,8 @@ class YIP {
         this.collegeSearchValue = search
         let itemName = "", searchItem = ""
         this.setTableData(this.institutions.filter((item: institutionProps) => {
-            itemName = item.name.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
-            searchItem = search.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
+            itemName = item.name.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '')
+            searchItem = search.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '')
             return itemName.includes(searchItem)
         }))
     }
