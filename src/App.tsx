@@ -8,8 +8,9 @@ import BlockSetup from './components/SetupBox/BlockSetup';
 import LegislativeSetup from './components/SetupBox/LegislativeSetup';
 import { useEffect, useState } from 'react';
 import yip from './service/dataHandler';
-import PrivateRoutes from './utils/PrivateRoutes';
+import PrivateRoutes, { PublicRoutes } from './utils/PrivateRoutes';
 import { link } from './service/routeHandler'
+
 function App() {
   const [dataUpdate, setUpdateData] = useState(true)
   const [create, setCreate] = useState(false)
@@ -18,7 +19,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Login />} />
+        <Route element={<PublicRoutes />}>
+          <Route path='/' element={<Login />} />
+        </Route>
         <Route element={<PrivateRoutes />}>
           {
             link.map((item, index) => {

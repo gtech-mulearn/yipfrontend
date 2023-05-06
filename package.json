@@ -13,7 +13,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-phone-number-input": "^3.2.19",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.11.1",
     "react-select": "^5.7.2"
   },
   "devDependencies": {
