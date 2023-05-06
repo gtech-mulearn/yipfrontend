@@ -3,8 +3,6 @@ import "./LeftDrawer.scss"
 import YIPlogo from "../../assets/logo.png"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import yip from "../../service/dataHandler"
-
 interface MenuItemProps {
   item_icon: string
   item_name: string
@@ -13,28 +11,22 @@ interface MenuItemProps {
 }
 
 interface LeftDrawerProps {
-  onValueChange: (value: string) => void
+  setCurrentOption: (value: string) => void
   currentOption: string
 }
 
-const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption }) => {
+const LeftDrawer: React.FC<LeftDrawerProps> = ({ setCurrentOption, currentOption }) => {
   const [activeItem, setActiveItem] = useState(currentOption)
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName)
-    onValueChange(itemName)
+    setCurrentOption(itemName)
   }
 
   return (
     <div className="left-menu">
       <img src={YIPlogo} alt="logo" />
       <div className="menu-items">
-        {/* <MenuItem
-                    item_icon='fa-solid fa-user'
-                    item_name='Users'
-                    onItemClick={() => handleItemClick('Users')}
-                    isActive={activeItem === 'Users'}
-                /> */}
         <MenuItem
           item_icon='fa-sharp fa-solid fa-school'
           item_name='Model School'
@@ -47,31 +39,16 @@ const LeftDrawer: React.FC<LeftDrawerProps> = ({ onValueChange, currentOption })
           onItemClick={() => handleItemClick('YIP Club')}
           isActive={activeItem === 'YIP Club'}
         />
-        {/* <MenuItem
-                    item_icon='fa-solid fa-people-group'
-                    item_name='Block'
-                    onItemClick={() => handleItemClick('Block')}
-                    isActive={activeItem === 'Block'}
-                />
-                <MenuItem
-                    item_icon='fa-solid fa-people-group'
-                    item_name='Legislative Assembly'
-                    onItemClick={() => handleItemClick('Legislative Assembly')}
-                    isActive={activeItem === 'Legislative Assembly'}
-                /> */}
       </div>
-      {/* <a className="logout" href="/yip/"> */}
       <button
         className="logout"
         onClick={() => {
           localStorage.removeItem("accessToken")
-
           window.location.href = "/"
         }}
       >
         Logout
       </button>
-      {/* <i className="fa-solid fa-right-from-bracket"></i> Logout</a> */}
     </div>
   )
 }

@@ -5,10 +5,6 @@ interface urlProps {
 
 export interface dashboardProps {
     content: string
-    dataUpdate: boolean
-    create: boolean
-    setCreate: Function
-    setUpdateData: Function
 }
 
 export const link = [

@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import './BottomTab.scss'
 import { Link } from 'react-router-dom'
 import yip from '../../service/dataHandler'
+
 interface BottomDrawerProps {
-    onValueChange: (value: string) => void
+    setCurrentOption: (value: string) => void
     currentOption: string
 }
 
-const BottomTab: React.FC<BottomDrawerProps> = ({ onValueChange, currentOption }) => {
+const BottomTab: React.FC<BottomDrawerProps> = ({ setCurrentOption, currentOption }) => {
     const [activeItem, setActiveItem] = useState(currentOption)
 
     const handleItemClick = (itemName: string) => {
         setActiveItem(itemName)
-        onValueChange(itemName)
+        setCurrentOption(itemName)
     }
     return (
         <div className="tab-nav">

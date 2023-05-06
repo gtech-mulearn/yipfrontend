@@ -6,121 +6,41 @@ import ClubSetup from "../../components/SetupBox/ClubSetup"
 import SchoolSetup from "../../components/SetupBox/SchoolSetup"
 import TableBox from "../../components/TableBox/TableBox"
 import BottomTab from "../../components/BottomTab/BottomTab"
-import UserTableBox from "../../components/TableBox/UserTablebox"
-import apiGateway from "../../service/apiGateway"
 import yip from "../../service/dataHandler"
-import { dashboardProps } from "../../service/routeHandler"
-yip.fetchStatus()
-yip.fetchDistrict()
-yip.fetchLegislativeAssemblies()
-yip.fetchBlocks()
-const Dashboard = (props: dashboardProps) => {
-  const [currentOption, setCurrentOption] = useState<string>(props.content)
-  const [updateOption, setUpdate] = useState(true)
-  const [data, setData] = useState([])
-  const [districts, setDistricts] = useState([])
-  yip.currentPage = props.content
-  useEffect(() => {
-    const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/district/`)
-        .then(({ data }) => {
-          const { districts } = data.response;
-          setDistricts(districts);
-        })
-        .catch(error => console.error(error));
-    }
-    fetchData()
-  }, [])
-  const handleOptionChange = (value: string) => {
-    setCurrentOption(value)
-  }
+import { dashboardProps } from "../../service/RouteLink"
+import { fetchInstitutions, fetchData } from '../../service/dashboardService'
+import Banner from "../../components/Banner/Banner"
+
+const Dashboard: React.FC<dashboardProps> = ({ content }) => {
+  const [currentOption, setCurrentOption] = useState<string>(content)
+  const [dataUpdate, setUpdateData] = useState(true)
+  const [create, setCreate] = useState(false)
+  const [institutions, setInstitutions] = useState([])
+
+  yip.currentPage = content
   const update = () => {
-    setUpdate(prev => !prev)
+    setUpdateData(prev => !prev)
   }
+  fetchData()
   useEffect(() => {
-    const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/${props.content === "Model School" ? "get-model-schools" : "get-colleges"}/`)
-        .then(res => {
-          setData(res.data.response.clubs)
-        }).catch(error => console.log(error))
-    }
-    fetchData()
-  }, [currentOption, updateOption, props.dataUpdate])
+    fetchInstitutions(content, setInstitutions)
+  }, [currentOption, dataUpdate])
 
   return (
     <>
-      <LeftDrawer onValueChange={handleOptionChange} currentOption={currentOption} />
+      <LeftDrawer setCurrentOption={setCurrentOption} currentOption={currentOption} />
       <div className="dash-container">
-        <Banner currentOption={currentOption} updateOption={updateOption} dataUpdate={props.dataUpdate} />
+        <Banner currentOption={currentOption} dataUpdate={dataUpdate} />
         {
-          currentOption === "Model School" ? <SchoolSetup setUpdateData={props.setUpdateData} dataUpdate={props.dataUpdate} create={props.create} setCreate={props.setCreate} /> :
-            <ClubSetup setUpdateData={props.setUpdateData} dataUpdate={props.dataUpdate} create={props.create} setCreate={props.setCreate} />
+          currentOption === "Model School" ? <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /> :
+            <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
         }
-        <TableBox current_option={currentOption} institutions={data} update={update} dataUpdate={props.dataUpdate} setCreate={props.setCreate} setUpdateData={props.setUpdateData} />
+        <TableBox current_option={currentOption} institutions={institutions} update={update} dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} />
       </div>
       <div className="bottom-tab-container">
-        <BottomTab onValueChange={handleOptionChange} currentOption={currentOption} />
+        <BottomTab setCurrentOption={setCurrentOption} currentOption={currentOption} />
       </div>
     </>
-  )
-}
-
-const Banner = (props: any) => {
-  const [count, setCount]: any = useState([])
-
-  useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        "Content-Type": "application/json"
-      }
-    };
-    const fetchData = async () => {
-      try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/get-clubs-count/${props.currentOption === "Model School" ? "School" : "College"}/`, requestOptions);
-        const data = await response.json();
-        setCount(data.response);
-      } catch (error) {
-        console.error("this is error", error);
-      }
-    };
-    fetchData();
-  }, [props.currentOption, props.updateOption, props.dataUpdate])
-  return (
-    <div className="banner-container">
-      <div className="welcome-banner">
-        <div className="statistics">
-          <div className="box blue-box">
-            <h3>{count["Identified"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Identified</p>
-          </div>
-          <div className="box blue-box">
-            <h3>{count["Confirmed"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Confirmed</p>
-          </div>
-          <div className="box blue-box">
-            <h3>{count["Connection established"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Connected</p>
-          </div>
-          <div className="box light-blue-box">
-            <h3>{count["Orientation Scheduled"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Orientation Scheduled</p>
-          </div>
-          <div className="box light-blue-box">
-            <h3>{count["Orientation Completed"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Orientation Completed </p>
-          </div>
-          <div className="box light-blue-box">
-            <h3>{count["Execom Formed"]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
-            <p>Execom Formed</p>
-          </div>
-        </div>
-        <div className="welcome-image-container">
-          <img id="banner-img" src={BannerImg} alt="" />
-        </div>
-      </div>
-    </div>
   )
 }
 
