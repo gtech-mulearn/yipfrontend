@@ -13,12 +13,7 @@ import { link } from './service/routeHandler'
 function App() {
   const [dataUpdate, setUpdateData] = useState(true)
   const [create, setCreate] = useState(false)
-  useEffect(() => {
-    yip.fetchStatus()
-    yip.fetchDistrict()
-    yip.fetchLegislativeAssemblies()
-    yip.fetchBlocks()
-  }, [])
+
 
   return (
     <Router>

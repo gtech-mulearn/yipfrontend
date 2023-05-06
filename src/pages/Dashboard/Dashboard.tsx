@@ -10,6 +10,10 @@ import UserTableBox from "../../components/TableBox/UserTablebox"
 import apiGateway from "../../service/apiGateway"
 import yip from "../../service/dataHandler"
 import { dashboardProps } from "../../service/routeHandler"
+yip.fetchStatus()
+yip.fetchDistrict()
+yip.fetchLegislativeAssemblies()
+yip.fetchBlocks()
 const Dashboard = (props: dashboardProps) => {
   const [currentOption, setCurrentOption] = useState<string>(props.content)
   const [updateOption, setUpdate] = useState(true)

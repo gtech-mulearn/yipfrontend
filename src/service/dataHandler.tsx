@@ -153,28 +153,31 @@ class YIP {
         }
     }
     fetchDistrict = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/district/`)
-            const { districts } = response.data.response
-            this.district = districts
-            return districts
-        } catch (error) {
-            console.error(error)
-            return []
-        }
+
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/district/`)
+                const { districts } = response.data.response
+                this.district = districts
+                return districts
+            } catch (error) {
+                console.error(error)
+                return []
+            }
     }
 
     fetchStatus = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-            const { club_status } = response.data.response
-            this.clubStatus = club_status.map((item: string, id: number) => { return { id: id, name: item } })
-            return club_status
-        } catch (error) {
-            console.error(error)
-            this.clubStatus = []
-            return []
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-clubs-status/`)
+                const { club_status } = response.data.response
+                this.clubStatus = club_status.map((item: string, id: number) => { return { id: id, name: item } })
+                return club_status
+            } catch (error) {
+                console.error(error)
+                this.clubStatus = []
+                return []
+            }
     }
 
     createInstitution = async (body: any, setUpdateData: any) => {
@@ -187,22 +190,24 @@ class YIP {
         }
     }
     fetchLegislativeAssemblies = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-legislative-assembly/`)
-            this.legislative_assembly = response.data.response
-            this.filteredAssembly = response.data.response
-        } catch (error) {
-            console.log(error)
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-legislative-assembly/`)
+                this.legislative_assembly = response.data.response
+                this.filteredAssembly = response.data.response
+            } catch (error) {
+                console.log(error)
+            }
     }
     fetchBlocks = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-blocks/`)
-            this.blocks = response.data.response
-        }
-        catch (error) {
-            console.log(error)
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-blocks/`)
+                this.blocks = response.data.response
+            }
+            catch (error) {
+                console.log(error)
+            }
     }
 }
 const yip = new YIP()
