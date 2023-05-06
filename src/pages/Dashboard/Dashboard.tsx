@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react"
 import "./Dashboard.scss"
 import LeftDrawer from "../../components/LeftDrawer/LeftDrawer"
 import BannerImg from "../../assets/Study abroad-pana.png"
-
+import ClubSetup from "../../components/SetupBox/ClubSetup"
 import SchoolSetup from "../../components/SetupBox/SchoolSetup"
 import TableBox from "../../components/TableBox/TableBox"
 import BottomTab from "../../components/BottomTab/BottomTab"
 import UserTableBox from "../../components/TableBox/UserTablebox"
 import apiGateway from "../../service/apiGateway"
 import yip from "../../service/dataHandler"
-const Dashboard = (props: any) => {
-  const [currentOption, setCurrentOption] = useState<string>(props.Content)
+import { dashboardProps } from "../../service/routeHandler"
+const Dashboard = (props: dashboardProps) => {
+  const [currentOption, setCurrentOption] = useState<string>(props.content)
   const [updateOption, setUpdate] = useState(true)
   const [data, setData] = useState([])
   const [districts, setDistricts] = useState([])
-  yip.currentPage = props.Content
+  yip.currentPage = props.content
   useEffect(() => {
     const fetchData = async () => {
       apiGateway.get(`/api/v1/yip/district/`)
@@ -34,7 +35,7 @@ const Dashboard = (props: any) => {
   }
   useEffect(() => {
     const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/${props.Content === "Model School" ? "get-model-schools" : "get-colleges"}/`)
+      apiGateway.get(`/api/v1/yip/${props.content === "Model School" ? "get-model-schools" : "get-colleges"}/`)
         .then(res => {
           setData(res.data.response.clubs)
         }).catch(error => console.log(error))
@@ -47,7 +48,10 @@ const Dashboard = (props: any) => {
       <LeftDrawer onValueChange={handleOptionChange} currentOption={currentOption} />
       <div className="dash-container">
         <Banner currentOption={currentOption} updateOption={updateOption} dataUpdate={props.dataUpdate} />
-        {props.children}
+        {
+          currentOption === "Model School" ? <SchoolSetup setUpdateData={props.setUpdateData} dataUpdate={props.dataUpdate} create={props.create} setCreate={props.setCreate} /> :
+            <ClubSetup setUpdateData={props.setUpdateData} dataUpdate={props.dataUpdate} create={props.create} setCreate={props.setCreate} />
+        }
         <TableBox current_option={currentOption} institutions={data} update={update} dataUpdate={props.dataUpdate} setCreate={props.setCreate} setUpdateData={props.setUpdateData} />
       </div>
       <div className="bottom-tab-container">

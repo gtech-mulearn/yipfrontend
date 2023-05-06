@@ -231,6 +231,8 @@ const FilterHeader = (props: any) => {
                 <Search />
                 <div className="table-fn-btn" onClick={() => {
                     props.setCreate(true)
+                    console.log("i have opened create")
+
                 }}>
                     <i className="fa-solid fa-plus"></i>
                     <p>Add {yip.currentPage}</p>
