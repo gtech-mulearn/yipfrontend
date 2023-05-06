@@ -24,8 +24,8 @@ export const sendLogin = (email: string, password: string, setErrorStatus: Funct
                 window.location.replace("/school-dashboard")
             })
             .catch((err) => {
-                console.error(err)
                 setErrorStatus(true)
+                console.error(err)
             })
     }
     createData()
