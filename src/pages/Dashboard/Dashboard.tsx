@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react"
 import "./Dashboard.scss"
-import LeftDrawer from "../../components/LeftDrawer/LeftDrawer"
-import BannerImg from "../../assets/Study abroad-pana.png"
+import { LeftDrawer, BottomTab } from "../../components/Navbar/Navbar"
 import ClubSetup from "../../components/SetupBox/ClubSetup"
 import SchoolSetup from "../../components/SetupBox/SchoolSetup"
 import TableBox from "../../components/TableBox/TableBox"
-import BottomTab from "../../components/BottomTab/BottomTab"
 import yip from "../../service/dataHandler"
 import { dashboardProps } from "../../service/RouteLink"
 import { fetchInstitutions, fetchData } from '../../service/dashboardService'
@@ -37,9 +35,9 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
         }
         <TableBox current_option={currentOption} institutions={institutions} update={update} dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} />
       </div>
-      <div className="bottom-tab-container">
-        <BottomTab setCurrentOption={setCurrentOption} currentOption={currentOption} />
-      </div>
+
+      <BottomTab setCurrentOption={setCurrentOption} currentOption={currentOption} />
+
     </>
   )
 }
