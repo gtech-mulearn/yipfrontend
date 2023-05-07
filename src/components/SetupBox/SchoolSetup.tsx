@@ -27,8 +27,9 @@ interface LegislativeAssemblyProps {
 }
 
 interface SchoolProps {
-  id: string
-  title: string
+  create: boolean
+  setCreate: (data: boolean) => void
+  setUpdateData: (data: boolean) => void
 }
 
 const SchoolSetup = (props: any) => {

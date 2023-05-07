@@ -3,6 +3,7 @@ import Select from "react-select"
 import "./Setup.scss"
 import setupImg from "../../assets/Kindergarten student-bro 1.png"
 import apiGateway from "../../service/apiGateway"
+import yip from "../../service/dataHandler"
 
 interface SelectItemProps {
   item: string
@@ -34,20 +35,6 @@ const ClubSetup = (props: any) => {
     setDistrictSelected(data.id)
     setDistrictName(data.name)
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/district/`)
-        .then(({ data }) => {
-          const { districts } = data.response;
-          //console.log("districts-axios :", districts);
-          setDistricts(districts);
-        })
-        .catch(error => console.error(error));
-    }
-    fetchData()
-  }, [])
-
   useEffect(() => {
     const reqData: any = {
       district: districtName,
@@ -110,7 +97,7 @@ const ClubSetup = (props: any) => {
             <div className="setup-item" id="district">
               <p>District</p>
               <Select
-                options={districts}
+                options={yip.district}
                 noOptionsMessage={() => `Districts are Loading`}
                 isSearchable={true}
                 isClearable={true}

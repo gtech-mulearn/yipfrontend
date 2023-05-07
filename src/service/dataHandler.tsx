@@ -26,10 +26,13 @@ interface legislativeProps {
     district: string
 }
 class YIP {
+    currentPage: string
+
+    setTableData: Function
+    updateTable: Function
+
     district: districtProps[]
     clubStatus: []
-    updateSortedTable: Function
-    setTableData: Function
     institutions: institutionProps[]
     collegeSearchValue: string
     legislative_assembly: legislativeProps[]
@@ -38,30 +41,35 @@ class YIP {
     institutionsData: institutionProps[]
     statusFilter: string
     districtFilter: string
-    updateTable: Function
-    currentPage: string
+
     blockFilter: string
     blocks: legislativeProps[]
     filteredBlocks: legislativeProps[]
 
     constructor() {
+
+        this.currentPage = ""
+
+        this.setTableData = () => { console.log("not working") }
+        this.updateTable = () => { console.log("not working") }
+        this.institutions = []
         this.institutionsData = []
+
         this.district = []
+        this.districtFilter = 'All'
+
         this.clubStatus = []
+        this.statusFilter = 'All'
+
         this.legislative_assembly = []
         this.filteredAssembly = []
-        this.updateSortedTable = () => { console.log("not working") }
-        this.setTableData = () => { console.log("not working") }
-        this.institutions = []
-        this.collegeSearchValue = ""
         this.assemblyFilter = "All"
-        this.statusFilter = 'All'
-        this.districtFilter = 'All'
-        this.updateTable = () => { console.log("not working") }
-        this.currentPage = ""
+
         this.blockFilter = "All"
         this.blocks = []
         this.filteredBlocks = []
+
+        this.collegeSearchValue = ""
     }
 
 
@@ -69,8 +77,8 @@ class YIP {
         this.collegeSearchValue = search
         let itemName = "", searchItem = ""
         this.setTableData(this.institutions.filter((item: institutionProps) => {
-            itemName = item.name.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
-            searchItem = search.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '');
+            itemName = item.name.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '')
+            searchItem = search.toLowerCase().replaceAll(' ', '').replace(/[^a-zA-Z0-9 ]/g, '')
             return itemName.includes(searchItem)
         }))
     }
@@ -145,28 +153,31 @@ class YIP {
         }
     }
     fetchDistrict = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/district/`)
-            const { districts } = response.data.response
-            this.district = districts
-            return districts
-        } catch (error) {
-            console.error(error)
-            return []
-        }
+
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/district/`)
+                const { districts } = response.data.response
+                this.district = districts
+                return districts
+            } catch (error) {
+                console.error(error)
+                return []
+            }
     }
 
     fetchStatus = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-            const { club_status } = response.data.response
-            this.clubStatus = club_status.map((item: string, id: number) => { return { id: id, name: item } })
-            return club_status
-        } catch (error) {
-            console.error(error)
-            this.clubStatus = []
-            return []
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-clubs-status/`)
+                const { club_status } = response.data.response
+                this.clubStatus = club_status.map((item: string, id: number) => { return { id: id, name: item } })
+                return club_status
+            } catch (error) {
+                console.error(error)
+                this.clubStatus = []
+                return []
+            }
     }
 
     createInstitution = async (body: any, setUpdateData: any) => {
@@ -179,22 +190,24 @@ class YIP {
         }
     }
     fetchLegislativeAssemblies = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-legislative-assembly/`)
-            this.legislative_assembly = response.data.response
-            this.filteredAssembly = response.data.response
-        } catch (error) {
-            console.log(error)
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-legislative-assembly/`)
+                this.legislative_assembly = response.data.response
+                this.filteredAssembly = response.data.response
+            } catch (error) {
+                console.log(error)
+            }
     }
     fetchBlocks = async () => {
-        try {
-            const response = await apiGateway.get(`/api/v1/yip/list-blocks/`)
-            this.blocks = response.data.response
-        }
-        catch (error) {
-            console.log(error)
-        }
+        if (localStorage.getItem("accessToken") !== null)
+            try {
+                const response = await apiGateway.get(`/api/v1/yip/list-blocks/`)
+                this.blocks = response.data.response
+            }
+            catch (error) {
+                console.log(error)
+            }
     }
 }
 const yip = new YIP()
