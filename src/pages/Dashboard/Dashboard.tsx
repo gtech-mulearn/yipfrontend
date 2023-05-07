@@ -19,7 +19,10 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
   const update = () => {
     setUpdateData(prev => !prev)
   }
-  fetchData()
+  useEffect(() => {
+    fetchData()
+
+  }, [])
   useEffect(() => {
     fetchInstitutions(content, setInstitutions)
   }, [currentOption, dataUpdate])
@@ -28,7 +31,7 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
     <>
       <LeftDrawer setCurrentOption={setCurrentOption} currentOption={currentOption} />
       <div className="dash-container">
-        <Banner currentOption={currentOption} dataUpdate={dataUpdate} />
+        {create && <Banner currentOption={currentOption} dataUpdate={dataUpdate} />}
         {
           currentOption === "Model School" ? <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /> :
             <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />

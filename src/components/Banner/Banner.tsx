@@ -14,7 +14,7 @@ const Banner = (props: any) => {
                 <div className="statistics">
                     {
                         Object.keys(count).slice(0, 6).map((item: any, index: number) => (
-                            <div className={`box ${index < 3 ? '' : 'light-'}blue-box`}>
+                            <div className={`box ${index < 3 ? '' : 'light-'}blue-box`} key={index}>
                                 <h3>{count[item]}<div className="count"><div className="count-in">{count.total}</div></div></h3>
                                 <p>{item}</p>
                             </div>

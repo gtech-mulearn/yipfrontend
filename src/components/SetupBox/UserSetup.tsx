@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Select from 'react-select';
 import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
-import PhoneInput from 'react-phone-number-input'
-import 'react-phone-number-input/style.css'
-
 const roles = [
     [
         "SA",

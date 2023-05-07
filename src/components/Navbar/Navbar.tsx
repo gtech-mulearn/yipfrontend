@@ -12,8 +12,8 @@ export const LeftDrawer: React.FC<drawerProps> = ({ setCurrentOption, currentOpt
       <img src={YIPlogo} alt="logo" />
       <div className="menu-items">
         {
-          navMenu.map((item: navMenuProps) =>
-            <div className="menu-item-container "
+          navMenu.map((item: navMenuProps, index: number) =>
+            <div className="menu-item-container " key={index}
               onClick={() => handleItemClick(item.name, setActiveItem, setCurrentOption)}>
               <Link className="link-item" to={item.link}>
                 <li className="menu-item">
@@ -43,8 +43,8 @@ export const BottomTab: React.FC<drawerProps> = ({ setCurrentOption, currentOpti
     <div className="bottom-tab-container">
       <div className="tab-nav">
         <div className="tab-nav-container">
-          {navMenu.map((item: navMenuProps) =>
-            <Link to={item.link}>
+          {navMenu.map((item: navMenuProps, index) =>
+            <Link to={item.link} key={index}>
               <div
                 className={`tab ${activeItem === item.name ? "active" : ""} `}
                 onClick={() => handleItemClick(item.name, setActiveItem, setCurrentOption)}>

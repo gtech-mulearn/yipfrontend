@@ -229,11 +229,7 @@ const FilterHeader = (props: any) => {
 
             <div className='table-fn'>
                 <Search />
-                <div className="table-fn-btn" onClick={() => {
-                    props.setCreate(true)
-                    console.log("i have opened create")
-
-                }}>
+                <div className="table-fn-btn" onClick={() => { props.setCreate(true) }}>
                     <i className="fa-solid fa-plus"></i>
                     <p>Add {yip.currentPage}</p>
                 </div>
