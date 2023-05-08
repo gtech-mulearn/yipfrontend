@@ -31,10 +31,10 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
     <>
       <LeftDrawer setCurrentOption={setCurrentOption} currentOption={currentOption} />
       <div className="dash-container">
-        {create && <Banner currentOption={currentOption} dataUpdate={dataUpdate} />}
-        {
+        <Banner currentOption={currentOption} dataUpdate={dataUpdate} />
+        {create &&
           currentOption === "Model School" ? <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /> :
-            <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
+          <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
         }
         <TableBox current_option={currentOption} institutions={institutions} update={update} dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} />
       </div>
