@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useEffect, useContext } from "react"
 import "./Dashboard.scss"
 import { LeftDrawer, BottomTab } from "../../components/Navbar/Navbar"
 import ClubSetup from "../../components/SetupBox/ClubSetup"
@@ -11,7 +11,7 @@ import Banner from "../../components/Banner/Banner"
 import { DashboardContext } from "../../utils/DashboardContext"
 import { TableContextProvider } from "../../utils/TableContext"
 const Dashboard: React.FC<dashboardProps> = ({ content }) => {
-  const { currentOption, dataUpdate, setUpdateData, create, setCreate, institutions, setInstitutions } = useContext(DashboardContext)
+  const { currentOption, dataUpdate, setUpdateData, create, setInstitutions } = useContext(DashboardContext)
   yip.currentPage = content
   const update = () => {
     setUpdateData(prev => !prev)
@@ -35,7 +35,6 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
           <TableBox update={update} />
         </TableContextProvider>
       </div>
-
       <BottomTab />
 
     </>

@@ -15,7 +15,7 @@ interface tableProps {
 }
 
 const TableBox: React.FC<tableProps> = ({ update }) => {
-    const { institutions, setUpdateData, setCreate } = useContext(DashboardContext)
+    const { institutions, setUpdateData, setCreate, dataUpdate } = useContext(DashboardContext)
     const {
         showFilterBox, setShowFilterBox,
         filterItem, setFilterItem,

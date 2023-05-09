@@ -119,7 +119,6 @@ const ClubSetup = () => {
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.title}
                 onChange={(data: any) => {
-                  setCollegeSelected(data.id)
                   setCollegeName(data.title)
                   //console.log(collegeName)
                 }}

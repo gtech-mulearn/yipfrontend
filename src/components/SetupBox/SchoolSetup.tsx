@@ -36,7 +36,6 @@ interface SchoolProps {
 const SchoolSetup = (props: any) => {
   const { dataUpdate, setUpdateData, setCreate } = useContext(DashboardContext)
 
-  const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [legislativeAssemblies, setLegislativeAssemblies] = useState<LegislativeAssemblyProps[]>([])
   const [school, setSchool] = useState<SchoolProps[]>([])
   const [blocks, setBlocks] = useState<SchoolProps[]>([])
@@ -217,15 +216,15 @@ const SchoolSetup = (props: any) => {
                   isSearchable={true}
                   isClearable={true}
                   placeholder={`Select a School`}
-                  getOptionValue={(option: any) => option.id}
+                  getOptionValue={(option: any) => option.code}
                   getOptionLabel={(option: any) => option.title}
                   onChange={(data: any) => {
                     try {
-                      setSchoolSelectedId(data.id)
+                      setSchoolSelectedId(data.code)
                       setSchoolSelectedName(data.title)
                     } catch (error) {
                       setSchoolSelectedId("")
-
+                      setSchoolSelectedName('')
                     }
                   }}
                   required
@@ -245,7 +244,7 @@ const SchoolSetup = (props: any) => {
                   else if (!blockSelectedId) {
                     setError("Select a Block")
                   }
-                  else if (!schoolSelectedId) {
+                  else if (!schoolSelectedName) {
                     setError("Select a School")
                   }
                   else {
