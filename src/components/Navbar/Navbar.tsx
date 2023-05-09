@@ -1,11 +1,13 @@
-import React from "react"
+import React, { useContext } from "react"
 import "./LeftDrawer.scss"
 import YIPlogo from "../../assets/logo.png"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { handleItemClick, navMenu, navMenuProps, removeAccesstoken, drawerProps } from "../../service/navbarSevice"
 import './BottomTab.scss'
-export const LeftDrawer: React.FC<drawerProps> = ({ setCurrentOption, currentOption }) => {
+import { DashboardContext } from "../../utils/DashboardContext"
+export const LeftDrawer = () => {
+  const { setCurrentOption, currentOption } = useContext(DashboardContext)
   const [activeItem, setActiveItem] = useState(currentOption)
   return (
     <div className="left-menu">
@@ -37,7 +39,8 @@ export const LeftDrawer: React.FC<drawerProps> = ({ setCurrentOption, currentOpt
   )
 }
 
-export const BottomTab: React.FC<drawerProps> = ({ setCurrentOption, currentOption }) => {
+export const BottomTab = () => {
+  const { setCurrentOption, currentOption } = useContext(DashboardContext)
   const [activeItem, setActiveItem] = useState(currentOption)
   return (
     <div className="bottom-tab-container">

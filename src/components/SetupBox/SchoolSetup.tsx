@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Select from "react-select"
 import "./Setup.scss"
 import apiGateway from "../../service/apiGateway"
 import yip from "../../service/dataHandler"
+import { DashboardContext } from "../../utils/DashboardContext"
 
 interface SelectItemProps {
   item: string
@@ -33,6 +34,8 @@ interface SchoolProps {
 }
 
 const SchoolSetup = (props: any) => {
+  const { dataUpdate, setUpdateData, setCreate } = useContext(DashboardContext)
+
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [legislativeAssemblies, setLegislativeAssemblies] = useState<LegislativeAssemblyProps[]>([])
   const [school, setSchool] = useState<SchoolProps[]>([])
@@ -113,7 +116,7 @@ const SchoolSetup = (props: any) => {
     }
 
     const createData = async () => {
-      yip.createInstitution(postData, props.setUpdateData)
+      yip.createInstitution(postData, setUpdateData)
         .then((res) => { setVisible(true) }).catch(err => { })
         .finally(() => {
           setDistrictSelected("")
@@ -123,7 +126,7 @@ const SchoolSetup = (props: any) => {
           setSchoolSelectedId("")
           setSchoolSelectedName("")
           setTimeout(() => {
-            props.setCreate((prev: any) => !prev)
+            setCreate((prev: any) => !prev)
             setVisible(false)
           }, 3000)
         })
@@ -134,7 +137,6 @@ const SchoolSetup = (props: any) => {
   const [error, setError] = useState("");
   return (
 
-    props.create &&
     <div className="white-container">
       <h3>Setup a new School</h3>
       {error && <div className="setup-error">
@@ -255,7 +257,7 @@ const SchoolSetup = (props: any) => {
                 }
                 }>Create
               </button >
-              <button className="black-btn" onClick={() => props.setCreate(false)}>
+              <button className="black-btn" onClick={() => setCreate(false)}>
                 Cancel
               </button>
             </div>
