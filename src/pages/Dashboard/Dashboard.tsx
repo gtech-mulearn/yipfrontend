@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useContext } from "react"
 import "./Dashboard.scss"
 import { LeftDrawer, BottomTab } from "../../components/Navbar/Navbar"
 import ClubSetup from "../../components/SetupBox/ClubSetup"
@@ -8,13 +8,10 @@ import yip from "../../service/dataHandler"
 import { dashboardProps } from "../../service/RouteLink"
 import { fetchInstitutions, fetchData } from '../../service/dashboardService'
 import Banner from "../../components/Banner/Banner"
-
+import { DashboardContext } from "../../utils/DashboardContext"
+import { TableContextProvider } from "../../utils/TableContext"
 const Dashboard: React.FC<dashboardProps> = ({ content }) => {
-  const [currentOption, setCurrentOption] = useState<string>(content)
-  const [dataUpdate, setUpdateData] = useState(true)
-  const [create, setCreate] = useState(false)
-  const [institutions, setInstitutions] = useState([])
-
+  const { currentOption, dataUpdate, setUpdateData, create, setInstitutions } = useContext(DashboardContext)
   yip.currentPage = content
   const update = () => {
     setUpdateData(prev => !prev)
@@ -29,17 +26,16 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
 
   return (
     <>
-      <LeftDrawer setCurrentOption={setCurrentOption} currentOption={currentOption} />
+      <LeftDrawer />
       <div className="dash-container">
-        {create && <Banner currentOption={currentOption} dataUpdate={dataUpdate} />}
-        {
-          currentOption === "Model School" ? <SchoolSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} /> :
-            <ClubSetup setUpdateData={setUpdateData} dataUpdate={dataUpdate} create={create} setCreate={setCreate} />
+        <Banner />
+        {create && (currentOption === "Model School" ? <SchoolSetup /> : <ClubSetup />)
         }
-        <TableBox current_option={currentOption} institutions={institutions} update={update} dataUpdate={dataUpdate} setCreate={setCreate} setUpdateData={setUpdateData} />
+        <TableContextProvider>
+          <TableBox update={update} />
+        </TableContextProvider>
       </div>
-
-      <BottomTab setCurrentOption={setCurrentOption} currentOption={currentOption} />
+      <BottomTab />
 
     </>
   )

@@ -3,6 +3,7 @@ import Login from './pages/LoginPage/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import PrivateRoutes, { PublicRoutes } from './utils/PrivateRoutes';
 import { link } from './service/RouteLink'
+import { DashboardContextProvider } from './utils/DashboardContext';
 
 function App() {
 
@@ -13,10 +14,13 @@ function App() {
           <Route path='/' element={<Login />} />
         </Route>
         <Route element={<PrivateRoutes />}>
-          {
-            link.map((item, index) => {
+          { link.map((item, index) => {
               return <Route key={index} path={item.path}
-                element={<Dashboard content={item.content} />} />
+                element={
+                  <DashboardContextProvider>
+                    <Dashboard content={item.content} />
+                  </DashboardContextProvider>
+                } />
             })}
         </Route>
       </Routes>

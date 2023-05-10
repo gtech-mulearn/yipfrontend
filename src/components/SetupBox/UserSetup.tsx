@@ -110,11 +110,11 @@ const UserSetup = () => {
                             onChange={(e)=>{
                                 setPhone(e.target.value)
                             }} /> */}
-                            <PhoneInput
+                            {/* <PhoneInput
                                 placeholder="Enter phone number"
                                 country="US"
                                 value={phone}
-                                onChange={setPhone} />
+                                onChange={setPhone} /> */}
                         </div>
                         <div className="setup-item" id="district">
                             <p>Role</p>
