@@ -1,54 +1,61 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import './TableBox.scss'
-import fakeData from './fakeData.json'
-import Select, { StylesConfig } from 'react-select';
 import apiGateway from '../../service/apiGateway';
-import DataTable from 'react-data-table-component';
-const schoolTableTitle = ["SL", "Name", "Status", "District", "Legislative Assembly", "Block"]
-const clubTableTitle = ["SL", "Name", "Status", "District"]
-const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
+import yip from '../../service/dataHandler';
+import { DashboardContext } from '../../utils/DashboardContext';
+import { TableContext } from '../../utils/TableContext';
 
-
+import Modal from './components/Modal';
+import FilterHeader from './components/features/FilterHeader';
+import FilterTable from './components/features/FilterTable';
+import InstitutionsTable from './components/InstitutionsTable';
+import Paginator from './components/Paginator';
 interface tableProps {
-    current_option: string
-    institutions: any
     update: any
-    setCreate: any
-    setUpdateData: any
-}
-// const schoolTableTitle: any = [
-//     { name: 'Name', selector: 'name', sortable: true },
-//     { name: 'District', selector: 'district', sortable: true },
-//     { name: 'Legislative Assembly', selector: 'legislative_assembly', sortable: true },
-//     { name: 'Block', selector: 'block', sortable: true },
-// ]
-// const clubTableTitle: any = [
-//     { name: 'Name', selector: 'name', sortable: true },
-//     { name: 'Status', selector: 'status', sortable: true },
-//     { name: 'District', selector: 'district', sortable: true },
-// ]
-interface tableBoxProps {
-    id: string,
-    name: string,
-    institute_type: string,
-    legislative_assembly: string,
-    status: boolean,
 }
 
+const TableBox: React.FC<tableProps> = ({ update }) => {
+    const { institutions, setUpdateData, setCreate, dataUpdate } = useContext(DashboardContext)
+    const {
+        showFilterBox, setShowFilterBox,
+        filterItem, setFilterItem,
+        showSortBox, setShowSortBox,
+        tableData, setTableData,
+        modalTrigger, setModalTrigger,
+        confirmDelete, setConfirmDelete,
+        deleteId,
+        statusFilter, setStatusFilter,
+        setClub,
+        setPagination
+    } = useContext(TableContext)
 
-const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, setCreate, setUpdateData }) => {
-    const [showFilterBox, setShowFilterBox] = useState(false);
-    const [filterItem, setFilterItem] = useState("all")
-    const [showSortBox, setShowSortBox] = useState(false);
-    const [districts, setDistricts] = useState([])
-    const [tableData, setTableData] = useState<tableBoxProps[]>([])
-    const [modalTrigger, setModalTrigger] = useState(false)
-    const [confirmDelete, setConfirmDelete] = useState(false)
-    const [deleteId, setDeleteId] = useState("")
-    const [deleteData, setDelete] = useState([])
-    const [status, setStatus] = useState([])
-    const [errorStatus, setErrorStatus] = useState<boolean>(false)
 
+    yip.setTableData = setTableData
+    yip.institutionsData = institutions
+    yip.updateTable = updateTable
+
+    useEffect(() => {
+        setPagination(1)
+        yip.statusFilter = statusFilter
+        yip.districtFilter = filterItem
+        yip.setFilter()
+    }, [filterItem, statusFilter, update])
+    useEffect(() => {
+        setPagination(1)
+
+    }, [])
+    useEffect(() => {
+        setFilterItem("All")
+        setStatusFilter("All")
+        yip.assemblyFilter = "All"
+        yip.statusFilter = "All"
+        yip.districtFilter = "All"
+        setShowFilterBox(false)
+    }, [yip.currentPage])
+
+    function updateTable() {
+        setUpdateData((prev: any) => !prev)
+    }
 
     const sendData = (club_id: string, club_status: string): any => {
         const postData: any = {
@@ -57,76 +64,14 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         }
         const updateStatus = async () => {
             apiGateway.put(`/api/v1/yip/update-club/`, postData)
-                .then((response) => {
+                .then((res) => {
+                    setClub({})
                     setUpdateData((prev: any) => !prev)
-                    console.log("status updated!!")
-                }
-                )
-                .catch(error => console.error(error));
+                })
+                .catch(error => console.error(error))
         }
         updateStatus()
-        //console.log("data send!!")
     }
-
-
-    let tableTitle = []
-    if (current_option === "Model School") {
-        tableTitle = schoolTableTitle
-    } else if (current_option === "YIP Club") {
-        tableTitle = clubTableTitle
-    } else {
-        tableTitle = userTableTitle
-    }
-
-    useEffect(() => {
-
-        let link_item = ""
-
-        if (current_option === "Model School") {
-            link_item = "get-model-schools"
-        } else if (current_option === "YIP Club") {
-            link_item = "get-colleges"
-        } else {
-            link_item = "get-users"
-        }
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/${link_item}/`)
-                .then(({ data }) => {
-                    //console.log("statsu: ", data.response)
-                    const { clubs } = data.response;
-                    //console.log("-axios :", clubs);
-                    setTableData(clubs);
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [current_option])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/district/`)
-                .then(({ data }) => {
-                    const { districts } = data.response;
-                    //console.log("districts-axios :", districts);
-                    setDistricts(districts);
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [])
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-                .then((res) => {
-
-                    setStatus(res.data.response.club_status.map((item: string, id: number) => { return { id: id, name: item } }));
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [])
 
 
     const handleFilterClick = () => {
@@ -142,45 +87,16 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
     const handleDelete = (schoolId: any) => {
         const fetchData = async () => {
             apiGateway.delete(`/api/v1/yip/delete-model-schools/${schoolId}/`)
-                .then(res => update())
+                .then(res => {
+                    setUpdateData((prev: any) => !prev)
+                })
                 .catch(error => console.error(error));
         }
         fetchData()
     }
 
-    useEffect(() => {
-        const requestOptions = {
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                "Content-Type": "application/json"
-            }
-        };
-        // const fetchData = async () => {
-        //     try {
-        //         const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/list-clubs-status/`, requestOptions);
-        //         const data = await response.json();
-        //         const status = data.response.club_status
-        //         const optionsArray = status.map((item: string, id: number) => {
-        //             return { id: id, name: item };
-        //         });
-        //         //console.log(optionsArray);
-        //         setStatus(optionsArray)
-        //     } catch (error) {
-        //         console.error("this is error", error);
-        //     }
-        // }
-        // fetchData()
-        const fetchData = async () => {
-            apiGateway.get(`/api/v1/yip/list-clubs-status/`)
-                .then(({ data }) => {
-                    const { club_status } = data.response;
-                    // //console.log("delete-status-axios :", data.response);
-                })
-                .catch(error => console.error(error));
-        }
-        fetchData()
-    }, [])
+
+
 
     useEffect(() => {
         if (confirmDelete) {
@@ -190,214 +106,26 @@ const TableBox: React.FC<tableProps> = ({ current_option, institutions, update, 
         setConfirmDelete(false)
     }, [confirmDelete])
 
-
-    const SchoolTableData = (props: { item: any, index: number }) => {
-        const { item, index } = props;
-        return (
-            <ul id="clubs_listed">
-                <li id="sl_no" className="value">{index + 1}</li>
-                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                {item.club_status && <li className="value editable status">
-                    <Select
-                        options={status}
-                        isSearchable={false}
-                        placeholder={item.club_status}
-                        getOptionValue={(option: any) => option.id}
-                        getOptionLabel={(option: any) => option.name}
-                        onChange={(status: any) => {
-                            sendData(item.id, status.name)
-                        }}
-                    />
-                </li>}
-                <li className="value" value="{{club.id}}">{item.district}</li>
-                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                {item.block && <li className="value">{(item.block)}
-                </li>}
-                {item.club_status && <li className="value editable">
-                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                        <i className="fa-solid fa-trash"></i>Delete</a>
-                </li>}
-            </ul>
-        );
-    };
-
-
-    const StatusCell = (props: any) => {
-        const [selectedOption, setSelectedOption] = useState<any>(null);
-        return (
-            <Select
-                value={selectedOption}
-                options={props.status}
-                onChange={(data: any) => {
-
-                    sendData(props.item.id, data.name)
-                }}
-                isClearable
-            />
-        );
-    };
-
-    const ClubTableData = (props: { item: any, index: number }) => {
-        const { item, index } = props;
-        return (
-            <ul id="clubs_listed">
-                <li id="sl_no" className="value">{index + 1}</li>
-                <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                {item.club_status && <li className="value editable status">
-                    <Select
-                        options={status}
-                        isSearchable={false}
-                        placeholder={item.club_status}
-                        getOptionValue={(option: any) => option.id}
-                        getOptionLabel={(option: any) => option.name}
-                        onChange={(status: any) => {
-                            sendData(item.id, status.name)
-                        }}
-                    />
-                </li>}
-                <li className="value" value="{{club.id}}">{item.district}</li>
-                {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                {item.block && <li className="value">{(item.block)}
-                </li>}
-                {item.club_status && <li className="value editable">
-                    <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                        <i className="fa-solid fa-trash"></i>Delete</a>
-                </li>}
-            </ul>
-        );
-    };
-
     return (
         <>
+            {modalTrigger && <Modal sendData={sendData} handleDelete={handleDelete} />}
+            <div className='white-container container-table'>
+                <FilterHeader setCreate={setCreate} handleFilterClick={handleFilterClick} showFilterBox={showFilterBox}
+                    setShowFilterBox={setShowFilterBox} setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />
+                {showFilterBox && <FilterTable setFilterItem={setFilterItem} setStatusFilter={setStatusFilter} />}
 
-            {modalTrigger && <div className="modal-overlay">
-                <div className="modal">
-                    <div>{ }</div>
-                    <p>Are you sure you want to delete this item?</p>
-                    <div className="modal-buttons">
-                        <button onClick={() => { setConfirmDelete(true); update() }} className="confirm-delete">Delete</button>
-                        <button onClick={() => { setConfirmDelete(false); setModalTrigger(false) }} className="cancel-delete">Cancel</button>
-                    </div>
-                </div>
-            </div>}
-
-            <div className='white-container'>
-                <div className="table-top">
-                    <h3>{current_option} List</h3>
-
-                    <div className='table-fn'>
-                        <div className="table-fn-btn" onClick={() => {
-                            setCreate(true)
-                        }}>
-                            <i className="fa-solid fa-plus"></i>
-                            <p>Add {current_option}</p>
-                        </div>
-                        <div className="table-fn-btn" onClick={handleFilterClick}>
-                            <i className="fa-solid fa-filter"></i>
-                            <p>Filter</p>
-                        </div>
-                        {/* <div className="table-fn-btn">
-                        <i className="fa-solid fa-sort" onClick={handleSortClick}></i>
-                        <p>Sort</p>
-                    </div> */}
-                    </div>
-                </div>
-                <div className="filter-container">
-                    {showFilterBox && (
-                        <div className="filter-box">
-                            <Select
-                                options={districts}
-                                isSearchable={true}
-                                isClearable={true}
-                                placeholder={`Select a District`}
-                                getOptionValue={(option: any) => option.id}
-                                getOptionLabel={(option: any) => option.name}
-                                onChange={(data: any) => {
-                                    setFilterItem(data.name)
-
-                                }}
-                            />
-                            <button
-                                className='black-btn btn'
-                                onClick={() => {
-                                    setShowFilterBox(false);
-                                    setFilterItem("all")
-                                }}
-                            >Close</button>
-                        </div>
-                    )}
-                    {/* {showSortBox && (
-                            <div className="sort-box">
-                                <div className="sort">
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                    <input type="checkbox" name="sort-item" id="identified"/><label>Identified</label>
-                                </div>
-                            </div>
-                        )} */}
-                </div>
-
-                {/* <DataTable
-                    pagination={true}
-
-                    columns={current_option === "YIP Club" ? clubTableTitle : schoolTableTitle}
-                    data={institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)}
-                /> */}
-                <div id="table-container" className="table-container">
-                    <div className="table-title">
-                        <ul>
-                            {
-                                tableTitle.map((item: any, index: number) => {
-                                    return <li className={`value assembly`} key={index}>{item}</li>
-                                })
-                            }
-                        </ul>
-                    </div>
-                    <div className="table-list">
-
-                        <div className="table-content">
-
-                            {
-                                institutions.filter((item: any) => filterItem === "all" ? true : item.district === filterItem)
-                                    .map((item: any, i: number) => {
-                                        return (
-                                            <>
-                                                <ul id="clubs_listed">
-                                                    <li id="sl_no" className="value">{i + 1}</li>
-                                                    <li id="club_id" className="value name" value="{{club.id}}">{item.name}</li>
-                                                    {item.club_status && <li className="value editable status">
-                                                        <Select
-                                                            options={status}
-                                                            isSearchable={false}
-                                                            isClearable={true}
-                                                            placeholder={item.club_status}
-                                                            getOptionValue={(option: any) => option.id}
-                                                            getOptionLabel={(option: any) => option.name}
-                                                            onChange={(data: any) => {
-                                                                sendData(item.id, data.name)
-                                                            }}
-                                                        />
-                                                    </li>}
-                                                    <li className="value" value="{{club.id}}">{item.district}</li>
-                                                    {item.legislative_assembly && <li className="value" value="{{club.district.id}}">{item.legislative_assembly}</li>}
-                                                    {item.block && <li className="value">{(item.block)}
-                                                    </li>}
-                                                    {item.club_status && <li className="value editable">
-                                                        <a onClick={() => { setModalTrigger(true); setDeleteId(item.id) }} id="delete">
-                                                            <i className="fa-solid fa-trash"></i>Delete</a>
-                                                    </li>}
-                                                </ul>
-                                            </>
-                                        );
-                                    })
-                            }
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <InstitutionsTable />
+                {!(tableData.length) &&
+                    <div className="no-data-table">
+                        No data available{filterItem !== 'All' ? ` for district ${filterItem}` : ''} {statusFilter !== 'All' ? ` for status ${statusFilter}` : ''}
+                    </div>}
+                <Paginator />
+            </div >
         </>
     )
 }
+
+
+
 
 export default TableBox

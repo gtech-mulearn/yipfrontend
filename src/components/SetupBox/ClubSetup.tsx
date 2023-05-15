@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Select from "react-select"
 import "./Setup.scss"
 import setupImg from "../../assets/Kindergarten student-bro 1.png"
 import apiGateway from "../../service/apiGateway"
+import yip from "../../service/dataHandler"
+import { DashboardContext } from "../../utils/DashboardContext"
 
 interface SelectItemProps {
   item: string
@@ -20,7 +22,8 @@ interface CollegeProps {
 }
 
 
-const ClubSetup = (props: any) => {
+const ClubSetup = () => {
+  const { dataUpdate, setUpdateData, setCreate } = useContext(DashboardContext)
   const [districts, setDistricts] = useState<DistrictProps[]>([])
   const [college, setCollege] = useState<CollegeProps[]>([])
   const [districtSelected, setDistrictSelected] = useState("")
@@ -34,20 +37,6 @@ const ClubSetup = (props: any) => {
     setDistrictSelected(data.id)
     setDistrictName(data.name)
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      apiGateway.get(`/api/v1/yip/district/`)
-        .then(({ data }) => {
-          const { districts } = data.response;
-          //console.log("districts-axios :", districts);
-          setDistricts(districts);
-        })
-        .catch(error => console.error(error));
-    }
-    fetchData()
-  }, [])
-
   useEffect(() => {
     const reqData: any = {
       district: districtName,
@@ -64,7 +53,7 @@ const ClubSetup = (props: any) => {
       }
       fetchData()
     }
-  }, [districtSelected, props.dataUpdate])
+  }, [districtSelected, dataUpdate])
 
   const sendData = (): any => {
     const postData: any = {
@@ -76,7 +65,7 @@ const ClubSetup = (props: any) => {
     const createData = async () => {
       apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
         .then((response) => {
-          props.setUpdateData((prev: any) => !prev)
+          setUpdateData((prev: any) => !prev)
           setActions("Club created " + " " + collegeName + " " + "IN" + " " + districtName)
         })
         .catch(error => {
@@ -90,7 +79,7 @@ const ClubSetup = (props: any) => {
           setCollegeName("")
           setTimeout(() => {
             setActions("")
-            props.setCreate(false)
+            setCreate(false)
           }, 3000)
         })
     }
@@ -98,7 +87,6 @@ const ClubSetup = (props: any) => {
   }
 
   return (
-    props.create &&
     <div className="white-container">
       <h3>Setup a new Club</h3>
       {error && <div className="setup-error">
@@ -110,7 +98,7 @@ const ClubSetup = (props: any) => {
             <div className="setup-item" id="district">
               <p>District</p>
               <Select
-                options={districts}
+                options={yip.district}
                 noOptionsMessage={() => `Districts are Loading`}
                 isSearchable={true}
                 isClearable={true}
@@ -131,7 +119,6 @@ const ClubSetup = (props: any) => {
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.title}
                 onChange={(data: any) => {
-                  setCollegeSelected(data.id)
                   setCollegeName(data.title)
                   //console.log(collegeName)
                 }}
@@ -156,7 +143,7 @@ const ClubSetup = (props: any) => {
                 }>
                 Create
               </button>
-              <button className="black-btn" onClick={() => props.setCreate(false)}>
+              <button className="black-btn" onClick={() => setCreate(false)}>
                 Cancel
               </button>
             </div>

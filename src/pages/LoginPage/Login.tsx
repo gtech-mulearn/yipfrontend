@@ -1,61 +1,13 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import YIPlogo from "../../assets/logo.png"
 import "./Login.scss"
-import { Link } from "react-router-dom"
-
+import { passHandleChange, emailHandleChange, passShowEvent, sendLogin } from "../../service/LoginService"
 function Login() {
   const [errorStatus, setErrorStatus] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [password, setPassword] = useState<string>("")
   const [email, setEmail] = useState("")
-  const [accessToken, setAccessToken] = useState("")
 
-  const passHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
-
-  const emailHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const passShowEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setShowPassword(event.target.checked)
-  }
-
-  const sendLogin = () => {
-    const postData: any = {
-      email: email,
-      password: password,
-    }
-    const postOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(postData),
-    }
-    console.log(postData)
-    const createData = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.VITE_BACKEND_URL + `/api/v1/yip/login/`,
-          postOptions
-        )
-        console.log(response)
-        const data = await response.json()
-        console.log("response : ", data)
-        if (data.statusCode === 400) {
-          setErrorStatus(true)
-        } else {
-          setErrorStatus(false)
-          window.location.replace("/school-dashboard")
-        }
-        localStorage.setItem("accessToken", data.response.accessToken)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    createData()
-    console.log("data send!!")
-  }
   return (
     <div className="login-background">
       <div className="login-container">
@@ -67,14 +19,14 @@ function Login() {
             name="email"
             type="text"
             placeholder="Email ID"
-            onChange={emailHandleChange}
+            onChange={(e) => emailHandleChange(e, setEmail)}
           />
           <input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            onChange={passHandleChange}
+            onChange={(e) => passHandleChange(e, setPassword)}
           />
           <div className="show-password">
             <input
@@ -82,15 +34,12 @@ function Login() {
               name="password"
               id="showpass"
               checked={showPassword}
-              onChange={passShowEvent}
+              onChange={(e) => passShowEvent(e, setShowPassword)}
             />
             <label>Show Password</label>
           </div>
-          {/* <Link 
-                to={errorStatus?"":"/school-dashboard"}
-                id="submitBtn" 
-                type="button">Login</Link> */}
-          <button type="button" id="submitBtn" onClick={() => sendLogin()}>
+
+          <button type="button" id="submitBtn" onClick={() => sendLogin(email, password, setErrorStatus)}>
             Login
           </button>
           {errorStatus ? <ErrorBox /> : <></>}

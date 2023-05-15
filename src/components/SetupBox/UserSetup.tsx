@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Select from 'react-select';
 import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
-import PhoneInput from 'react-phone-number-input'
-import 'react-phone-number-input/style.css'
-
 const roles = [
     [
         "SA",
@@ -113,11 +110,11 @@ const UserSetup = () => {
                             onChange={(e)=>{
                                 setPhone(e.target.value)
                             }} /> */}
-                            <PhoneInput
+                            {/* <PhoneInput
                                 placeholder="Enter phone number"
                                 country="US"
                                 value={phone}
-                                onChange={setPhone} />
+                                onChange={setPhone} /> */}
                         </div>
                         <div className="setup-item" id="district">
                             <p>Role</p>
