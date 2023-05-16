@@ -1,14 +1,7 @@
 import apiGateway from "./apiGateway"
-import yip from "./dataHandler"
+import yip, { institutionProps } from "./dataHandler"
 import React from "react"
-export type institutionProps = {
-    id: string
-    name: string
-    district: string
-    legislative_assembly: string
-    block: string
-    club_status: string
-}
+
 
 export interface DashboardContextProps {
     currentOption: string

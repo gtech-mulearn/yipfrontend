@@ -6,6 +6,9 @@ export interface institutionProps {
     club_status: string
     legislative_assembly: string
     block: string
+    email: string
+    phone?: string
+    role?: string
 }
 interface districtProps {
     id: string,

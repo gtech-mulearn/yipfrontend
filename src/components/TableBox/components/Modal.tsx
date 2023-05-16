@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { DashboardContext } from "../../../utils/DashboardContext"
 import { TableContext } from "../../../utils/TableContext"
-import yip from "../../../service/dataHandler"
+import yip, { institutionProps } from "../../../service/dataHandler"
 import Select from 'react-select'
 
 const Modal = (props: any) => {
@@ -19,7 +19,7 @@ const Modal = (props: any) => {
         setConfirmDelete(false)
         setDelete(false)
         setClub({})
-        setSelectedData({})
+        setSelectedData({} as institutionProps)
     }
     return (
         <div className="modal-overlay">
@@ -30,14 +30,22 @@ const Modal = (props: any) => {
                     </div>
                 </div>
                 <div className='secondary-box'>
-                    <div className="data-box">
+                    {selectedData.name && <div className="data-box">
                         <div className="title">Name</div>
                         <div className="content">{selectedData.name}</div>
-                    </div>
-                    <div className="data-box">
+                    </div>}
+                    {selectedData.email && <div className="data-box">
+                        <div className="title">email</div>
+                        <div className="content">{selectedData.email}</div>
+                    </div>}
+                    {selectedData.phone && <div className="data-box">
+                        <div className="title">phone</div>
+                        <div className="content">{selectedData.phone}</div>
+                    </div>}
+                    {selectedData.district && <div className="data-box">
                         <div className="title">District</div>
                         <div className="content">{selectedData.district}</div>
-                    </div>
+                    </div>}
                     {selectedData.legislative_assembly && <div className="data-box">
                         <div className="title">Legislative Assembly</div>
                         <div className="content">{selectedData.legislative_assembly}</div>
@@ -46,7 +54,7 @@ const Modal = (props: any) => {
                         <div className="title">BRC</div>
                         <div className="content">{selectedData.block}</div>
                     </div>}
-                    <div className="data-box">
+                    {selectedData.club_status && <div className="data-box">
                         <div className="title">Update Status</div>
                         <div className="content">
                             <Select
@@ -62,9 +70,9 @@ const Modal = (props: any) => {
                                 }}
                             />
                         </div>
-                    </div>
+                    </div>}
                     <div>
-                        <div className={`${(club.status && selectedData.club_status !== club.status) ? 'btn-update ' : 'btn-disabled'}`}
+                        {selectedData.club_status && <div className={`${(club.status && selectedData.club_status !== club.status) ? 'btn-update ' : 'btn-disabled'}`}
                             onClick={() => {
                                 if (club.status && selectedData.club_status !== club.status) {
                                     props.sendData(club.id, club.status)
@@ -72,7 +80,7 @@ const Modal = (props: any) => {
                                 }
                             }}>
                             Update Status
-                        </div>
+                        </div>}
                     </div>
                     <div className='last-container'>
                         {deleteData && <p>Are you sure you want to delete this item?</p>}
