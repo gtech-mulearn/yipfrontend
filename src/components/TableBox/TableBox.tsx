@@ -10,6 +10,7 @@ import FilterHeader from './components/features/FilterHeader';
 import FilterTable from './components/features/FilterTable';
 import InstitutionsTable from './components/InstitutionsTable';
 import Paginator from './components/Paginator';
+import { getCurrentPageUtils } from '../../utils/utils';
 interface tableProps {
     update: any
 }
@@ -86,7 +87,7 @@ const TableBox: React.FC<tableProps> = ({ update }) => {
 
     const handleDelete = (schoolId: any) => {
         const fetchData = async () => {
-            apiGateway.delete(`/api/v1/yip/delete-model-schools/${schoolId}/`)
+            apiGateway.delete(`/api/v1/yip/delete-${getCurrentPageUtils().content !== 'Users' ? 'model-schools' : 'user'}/${schoolId}/`)
                 .then(res => {
                     setUpdateData((prev: any) => !prev)
                 })

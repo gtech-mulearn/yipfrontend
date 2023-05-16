@@ -2,26 +2,14 @@ import { useState, useEffect, useContext } from "react"
 import yip, { conditionProps } from "../../../service/dataHandler"
 import { DashboardContext } from "../../../utils/DashboardContext"
 import { TableContext } from "../../../utils/TableContext"
+import { getCurrentPageUtils } from "../../../utils/utils"
 
 const InstitutionsTable = () => {
-    const schoolTableTitle = ["SL", "Name", "District", "Legislative Assembly", "Block", "Status", "Manage"]
-    const clubTableTitle = ["SL", "Name", "District", "Status", "Manage"]
-    const userTableTitle = ["SL", "Name", "Email", "Phone", "Role", "Status"]
-    const { currentOption } = useContext(DashboardContext)
-    const { tableData, setTableData, page, setModalTrigger, setDeleteId, setSelectedData } = useContext(TableContext)
-    let tableTitle = []
-    if (currentOption === "Model School") {
-        tableTitle = schoolTableTitle
-    } else if (currentOption === "YIP Club") {
-        tableTitle = clubTableTitle
-    } else {
-        tableTitle = userTableTitle
-    }
+    const { tableData, setTableData, page, setModalTrigger, setDeleteId, setSelectedData, selectedData } = useContext(TableContext)
+
     const [condition, setCondition] = useState<conditionProps>({ updater: false, name: "Unsorted" })
     const [styleThis, setStyler] = useState<string>('')
-    useEffect(() => {
 
-    }, [condition])
     function paginateArray<T>(array: T[], page: number): T[] {
         const startIndex = (page - 1) * 10;
         const endIndex = startIndex + 10;
@@ -58,7 +46,7 @@ const InstitutionsTable = () => {
             <thead>
                 <tr>
                     {
-                        tableTitle.map((item: string, index: number) =>
+                        getCurrentPageUtils().tableTitleList.map((item: string, index: number) =>
                         (
                             <th key={index} className={`${item === 'Status' ? 'stat' : ''}`}
                                 onClick={() => {
@@ -87,12 +75,15 @@ const InstitutionsTable = () => {
                                 <tr key={i}>
                                     <td >{(page - 1) * 10 + i + 1}</td>
                                     <td className='name'>{item.name}</td>
-                                    <td className='district'>{item.district}</td>
+                                    {item.district && <td className='district'>{item.district}</td>}
                                     {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
                                     {item.block && <td >{item.block}</td>}
                                     {item.club_status && <td className='status' >
                                         {item.club_status}
                                     </td>}
+                                    {item.email && <td >{item.email}</td>}
+                                    {item.phone && <td >{item.phone}</td>}
+                                    {item.role && <td >{item.role}</td>}
                                     <td >
                                         <a onClick={() => {
                                             setModalTrigger(true)

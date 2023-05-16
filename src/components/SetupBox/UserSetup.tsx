@@ -1,75 +1,37 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 import Select from 'react-select';
 import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
-const roles = [
-    [
-        "SA",
-        "Super Admin"
-    ],
-    [
-        "AD",
-        "Admin"
-    ],
-    [
-        "HQ",
-        "Hq Staff"
-    ],
-]
-
-// interface SelectItemProps {
-//   item: string;
-//   list: any;
-// }
-
-// interface DistrictProps {
-//   id: string;
-//   name: string;
-// }
-
-// interface CollegeProps {
-//   id: string;
-//   title: string;
-// }
+import { addUser, getRoles } from '../../utils/utils';
+import { DashboardContext } from '../../utils/DashboardContext';
 
 const UserSetup = () => {
+    const [roles, setRoles] = useState<string[]>([])
 
-    const [username, setUsername] = useState<string>("")
-    const [email, setEmail] = useState<string>("")
+    useEffect(() => {
+        getRoles(setRoles).then(() => console.log(roles))
+    }, [])
+    const { setUpdateData, setCreate } = useContext(DashboardContext)
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [phone, setPhone] = useState<any>()
-    const [role, setRole] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
+    const [role, setRole] = useState("")
+    const [password, setPassword] = useState("")
 
     const sendData = (): any => {
         const postData: any = {
-            username: username,
+            name: username,
             email: email,
             phone: phone,
             role: role,
             password: password
         }
-        const postOptions = {
-            method: "POST",
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(postData)
-        };
-
-        const createData = async () => {
-            try {
-                console.log(postOptions)
-                const response = await fetch(
-                    `https://dev.mulearn.org/api/v1/yip/create-user/`, postOptions
-                );
-                const data = await response.json();
-                console.log("user response : ", data)
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        createData();
+        addUser(postData).then(() => {
+            setCreate((prev: boolean) => !prev)
+            setUpdateData((prev: any) => !prev)
+        })
     }
 
     return (
@@ -102,19 +64,11 @@ const UserSetup = () => {
                         </div>
                         <div className="setup-item" id="district">
                             <p>Phone Number</p>
-                            {/* <input 
-                            type='number' 
-                            name="phone" 
-                            placeholder='Type Phone Number' 
-                            id="phone"
-                            onChange={(e)=>{
-                                setPhone(e.target.value)
-                            }} /> */}
-                            {/* <PhoneInput
+                            <PhoneInput
                                 placeholder="Enter phone number"
-                                country="US"
+                                defaultCountry='IN'
                                 value={phone}
-                                onChange={setPhone} /> */}
+                                onChange={setPhone} />
                         </div>
                         <div className="setup-item" id="district">
                             <p>Role</p>
@@ -123,10 +77,10 @@ const UserSetup = () => {
                                 isSearchable={true}
                                 isClearable={true}
                                 placeholder={`Select a Role`}
-                                getOptionValue={(option: any) => option[0]}
-                                getOptionLabel={(option: any) => option[1]}
+                                getOptionValue={(option: any) => option.value}
+                                getOptionLabel={(option: any) => option.label}
                                 onChange={(data) => {
-                                    setRole(data[0])
+                                    setRole(data.label)
                                 }}
                             />
                         </div>

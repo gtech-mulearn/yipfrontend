@@ -3,9 +3,11 @@ import "./LeftDrawer.scss"
 import YIPlogo from "../../assets/logo.png"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { handleItemClick, navMenu, navMenuProps, removeAccesstoken, drawerProps } from "../../service/navbarSevice"
+import { link, urlProps } from "../../service/RouteLink"
+import { handleItemClick, removeAccesstoken } from "../../service/navbarSevice"
 import './BottomTab.scss'
 import { DashboardContext } from "../../utils/DashboardContext"
+import { getCurrentPageUtils } from "../../utils/utils"
 export const LeftDrawer = () => {
   const { setCurrentOption, currentOption } = useContext(DashboardContext)
   const [activeItem, setActiveItem] = useState(currentOption)
@@ -14,15 +16,15 @@ export const LeftDrawer = () => {
       <img src={YIPlogo} alt="logo" />
       <div className="menu-items">
         {
-          navMenu.map((item: navMenuProps, index: number) =>
+          link.map((item: urlProps, index: number) =>
             <div className="menu-item-container " key={index}
-              onClick={() => handleItemClick(item.name, setActiveItem, setCurrentOption)}>
-              <Link className="link-item" to={item.link}>
+              onClick={() => handleItemClick(item.content, setActiveItem, setCurrentOption)}>
+              <Link className="link-item" to={item.path}>
                 <li className="menu-item">
-                  <div className={`menu-icon ${activeItem === item.name ? "active" : ""}`}>
+                  <div className={`menu-icon ${getCurrentPageUtils().content === item.content ? "active" : ""}`}>
                     <i className={`fa-sharp fa-solid ${item.icon}`}></i>
                   </div>
-                  <h5>{item.name}</h5>
+                  <h5>{item.content}</h5>
                 </li>
               </Link>
             </div>
@@ -46,13 +48,13 @@ export const BottomTab = () => {
     <div className="bottom-tab-container">
       <div className="tab-nav">
         <div className="tab-nav-container">
-          {navMenu.map((item: navMenuProps, index) =>
-            <Link to={item.link} key={index}>
+          {link.map((item: urlProps, index) =>
+            <Link to={item.path} key={index}>
               <div
-                className={`tab ${activeItem === item.name ? "active" : ""} `}
-                onClick={() => handleItemClick(item.name, setActiveItem, setCurrentOption)}>
+                className={`tab ${activeItem === item.content ? "active" : ""} `}
+                onClick={() => handleItemClick(item.content, setActiveItem, setCurrentOption)}>
                 <i className={`fa-sharp fa-solid ${item.icon}`}></i>
-                <h3 className={`tab-text ${activeItem === item.name ? "visible" : ""}`} >{item.name}</h3>
+                <h3 className={`tab-text ${getCurrentPageUtils().content === item.content ? "visible" : ""}`} >{item.content}</h3>
               </div>
             </Link>
           )

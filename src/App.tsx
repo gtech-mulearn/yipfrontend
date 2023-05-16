@@ -14,14 +14,14 @@ function App() {
           <Route path='/' element={<Login />} />
         </Route>
         <Route element={<PrivateRoutes />}>
-          { link.map((item, index) => {
-              return <Route key={index} path={item.path}
-                element={
-                  <DashboardContextProvider>
-                    <Dashboard content={item.content} />
-                  </DashboardContextProvider>
-                } />
-            })}
+          {link.map((item, index) => {
+            return <Route key={index} path={item.path}
+              element={
+                <DashboardContextProvider>
+                  <Dashboard content={item.content} />
+                </DashboardContextProvider>
+              } />
+          })}
         </Route>
       </Routes>
     </Router>

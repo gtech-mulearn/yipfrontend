@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import BannerImg from "../../assets/Study abroad-pana.png"
 import { fetchInstitutionStatusCount } from "../../service/bannerService"
 import { DashboardContext } from "../../utils/DashboardContext"
+import { getCurrentPageUtils } from "../../utils/utils";
 interface CountResponse {
     Identified: number;
     Confirmed: number;
@@ -10,10 +11,6 @@ interface CountResponse {
     "Orientation Completed": number;
     "Execom Formed": number;
     total: number;
-}
-
-interface CountData {
-    response: CountResponse;
 }
 
 const initialState: CountResponse = {
@@ -28,11 +25,11 @@ const initialState: CountResponse = {
 
 const Banner = () => {
     const [count, setCount] = useState<CountResponse>(initialState)
-    const { currentOption, dataUpdate } = useContext(DashboardContext)
+    const { dataUpdate } = useContext(DashboardContext)
 
     useEffect(() => {
-        fetchInstitutionStatusCount(setCount, currentOption)
-    }, [currentOption, dataUpdate])
+        fetchInstitutionStatusCount(setCount, getCurrentPageUtils().content)
+    }, [getCurrentPageUtils().content, dataUpdate])
     return (
         <div className="banner-container">
             <div className="welcome-banner">

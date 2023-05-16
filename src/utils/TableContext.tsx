@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { institutionProps } from "../service/dashboardService";
+import { institutionProps } from "../service/dataHandler";
 
 
 interface TableContextProps {
@@ -21,8 +21,8 @@ interface TableContextProps {
     setDelete: React.Dispatch<React.SetStateAction<boolean>>;
     statusFilter: string;
     setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
-    selectedData: any;
-    setSelectedData: React.Dispatch<React.SetStateAction<any>>;
+    selectedData: institutionProps;
+    setSelectedData: React.Dispatch<React.SetStateAction<institutionProps>>;
     club: any;
     setClub: React.Dispatch<React.SetStateAction<any>>;
     page: number;
