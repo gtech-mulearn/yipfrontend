@@ -1,6 +1,8 @@
 import { createContext, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import { institutionProps, DashboardContextProps } from "../service/dashboardService";
+import { DashboardContextProps } from "../service/dashboardService";
+import { institutionProps } from "../service/dataHandler";
+
 
 export const DashboardContext = createContext<DashboardContextProps>({} as DashboardContextProps)
 
