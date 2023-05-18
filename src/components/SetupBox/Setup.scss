@@ -43,6 +43,12 @@
     margin-top: 12px;
 
 }
+.setup-item{
+    text-align: center;
+    .black-btn{
+        width: 50%;
+    }
+}
 .setup-error{
     background-color: rgba(255, 0, 0, 0.20);
     padding: 20px;
@@ -83,4 +89,13 @@
     .setup-item{
         width: 100%;
     }
+}
+.error,.success{
+    background-color: pink;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.success{
+    background-color: lightgreen;
 }

@@ -30,10 +30,10 @@ interface legislativeProps {
 }
 class YIP {
     currentPage: string
-
+    roleFilter: string
     setTableData: Function
     updateTable: Function
-
+    roles = []
     district: districtProps[]
     clubStatus: []
     institutions: institutionProps[]
@@ -52,7 +52,7 @@ class YIP {
     constructor() {
 
         this.currentPage = ""
-
+        this.roleFilter = 'All'
         this.setTableData = () => { console.log("not working") }
         this.updateTable = () => { console.log("not working") }
         this.institutions = []
@@ -71,7 +71,7 @@ class YIP {
         this.blockFilter = "All"
         this.blocks = []
         this.filteredBlocks = []
-
+        this.roles = []
         this.collegeSearchValue = ""
     }
 
@@ -93,6 +93,12 @@ class YIP {
         if (this.statusFilter !== "All") {
             this.institutions = this.institutions.filter((item: any) => {
                 return item.club_status === this.statusFilter
+            })
+        }
+        if (this.roleFilter !== "All") {
+            console.log(this.roleFilter)
+            this.institutions = this.institutions.filter((item: any) => {
+                return item.role === this.roleFilter
             })
         }
         if (this.districtFilter !== "All") {

@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react"
 import { link, urlProps } from "../service/RouteLink"
 import apiGateway from "../service/apiGateway"
-import { institutionProps } from "../service/dataHandler"
+import yip, { institutionProps } from "../service/dataHandler"
 
 export const getCurrentPageUtils = (): urlProps => {
     for (let i in link) {
@@ -17,6 +17,19 @@ export const fetchUserList = async (setData: React.Dispatch<React.SetStateAction
         .then((res) => res.data.response)
         .then((data) => setData(data))
         .catch((err) => console.log(err))
+}
+export const fetchLegislativeAssemblies = async (setData: React.Dispatch<React.SetStateAction<institutionProps[]>>) => {
+    apiGateway.get('/api/v1/yip/list-legislative-assembly/')
+        .then((res) => res.data.response)
+        .then((data) => setData(data))
+        .catch((err) => console.log(err))
+}
+export const fetchBlocks = async (setData: React.Dispatch<React.SetStateAction<institutionProps[]>>) => {
+    apiGateway.get('/api/v1/yip/list-blocks/')
+        .then((res) => res.data.response)
+        .then((data) => setData(data))
+        .catch((err) => console.log(err))
+
 }
 export interface postDataUserProps {
     name: string,
@@ -41,8 +54,20 @@ export const getRoles = async (setRoles: React.Dispatch<React.SetStateAction<str
     apiGateway.get('/api/v1/yip/get-roles/')
         .then((res) => res.data.response.club_status)
         .then((data) => {
+            yip.roles = data.map((role: string, index: number) => ({ value: index, label: role }))
+
             setRoles(
                 data.map((role: string, index: number) => ({ value: index, label: role })))
         })
         .catch((err) => console.log(err))
+}
+export function toSentenceCase(input: string): string {
+    if (input.length === 0) {
+        return input;
+    }
+
+    const trimmedInput = input.trim();
+    const firstChar = trimmedInput.charAt(0).toUpperCase()
+    const restOfSentence = trimmedInput.slice(1,).toLowerCase();
+    return `${firstChar}${restOfSentence}`;
 }
