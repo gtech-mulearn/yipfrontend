@@ -119,6 +119,7 @@ const ClubSetup = () => {
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.title}
                 onChange={(data: any) => {
+
                   setCollegeName(data.title)
                   //console.log(collegeName)
                 }}
@@ -151,9 +152,9 @@ const ClubSetup = () => {
           </div>
             : <div className="actions">{actions}</div>}
         </div>
-        {/* <div className="setup-img">
+        <div className="setup-img">
           <img src={setupImg} alt="HI" />
-        </div> */}
+        </div>
       </div>
     </div >
   )
