@@ -87,7 +87,19 @@ const TableBox: React.FC<tableProps> = ({ update }) => {
 
     const handleDelete = (schoolId: any) => {
         const fetchData = async () => {
-            apiGateway.delete(`/api/v1/yip/delete-${getCurrentPageUtils().content !== 'Users' ? 'model-schools' : 'user'}/${schoolId}/`)
+            let link = ''
+            switch (getCurrentPageUtils().content) {
+                case 'Users': link = 'user'
+                    break
+                case 'Model Schools': link = 'model-schools'
+                    break
+                case 'YIP Club': link = 'model-schools'
+                    break
+                case 'Legislative Assembly': link = 'legislative-assembly'
+                    break
+                case 'Block': link = 'block'
+            }
+            apiGateway.delete(`/api/v1/yip/delete-${link}/${schoolId}/`)
                 .then(res => {
                     setUpdateData((prev: any) => !prev)
                 })

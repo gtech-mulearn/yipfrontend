@@ -76,6 +76,8 @@ const UserSetup = () => {
                                 placeholder='Type User Name'
                                 id="username"
                                 onChange={(e) => {
+                                    if (hasWhitespace(e.target.value))
+                                        setError("Username cannot have whitespace")
                                     setUsername(e.target.value)
                                 }} />
                         </div>
@@ -149,6 +151,10 @@ const UserSetup = () => {
             setError('Enter Username')
             return false
         }
+        if (hasWhitespace(username)) {
+            setError('Username cannot have whitespace')
+            return false
+        }
         if (!email) {
             setError('Enter Email')
             return false
@@ -168,6 +174,11 @@ const UserSetup = () => {
         }
         return true
     }
+    function hasWhitespace(text: string): boolean {
+        const whitespaceRegex = /\s/;
+        return whitespaceRegex.test(text);
+    }
+
 }
 
 export default UserSetup

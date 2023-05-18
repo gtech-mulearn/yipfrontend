@@ -27,5 +27,17 @@ export const link = [
         path: '/user',
         content: 'Users',
         tableTitleList: ["SL", "Name", "Email", "Phone", "Role", "Manage"]
+    },
+    {
+        icon: "fa-users",
+        path: '/legislative-assembly',
+        content: 'Legislative Assembly',
+        tableTitleList: ["SL", "Name", "District", "Manage"]
+    },
+    {
+        icon: 'fa-building',
+        path: '/block',
+        content: 'Block',
+        tableTitleList: ["SL", "Name", "District", "Manage"]
     }
 ]

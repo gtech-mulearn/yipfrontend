@@ -51,7 +51,7 @@ export const BottomTab = () => {
           {link.map((item: urlProps, index) =>
             <Link to={item.path} key={index}>
               <div
-                className={`tab ${activeItem === item.content ? "active" : ""} `}
+                className={`tab ${getCurrentPageUtils().content === item.content ? "active" : ""} `}
                 onClick={() => handleItemClick(item.content, setActiveItem, setCurrentOption)}>
                 <i className={`fa-sharp fa-solid ${item.icon}`}></i>
                 <h3 className={`tab-text ${getCurrentPageUtils().content === item.content ? "visible" : ""}`} >{item.content}</h3>

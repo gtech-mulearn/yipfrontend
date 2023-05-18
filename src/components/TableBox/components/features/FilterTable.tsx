@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import yip from "../../../../service/dataHandler"
 import Select from 'react-select'
-import { getCurrentPageUtils, getRoles } from "../../../../utils/utils"
+import { getCurrentPageUtils, getRoles, toSentenceCase } from "../../../../utils/utils"
 import { DashboardContext } from "../../../../utils/DashboardContext"
 
 const FilterTable = (props: any) => {
@@ -65,7 +65,7 @@ const FilterTable = (props: any) => {
                         isClearable={true}
                         placeholder={`Select a Block`}
                         getOptionValue={(option: any) => option.id}
-                        getOptionLabel={(option: any) => option.name}
+                        getOptionLabel={(option: any) => toSentenceCase(option.name)}
                         onChange={(data: any) => {
                             try {
                                 yip.blockFilter = data.name
@@ -121,7 +121,7 @@ const FilterTable = (props: any) => {
                         }
                     }}
                 />}
-                {getCurrentPageUtils().content !== 'Users' && <Select
+                {getCurrentPageUtils().content !== 'Users' && getCurrentPageUtils().content !== 'Block' && getCurrentPageUtils().content !== 'Legislative Assembly' && <Select
                     styles={{
                         control: (baseStyles) => ({
                             ...baseStyles,

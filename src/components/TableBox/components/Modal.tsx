@@ -20,6 +20,7 @@ const Modal = (props: any) => {
         setDelete(false)
         setClub({})
         setSelectedData({} as institutionProps)
+        setUpdateData((prev: any) => !prev)
     }
     return (
         <div className="modal-overlay">

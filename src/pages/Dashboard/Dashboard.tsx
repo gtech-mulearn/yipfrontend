@@ -10,7 +10,7 @@ import { fetchInstitutions, fetchData } from '../../service/dashboardService'
 import Banner from "../../components/Banner/Banner"
 import { DashboardContext } from "../../utils/DashboardContext"
 import { TableContextProvider } from "../../utils/TableContext"
-import { fetchUserList, getCurrentPageUtils } from "../../utils/utils"
+import { fetchBlocks, fetchLegislativeAssemblies, fetchUserList, getCurrentPageUtils } from "../../utils/utils"
 import Setup from "../../components/SetupBox/Setup"
 const Dashboard: React.FC<dashboardProps> = ({ content }) => {
   const { currentOption, dataUpdate, setUpdateData, create, setInstitutions } = useContext(DashboardContext)
@@ -30,15 +30,19 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
         break
       case 'YIP Club': fetchInstitutions(content, setInstitutions)
         break
+      case 'Legislative Assembly': fetchLegislativeAssemblies(setInstitutions)
+        break
+      case 'Block': fetchBlocks(setInstitutions)
+        break
     }
 
-  }, [currentOption, dataUpdate])
+  }, [getCurrentPageUtils().content, dataUpdate])
 
   return (
     <>
       <LeftDrawer />
       <div className="dash-container">
-        {getCurrentPageUtils().content !== 'Users' && <Banner />}
+        {<Banner />}
         {create && <Setup />}
         <TableContextProvider>
           <TableBox update={update} />

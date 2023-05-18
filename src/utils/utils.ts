@@ -18,6 +18,19 @@ export const fetchUserList = async (setData: React.Dispatch<React.SetStateAction
         .then((data) => setData(data))
         .catch((err) => console.log(err))
 }
+export const fetchLegislativeAssemblies = async (setData: React.Dispatch<React.SetStateAction<institutionProps[]>>) => {
+    apiGateway.get('/api/v1/yip/list-legislative-assembly/')
+        .then((res) => res.data.response)
+        .then((data) => setData(data))
+        .catch((err) => console.log(err))
+}
+export const fetchBlocks = async (setData: React.Dispatch<React.SetStateAction<institutionProps[]>>) => {
+    apiGateway.get('/api/v1/yip/list-blocks/')
+        .then((res) => res.data.response)
+        .then((data) => setData(data))
+        .catch((err) => console.log(err))
+
+}
 export interface postDataUserProps {
     name: string,
     email: string,
@@ -47,4 +60,14 @@ export const getRoles = async (setRoles: React.Dispatch<React.SetStateAction<str
                 data.map((role: string, index: number) => ({ value: index, label: role })))
         })
         .catch((err) => console.log(err))
-}   
+}
+export function toSentenceCase(input: string): string {
+    if (input.length === 0) {
+        return input;
+    }
+
+    const trimmedInput = input.trim();
+    const firstChar = trimmedInput.charAt(0).toUpperCase()
+    const restOfSentence = trimmedInput.slice(1,).toLowerCase();
+    return `${firstChar}${restOfSentence}`;
+}
