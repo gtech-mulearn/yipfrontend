@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import yip, { conditionProps } from "../../../service/dataHandler"
 import { DashboardContext } from "../../../utils/DashboardContext"
 import { TableContext } from "../../../utils/TableContext"
-import { getCurrentPageUtils } from "../../../utils/utils"
+import { getCurrentPageUtils, toSentenceCase } from "../../../utils/utils"
 
 const InstitutionsTable = () => {
     const { tableData, setTableData, page, setModalTrigger, setDeleteId, setSelectedData, selectedData } = useContext(TableContext)
@@ -74,10 +74,10 @@ const InstitutionsTable = () => {
                             .map((item: any, i: number) => (
                                 <tr key={i}>
                                     <td >{(page - 1) * 10 + i + 1}</td>
-                                    <td className='name'>{item.name}</td>
+                                    <td className='name'>{getCurrentPageUtils().content === 'Block' ? toSentenceCase(item.name) : item.name}</td>
                                     {item.district && <td className='district'>{item.district}</td>}
                                     {item.legislative_assembly && <td >{item.legislative_assembly}</td>}
-                                    {item.block && <td >{item.block}</td>}
+                                    {item.block && <td >{toSentenceCase(item.block)}</td>}
                                     {item.club_status && <td className='status' >
                                         {item.club_status}
                                     </td>}

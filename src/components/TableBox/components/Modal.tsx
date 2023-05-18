@@ -20,6 +20,7 @@ const Modal = (props: any) => {
         setDelete(false)
         setClub({})
         setSelectedData({} as institutionProps)
+        setUpdateData((prev: any) => !prev)
     }
     return (
         <div className="modal-overlay">
@@ -33,6 +34,10 @@ const Modal = (props: any) => {
                     {selectedData.name && <div className="data-box">
                         <div className="title">Name</div>
                         <div className="content">{selectedData.name}</div>
+                    </div>}
+                    {selectedData.role && <div className="data-box">
+                        <div className="title">Role</div>
+                        <div className="content">{selectedData.role}</div>
                     </div>}
                     {selectedData.email && <div className="data-box">
                         <div className="title">email</div>
