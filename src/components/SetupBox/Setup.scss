@@ -84,3 +84,12 @@
         width: 100%;
     }
 }
+.error,.success{
+    background-color: pink;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.success{
+    background-color: lightgreen;
+}

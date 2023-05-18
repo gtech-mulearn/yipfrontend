@@ -6,12 +6,16 @@ import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
 import { addUser, getRoles } from '../../utils/utils';
 import { DashboardContext } from '../../utils/DashboardContext';
+import { postDataUserProps } from '../../utils/utils';
+import apiGateway from '../../service/apiGateway';
 
 const UserSetup = () => {
     const [roles, setRoles] = useState<string[]>([])
+    const [error, setError] = useState<string>("")
+    const [success, setSuccess] = useState(false)
 
     useEffect(() => {
-        getRoles(setRoles).then(() => console.log(roles))
+        getRoles(setRoles)
     }, [])
     const { setUpdateData, setCreate } = useContext(DashboardContext)
     const [username, setUsername] = useState("")
@@ -21,19 +25,43 @@ const UserSetup = () => {
     const [password, setPassword] = useState("")
 
     const sendData = (): any => {
-        const postData: any = {
-            name: username,
-            email: email,
-            phone: phone,
-            role: role,
-            password: password
-        }
-        addUser(postData).then(() => {
-            setCreate((prev: boolean) => !prev)
-            setUpdateData((prev: any) => !prev)
-        })
-    }
+        if (isEvaluated()) {
+            const postData: any = {
+                name: username,
+                email: email,
+                phone: phone,
+                role: role,
+                password: password
+            }
+            const addUser = async (postData: postDataUserProps) => {
+                apiGateway.post('/api/v1/yip/create-user/', postData)
+                    .then(() => {
+                        setUsername("")
+                        setEmail("")
+                        setPhone("")
+                        setRole("")
+                        setPassword("")
 
+                        setSuccess(true)
+                    })
+                    .catch((err) => setError(err.response.data.message.general))
+            }
+            addUser(postData)
+
+        }
+    }
+    useEffect(() => {
+        setTimeout(() => {
+            setError("")
+        }, 3000);
+    }, [error])
+    useEffect(() => {
+        setTimeout(() => {
+            setSuccess(false)
+            setCreate((prev: boolean) => !prev)
+            setUpdateData((prev: boolean) => !prev)
+        }, 3000);
+    }, [success])
     return (
         <div className="white-container">
             <h3>Setup a new User</h3>
@@ -74,13 +102,17 @@ const UserSetup = () => {
                             <p>Role</p>
                             <Select
                                 options={roles}
-                                isSearchable={true}
                                 isClearable={true}
+                                isSearchable={false}
                                 placeholder={`Select a Role`}
                                 getOptionValue={(option: any) => option.value}
                                 getOptionLabel={(option: any) => option.label}
                                 onChange={(data) => {
-                                    setRole(data.label)
+                                    try {
+                                        setRole(data.label)
+                                    } catch (error) {
+                                        setRole('')
+                                    }
                                 }}
                             />
                         </div>
@@ -106,9 +138,36 @@ const UserSetup = () => {
                 <div className="setup-img">
                     <img src={setupImg} alt="HI" />
                 </div>
+
             </div>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">User Added Successfully</p>}
         </div>
     )
+    function isEvaluated() {
+        if (!username) {
+            setError('Enter Username')
+            return false
+        }
+        if (!email) {
+            setError('Enter Email')
+            return false
+        }
+        if (!phone) {
+            setError('Enter Phone Number')
+            return false
+        }
+        if (!role) {
+
+            setError('Select a Role')
+            return false
+        }
+        if (!password) {
+            setError('Enter Password')
+            return false
+        }
+        return true
+    }
 }
 
 export default UserSetup

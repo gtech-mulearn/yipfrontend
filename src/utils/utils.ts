@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react"
 import { link, urlProps } from "../service/RouteLink"
 import apiGateway from "../service/apiGateway"
-import { institutionProps } from "../service/dataHandler"
+import yip, { institutionProps } from "../service/dataHandler"
 
 export const getCurrentPageUtils = (): urlProps => {
     for (let i in link) {
@@ -41,8 +41,10 @@ export const getRoles = async (setRoles: React.Dispatch<React.SetStateAction<str
     apiGateway.get('/api/v1/yip/get-roles/')
         .then((res) => res.data.response.club_status)
         .then((data) => {
+            yip.roles = data.map((role: string, index: number) => ({ value: index, label: role }))
+
             setRoles(
                 data.map((role: string, index: number) => ({ value: index, label: role })))
         })
         .catch((err) => console.log(err))
-}
+}   

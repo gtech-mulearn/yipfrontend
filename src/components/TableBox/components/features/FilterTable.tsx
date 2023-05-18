@@ -1,10 +1,21 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import yip from "../../../../service/dataHandler"
 import Select from 'react-select'
+import { getCurrentPageUtils, getRoles } from "../../../../utils/utils"
+import { DashboardContext } from "../../../../utils/DashboardContext"
 
 const FilterTable = (props: any) => {
     const [assemblyFilter, setAssemblyFilter] = useState('All')
     const [switchAssembly, setSwitchAssembly] = useState(true)
+    const [roleFilter, setRoleFilter] = useState('All')
+    const { setUpdateData } = useContext(DashboardContext)
+    const [roles, setRoles] = useState<string[]>([])
+    useEffect(() => {
+        getRoles(setRoles)
+    }, [getCurrentPageUtils().content])
+    useEffect(() => {
+        setUpdateData((prev: any) => !prev)
+    }, [roleFilter])
     return (
         <div className="filter-container">
             <div className="filter-box">
@@ -66,7 +77,30 @@ const FilterTable = (props: any) => {
                         }}
                     />}
                 </>}
-                <Select
+                {getCurrentPageUtils().content === 'Users' && <Select
+                    styles={{
+                        control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            minWidth: "200px",
+                        }),
+                    }}
+                    options={yip.roles}
+                    isSearchable={true}
+                    isClearable={true}
+                    placeholder={`Select a Role`}
+                    getOptionValue={(option: any) => option.value}
+                    getOptionLabel={(option: any) => option.label}
+                    onChange={(data: any) => {
+                        try {
+                            setRoleFilter(data.label)
+                            yip.roleFilter = data.label
+                        } catch (error) {
+                            setRoleFilter("All")
+                            yip.roleFilter = "All"
+                        }
+                    }}
+                />}
+                {getCurrentPageUtils().content !== 'Users' && <Select
                     styles={{
                         control: (baseStyles, state) => ({
                             ...baseStyles,
@@ -86,8 +120,8 @@ const FilterTable = (props: any) => {
                             props.setFilterItem("All")
                         }
                     }}
-                />
-                <Select
+                />}
+                {getCurrentPageUtils().content !== 'Users' && <Select
                     styles={{
                         control: (baseStyles) => ({
                             ...baseStyles,
@@ -107,7 +141,7 @@ const FilterTable = (props: any) => {
                             props.setStatusFilter("All")
                         }
                     }}
-                />
+                />}
 
             </div>
 

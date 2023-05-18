@@ -13,7 +13,7 @@ const FilterHeader = (props: any) => {
 
             <div className='table-fn'>
                 <Search />
-                <div className="table-fn-btn" onClick={() => { setCreate(true) }}>
+                <div className="table-fn-btn" onClick={() => { setCreate((prev: boolean) => !prev) }}>
                     <i className="fa-solid fa-plus"></i>
                     <p>Add {getCurrentPageUtils().content}</p>
                 </div>

@@ -34,6 +34,10 @@ const Modal = (props: any) => {
                         <div className="title">Name</div>
                         <div className="content">{selectedData.name}</div>
                     </div>}
+                    {selectedData.role && <div className="data-box">
+                        <div className="title">Role</div>
+                        <div className="content">{selectedData.role}</div>
+                    </div>}
                     {selectedData.email && <div className="data-box">
                         <div className="title">email</div>
                         <div className="content">{selectedData.email}</div>
