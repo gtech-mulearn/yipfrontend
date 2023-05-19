@@ -51,16 +51,16 @@ const UserSetup = () => {
         }
     }
     useEffect(() => {
-        
+        setTimeout(() => {
             setError("")
-       
+        }, 3000);
     }, [error])
     useEffect(() => {
-        
+        setTimeout(() => {
             setSuccess(false)
             setCreate((prev: boolean) => !prev)
             setUpdateData((prev: boolean) => !prev)
-        
+        }, 3000);
     }, [success])
     return (
         <div className="white-container">
