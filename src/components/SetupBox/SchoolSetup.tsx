@@ -4,6 +4,7 @@ import "./Setup.scss"
 import apiGateway from "../../service/apiGateway"
 import yip from "../../service/dataHandler"
 import { DashboardContext } from "../../utils/DashboardContext"
+import { toSentenceCase } from "../../utils/utils"
 
 interface SelectItemProps {
   item: string
@@ -197,7 +198,7 @@ const SchoolSetup = (props: any) => {
                   isClearable={true}
                   placeholder={`Select a Block`}
                   getOptionValue={(option: any) => option.id}
-                  getOptionLabel={(option: any) => option.name}
+                  getOptionLabel={(option: any) => toSentenceCase(option.name)}
                   onChange={(data: any) => {
                     try {
                       setBlockSelectedId(data.id)
