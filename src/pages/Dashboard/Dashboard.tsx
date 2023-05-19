@@ -42,7 +42,7 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
     <>
       <LeftDrawer />
       <div className="dash-container">
-        {<Banner />}
+        {(getCurrentPageUtils().content === 'YIP Club' || getCurrentPageUtils().content === 'Model School') && <Banner />}
         {create && <Setup />}
         <TableContextProvider>
           <TableBox update={update} />
