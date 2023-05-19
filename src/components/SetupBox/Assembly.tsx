@@ -38,7 +38,7 @@ const assembly = () => {
     useEffect(() => {
         setTimeout(() => {
             setSuccess(false)
-            setCreate((prev: boolean) => !prev)
+            setCreate(false)
             setUpdateData((prev: boolean) => !prev)
         }, 3000);
     }, [success])
@@ -84,7 +84,7 @@ const assembly = () => {
                                     sendData()
                             }}>Add assembly</button>
                             <button className='black-btn' onClick={() => {
-                                setCreate((prev: boolean) => !prev)
+                                setCreate(false)
                                 setAssembly("")
                                 setDistrict({ id: "", name: "" })
                             }}>Cancel</button>

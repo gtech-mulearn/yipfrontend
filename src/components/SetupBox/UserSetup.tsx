@@ -58,7 +58,7 @@ const UserSetup = () => {
     useEffect(() => {
         setTimeout(() => {
             setSuccess(false)
-            setCreate((prev: boolean) => !prev)
+            setCreate(false)
             setUpdateData((prev: boolean) => !prev)
         }, 3000);
     }, [success])

@@ -126,7 +126,7 @@ const SchoolSetup = (props: any) => {
           setSchoolSelectedId("")
           setSchoolSelectedName("")
           setTimeout(() => {
-            setCreate((prev: any) => !prev)
+            setCreate(false)
             setVisible(false)
           }, 3000)
         })
