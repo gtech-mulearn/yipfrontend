@@ -21,6 +21,8 @@ export const DashboardContextProvider: React.FC<any> = ({ children }) => {
     const [create, setCreate] = useState(false)
     const [institutions, setInstitutions] = useState<institutionProps[]>([])
 
+    
+
     return (
         <DashboardContext.Provider value={{
             currentOption, setCurrentOption,
