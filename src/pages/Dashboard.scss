@@ -1,0 +1,39 @@
+@use '../abstracts/variables';
+
+.dash-container{
+    margin-left: variables.$slidebar-width;
+    padding: 0rem 6rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    background-color: #f5f8fa;
+}
+
+.white-container{
+    height: auto;
+    position: relative;
+    background-color: white;
+    border: 1px solid black;
+    margin-top: 30px;
+    border-radius:20px ;
+    padding: 20px;
+}
+
+
+.bottom-tab-container{
+    display: none;
+}
+@media only screen and (max-width: 1024px){
+    .dash-container{
+        margin: 0;
+        margin-bottom: 4rem;
+        padding: 1rem;
+    }
+    .bottom-tab-container{
+        display: block;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+}
