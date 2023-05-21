@@ -1,8 +1,42 @@
-import React, { SetStateAction } from "react"
-import { link, urlProps } from "../service/RouteLink"
-import apiGateway from "../service/apiGateway"
-import { institutionProps } from "../service/dataHandler"
-
+import React, { Dispatch, SetStateAction } from 'react'
+export interface urlProps {
+    icon: string
+    path: string
+    content: string
+    tableTitleList: string[]
+}
+export const link: urlProps[] = [
+    {
+        icon: 'fa-school',
+        path: '/school-dashboard',
+        content: 'Model School',
+        tableTitleList: ["SL", "Name", "District", "Legislative Assembly", "Block", "Status", "Manage"]
+    },
+    {
+        icon: 'fa-people-group',
+        path: '/club-dashboard',
+        content: 'YIP Club',
+        tableTitleList: ["SL", "Name", "District", "Status", "Manage"]
+    },
+    {
+        icon: "fa-user",
+        path: '/user',
+        content: 'Users',
+        tableTitleList: ["SL", "Name", "Email", "Phone", "Role", "Manage"]
+    },
+    {
+        icon: "fa-users",
+        path: '/legislative-assembly',
+        content: 'Legislative Assembly',
+        tableTitleList: ["SL", "Name", "District", "Manage"]
+    },
+    {
+        icon: 'fa-building',
+        path: '/block',
+        content: 'Block',
+        tableTitleList: ["SL", "Name", "District", "Manage"]
+    }
+]
 export const getCurrentPageUtils = (): urlProps => {
     for (let i in link) {
         if (window.location.pathname === link[i].path) {
@@ -11,38 +45,9 @@ export const getCurrentPageUtils = (): urlProps => {
     }
     return {} as urlProps
 }
-
-export const fetchUserList = async (setData: React.Dispatch<React.SetStateAction<institutionProps[]>>) => {
-    apiGateway.get('/api/v1/yip/list-users/')
-        .then((res) => res.data.response)
-        .then((data) => setData(data))
-        .catch((err) => console.log(err))
+export function requirementSatisfied(value: string) {
+    return value === 'Model School' || value === 'YIP Club'
 }
-export interface postDataUserProps {
-    name: string,
-    email: string,
-    password: string,
-    phone: string,
-    role: string,
-}
-export const addUser = async (postData: postDataUserProps) => {
-    apiGateway.post('/api/v1/yip/create-user/', postData)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
-}
-
-export const handleDelete = (schoolId: string, setUpdateData: React.Dispatch<React.SetStateAction<boolean>>) => {
-
-    apiGateway.delete(`/api/v1/yip/delete-${getCurrentPageUtils().content !== 'Users' ? 'model-schools' : 'user'}/${schoolId}/`)
-        .then(() => setUpdateData((prev: boolean) => !prev))
-        .catch(error => console.error(error))
-}
-export const getRoles = async (setRoles: React.Dispatch<React.SetStateAction<string[]>>) => {
-    apiGateway.get('/api/v1/yip/get-roles/')
-        .then((res) => res.data.response.club_status)
-        .then((data) => {
-            setRoles(
-                data.map((role: string, index: number) => ({ value: index, label: role })))
-        })
-        .catch((err) => console.log(err))
+export function updater(setState: Dispatch<SetStateAction<boolean>>) {
+    setState(prev => !prev)
 }

@@ -68,18 +68,20 @@
     margin-left: 4px;
     font-weight: 600;
 }
-.visible{
-    display: block !important;
-}
+
 .logout{
     @include functions.btn();
     color: white !important;
     background-color:red;
 }
+@media only screen and (min-width:425px){
+  .visible{
+    display: block !important;
+}
+}
 
 
-
-@media only screen and (max-width: 1200px){
+@media only screen and (max-width: 1024px){
     .left-menu{
         display: none;
     }

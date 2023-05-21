@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/LoginPage/Login';
-import Dashboard from './pages/Dashboard/Dashboard';
-import PrivateRoutes, { PublicRoutes } from './utils/PrivateRoutes';
-import { link } from './service/RouteLink'
-import { DashboardContextProvider } from './utils/DashboardContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import { PrivateRoutes, PublicRoutes } from './utils/RoutePrivacy';
+import { link } from './utils/utils';
+
 
 function App() {
 
@@ -17,9 +17,7 @@ function App() {
           {link.map((item, index) => {
             return <Route key={index} path={item.path}
               element={
-                <DashboardContextProvider>
-                  <Dashboard content={item.content} />
-                </DashboardContextProvider>
+                <Dashboard />
               } />
           })}
         </Route>

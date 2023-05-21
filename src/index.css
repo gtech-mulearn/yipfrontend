@@ -39,3 +39,8 @@ input:focus{
   outline:none;
   border: 2px solid #FB6962;
 }
+@media screen and (max-width: 425px) {
+  body{
+      margin-bottom: 150px;
+  }
+} 

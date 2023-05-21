@@ -1,35 +1,15 @@
-import { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect } from 'react'
 import BannerImg from "../../assets/Study abroad-pana.png"
-import { fetchInstitutionStatusCount } from "../../service/bannerService"
-import { DashboardContext } from "../../utils/DashboardContext"
-import { getCurrentPageUtils } from "../../utils/utils";
-interface CountResponse {
-    Identified: number;
-    Confirmed: number;
-    "Connection established": number;
-    "Orientation Scheduled": number;
-    "Orientation Completed": number;
-    "Execom Formed": number;
-    total: number;
-}
-
-const initialState: CountResponse = {
-    Identified: 0,
-    Confirmed: 0,
-    "Connection established": 0,
-    "Orientation Scheduled": 0,
-    "Orientation Completed": 0,
-    "Execom Formed": 0,
-    total: 0,
-};
-
+import { getCurrentPageUtils, requirementSatisfied } from '../../utils/utils'
+import apiGateway from '../../services/apiGateway'
+import './Banner.scss'
 const Banner = () => {
-    const [count, setCount] = useState<CountResponse>(initialState)
-    const { dataUpdate } = useContext(DashboardContext)
 
+    const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
+        requirementSatisfied(getCurrentPageUtils().content)
         fetchInstitutionStatusCount(setCount, getCurrentPageUtils().content)
-    }, [getCurrentPageUtils().content, dataUpdate])
+    }, [getCurrentPageUtils().content])
     return (
         <div className="banner-container">
             <div className="welcome-banner">
@@ -49,4 +29,31 @@ const Banner = () => {
         </div>
     )
 }
+const initialState: CountResponse = {
+    Identified: 0,
+    Confirmed: 0,
+    "Connection established": 0,
+    "Orientation Scheduled": 0,
+    "Orientation Completed": 0,
+    "Execom Formed": 0,
+    total: 0,
+};
+interface CountResponse {
+    Identified: number;
+    Confirmed: number;
+    "Connection established": number;
+    "Orientation Scheduled": number;
+    "Orientation Completed": number;
+    "Execom Formed": number;
+    total: number;
+}
+const fetchInstitutionStatusCount = async (setCount: Function, currentPage: string) => {
+    const institutionType = currentPage === 'Model School' ? 'School' : 'College'
+    apiGateway.get(`/api/v1/yip/get-clubs-count/${institutionType}/`)
+        .then(res => res.data.response)
+        .then(res => setCount(res))
+        .catch(err => console.log(err))
+}
+
+
 export default Banner

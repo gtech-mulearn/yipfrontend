@@ -2,13 +2,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { getCurrentPageUtils } from "../../utils/utils"
 import Select from 'react-select'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
-interface dummyProps {
+export interface dummyProps {
     id: string
     name: string
 }
-const dummy: dummyProps[] = [
+export const dummy: dummyProps[] = [
     { id: "1", name: 'Dummy1' },
-    { id: "2", name: 'Dummy2' },
+    { id: "2", name: 'Dummy i need a long long and long' },
     { id: "3", name: 'Dummy3' },
     { id: "4", name: 'Dummy4' },
     { id: "5", name: 'Dummy5' },
@@ -44,10 +44,10 @@ function Buttons() {
         </div>
     )
 }
-function NewSelect({ option, value, setData }: newSelectProps) {
+export function NewSelect({ option, value, setData = () => { setData(intialState) }, setValue = () => { setValue('All') }, requiredHeader = true, requiredLabel = false }: newSelectProps) {
     return (
         <div className="setup-item">
-            <p>{value}</p>
+            {requiredHeader && <p>{value}</p>}
             <Select
                 options={option}
                 isSearchable={true}
@@ -56,8 +56,14 @@ function NewSelect({ option, value, setData }: newSelectProps) {
                 getOptionValue={(option: dummyProps) => option.id}
                 getOptionLabel={(option: dummyProps) => option.name}
                 onChange={(data) => {
-                    if (data === null) setData(intialState)
-                    else setData(data)
+                    if (requiredLabel) {
+                        if (data === null) setValue('All')
+                        else setValue(data.name)
+                    }
+                    else {
+                        if (data === null) setData(intialState)
+                        else setData(data)
+                    }
                 }}
             />
         </div>
@@ -83,9 +89,12 @@ function NewInput({ value, setData }: newInputProps) {
 interface newSelectProps {
     option: dummyProps[]
     value: string
-    setData: Dispatch<SetStateAction<dummyProps>>
+    setData?: Dispatch<SetStateAction<dummyProps>>
+    setValue?: Dispatch<SetStateAction<string>>
+    requiredHeader?: boolean
+    requiredLabel?: boolean
 }
-const intialState = { id: '', name: '' }
+export const intialState = { id: '', name: '' }
 
 
 const All: React.FC<{ content: string }> = ({ content }) => {
