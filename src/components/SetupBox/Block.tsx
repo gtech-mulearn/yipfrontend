@@ -56,7 +56,8 @@ const Block = () => {
                                 placeholder='Type block Name'
                                 id="username"
                                 onChange={(e) => {
-                                    setBlock(e.target.value)
+                                    if (e.target.value.length !== null && e.target.value.length !== undefined)
+                                        setBlock(e.target.value)
                                 }} />
                         </div>
                         <div className="setup-item">
@@ -69,13 +70,13 @@ const Block = () => {
                                 getOptionValue={(option: any) => option.id}
                                 getOptionLabel={(option: any) => option.name}
                                 onChange={(data: any) => {
-                                    try {
+                                    if (data) {
                                         setDistrict(data)
-                                    } catch (error) {
+                                    }
+                                    else {
                                         setDistrict({ id: "", name: "" })
                                     }
                                 }}
-                                required
                             />
                         </div>
                         <div className="create_btn_cntr">

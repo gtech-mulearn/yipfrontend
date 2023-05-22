@@ -43,8 +43,7 @@ const TableBox: React.FC<tableProps> = ({ update }) => {
     }, [filterItem, statusFilter, update])
     useEffect(() => {
         setPagination(1)
-
-    }, [])
+    }, [yip.collegeSearchValue])
     useEffect(() => {
         setFilterItem("All")
         setStatusFilter("All")

@@ -77,8 +77,6 @@ const UserSetup = () => {
                                 placeholder='Type User Name'
                                 id="username"
                                 onChange={(e) => {
-                                    if (hasWhitespace(e.target.value))
-                                        setError("Username cannot have whitespace")
                                     setUsername(e.target.value)
                                 }} />
                         </div>
@@ -153,11 +151,7 @@ const UserSetup = () => {
             clearError(setError)
             return false
         }
-        if (hasWhitespace(username)) {
-            setError('Username cannot have whitespace')
-            clearError(setError)
-            return false
-        }
+
         if (!email) {
             setError('Enter Email')
             clearError(setError)
@@ -179,7 +173,11 @@ const UserSetup = () => {
             clearError(setError)
             return false
         }
-
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters')
+            clearError(setError)
+            return false
+        }
         return true
     }
     function hasWhitespace(text: string): boolean {
