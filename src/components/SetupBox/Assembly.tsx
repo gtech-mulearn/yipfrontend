@@ -56,7 +56,8 @@ const assembly = () => {
                                 placeholder='Type assembly Name'
                                 id="username"
                                 onChange={(e) => {
-                                    setAssembly(e.target.value)
+                                    if (e.target.value.length !== null && e.target.value.length !== undefined)
+                                        setAssembly(e.target.value)
                                 }} />
                         </div>
                         <div className="setup-item">
@@ -69,13 +70,13 @@ const assembly = () => {
                                 getOptionValue={(option: any) => option.id}
                                 getOptionLabel={(option: any) => option.name}
                                 onChange={(data: any) => {
-                                    try {
+                                    if (data) {
                                         setDistrict(data)
-                                    } catch (error) {
+                                    }
+                                    else {
                                         setDistrict({ id: "", name: "" })
                                     }
                                 }}
-                                required
                             />
                         </div>
                         <div className="create_btn_cntr">
