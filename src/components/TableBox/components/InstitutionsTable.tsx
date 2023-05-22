@@ -4,6 +4,8 @@ import { DashboardContext } from "../../../utils/DashboardContext"
 import { TableContext } from "../../../utils/TableContext"
 import { getCurrentPageUtils, toSentenceCase } from "../../../utils/utils"
 
+//Todo: Rename file to something more general
+
 const InstitutionsTable = () => {
     const { tableData, setTableData, page, setModalTrigger, setDeleteId, setSelectedData, selectedData } = useContext(TableContext)
 

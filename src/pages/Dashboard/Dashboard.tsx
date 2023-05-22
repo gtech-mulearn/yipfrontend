@@ -1,20 +1,22 @@
 import React, { useEffect, useContext } from "react"
 import "./Dashboard.scss"
 import { LeftDrawer, BottomTab } from "../../components/Navbar/Navbar"
-import ClubSetup from "../../components/SetupBox/ClubSetup"
-import SchoolSetup from "../../components/SetupBox/SchoolSetup"
+
 import TableBox from "../../components/TableBox/TableBox"
 import yip from "../../service/dataHandler"
-import { dashboardProps } from "../../service/RouteLink"
 import { fetchInstitutions, fetchData } from '../../service/dashboardService'
 import Banner from "../../components/Banner/Banner"
 import { DashboardContext } from "../../utils/DashboardContext"
 import { TableContextProvider } from "../../utils/TableContext"
 import { fetchBlocks, fetchLegislativeAssemblies, fetchUserList, getCurrentPageUtils } from "../../utils/utils"
 import Setup from "../../components/SetupBox/Setup"
-const Dashboard: React.FC<dashboardProps> = ({ content }) => {
+
+
+
+const Dashboard = () => {
   const { currentOption, dataUpdate, setUpdateData, create, setInstitutions } = useContext(DashboardContext)
-  yip.currentPage = content
+  yip.currentPage = getCurrentPageUtils().content
+  const content = getCurrentPageUtils().content
   const update = () => {
     setUpdateData(prev => !prev)
   }
@@ -22,6 +24,8 @@ const Dashboard: React.FC<dashboardProps> = ({ content }) => {
     fetchData()
 
   }, [])
+
+
   useEffect(() => {
     switch (getCurrentPageUtils().content) {
       case 'Users': fetchUserList(setInstitutions)

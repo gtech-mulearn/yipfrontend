@@ -219,6 +219,7 @@ class YIP {
             }
     }
 }
+
 const yip = new YIP()
 
 export class InstituteCreate {
