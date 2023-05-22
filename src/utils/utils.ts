@@ -71,3 +71,8 @@ export function toSentenceCase(input: string): string {
     const restOfSentence = trimmedInput.slice(1,).toLowerCase();
     return `${firstChar}${restOfSentence}`;
 }
+export function clearError(setError: any) {
+    setTimeout(() => {
+        setError('')
+    }, 3000)
+}

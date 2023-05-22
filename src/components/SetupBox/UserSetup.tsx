@@ -4,7 +4,7 @@ import PhoneInput from 'react-phone-number-input'
 import Select from 'react-select';
 import './Setup.scss'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
-import { addUser, getRoles } from '../../utils/utils';
+import { addUser, clearError, getRoles } from '../../utils/utils';
 import { DashboardContext } from '../../utils/DashboardContext';
 import { postDataUserProps } from '../../utils/utils';
 import apiGateway from '../../service/apiGateway';
@@ -41,27 +41,28 @@ const UserSetup = () => {
                         setPhone("")
                         setRole("")
                         setPassword("")
-
                         setSuccess(true)
                     })
-                    .catch((err) => setError(err.response.data.message.general))
+                    .catch((err) => {
+                        setError(err.response.data.message.general)
+                        setTimeout(() => {
+                            setError("")
+                        }, 3000)
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            setSuccess(false)
+                            setCreate(false)
+                            setUpdateData((prev: boolean) => !prev)
+                        }, 3000);
+                    }
+                    )
             }
             addUser(postData)
 
         }
     }
-    useEffect(() => {
-        setTimeout(() => {
-            setError("")
-        }, 3000);
-    }, [error])
-    useEffect(() => {
-        setTimeout(() => {
-            setSuccess(false)
-            setCreate((prev: boolean) => !prev)
-            setUpdateData((prev: boolean) => !prev)
-        }, 3000);
-    }, [success])
+
     return (
         <div className="white-container">
             <h3>Setup a new User</h3>
@@ -149,35 +150,43 @@ const UserSetup = () => {
     function isEvaluated() {
         if (!username) {
             setError('Enter Username')
+            clearError(setError)
             return false
         }
         if (hasWhitespace(username)) {
             setError('Username cannot have whitespace')
+            clearError(setError)
             return false
         }
         if (!email) {
             setError('Enter Email')
+            clearError(setError)
             return false
         }
         if (!phone) {
             setError('Enter Phone Number')
+            clearError(setError)
             return false
         }
         if (!role) {
 
             setError('Select a Role')
+            clearError(setError)
             return false
         }
         if (!password) {
             setError('Enter Password')
+            clearError(setError)
             return false
         }
+
         return true
     }
     function hasWhitespace(text: string): boolean {
         const whitespaceRegex = /\s/;
         return whitespaceRegex.test(text);
     }
+
 
 }
 

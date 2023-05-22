@@ -4,6 +4,7 @@ import yip from '../../service/dataHandler'
 import apiGateway from '../../service/apiGateway'
 import setupImg from '../../assets/Kindergarten student-bro 1.png'
 import { DashboardContext } from '../../utils/DashboardContext'
+import { clearError } from '../../utils/utils'
 const Block = () => {
     const { setCreate, setUpdateData } = useContext(DashboardContext)
     const [block, setBlock] = useState('')
@@ -24,24 +25,23 @@ const Block = () => {
                         setDistrict({ id: "", name: "" })
                         setSuccess(true)
                     })
-                    .catch((err) => setError(err.response.data.message.general))
+                    .catch((err) => {
+                        setError(err.response.data.message.general)
+                        clearError(setError)
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            setSuccess(false)
+                            setCreate(false)
+                            setUpdateData((prev: boolean) => !prev)
+                        }, 3000);
+                    })
             }
             addUser(postData)
 
         }
     }
-    useEffect(() => {
-        setTimeout(() => {
-            setError("")
-        }, 3000);
-    }, [error])
-    useEffect(() => {
-        setTimeout(() => {
-            setSuccess(false)
-            setCreate((prev: boolean) => !prev)
-            setUpdateData((prev: boolean) => !prev)
-        }, 3000);
-    }, [success])
+
     return (
         <div className="white-container">
             <h3>Setup a new User</h3>
@@ -84,7 +84,7 @@ const Block = () => {
                                     sendData()
                             }}>Add Block</button>
                             <button className='black-btn' onClick={() => {
-                                setCreate((prev: boolean) => !prev)
+                                setCreate(false)
                                 setBlock("")
                                 setDistrict({ id: "", name: "" })
                             }}>Cancel</button>
@@ -106,10 +106,12 @@ const Block = () => {
     function isEvaluated() {
         if (block === '') {
             setError("Enter a block name")
+            clearError(setError)
             return false
         }
         else if (district.name === '') {
             setError("Select a district")
+            clearError(setError)
             return false
         }
         return true
