@@ -105,23 +105,36 @@ const ClubSetup = () => {
                 placeholder={districtName ? districtName : `Select a District`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.name}
-                onChange={handleDistrict}
+                onChange={(e) => {
+                  try {
+                    handleDistrict(e)
+                  } catch (error) {
+                    setDistrictSelected('')
+                    setDistrictName('')
+                  }
+                }
+                }
               />
             </div>
-            {districtSelected && <div className="setup-item" id="district">
+            {districtSelected && <div className="setup-item" >
               <p>College</p>
               <Select
                 options={college}
-                noOptionsMessage={() => districts.length > 0 ? `College is Loading` : `Select a District First`}
+                noOptionsMessage={() => `Colleges are Loading`}
                 isSearchable={true}
                 isClearable={true}
-                placeholder={`Select a College`}
+                placeholder={collegeName ? collegeName : `Select a College`}
                 getOptionValue={(option: any) => option.id}
                 getOptionLabel={(option: any) => option.title}
                 onChange={(data: any) => {
+                  try {
+                    setCollegeName(data.title)
+                    setCollegeSelected(data.id)
 
-                  setCollegeName(data.title)
-                  //console.log(collegeName)
+                  } catch (error) {
+                    setCollegeName('')
+                    setCollegeSelected('')
+                  }
                 }}
               />
             </div>}

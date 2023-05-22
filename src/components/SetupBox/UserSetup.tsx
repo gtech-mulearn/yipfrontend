@@ -77,8 +77,6 @@ const UserSetup = () => {
                                 placeholder='Type User Name'
                                 id="username"
                                 onChange={(e) => {
-                                    if (hasWhitespace(e.target.value))
-                                        setError("Username cannot have whitespace")
                                     setUsername(e.target.value)
                                 }} />
                         </div>
