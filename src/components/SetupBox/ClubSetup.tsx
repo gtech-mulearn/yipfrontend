@@ -63,6 +63,7 @@ const ClubSetup = () => {
       district_id: districtSelected,
     }
     const createData = async () => {
+      // console.log(postData)
       apiGateway.post(`/api/v1/yip/create-college-club/`, postData)
         .then((response) => {
           setUpdateData((prev: any) => !prev)
@@ -70,7 +71,7 @@ const ClubSetup = () => {
         })
         .catch(error => {
           console.log(error)
-          setActions("Club already exits")
+          setActions("Club already exists")
         })
         .finally(() => {
           setDistrictSelected("")
