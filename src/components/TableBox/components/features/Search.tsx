@@ -6,6 +6,9 @@ const Search = () => {
     useEffect(() => {
         yip.collegeSearch(search)
     }, [search])
+    useEffect(() => {
+        setSearch("")
+    }, [getCurrentPageUtils().content])
     return (
         <div className='search-box'>
             <input className='search-bar' type="text" value={search} placeholder={`Search ${getCurrentPageUtils().content}`} onChange={e => {
