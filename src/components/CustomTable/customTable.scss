@@ -1,0 +1,103 @@
+table{
+    margin-top: 20px;
+    // border-collapse: collapse;
+    border-spacing:15px;
+    width: 100%;
+    thead{
+        border-bottom:1px solid black ;
+        tr{
+            text-align: left;
+            .cursor{
+                cursor: pointer;
+                &:hover{
+                    i{
+                    color: #59b3fa;
+                    }
+                }
+            }
+            .selected{
+                color: #59b3fa;
+            }
+            th{
+                user-select: none;
+                .th-mid{
+                    text-align: center;
+                }
+                .th-wrap{
+                    display: flex;
+                    align-items: center;
+                    i{
+                        padding-right:5px ;
+                    }
+                }
+            }
+        }
+    }
+    tbody{
+        tr{
+            td{
+                .edit-btn{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #100f0f;
+                    color: white;
+                    border-radius: 5px;
+                    width: 50px;
+                    padding: 5px;
+                    font-size: 12px;
+                    gap: 5px;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: #2d353d;  
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.paginator{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    div{
+        display: flex;
+        gap:0 15px;
+        div{
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        i{
+            height: 20px;
+            display: flex;
+            color: white;
+            align-items: center;
+            background-color: rgb(80, 75, 75);
+            padding:0 15px ;
+            border-radius: 10px;
+            font-size: 10px;
+            
+        }
+        .input{
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            padding: 5px;
+            font-size: small;
+            margin: 0;
+            text-align: center; 
+            width: 50px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+
+            &:focus{
+                border: 1px solid rgb(0, 0, 0);
+            }
+        }
+        
+    }
+}
