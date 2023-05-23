@@ -5,3 +5,7 @@ export const bannerRoutes = {
     schoolBanner: "/api/v1/yip/get-clubs-count/School/",
     clubBanner: "/api/v1/yip/get-clubs-count/College/"
 }
+export const setupRoutes = {
+    userSetup: "/api/v1/yip/get-roles/",
+    userCreate: '/api/v1/yip/create-user/',
+}

@@ -1,4 +1,4 @@
-@use '../../../abstracts/variables.scss';
+@use '../../../../abstracts/variables.scss';
 
 .dash-container {
     margin-left: variables.$slidebar-width;
@@ -8,7 +8,7 @@
     position: relative;
     justify-content: center;
     background-color: #f5f8fa;
-    
+
     @media only screen and (max-width: 1024px) {
         margin: 0;
         margin-bottom: 5rem;

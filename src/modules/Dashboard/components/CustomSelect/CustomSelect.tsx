@@ -19,12 +19,13 @@ export const CustomSelect: FC<newSelectProps> = ({
     setData = () => { setData(intialState) },
     setValue = () => { setValue('All') },
     requiredHeader = true,
-    requiredLabel = false
+    requiredLabel = false,
 }) => {
     return (
         <div className="setup-item">
             {requiredHeader && <p>{value}</p>}
             <Select
+
                 options={option}
                 isSearchable={true}
                 isClearable={true}
