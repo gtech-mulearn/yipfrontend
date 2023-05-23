@@ -15,7 +15,7 @@ export const LeftDrawer = () => {
                         <div className="menu-item-container " key={index}>
                             <Link className="link-item" to={item.path}>
                                 <li className="menu-item">
-                                    <div className={`menu-icon ${getCurrentPageUtils().content === item.content ? "active" : ""}`}>
+                                    <div className={`menu-icon ${window.location.pathname === item.path ? "active" : ""}`}>
                                         <i className={`fa-sharp fa-solid ${item.icon}`}></i>
                                     </div>
                                     <h5>{item.content}</h5>

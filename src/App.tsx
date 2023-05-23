@@ -1,10 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import { BrowserRouter as Router, Routes, Route, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Login from './modules/Login/pages/Login';
 import Dashboard from './pages/Dashboard';
 import { PrivateRoutes, PublicRoutes } from './utils/RoutePrivacy';
 import { link } from './utils/utils';
 
-
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <PublicRoutes />,
+    children: [
+      {
+        path: '',
+        element: <Login />
+      }
+    ]
+  },
+  {
+    path: 'dashboard/',
+    element: <PrivateRoutes />,
+    children: [
+      {
+        path: '',
+        element: <Dashboard />
+      }
+    ]
+  }
+])
 function App() {
 
   return (

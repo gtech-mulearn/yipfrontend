@@ -1,0 +1,13 @@
+@use '../../../../abstracts/colors.scss';
+.login-error{
+    background-color: colors.$error-box;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    transition: opacity 0.3s linear, display 0s linear;
+    p{
+        color: rgb(146, 9, 9);
+        font-size: 13px;
+        font-weight: 500;
+    }
+}

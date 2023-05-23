@@ -1,0 +1,32 @@
+export interface urlProps {
+    icon: string
+    url: string
+    title: string
+}
+export const buttons: urlProps[] = [
+    {
+        icon: 'fa-school',
+        url: '/school-dashboard',
+        title: 'Model School',
+    },
+    {
+        icon: 'fa-people-group',
+        url: '/club-dashboard',
+        title: 'YIP Club',
+    },
+    {
+        icon: "fa-user",
+        url: '/user',
+        title: 'Users',
+    },
+    {
+        icon: "fa-users",
+        url: '/legislative-assembly',
+        title: 'Legislative Assembly',
+    },
+    {
+        icon: 'fa-building',
+        url: '/block',
+        title: 'Block',
+    }
+]

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BannerImg from "../../assets/Study abroad-pana.png"
 import { getCurrentPageUtils, requirementSatisfied } from '../../utils/utils'
-import apiGateway from '../../services/apiGateway'
+import { privateGateway as apiGateway } from '../../services/apiGateway'
 import './Banner.scss'
 const Banner = () => {
 
@@ -52,7 +52,7 @@ const fetchInstitutionStatusCount = async (setCount: Function, currentPage: stri
     apiGateway.get(`/api/v1/yip/get-clubs-count/${institutionType}/`)
         .then(res => res.data.response)
         .then(res => setCount(res))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 
 

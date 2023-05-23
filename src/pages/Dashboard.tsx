@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react'
-import { BottomTab, LeftDrawer } from '../components/Navbar/Navbar'
 import Banner from '../components/Banner/Banner'
 import './Dashboard.scss'
 import { getCurrentPageUtils, requirementSatisfied, updater } from '../utils/utils'
 import Table from '../components/Table/Table'
-import Setup from '../components/Setup/Setup'
+import { LeftDrawer } from '../modules/Dashboard/components/Navbar/LeftDrawer'
+import { BottomTab } from '../modules/Dashboard/components/Navbar/Bottom'
+import Setup from '../modules/Dashboard/components/Setup/Setup'
 const Dashboard = () => {
 
     return (
         <>
-            <LeftDrawer />
+            < LeftDrawer />
             <div className='dash-container'>
                 {requirementSatisfied(getCurrentPageUtils().content) && <Banner />}
-                {<Setup />}
+                <Setup />
                 <Table />
             </div>
             <BottomTab />
@@ -20,4 +21,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+export default Dashboard 

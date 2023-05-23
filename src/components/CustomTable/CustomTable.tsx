@@ -40,6 +40,7 @@ function CustomTable<TableProps>({
     const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
+
     function capitalizeString(sentence: string): string {
         let capitalizedSentence = sentence.toLowerCase();
         capitalizedSentence = capitalizedSentence.charAt(0).toUpperCase() + capitalizedSentence.slice(1);
@@ -125,8 +126,9 @@ function CustomTable<TableProps>({
         }
         return ''
     }
+
     return (
-        <>
+        <div className="table-wrap">
 
             <table className='table '>
                 {/* Table Header */}
@@ -206,7 +208,7 @@ function CustomTable<TableProps>({
                     </div>
                 </div>
             </div >
-        </>
+        </div>
     )
 }
 export default CustomTable

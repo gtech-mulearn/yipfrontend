@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { getCurrentPageUtils } from "../../utils/utils"
 import Select from 'react-select'
-import setupImg from '../../assets/Kindergarten student-bro 1.png'
+import setupImg from '../../assets/High School-amico.png'
 export interface dummyProps {
     id: string
     name: string
@@ -107,7 +107,6 @@ const All: React.FC<{ content: string }> = ({ content }) => {
     const [assemblyList, setAssemblyList] = useState<dummyProps>(intialState)
     const [blockList, setBlockList] = useState<dummyProps>(intialState)
     useEffect(() => {
-        console.log(name, email, phone, password, districtList, schoolList, assemblyList, blockList)
         setName("")
         setEmail("")
         setPhone("")

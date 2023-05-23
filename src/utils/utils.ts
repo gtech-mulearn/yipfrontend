@@ -10,31 +10,31 @@ export const link: urlProps[] = [
         icon: 'fa-school',
         path: '/school-dashboard',
         content: 'Model School',
-        tableTitleList: ["SL", "Name", "District", "Legislative Assembly", "Block", "Status", "Manage"]
+        tableTitleList: ["Name", "District", "Legislative Assembly", "Block", "Status"]
     },
     {
         icon: 'fa-people-group',
         path: '/club-dashboard',
         content: 'YIP Club',
-        tableTitleList: ["SL", "Name", "District", "Status", "Manage"]
+        tableTitleList: ["Name", "District", "Status"]
     },
     {
         icon: "fa-user",
         path: '/user',
         content: 'Users',
-        tableTitleList: ["SL", "Name", "Email", "Phone", "Role", "Manage"]
+        tableTitleList: ["Name", "Email", "Phone", "Role"]
     },
     {
         icon: "fa-users",
         path: '/legislative-assembly',
         content: 'Legislative Assembly',
-        tableTitleList: ["SL", "Name", "District", "Manage"]
+        tableTitleList: ["Name", "District"]
     },
     {
         icon: 'fa-building',
         path: '/block',
         content: 'Block',
-        tableTitleList: ["SL", "Name", "District", "Manage"]
+        tableTitleList: ["Name", "District"]
     }
 ]
 export const getCurrentPageUtils = (): urlProps => {
@@ -50,4 +50,9 @@ export function requirementSatisfied(value: string) {
 }
 export function updater(setState: Dispatch<SetStateAction<boolean>>) {
     setState(prev => !prev)
+}
+export function paginateArray<T>(array: T[], page: number): T[] {
+    const startIndex = (page - 1) * 10;
+    const endIndex = startIndex + 10;
+    return array.slice(startIndex, endIndex);
 }

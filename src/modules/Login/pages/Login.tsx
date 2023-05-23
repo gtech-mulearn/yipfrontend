@@ -1,17 +1,14 @@
 import { useState } from "react"
-import YIPlogo from '../assets/logo.png'
-import "./Login.scss"
-import { apiPublicGateway } from "../services/apiGateway"
-interface loginPostDataProps {
-    email: string
-    password: string
-}
+import YIPlogo from '../../../newAssets/logo.png'
+import ErrorBox from "../components/ErrorBox/ErrorBox"
+import { login } from "../services/apis"
+import './Login.scss'
+
 function Login() {
     const [errorStatus, setErrorStatus] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [password, setPassword] = useState<string>("")
     const [email, setEmail] = useState("")
-
     return (
         <div className="login-background">
             <div className="login-container">
@@ -43,24 +40,8 @@ function Login() {
                         <label>Show Password</label>
                     </div>
                     <button type="button" id="submitBtn" onClick={
-                        () => {
-                            const postData: loginPostDataProps = {
-                                email: email,
-                                password: password
-                            }
-                            apiPublicGateway.post("/api/v1/yip/login/", postData)
-                                .then((res) => res.data)
-                                .then((data) => {
-                                    setErrorStatus(false)
-                                    localStorage.setItem("accessToken", data.response.accessToken)
-                                    window.location.replace("/school-dashboard")
-                                })
-                                .catch((err) => {
-                                    setErrorStatus(true)
-                                    console.error(err)
-                                })
-                        }
-                    }>
+                        () => login(email, password, setErrorStatus)}
+                    >
                         Login
                     </button>
                     {errorStatus ? <ErrorBox /> : <></>}
@@ -69,13 +50,4 @@ function Login() {
         </div >
     )
 }
-
-const ErrorBox = () => {
-    return (
-        <div id="login-error" className="login-error">
-            <p>Incorrect Username or Password!!!</p>
-        </div>
-    )
-}
-
 export default Login

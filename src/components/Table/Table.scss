@@ -3,6 +3,11 @@
 .table-top{
     display: flex;
     flex-direction: column;
+    @media screen and (min-width:769px) {
+    align-items: center;    
+    }
+
+    padding-bottom: 10px;
     .table-fn{
         display: flex;
         gap:8px;
@@ -19,7 +24,7 @@
             font-size: 14px;
         }
         @media screen and (max-width: 560px) {
-            justify-content: flex-end;
+            justify-content: flex-end; 
             flex-wrap: wrap;
 
             .table-fn-btn{
@@ -99,7 +104,6 @@
         }  
         .table-white-btn{
             width: fit-content;
-            height: fit-content;
             display: flex;
             align-items: center;
             background-color: white;
@@ -118,3 +122,16 @@
 
 // Table 
 
+.status{
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    color: white;
+    font-size: 12px;
+    background-color: #0bd815;
+    border-radius: 15px; 
+    width: 130px;
+    user-select: none;
+}
