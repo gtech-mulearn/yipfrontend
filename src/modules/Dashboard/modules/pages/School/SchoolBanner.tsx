@@ -3,7 +3,7 @@ import BannerImg from "../../../../../assets/Study abroad-pana.png"
 import './Banner.scss'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { bannerRoutes } from '../../../../../services/urls'
-const Banner = () => {
+const SchoolBanner = () => {
     const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
         fetchInstitutionStatusCount(setCount)
@@ -53,4 +53,4 @@ const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<Cou
 }
 
 
-export default Banner
+export default SchoolBanner

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Table = () => {
+const ClubTable = () => {
     return (
         <div>Table</div>
     )
 }
 
-export default Table
+export default ClubTable

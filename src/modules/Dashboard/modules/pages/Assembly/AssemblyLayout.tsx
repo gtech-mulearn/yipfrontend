@@ -1,12 +1,11 @@
-import React from 'react'
-import Setup from './Setup'
-import Table from './Table'
+import AssemblySetup from './AssemblySetup'
+import AssemblyTable from './AssemblyTable'
 import '../../components/Layout.scss'
 const AssemblyLayout = () => {
     return (
         <div className='dash-container'>
-            <Setup title="Assembly" />
-            <Table />
+            <AssemblySetup title="Assembly" />
+            <AssemblyTable />
         </div>
     )
 }

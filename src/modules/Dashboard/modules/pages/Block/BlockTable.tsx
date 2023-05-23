@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Table = () => {
+const BlockTable = () => {
     return (
         <div>Table</div>
     )
 }
 
-export default Table
+export default BlockTable

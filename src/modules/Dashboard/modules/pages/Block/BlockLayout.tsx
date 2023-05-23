@@ -1,6 +1,6 @@
 import React from 'react'
-import Setup from './Setup'
-import Table from './Table'
+import Setup from './BlockSetup'
+import Table from './BlockTable'
 import '../../components/Layout.scss'
 
 const BlockLayout = () => {

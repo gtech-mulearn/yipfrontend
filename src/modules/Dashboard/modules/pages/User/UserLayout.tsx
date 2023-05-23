@@ -1,6 +1,6 @@
 import React from 'react'
-import Setup from './Setup'
-import Table from './Table'
+import Setup from './UserSetup'
+import Table from './UserTable'
 import '../../components/Layout.scss'
 const UserLayout = () => {
     return (

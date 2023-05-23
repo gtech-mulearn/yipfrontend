@@ -1,11 +1,15 @@
 
-import { useState } from "react"
-import { paginateArray } from "../../utils/utils"
+import { useEffect, useState } from "react"
 import './customTable.scss'
 interface sortProps {
     status: string;
     updater: boolean;
 
+}
+function paginateArray<T>(array: T[], page: number): T[] {
+    const startIndex = (page - 1) * 10;
+    const endIndex = startIndex + 10;
+    return array.slice(startIndex, endIndex);
 }
 function CustomTable<TableProps>({
     tableHeadList,
@@ -40,7 +44,10 @@ function CustomTable<TableProps>({
     const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
-
+    useEffect(() => {
+        setPage(1)
+        setSortedTable(tableData)
+    }, [tableData])
     function capitalizeString(sentence: string): string {
         let capitalizedSentence = sentence.toLowerCase();
         capitalizedSentence = capitalizedSentence.charAt(0).toUpperCase() + capitalizedSentence.slice(1);
@@ -141,6 +148,7 @@ function CustomTable<TableProps>({
                         </th>
                         {tableHeadList.map((item: string, index: number) => (
                             <th key={index} onClick={() => {
+                                setPage(1)
                                 sortOrderByRequired(index)
                                 setSelectedHeading(index)
                             }}>
@@ -170,7 +178,7 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <td className={`${customCssByRequired(index)}`} key={index}>{capitalizeString(item[item2] as string)}</td>
+                                    <td className={`${customCssByRequired(index)}`} key={index}>{(item[item2] as string)}</td>
                                 )
                                 )
                             }
@@ -199,11 +207,11 @@ function CustomTable<TableProps>({
                         <i >{"|<"}</i>
                     </div>
                     <div className="input">
-                        {`${page} / ${Math.trunc(sortedTable.length / 10) + (sortedTable.length % 10 ? 1 : 0)}`}
+                        {`${page} / ${Math.trunc(sortedTable.length / 10) + 1}`}
                     </div>
-                    <div onClick={() => { if (page < Math.trunc(sortedTable.length / 10) + (sortedTable.length % 10 ? 1 : 0)) setPage(page + 1) }}>
+                    <div onClick={() => { if (page < Math.trunc(sortedTable.length / 10) + 1) setPage(page + 1) }}>
                         <i >{">|"}</i></div>
-                    <div onClick={() => { setPage(Math.trunc(sortedTable.length / 10) + (sortedTable.length % 10 ? 1 : 0)) }}>
+                    <div onClick={() => { setPage(Math.trunc(sortedTable.length / 10) + 1) }}>
                         <i >{">>|"}</i>
                     </div>
                 </div>

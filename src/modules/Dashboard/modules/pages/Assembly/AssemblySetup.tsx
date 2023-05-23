@@ -5,7 +5,7 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
-const Setup: FC<{ title: string }> = ({ title }) => {
+const AssemblySetup: FC<{ title: string }> = ({ title }) => {
     const [Assembly, setAssembly] = useState("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
@@ -50,14 +50,14 @@ function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
 }
 function createAssembly(
     assembly: string,
-    district_id: string,
+    districtId: string,
 ) {
     const postData = {
         name: assembly,
-        district_id: district_id,
+        districtId: districtId,
     }
     privateGateway.post(setupRoutes.assembly.create, postData)
         .then(res => console.log('Success :', res.data.message.general[0]))
         .catch(err => console.log('Error :', err?.response.data.message.general[0]))
 }
-export default Setup
+export default AssemblySetup

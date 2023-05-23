@@ -17,8 +17,32 @@ export const setupRoutes = {
     },
     district: {
         list: '/api/v1/yip/district/',
+        college: '/api/v1/yip/list-colleges/',
+        school: '/api/v1/yip/list-model-schools/',
+        assembly: '/api/v1/yip/get-legislative-assembly/',
+        block: '/api/v1/yip/get-blocks/',
     },
     block: {
         create: '/api/v1/yip/create-block/'
+    },
+    school: {
+        create: '/api/v1/yip/create-model-school-club/'
+    },
+    club: {
+        create: '/api/v1/yip/create-college-club/'
+    }
+}
+export const tableRoutes = {
+    school: {
+        list: '/api/v1/yip/get-model-schools/',
+    },
+    assembly: {
+        list: '/api/v1/yip/list-legislative-assembly/'
+    },
+    block: {
+        list: '/api/v1/yip/list-blocks/'
+    },
+    status: {
+        list: '/api/v1/yip/list-clubs-status/'
     }
 }

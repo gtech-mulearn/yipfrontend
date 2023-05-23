@@ -7,7 +7,7 @@ import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 
-const Setup: FC<{ title: string }> = ({ title }) => {
+const UserSetup: FC<{ title: string }> = ({ title }) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState<string>('')
@@ -22,6 +22,7 @@ const Setup: FC<{ title: string }> = ({ title }) => {
         setRole(initialState)
     }
     useEffect(() => {
+        console.log('working')
         fetchUserRoles(setRoleList)
     }, [])
     function handleCreate() {
@@ -61,11 +62,10 @@ const Setup: FC<{ title: string }> = ({ title }) => {
 function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(setupRoutes.user.roles.list)
         .then(res => res.data.response.club_status)
-        .then(data => {
-            setData(data.map((value: string, index: number) =>
-                ({ id: index.toString(), name: value })
-            ))
-        })
+        .then(data =>
+            setData(data?.map((value: string, index: number) =>
+                ({ id: index.toString(), name: value })))
+        )
         .catch(err => console.log(err))
 }
 function createUser(
@@ -87,4 +87,4 @@ function createUser(
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 
-export default Setup 
+export default UserSetup 

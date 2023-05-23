@@ -1,15 +1,15 @@
 import React from 'react'
-import Setup from './Setup'
-import Table from './Table'
-import Banner from './Banner'
+import SchoolSetup from './SchoolSetup'
+import SchoolTable from './SchoolTable'
+import SchoolBanner from './SchoolBanner'
 import '../../components/Layout.scss'
 
 const SchoolLayout = () => {
     return (
         <div className='dash-container'>
-            <Banner />
-            <Setup />
-            <Table />
+            <SchoolBanner />
+            <SchoolSetup />
+            <SchoolTable />
         </div>
     )
 }
