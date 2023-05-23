@@ -5,7 +5,7 @@ import '../../components/Layout.scss'
 const UserLayout = () => {
     return (
         <div className='dash-container'>
-            <Setup />
+            <Setup title='User' />
             <Table />
         </div>
     )

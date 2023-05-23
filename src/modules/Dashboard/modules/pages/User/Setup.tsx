@@ -5,23 +5,21 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
-interface roleProps {
-    id: string
-    name: string
-}
+import { initialState, selectProps } from '../../utils/setupUtils'
+
 const Setup: FC<{ title: string }> = ({ title }) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState<string>('')
     const [password, setPassword] = useState("")
-    const [role, setRole] = useState({ id: '', name: '' })
-    const [roleList, setRoleList] = useState<roleProps[]>([])
+    const [role, setRole] = useState(initialState)
+    const [roleList, setRoleList] = useState<selectProps[]>([])
     const reset = () => {
         setName("")
         setEmail("")
         setPhone("")
         setPassword("")
-        setRole({ id: '', name: '' })
+        setRole(initialState)
     }
     useEffect(() => {
         fetchUserRoles(setRoleList)
@@ -35,9 +33,9 @@ const Setup: FC<{ title: string }> = ({ title }) => {
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                        <CustomInput value="Username" setData={setName} data={name} />
+                        <CustomInput value="Name" setData={setName} data={name} />
                         <CustomInput value="Email" setData={setEmail} data={email} />
-                        <CustomInput value="Mobile number" setData={setPhone} data={phone} />
+                        <CustomInput value="Phone" setData={setPhone} data={phone} />
                         <CustomSelect
                             option={roleList}
                             value="Role"
@@ -60,8 +58,8 @@ const Setup: FC<{ title: string }> = ({ title }) => {
         </div>
     )
 }
-function fetchUserRoles(setData: Dispatch<SetStateAction<roleProps[]>>) {
-    privateGateway.get(setupRoutes.userSetup)
+function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(setupRoutes.user.roles.list)
         .then(res => res.data.response.club_status)
         .then(data => {
             setData(data.map((value: string, index: number) =>
@@ -84,9 +82,9 @@ function createUser(
         role: role,
         password: password
     }
-    privateGateway.post(setupRoutes.userCreate, postData)
-        .then(res => console.log(res.data.response))
-        .catch(err => console.log(err.response))
+    privateGateway.post(setupRoutes.user.create, postData)
+        .then(res => console.log('Success :', res?.data?.message?.general[0]))
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 
 export default Setup 

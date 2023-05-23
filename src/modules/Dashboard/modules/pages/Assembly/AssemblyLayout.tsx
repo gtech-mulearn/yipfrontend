@@ -5,7 +5,7 @@ import '../../components/Layout.scss'
 const AssemblyLayout = () => {
     return (
         <div className='dash-container'>
-            <Setup />
+            <Setup title="Assembly" />
             <Table />
         </div>
     )

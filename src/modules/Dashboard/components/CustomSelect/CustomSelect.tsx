@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, FC } from "react"
-import { dummyProps } from "../../utils/setupUtils"
+import { dummyProps } from "../../modules/utils/setupUtils"
 import Select from 'react-select'
 import './CustomSelect.scss'
 

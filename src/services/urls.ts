@@ -6,6 +6,16 @@ export const bannerRoutes = {
     clubBanner: "/api/v1/yip/get-clubs-count/College/"
 }
 export const setupRoutes = {
-    userSetup: "/api/v1/yip/get-roles/",
-    userCreate: '/api/v1/yip/create-user/',
+    user: {
+        roles: {
+            list: "/api/v1/yip/get-roles/",
+        },
+        create: '/api/v1/yip/create-user/',
+    },
+    assembly: {
+        create: '/api/v1/yip/create-legislative-assembly/',
+    },
+    district: {
+        list: '/api/v1/yip/district/',
+    },
 }
