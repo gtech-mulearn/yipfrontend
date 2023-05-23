@@ -18,4 +18,7 @@ export const setupRoutes = {
     district: {
         list: '/api/v1/yip/district/',
     },
+    block: {
+        create: '/api/v1/yip/create-block/'
+    }
 }

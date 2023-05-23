@@ -6,7 +6,7 @@ import '../../components/Layout.scss'
 const BlockLayout = () => {
     return (
         <div className='dash-container'>
-            <Setup />
+            <Setup title='Block' />
             <Table />
         </div>
     )
