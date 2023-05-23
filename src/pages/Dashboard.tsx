@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Banner from '../components/Banner/Banner'
+import Banner from '../modules/Dashboard/components/Banner/Banner'
 import './Dashboard.scss'
 import { getCurrentPageUtils, requirementSatisfied, updater } from '../utils/utils'
 import Table from '../components/Table/Table'
@@ -21,4 +21,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard 
+export default Dashboard    

@@ -1,101 +1,122 @@
-.statistics{
-    width:100%;
+.statistics {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly ;
+    justify-content: space-evenly;
     gap: 20px;
 }
-.banner-container{
+
+.banner-container {
     position: relative;
     padding-top: 10px;
-    .black-btn{
+
+    .black-btn {
         display: none;
     }
-    .welcome-image-container{
+
+    .welcome-image-container {
         width: 50%;
         height: 100%;
         display: flex;
         position: relative;
-        img{
+
+        img {
             height: 15rem;
             bottom: -2.3rem;
             right: -20px;
             transition: height 0.3s ease-out;
         }
-        h1{
+
+        h1 {
             text-align: right;
             transition: 0.3s ease-out;
         }
-        h3{
+
+        h3 {
             text-align: right;
             margin-top: 20px;
             font-weight: 500;
         }
     }
-    @media screen and (max-width:770px),(max-width:1136px) and (min-width:1025px){
-        .welcome-image-container{
+
+    @media screen and (max-width:770px),
+    (max-width:1136px) and (min-width:1025px) {
+        .welcome-image-container {
             display: none;
         }
     }
 }
-.welcome-banner{
+
+.welcome-banner {
     height: auto;
     background-color: #9fcdec;
     border-radius: 20px;
     display: flex;
     margin-top: 20px;
     align-items: center;
-    padding:1rem 2rem;
+    padding: 1rem 2rem;
 }
-.box{
+
+.box {
     border-radius: 12px;
-    padding:20px 5px;
+    padding: 20px 5px;
     text-align: center;
-    width: 150px;   
+    width: 150px;
     color: white;
     text-align: center;
-    h3{
+
+    h3 {
         font-size: 30px;
     }
-    p{
+
+    p {
         font-size: 13px;
     }
 }
-@media screen and (max-width:500px){
-    .box{
+
+@media screen and (max-width:500px) {
+    .box {
         width: 100%;
         min-width: 80px;
         padding: 5px;
-       h3{ font-size: 20px;}
+
+        h3 {
+            font-size: 20px;
+        }
     }
 }
-@media screen and (max-width:500px){
-    .banner-container{
-        .black-btn{
+
+@media screen and (max-width:500px) {
+    .banner-container {
+        .black-btn {
             display: block;
-        } 
-        .welcome-banner{
+        }
+
+        .welcome-banner {
             display: none;
         }
-    }  
+    }
 }
-    
 
-.blue-box{
+
+.blue-box {
     background-color: #59b3fa;
 }
-.light-blue-box{
+
+.light-blue-box {
     background-color: #dceaf5;
     color: black;
 }
-.count-in{
+
+.count-in {
     padding-top: 5px;
     border-top: 1px solid rgba(0, 0, 0, 0.3);
 
 }
-.count{
+
+.count {
     display: flex;
     justify-content: center;
     text-align: center;
-    font-size:15px;
+    font-size: 15px;
 }

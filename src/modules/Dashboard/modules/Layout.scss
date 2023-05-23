@@ -1,0 +1,17 @@
+@use '../../../abstracts/variables.scss';
+
+.dash-container {
+    margin-left: variables.$slidebar-width;
+    padding: 0rem variables.$dashboard-padding;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    background-color: #f5f8fa;
+
+    @media only screen and (max-width: 1024px) {
+        margin: 0;
+        margin-bottom: 5rem;
+        padding: 1rem;
+    }
+}

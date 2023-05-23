@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BannerImg from "../../assets/Study abroad-pana.png"
-import { getCurrentPageUtils, requirementSatisfied } from '../../utils/utils'
-import { privateGateway as apiGateway } from '../../services/apiGateway'
+import { getCurrentPageUtils, requirementSatisfied } from '../../../../utils/utils'
+import { privateGateway as apiGateway } from '../../../../services/apiGateway'
 import './Banner.scss'
 const Banner = () => {
 

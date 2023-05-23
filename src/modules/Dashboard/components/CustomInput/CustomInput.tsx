@@ -5,7 +5,7 @@ interface inputProps {
     data: string
     setData: Dispatch<SetStateAction<string>>
 }
-import './CustomInput.scss'
+// import './CustomInput.scss'
 export const CustomInput: FC<inputProps> = ({ value, setData, data }) => (
     <div className="setup-item" >
         <p>{value}</p>

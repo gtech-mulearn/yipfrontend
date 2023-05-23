@@ -5,7 +5,6 @@ import './Setup.scss'
 import { buttons, urlProps } from "../../utils/navbarUtils"
 import { CustomInput } from "../CustomInput/CustomInput"
 import { CustomSelect, intialState } from "../CustomSelect/CustomSelect"
-import { Buttons } from "./componets/Buttons"
 
 const currentPage = (): urlProps => {
     for (let i in buttons) {
@@ -15,8 +14,28 @@ const currentPage = (): urlProps => {
     }
     return {} as urlProps
 }
-const Setup = memo(() => {
 
+const Setup = () => {
+    return (
+        <div className="white-container">
+            <h3>Setup a new {currentPage().title}</h3>
+            <div className="setup-club">
+                <div className="setup-filter">
+                    <div className="select-container club">
+                        <SetupSelector content={currentPage().title} />
+                    </div>
+                </div>
+                <div className="setup-img">
+                    <img src={setupImg} alt="HI" />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+
+const SetupSelector: React.FC<{ content: string }> = ({ content }) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState<string>('')
@@ -25,35 +44,62 @@ const Setup = memo(() => {
     const [schoolList, setSchoolList] = useState<dummyProps>(intialState)
     const [assemblyList, setAssemblyList] = useState<dummyProps>(intialState)
     const [blockList, setBlockList] = useState<dummyProps>(intialState)
-    const resetState = () => {
-        setName("");
-        setEmail("");
-        setPhone("");
-        setPassword("");
-        setDistrictList(intialState);
-        setSchoolList(intialState);
-        setAssemblyList(intialState);
-        setBlockList(intialState);
-    };
+    const reset = () => {
+        setName("")
+        setEmail("")
+        setPhone("")
+        setPassword("")
+        setDistrictList(intialState)
+        setSchoolList(intialState)
+        setAssemblyList(intialState)
+        setBlockList(intialState)
+    }
     useEffect(() => {
-        resetState()
-    }, [currentPage().title])
-    return (
-        <div className="white-container">
-            <h3>Setup a new {currentPage().title}</h3>
-            <div className="setup-club">
-                <div className="setup-filter">
-                    <div className="select-container club">
-                        <Buttons create={() => { }} cancel={resetState} />
-                    </div>
-                </div>
-                <div className="setup-img">
-                    <img src={setupImg} alt="HI" />
-                </div>
-
-            </div>
+        reset()
+    }, [content])
+    return (<>
+        {
+            content === 'Users' && <>
+                <CustomInput value="Username" setData={setName} data={name} />
+                <CustomInput value="Email" setData={setEmail} data={email} />
+                <CustomInput value="Mobile number" setData={setPhone} data={phone} />
+                <CustomSelect option={dummy} value="Role" setData={setDistrictList} />
+                <CustomInput value="Password" setData={setPassword} data={password} />
+            </>
+        }
+        {
+            (content === 'YIP Club' || content === 'Model School') &&
+            <>
+                <CustomSelect option={dummy} value="District" setData={setDistrictList} />
+                {districtList.id &&
+                    <>
+                        {
+                            content === 'Model School' &&
+                            <>
+                                <CustomSelect option={dummy} value="Legislative Assembly" setData={setAssemblyList} />
+                                <CustomSelect option={dummy} value="Block" setData={setBlockList} />
+                            </>
+                        }
+                        <CustomSelect option={dummy} value="School" setData={setSchoolList} />
+                    </>
+                }
+            </>
+        }
+        {
+            (content === 'Block' || content === 'Legislative Assembly') &&
+            <>
+                <CustomInput value={`${content} Name`} setData={setName} data={name} />
+                <CustomSelect option={dummy} value="District" setData={setDistrictList} />
+            </>
+        }
+        <div className="create-btn-container">
+            <button className="black-btn"
+                onClick={() => { }}>Create</button>
+            <button className="black-btn"
+                onClick={reset}
+            >Cancel</button>
         </div>
-    )
-})
+    </>)
+}
 export default Setup
 
