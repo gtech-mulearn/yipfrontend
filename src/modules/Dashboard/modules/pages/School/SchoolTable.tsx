@@ -20,7 +20,6 @@ const TableTitleList = ["Name", "District", "Block", "Legislative Assembly", "St
 const list: (keyof SchoolTableProps)[] = ['name', 'district', 'block', 'legislative_assembly', 'club_status']
 
 const Table = () => {
-    const [value, setValue] = useState('All')
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [filterByAssembly, setFilterByAssembly] = useState<boolean>(true)
@@ -48,7 +47,11 @@ const Table = () => {
     }, [district])
     useEffect(() => {
         setListForTable(filterSchool(schoolList, search, district, assembly, block, status))
-    }, [district, block, assembly, status, search])
+    }, [district, block, assembly, status, search, filterBtn])
+    function filterBy(list: localBodyProps[]) {
+        return list.filter((item: localBodyProps) =>
+            district.id ? item.district === district.name : true)
+    }
     return (
         <>
             <div className='white-container'>
@@ -104,7 +107,7 @@ const Table = () => {
                         </div>
                         <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
                         <CustomSelect
-                            option={filterByAssembly ? assemblyList : blockList}
+                            option={filterByAssembly ? filterBy(assemblyList) : filterBy(blockList)}
                             value={filterByAssembly ? 'Assembly' : 'Block'}
                             setValue={filterByAssembly ? setAssembly : setBlock}
                             requiredHeader={false}
@@ -116,7 +119,9 @@ const Table = () => {
                     </div >
                 </div>
                 }
+
                 {/*  Table  */}
+
                 <CustomTable<SchoolTableProps>
                     tableHeadList={TableTitleList}
                     tableData={listForTable}
@@ -140,6 +145,15 @@ const Table = () => {
                 />
             </div >
         </>
+    )
+}
+function filterBy(assemblyList: localBodyProps[], blockList: localBodyProps[], filterByAssembly: boolean, district: selectProps) {
+    if (filterByAssembly) {
+        return assemblyList.filter((assembly: localBodyProps) =>
+            district.id ? assembly.district === district.name : true)
+    }
+    return blockList.filter((block: localBodyProps) =>
+        district ? block.district === district.name : true
     )
 }
 function filterSchool(schoolList: SchoolTableProps[], search: string, district: selectProps, assembly: string, block: string, status: string) {
