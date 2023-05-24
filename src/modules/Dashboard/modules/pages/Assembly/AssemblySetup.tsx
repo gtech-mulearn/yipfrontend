@@ -5,27 +5,32 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
-const AssemblySetup: FC<{ title: string }> = ({ title }) => {
-    const [Assembly, setAssembly] = useState("")
+interface AssemblySetupProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateAssemblyData: Function
+}
+const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyData }) => {
+    const [assembly, setAssembly] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const reset = () => {
         setAssembly("")
         setDistrict(initialState)
+        setViewSetup(false)
     }
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
     function handleCreate() {
-        createAssembly(Assembly, district.id)
+        createAssembly(assembly, district.id, updateAssemblyData, setViewSetup)
     }
     return (
         <div className="white-container">
-            <h3>Setup a new {title}</h3>
+            <h3>Setup a Assembly</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                        <CustomInput value={`${title}`} setData={setAssembly} data={Assembly} />
+                        <CustomInput value={'Assembly'} setData={setAssembly} data={assembly} />
                         <CustomSelect option={districtList} value="District" setData={setDistrict} />
                         <div className="create-btn-container">
                             <button className="black-btn"
@@ -51,13 +56,19 @@ function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
 function createAssembly(
     assembly: string,
     districtId: string,
+    update: Function,
+    setViewSetup: Dispatch<SetStateAction<boolean>>
 ) {
     const postData = {
         name: assembly,
         districtId: districtId,
     }
     privateGateway.post(setupRoutes.assembly.create, postData)
-        .then(res => console.log('Success :', res.data.message.general[0]))
+        .then(res => {
+            update()
+            console.log('Success :', res.data.message.general[0])
+        })
         .catch(err => console.log('Error :', err?.response.data.message.general[0]))
+        .finally(() => setViewSetup(false))
 }
 export default AssemblySetup

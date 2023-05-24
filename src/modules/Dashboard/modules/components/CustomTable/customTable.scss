@@ -40,6 +40,8 @@ table {
                     text-align: center;
                 }
 
+
+
                 .th-wrap {
                     display: flex;
                     align-items: center;
@@ -48,6 +50,11 @@ table {
                     i {
                         padding-right: 5px;
                     }
+                }
+
+                .end {
+                    padding-right: 8px;
+                    justify-content: flex-end;
                 }
             }
         }
@@ -77,7 +84,15 @@ table {
                         background-color: #2d353d;
                     }
                 }
+
+                .manage {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                }
             }
+
+
         }
     }
 

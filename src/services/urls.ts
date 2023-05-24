@@ -44,10 +44,12 @@ export const tableRoutes = {
         delete: '/api/v1/yip/delete-model-schools/'
     },
     assembly: {
-        list: '/api/v1/yip/list-legislative-assembly/'
+        list: '/api/v1/yip/list-legislative-assembly/',
+        delete: '/api/v1/yip/delete-legislative-assembly/'
     },
     block: {
-        list: '/api/v1/yip/list-blocks/'
+        list: '/api/v1/yip/list-blocks/',
+        delete: '/api/v1/yip/delete-block/'
     },
     status: {
         list: '/api/v1/yip/list-clubs-status/',

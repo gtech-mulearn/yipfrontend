@@ -1,13 +1,27 @@
-import React from 'react'
-import Setup from './BlockSetup'
-import Table from './BlockTable'
+import React, { useState } from 'react'
+import BlockSetup from './BlockSetup'
+import BlockTable from './BlockTable'
 import '../../components/Layout.scss'
 
 const BlockLayout = () => {
+    const [update, setUpdate] = useState<boolean>(false)
+    const [viewSetup, setViewSetup] = useState<boolean>(false)
+    const [viewBanner, setViewBanner] = useState<boolean>(true)
+    function updateBlockData() {
+        setUpdate((prev: boolean) => !prev)
+    }
     return (
         <div className='dash-container'>
-            <Setup title='Block' />
-            <Table />
+            {viewSetup &&
+                <BlockSetup
+                    setViewSetup={setViewSetup}
+                    updateBlockData={updateBlockData}
+                />}
+            <BlockTable
+                setViewSetup={setViewSetup}
+                updateBlockData={updateBlockData}
+                updated={update}
+            />
         </div>
     )
 }

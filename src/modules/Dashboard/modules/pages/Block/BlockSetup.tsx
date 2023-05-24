@@ -5,27 +5,32 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
-const BlockSetup: FC<{ title: string }> = ({ title }) => {
+interface BlockSetupProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateBlockData: Function
+}
+const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const reset = () => {
         setBlock("")
         setDistrict(initialState)
+        setViewSetup(false)
     }
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
     function handleCreate() {
-        createBlock(block, district.id)
+        createBlock(block, district.id, updateBlockData, setViewSetup)
     }
     return (
         <div className="white-container">
-            <h3>Setup a new {title}</h3>
+            <h3>Setup a Block</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                        <CustomInput value={`${title}`} setData={setBlock} data={block} />
+                        <CustomInput value={'Block'} setData={setBlock} data={block} />
                         <CustomSelect option={districtList} value="District" setData={setDistrict} />
                         <div className="create-btn-container">
                             <button className="black-btn"
@@ -51,14 +56,19 @@ function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
 function createBlock(
     block: string,
     districtId: string,
+    update: Function,
+    setViewSetup: Dispatch<SetStateAction<boolean>>
 ) {
     const postData = {
         name: block,
         districtId: districtId,
     }
-    console.log(postData)
     privateGateway.post(setupRoutes.block.create, postData)
-        .then(res => console.log('Success :', res.data.message.general[0]))
+        .then(res => {
+            update()
+            console.log('Success :', res.data.message.general[0])
+        })
         .catch(err => console.log('Error :', err?.response.data.message.general[0]))
+        .finally(() => setViewSetup(false))
 }
 export default BlockSetup

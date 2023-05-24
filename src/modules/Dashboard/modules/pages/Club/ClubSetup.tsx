@@ -89,7 +89,6 @@ function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, distric
         .catch(err => console.log(err))
 }
 function createClub<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>) {
-    console.log(postData)
     privateGateway.post(setupRoutes.club.create, postData)
         .then(res => {
             update()

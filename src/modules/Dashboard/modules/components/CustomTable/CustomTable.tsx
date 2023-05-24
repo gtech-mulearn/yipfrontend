@@ -49,6 +49,7 @@ function CustomTable<TableProps>({
     useEffect(() => {
         setPage(1)
         setSortedTable(tableData)
+        setSort({ updater: false, status: "Unsorted" })
     }, [tableData])
     function capitalizeString(sentence: string): string {
         let capitalizedSentence = sentence.toLowerCase();
@@ -162,8 +163,8 @@ function CustomTable<TableProps>({
                             </th>)
                         )}
                         {manage?.value &&
-                            <th >
-                                <div className="th-wrap">
+                            <th>
+                                <div className="th-wrap end ">
                                     <div>{'Manage'}</div>
                                 </div>
                             </th>
@@ -185,10 +186,12 @@ function CustomTable<TableProps>({
                                 )
                             }
                             {manage?.value &&
-                                <td >
-                                    <div className="edit-btn" onClick={() => { manage.manageFunction(item) }}>
-                                        <i className="fas fa-edit "></i>
-                                        Edit
+                                <td className="">
+                                    <div className="manage">
+                                        <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
+                                            <i className="fas fa-edit "></i>
+                                            Edit
+                                        </div>
                                     </div>
                                 </td>
                             }
