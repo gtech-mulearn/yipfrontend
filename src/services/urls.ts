@@ -39,6 +39,10 @@ export const tableRoutes = {
         list: '/api/v1/yip/get-model-schools/',
         delete: '/api/v1/yip/delete-model-schools/'
     },
+    club: {
+        list: '/api/v1/yip/get-colleges/',
+        delete: '/api/v1/yip/delete-model-schools/'
+    },
     assembly: {
         list: '/api/v1/yip/list-legislative-assembly/'
     },

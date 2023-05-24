@@ -8,9 +8,9 @@ import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
-    updateSchoolData: Function
+    updateClubData: Function
 }
-const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateSchoolData }) => {
+const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
@@ -21,7 +21,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateSchoolData }) => {
         setCollege(initialState)
         setDistrictList([])
         setCollegeList([])
-
+        setViewSetup(false)
     }
     useEffect(() => {
         fetchDistricts(setDistrictList)
@@ -44,7 +44,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateSchoolData }) => {
             instituteId: college.id,
             districtId: district.id,
         }
-        createClub<postDataProps>(postData, updateSchoolData, setViewSetup)
+        createClub<postDataProps>(postData, updateClubData, setViewSetup)
     }
     return (
         <div className="white-container">

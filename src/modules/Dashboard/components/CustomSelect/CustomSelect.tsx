@@ -52,14 +52,15 @@ export const CustomSelect: FC<{
                     placeholder={requirePlaceHolder ? placeHolder : `Select a ${value}`}
                     getOptionValue={(option: dummyProps) => option.id}
                     getOptionLabel={(option: dummyProps) => sentenceCase ? capitalizeString(option.name) : option.name}
-
                     onChange={(data: any) => {
                         try {
                             if (requiredData) {
-                                setData?.(data?.id ? data : intialState)
-                                console.log(intialState)
+                                setData?.(data?.name ? data : intialState)
                             }
-                            if (requiredLabel) setValue?.(data?.id ? data.name : '')
+                            if (requiredLabel) {
+                                setValue?.(data?.name ? data.name : '')
+                                console.log(data)
+                            }
 
                         } catch (error) {
                             if (requiredData) setData?.(intialState)

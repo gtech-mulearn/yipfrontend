@@ -9,9 +9,9 @@ interface SchoolModalProps {
     school: SchoolTableProps
     setSchool: Dispatch<SetStateAction<SchoolTableProps>>
     optionStatusList: selectProps[]
-    update: Function
+    updateSchoolData: Function
 }
-const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, update }) => {
+const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, updateSchoolData }) => {
     const [status, setStatus] = useState('')
     const [deleteSchool, setDeleteSchool] = useState(false)
 
@@ -66,7 +66,7 @@ const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, upda
                         <div className={`${(status) ? 'btn-update ' : 'btn-disabled'}`}
                             onClick={() => {
                                 if (status) {
-                                    updateSchoolStatus(school.id, status, setSchool)
+                                    updateSchoolStatus(school.id, status, setSchool, updateSchoolData)
                                 }
                             }}>
                             Update Status
@@ -76,7 +76,7 @@ const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, upda
                         {deleteSchool && <p>Are you sure you want to delete this item?</p>}
                         <div className="modal-buttons">
                             {deleteSchool && <button className="confirm-delete" onClick={() => {
-                                deleteModelSchool(school.id, update)
+                                deleteModelSchool(school.id, updateSchoolData)
                                 setSchool({} as SchoolTableProps)
                             }}>Confirm Delete</button>}
                             {!deleteSchool && <button className="confirm-delete" onClick={() => setDeleteSchool(true)}>Delete</button>}
@@ -89,10 +89,11 @@ const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, upda
         </div>
     )
 }
-function updateSchoolStatus(id: string, status: string, setSchool: Dispatch<SetStateAction<SchoolTableProps>>) {
+function updateSchoolStatus(id: string, status: string, setSchool: Dispatch<SetStateAction<SchoolTableProps>>, update: Function) {
     privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then(res => {
             setSchool({} as SchoolTableProps)
+            update()
             console.log('Success :', res?.data?.message?.general[0])
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
@@ -100,8 +101,8 @@ function updateSchoolStatus(id: string, status: string, setSchool: Dispatch<SetS
 function deleteModelSchool(id: string, update: Function) {
     privateGateway.delete(`${tableRoutes.school.delete}${id}/`)
         .then(res => {
-            update()
             console.log('Success :', res?.data?.message?.general[0])
+            update()
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

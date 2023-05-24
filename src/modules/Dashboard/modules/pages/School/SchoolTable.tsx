@@ -58,6 +58,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
         setBlock('')
     }, [filterByAssembly])
     useEffect(() => {
+        console.log('status', status)
         setListForTable(filterSchool(schoolList, search, district, assembly, block, status))
     }, [district, block, assembly, status, search, filterBtn])
     function updateTable(schoolList: SchoolTableProps[]) {
@@ -76,7 +77,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
     }
     return (
         <>
-            {school?.id && <Modal school={school} setSchool={setSchool} optionStatusList={optionStatusList} update={updateSchoolData} />}
+            {school?.id && <Modal school={school} setSchool={setSchool} optionStatusList={optionStatusList} updateSchoolData={updateSchoolData} />}
             <div className='white-container'>
 
                 {/* Table top */}
