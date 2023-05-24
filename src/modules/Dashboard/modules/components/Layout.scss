@@ -1,4 +1,4 @@
-@use '../../../../abstracts/variables.scss';
+@use '../../../../abstracts/variables';
 
 .dash-container {
     margin-left: variables.$slidebar-width;
@@ -16,8 +16,27 @@
     }
 }
 
-.cursor {
-    &:hover {
-        cursor: pointer;
+.white-container {
+    height: auto;
+    position: relative;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    margin-top: 30px;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+
+.bottom-tab-container {
+    display: none;
+}
+
+@media only screen and (max-width: 1024px) {
+
+    .bottom-tab-container {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
     }
 }
