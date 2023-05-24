@@ -1,13 +1,13 @@
-import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
+import React, { useState, useEffect, SetStateAction, Dispatch, FC } from 'react'
 import BannerImg from "../../../../../assets/Study abroad-pana.png"
 import './Banner.scss'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { bannerRoutes } from '../../../../../services/urls'
-const Banner = () => {
+const ClubBanner: FC<{ updated: boolean }> = ({ updated }) => {
     const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
         fetchInstitutionStatusCount(setCount)
-    }, [location.pathname])
+    }, [location.pathname, updated])
     return (
         <div className="banner-container">
             <div className="welcome-banner">
@@ -51,6 +51,4 @@ const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<Cou
         .then(res => setCount(res))
         .catch(err => console.log(err))
 }
-
-
-export default Banner
+export default ClubBanner

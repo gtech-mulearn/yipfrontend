@@ -6,8 +6,11 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
-
-const ClubSetup: FC<{ title: string }> = ({ title }) => {
+interface ClubSetupProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateSchoolData: Function
+}
+const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateSchoolData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
@@ -24,7 +27,6 @@ const ClubSetup: FC<{ title: string }> = ({ title }) => {
         fetchDistricts(setDistrictList)
     }, [])
     useEffect(() => {
-        console.log(district)
         if (district?.id) {
             fetchcolleges(setCollegeList, district.name)
         }
@@ -42,11 +44,11 @@ const ClubSetup: FC<{ title: string }> = ({ title }) => {
             instituteId: college.id,
             districtId: district.id,
         }
-        createClub<postDataProps>(postData)
+        createClub<postDataProps>(postData, updateSchoolData, setViewSetup)
     }
     return (
         <div className="white-container">
-            <h3>Setup a new {title}</h3>
+            <h3>Setup a YIP Club</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
@@ -86,10 +88,14 @@ function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, distric
         })
         .catch(err => console.log(err))
 }
-function createClub<postDataProps>(postData: postDataProps) {
+function createClub<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>) {
     console.log(postData)
     privateGateway.post(setupRoutes.club.create, postData)
-        .then(res => console.log('Success :', res.data.message.general[0]))
+        .then(res => {
+            update()
+            console.log('Success :', res.data.message.general[0])
+        })
         .catch(err => console.log('Error :', err?.response.data.message.general[0]))
+        .finally(() => setViewSetup(false))
 }
 export default ClubSetup 
