@@ -13,7 +13,7 @@ const SchoolLayout = () => {
     }
     return (
         <div className='dash-container'>
-            <SchoolBanner />
+            <SchoolBanner updated={update} />
             {viewSetup &&
                 <SchoolSetup
                     setViewSetup={setViewSetup}

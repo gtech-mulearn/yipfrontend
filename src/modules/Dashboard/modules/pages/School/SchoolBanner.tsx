@@ -1,9 +1,9 @@
-import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
+import React, { useState, useEffect, SetStateAction, Dispatch, FC } from 'react'
 import BannerImg from "../../../../../assets/Study abroad-pana.png"
 import './Banner.scss'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { bannerRoutes } from '../../../../../services/urls'
-const SchoolBanner = (updated: boolean) => {
+const SchoolBanner: FC<{ updated: boolean }> = ({ updated }) => {
     const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
         fetchInstitutionStatusCount(setCount)
