@@ -29,7 +29,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         fetchUserRoles(setRoleList)
     }, [])
     function handleCreate() {
-        createUser(name, email, phone, role.id, password, updateUserData)
+        createUser(name, email, phone, role.id, password, updateUserData, setViewSetup)
     }
     return (
         <div className="white-container">
@@ -76,7 +76,8 @@ function createUser(
     phone: string,
     role: string,
     password: string,
-    updateUserData: Function
+    updateUserData: Function,
+    setViewSetup: Dispatch<SetStateAction<boolean>>
 ) {
     const postData = {
         name: name,
@@ -85,8 +86,9 @@ function createUser(
         role: role,
         password: password
     }
-    privateGateway.post(setupRoutes.user.create, postData,)
+    privateGateway.post(setupRoutes.user.create, postData)
         .then(res => {
+            setViewSetup(false)
             updateUserData()
             console.log('Success :', res?.data?.message?.general[0])
         })
