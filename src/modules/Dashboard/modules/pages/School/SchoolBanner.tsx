@@ -3,11 +3,11 @@ import BannerImg from "../../../../../assets/Study abroad-pana.png"
 import './Banner.scss'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { bannerRoutes } from '../../../../../services/urls'
-const SchoolBanner = () => {
+const SchoolBanner = (updated: boolean) => {
     const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
         fetchInstitutionStatusCount(setCount)
-    }, [location.pathname])
+    }, [location.pathname, updated])
     return (
         <div className="banner-container">
             <div className="welcome-banner">

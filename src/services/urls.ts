@@ -1,3 +1,5 @@
+import { updater } from "../utils/utils"
+
 export const authRoutes = {
     login: "/api/v1/yip/login/"
 }
@@ -35,6 +37,7 @@ export const setupRoutes = {
 export const tableRoutes = {
     school: {
         list: '/api/v1/yip/get-model-schools/',
+        delete: '/api/v1/yip/delete-model-schools/'
     },
     assembly: {
         list: '/api/v1/yip/list-legislative-assembly/'
@@ -43,6 +46,7 @@ export const tableRoutes = {
         list: '/api/v1/yip/list-blocks/'
     },
     status: {
-        list: '/api/v1/yip/list-clubs-status/'
+        list: '/api/v1/yip/list-clubs-status/',
+        update: '/api/v1/yip/update-club/'
     }
 }

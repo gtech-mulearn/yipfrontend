@@ -1,13 +1,18 @@
-.setup-item{
+.setup-item {
     display: flex;
     flex-direction: column;
     width: 45%;
     gap: 2px;
     margin-bottom: 8px;
-    p{
+
+    p {
         align-self: start;
         font-size: 14px;
         font-weight: 600;
         font-size: 13px;
     }
+}
+
+.special-setup {
+    width: 100%;
 }

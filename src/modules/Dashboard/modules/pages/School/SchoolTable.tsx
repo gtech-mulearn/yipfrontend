@@ -1,11 +1,13 @@
-import { useState, Dispatch, SetStateAction, useEffect } from "react"
+import { useState, Dispatch, SetStateAction, useEffect, FC } from "react"
 import { CustomSelect } from "../../../components/CustomSelect/CustomSelect"
 import { initialState, selectProps } from "../../utils/setupUtils"
 import { privateGateway } from "../../../../../services/apiGateway"
 import { setupRoutes, tableRoutes } from "../../../../../services/urls"
 import CustomTable from "../../components/CustomTable/CustomTable"
 import '../../components/Table.scss'
-interface SchoolTableProps {
+import Modal from "./Modal"
+export interface SchoolTableProps {
+    id: string
     name: string
     district: string
     block: string
@@ -15,11 +17,14 @@ interface SchoolTableProps {
 interface localBodyProps extends selectProps {
     district: string
 }
-const localBodyInitialState = { ...initialState, district: '' }
-const TableTitleList = ["Name", "District", "Block", "Legislative Assembly", "Status"]
+const TableTitleList = ["Name", "District", " Assembly", "Block", "Status"]
 const list: (keyof SchoolTableProps)[] = ['name', 'district', 'block', 'legislative_assembly', 'club_status']
-
-const Table = () => {
+interface SchoolSetupProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateSchoolData: Function
+    updated: boolean
+}
+const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, updated }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [filterByAssembly, setFilterByAssembly] = useState<boolean>(true)
@@ -34,6 +39,7 @@ const Table = () => {
     const [listForTable, setListForTable] = useState<SchoolTableProps[]>([])
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
+    const [school, setSchool] = useState<SchoolTableProps>({} as SchoolTableProps)
 
     useEffect(() => {
         fetchDistricts(setDistrictList)
@@ -42,18 +48,35 @@ const Table = () => {
         fetchSchools(setSchoolList, setListForTable)
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
-    useEffect(() => {
 
-    }, [district])
+    useEffect(() => {
+        fetchSchools(setSchoolList, setListForTable, updateTable)
+    }, [updated])
+
+    useEffect(() => {
+        setAssembly('')
+        setBlock('')
+    }, [filterByAssembly])
     useEffect(() => {
         setListForTable(filterSchool(schoolList, search, district, assembly, block, status))
     }, [district, block, assembly, status, search, filterBtn])
+    function updateTable(schoolList: SchoolTableProps[]) {
+        setListForTable(filterSchool(schoolList, search, district, assembly, block, status))
+    }
+    function resetFilter() {
+        setFilterBtn(false)
+        setDistrict(initialState)
+        setAssembly('')
+        setBlock('')
+        setStatus('')
+    }
     function filterBy(list: localBodyProps[]) {
         return list.filter((item: localBodyProps) =>
             district.id ? item.district === district.name : true)
     }
     return (
         <>
+            {school?.id && <Modal school={school} setSchool={setSchool} optionStatusList={optionStatusList} update={updateSchoolData} />}
             <div className='white-container'>
 
                 {/* Table top */}
@@ -76,22 +99,22 @@ const Table = () => {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <li
-                                className='fas fa-close'
+                                className='fas fa-close cursor'
                                 onClick={() => setSearch('')}
                             ></li>
                         </div>
-                        <div className="table-fn-btn" >
+                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
                             <i className="fa-solid fa-plus"></i>
                             <p>Add Model School</p>
                         </div>
-                        <button className="table-fn-btn show-in-500">Show Banner</button>
-                        <div className="table-fn-btn" onClick={() => setFilterBtn(true)}>
+                        <button className="table-fn-btn show-in-500 cursor">Show Banner</button>
+                        <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>
                         </div>
-                        {filterBtn && <div className="table-fn-btn" onClick={() => setFilterBtn(false)}>
+                        {filterBtn && <div className="table-fn-btn  cursor" onClick={resetFilter}>
                             <p></p>
-                            <i className="fa-solid fa-close"></i>
+                            <i className="fa-solid fa-close  "></i>
                             <p></p>
                         </div>}
                     </div>
@@ -103,7 +126,7 @@ const Table = () => {
                     <div className="filter-box">
                         <div className="table-white-btn" onClick={() => setFilterByAssembly((prev: boolean) => !prev)}>
                             <i className="fa-solid fa-repeat"></i>
-                            <p>{`Filter By Assembly`}</p>
+                            <p>{`Filter By ${filterByAssembly ? 'Block' : 'Assembly'}`}</p>
                         </div>
                         <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
                         <CustomSelect
@@ -114,6 +137,7 @@ const Table = () => {
                             requiredData={false}
                             requiredLabel={true}
                             sentenceCase={!filterByAssembly}
+
                         />
                         <CustomSelect option={optionStatusList} value='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
                     </div >
@@ -139,21 +163,12 @@ const Table = () => {
                         css: 'status'
                     }]}
                     manage={{
-                        value: 'Edit',
-                        manageFunction: () => { console.log('manage') }
+                        value: 'View',
+                        manageFunction: (item: SchoolTableProps) => { setSchool(item) }
                     }}
                 />
             </div >
         </>
-    )
-}
-function filterBy(assemblyList: localBodyProps[], blockList: localBodyProps[], filterByAssembly: boolean, district: selectProps) {
-    if (filterByAssembly) {
-        return assemblyList.filter((assembly: localBodyProps) =>
-            district.id ? assembly.district === district.name : true)
-    }
-    return blockList.filter((block: localBodyProps) =>
-        district ? block.district === district.name : true
     )
 }
 function filterSchool(schoolList: SchoolTableProps[], search: string, district: selectProps, assembly: string, block: string, status: string) {
@@ -176,7 +191,6 @@ function filterSchool(schoolList: SchoolTableProps[], search: string, district: 
     return list
 }
 function searchSchool(schoolList: SchoolTableProps[], search: string) {
-    let itemName = "", searchItem = ""
     return schoolList.filter((school: SchoolTableProps) => rawString(school.name).includes(rawString(search)))
 }
 
@@ -192,7 +206,7 @@ function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(setupRoutes.district.list)
         .then(res => res.data.response.districts)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 function fetchAssemblies(setData: Dispatch<SetStateAction<localBodyProps[]>>) {
 
@@ -200,24 +214,29 @@ function fetchAssemblies(setData: Dispatch<SetStateAction<localBodyProps[]>>) {
     privateGateway.get(tableRoutes.assembly.list)
         .then(res => res.data.response)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 function fetchBlocks(setData: Dispatch<SetStateAction<localBodyProps[]>>) {
     privateGateway.get(tableRoutes.block.list)
         .then(res => res.data.response)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
-function fetchSchools(
+async function fetchSchools(
     setData: Dispatch<SetStateAction<SchoolTableProps[]>>,
-    setData2: Dispatch<SetStateAction<SchoolTableProps[]>>
+    setData2: Dispatch<SetStateAction<SchoolTableProps[]>>,
+    updateTable?: Function
 ) {
-    privateGateway.get(tableRoutes.school.list)
+    await privateGateway.get(tableRoutes.school.list)
         .then(res => res.data.response.clubs)
-        .then(data => { setData(data); setData2(data) })
-        .catch(err => console.log(err))
+        .then(data => {
+            setData(data)
+            setData2(data)
+            if (updateTable) updateTable(data)
+        })
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
-function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatusList: Dispatch<SetStateAction<selectProps[]>>) {
+export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatusList: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(tableRoutes.status.list)
         .then(res => res.data.response.clubStatus)
         .then(data => {
@@ -229,6 +248,6 @@ function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatu
                 }
             }))
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
-export default Table
+export default SchoolTable

@@ -6,8 +6,11 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
-
-const SchoolSetup = () => {
+interface SchoolSetupProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateSchoolData: Function
+}
+const SchoolSetup: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [schoolList, setSchoolList] = useState<selectProps[]>([])
@@ -16,16 +19,6 @@ const SchoolSetup = () => {
     const [assembly, setAssembly] = useState<selectProps>(initialState)
     const [blockList, setBlockList] = useState<selectProps[]>([])
     const [block, setBlock] = useState<selectProps>(initialState)
-    const reset = () => {
-        setDistrict(initialState)
-        setSchool(initialState)
-        setAssembly(initialState)
-        setBlock(initialState)
-        setDistrictList([])
-        setSchoolList([])
-        setAssemblyList([])
-        setBlockList([])
-    }
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
@@ -53,7 +46,7 @@ const SchoolSetup = () => {
             districtId: district.id,
             blockId: block.id,
         }
-        createSchool<postDataProps>(postData)
+        createSchool<postDataProps>(postData, updateSchoolData, setViewSetup)
     }
     return (
         <div className="white-container">
@@ -62,15 +55,19 @@ const SchoolSetup = () => {
                 <div className="setup-filter">
                     <div className="select-container club">
                         <CustomSelect option={districtList} value="District" setData={setDistrict} />
-                        <CustomSelect option={assemblyList} value="Legislative Assembly" setData={setAssembly} />
-                        <CustomSelect option={blockList} value="Block" setData={setBlock} />
-                        <CustomSelect option={schoolList} value="School" setData={setSchool} />
+                        {district?.id &&
+                            <>
+                                <CustomSelect option={assemblyList} value="Legislative Assembly" setData={setAssembly} />
+                                <CustomSelect option={blockList} value="Block" setData={setBlock} />
+                                <CustomSelect option={schoolList} value="School" setData={setSchool} />
+                            </>
+                        }
 
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
                             <button className="black-btn"
-                                onClick={reset}
+                                onClick={() => setViewSetup(false)}
                             >Cancel</button>
                         </div>
                     </div>
@@ -109,9 +106,13 @@ function fetchSchools(setData: Dispatch<SetStateAction<selectProps[]>>, district
         .then(data => setData(data.map((item: any) => ({ id: item.id, name: item.title, }))))
         .catch(err => console.log(err))
 }
-function createSchool<postDataProps>(postData: postDataProps) {
+function createSchool<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>) {
     privateGateway.post(setupRoutes.school.create, postData)
-        .then(res => console.log('Success :', res.data.message.general[0]))
+        .then(res => {
+            update()
+            console.log('Success :', res.data.message.general[0])
+        })
         .catch(err => console.log('Error :', err?.response.data.message.general[0]))
+        .finally(() => setViewSetup(false))
 }
 export default SchoolSetup 

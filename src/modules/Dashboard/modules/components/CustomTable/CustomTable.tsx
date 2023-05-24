@@ -178,13 +178,13 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <td className={`${customCssByRequired(index)}`} key={index}>{(item[item2] as string)}</td>
+                                    <td className={`${customCssByRequired(index)}`} key={index}>{capitalizeString(item[item2] as string)}</td>
                                 )
                                 )
                             }
                             {manage?.value &&
                                 <td >
-                                    <div className="edit-btn" onClick={manage?.manageFunction}>
+                                    <div className="edit-btn" onClick={() => { manage.manageFunction(item) }}>
                                         <i className="fas fa-edit "></i>
                                         Edit
                                     </div>
@@ -195,7 +195,7 @@ function CustomTable<TableProps>({
                     )}
                 </tbody>
             </table >
-
+            {!sortedTable.length && <div className="no-data">No Data to show </div>}
             {/* Pagination */}
 
             <div className='paginator' >
