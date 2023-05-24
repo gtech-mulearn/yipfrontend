@@ -43,7 +43,6 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     }, [updated])
 
     useEffect(() => {
-        console.log(search, district, status)
         setListForTable(filterClub(clubList, search, district, status))
     }, [district, status, search, filterBtn])
     function updateTable(clubList: ClubTableProps[]) {

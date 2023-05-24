@@ -144,7 +144,6 @@ function filterUser(userList: UserTableProps[], searchName: string, searchEmail:
         list = search(list, searchEmail)
     }
     if (role.name) {
-        console.log(role)
         list = list.filter(user => { user.role === role.id })
     }
     return list

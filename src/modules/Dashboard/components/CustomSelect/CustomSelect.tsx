@@ -59,7 +59,6 @@ export const CustomSelect: FC<{
                             }
                             if (requiredLabel) {
                                 setValue?.(data?.name ? data.name : '')
-                                console.log(data)
                             }
 
                         } catch (error) {

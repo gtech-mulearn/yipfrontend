@@ -1,5 +1,5 @@
 import { useState } from "react"
-import YIPlogo from '../../../newAssets/logo.png'
+import YIPlogo from '../../../assets/logo.png'
 import ErrorBox from "../components/ErrorBox/ErrorBox"
 import { login } from "../services/apis"
 import './Login.scss'

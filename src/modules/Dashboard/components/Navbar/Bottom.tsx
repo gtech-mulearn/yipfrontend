@@ -1,5 +1,5 @@
 import { buttons, urlProps } from "../../utils/navbarUtils"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import './BottomTab.scss'
 
 const getCurrentPageUtils = (): urlProps => {
@@ -18,6 +18,8 @@ export const BottomTab = () => {
      * Renders a bottom tab component.
      * @return {JSX.Element} The bottom tab component.
      */
+    const navigate = useNavigate();
+
     return (
         <div className="bottom-tab-container">
             <div className="tab-nav">
@@ -28,20 +30,16 @@ export const BottomTab = () => {
                 <div className="tab-nav-container">
                     {/* Renders navigation links */}
                     {buttons.map((button: urlProps, index: number) => (
-                        <Link to={button.url} key={index}>
+                        <div key={index} onClick={() => navigate(button.url)} >
                             <div
-                                className={`tab ${window.location.pathname === button.url ? "active" : ""
-                                    } `}
+                                className={`tab ${window.location.pathname === button.url ? "active" : ""} `}
                             >
                                 <i className={`fa-sharp fa-solid ${button.icon}`}></i>
-                                <h3
-                                    className={`tab-text ${window.location.pathname === button.url ? "visible " : ""
-                                        }`}
-                                >
+                                <h3 className={`tab-text ${window.location.pathname === button.url ? "visible " : ""}`} >
                                     {button.title}
                                 </h3>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                     {/* Renders logout button */}
                     <div className="tab red">
@@ -57,6 +55,6 @@ export const BottomTab = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
