@@ -18,6 +18,7 @@ function CustomTable<TableProps>({
     sortOrder,
     customCSS,
     manage,
+    capitalize = true,
 }:
     {
         tableHeadList: string[]
@@ -39,6 +40,7 @@ function CustomTable<TableProps>({
             value: string
             manageFunction: any
         },
+        capitalize?: boolean
     }) {
     const [page, setPage] = useState(1)
     const [sortedTable, setSortedTable] = useState(tableData)
@@ -178,7 +180,7 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <td className={`${customCssByRequired(index)}`} key={index}>{capitalizeString(item[item2] as string)}</td>
+                                    <td className={`${customCssByRequired(index)}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
                                 )
                                 )
                             }

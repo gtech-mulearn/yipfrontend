@@ -1,12 +1,26 @@
-import React from 'react'
-import Setup from './UserSetup'
-import Table from './UserTable'
+import React, { useState } from 'react'
+import UserSetup from './UserSetup'
+import UserTable from './UserTable'
 import '../../components/Layout.scss'
 const UserLayout = () => {
+    const [update, setUpdate] = useState<boolean>(false)
+    const [viewSetup, setViewSetup] = useState<boolean>(false)
+    const [viewBanner, setViewBanner] = useState<boolean>(true)
+    function updateUserData() {
+        setUpdate((prev: boolean) => !prev)
+    }
     return (
         <div className='dash-container'>
-            <Setup title='User' />
-            <Table />
+            {viewSetup &&
+                <UserSetup
+                    setViewSetup={setViewSetup}
+                    updateUserData={updateUserData}
+                />}
+            <UserTable
+                setViewSetup={setViewSetup}
+                updateUserData={updateUserData}
+                updated={update}
+            />
         </div>
     )
 }

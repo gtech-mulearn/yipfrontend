@@ -6,8 +6,11 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
-
-const UserSetup: FC<{ title: string }> = ({ title }) => {
+interface UserTableProps {
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+    updateUserData: Function
+}
+const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState<string>('')
@@ -20,17 +23,17 @@ const UserSetup: FC<{ title: string }> = ({ title }) => {
         setPhone("")
         setPassword("")
         setRole(initialState)
+        setViewSetup(false)
     }
     useEffect(() => {
-        console.log('working')
         fetchUserRoles(setRoleList)
     }, [])
     function handleCreate() {
-        createUser(name, email, phone, role.id, password)
+        createUser(name, email, phone, role.id, password, updateUserData)
     }
     return (
         <div className="white-container">
-            <h3>Setup a new {title}</h3>
+            <h3>Setup a User</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
@@ -61,11 +64,10 @@ const UserSetup: FC<{ title: string }> = ({ title }) => {
 }
 function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(setupRoutes.user.roles.list)
-        .then(res => res.data.response.club_status)
+        .then(res => res.data.response.roles)
         .then(data =>
-            setData(data?.map((value: string, index: number) =>
-                ({ id: index.toString(), name: value })))
-        )
+            setData(data?.map((item: { value: string, label: string }) =>
+                ({ id: item.value, name: item.label }))))
         .catch(err => console.log(err))
 }
 function createUser(
@@ -73,7 +75,8 @@ function createUser(
     email: string,
     phone: string,
     role: string,
-    password: string
+    password: string,
+    updateUserData: Function
 ) {
     const postData = {
         name: name,
@@ -82,8 +85,11 @@ function createUser(
         role: role,
         password: password
     }
-    privateGateway.post(setupRoutes.user.create, postData)
-        .then(res => console.log('Success :', res?.data?.message?.general[0]))
+    privateGateway.post(setupRoutes.user.create, postData,)
+        .then(res => {
+            updateUserData()
+            console.log('Success :', res?.data?.message?.general[0])
+        })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 

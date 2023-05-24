@@ -52,5 +52,9 @@ export const tableRoutes = {
     status: {
         list: '/api/v1/yip/list-clubs-status/',
         update: '/api/v1/yip/update-club/'
+    },
+    user: {
+        list: '/api/v1/yip/list-users/',
+        delete: '/api/v1/yip/delete-user/'
     }
 }
