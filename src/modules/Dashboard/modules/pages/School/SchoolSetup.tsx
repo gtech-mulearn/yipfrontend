@@ -8,6 +8,7 @@ import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
 import { Error, Success, showAlert } from '../../../components/Error/Alerts'
+import { createSchool, fetchDistrictAssemblies, fetchDistrictBlocks, fetchDistrictSchools, fetchDistricts, } from './SchoolAPI'
 interface SchoolSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateSchoolData: Function
@@ -28,9 +29,9 @@ const SchoolSetup: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData }) =
     }, [])
     useEffect(() => {
         if (district?.id) {
-            fetchAssemblies(setAssemblyList, district.id)
-            fetchBlocks(setBlockList, district.id)
-            fetchSchools(setSchoolList, district.name)
+            fetchDistrictAssemblies(setAssemblyList, district.id)
+            fetchDistrictBlocks(setBlockList, district.id)
+            fetchDistrictSchools(setSchoolList, district.name)
         }
     }, [district.id])
     function validateDistrict() {
@@ -115,48 +116,5 @@ const SchoolSetup: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData }) =
         </div>
     )
 }
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log(err))
-}
-function fetchAssemblies(setData: Dispatch<SetStateAction<selectProps[]>>, districtId: string) {
-    privateGateway.get(`${setupRoutes.district.assembly}${districtId}/`)
-        .then(res => res.data.response.legislativeAssembly)
-        .then(data => setData(data))
-        .catch(err => console.log(err))
-}
-function fetchBlocks(setData: Dispatch<SetStateAction<selectProps[]>>, districtId: string) {
-    privateGateway.get(`${setupRoutes.district.block}${districtId}/`)
-        .then(res => res.data.response.block)
-        .then(data => { setData(data) })
-        .catch(err => console.log(err))
-}
-function fetchSchools(setData: Dispatch<SetStateAction<selectProps[]>>, districtName: string) {
-    const reqData: any = {
-        district: districtName
-    }
-    privateGateway.post(setupRoutes.district.school, reqData)
-        .then(res => res.data.response.institutions)
-        .then(data => setData(data.map((item: any) => ({ id: item.id, name: item.title, }))))
-        .catch(err => console.log(err))
-}
-function createSchool<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>) {
-    privateGateway.post(setupRoutes.school.create, postData)
-        .then(res => {
-            update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
-        })
-        .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
-        })
-}
+
 export default SchoolSetup 

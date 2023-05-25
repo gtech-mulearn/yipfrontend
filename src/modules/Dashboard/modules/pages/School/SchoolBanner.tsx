@@ -1,8 +1,7 @@
-import React, { useState, useEffect, SetStateAction, Dispatch, FC } from 'react'
+import { useState, useEffect, FC } from 'react'
 import BannerImg from "../../../../../assets/Study abroad-pana.png"
 import './Banner.scss'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { bannerRoutes } from '../../../../../services/urls'
+import { fetchInstitutionStatusCount } from './SchoolAPI'
 const SchoolBanner: FC<{ updated: boolean }> = ({ updated }) => {
     const [count, setCount] = useState<CountResponse>(initialState)
     useEffect(() => {
@@ -36,7 +35,7 @@ const initialState: CountResponse = {
     "Execom Formed": 0,
     total: 0,
 };
-interface CountResponse {
+export interface CountResponse {
     Identified: number;
     Confirmed: number;
     "Connection established": number;
@@ -45,12 +44,7 @@ interface CountResponse {
     "Execom Formed": number;
     total: number;
 }
-const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
-    privateGateway.get(`${bannerRoutes.schoolBanner}`)
-        .then(res => res.data.response)
-        .then(res => setCount(res))
-        .catch(err => console.log(err))
-}
+
 
 
 export default SchoolBanner

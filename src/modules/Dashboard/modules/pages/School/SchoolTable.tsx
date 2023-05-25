@@ -1,11 +1,10 @@
 import { useState, Dispatch, SetStateAction, useEffect, FC } from "react"
 import { CustomSelect } from "../../../components/CustomSelect/CustomSelect"
 import { initialState, selectProps } from "../../utils/setupUtils"
-import { privateGateway } from "../../../../../services/apiGateway"
-import { setupRoutes, tableRoutes } from "../../../../../services/urls"
 import CustomTable from "../../components/CustomTable/CustomTable"
 import '../../components/Table.scss'
-import Modal from "./Modal"
+import Modal from "./SchoolModal"
+import { fetchAssemblies, fetchBlocks, fetchDistricts, fetchSchools, fetchStatus } from "./SchoolAPI"
 export interface SchoolTableProps {
     id: string
     name: string
@@ -14,7 +13,7 @@ export interface SchoolTableProps {
     legislative_assembly: string
     club_status: string
 }
-interface localBodyProps extends selectProps {
+export interface localBodyProps extends selectProps {
     district: string
 }
 const TableTitleList = ["Name", "District", " Assembly", "Block", "Status"]
@@ -209,52 +208,4 @@ function rawString(str: string) {
 }
 
 
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-function fetchAssemblies(setData: Dispatch<SetStateAction<localBodyProps[]>>) {
-
-
-    privateGateway.get(tableRoutes.assembly.list)
-        .then(res => res.data.response)
-        .then(data => setData(data))
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-function fetchBlocks(setData: Dispatch<SetStateAction<localBodyProps[]>>) {
-    privateGateway.get(tableRoutes.block.list)
-        .then(res => res.data.response)
-        .then(data => setData(data))
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-async function fetchSchools(
-    setData: Dispatch<SetStateAction<SchoolTableProps[]>>,
-    setData2: Dispatch<SetStateAction<SchoolTableProps[]>>,
-    updateTable?: Function
-) {
-    await privateGateway.get(tableRoutes.school.list)
-        .then(res => res.data.response.clubs)
-        .then(data => {
-            setData(data)
-            setData2(data)
-            if (updateTable) updateTable(data)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatusList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(tableRoutes.status.list)
-        .then(res => res.data.response.clubStatus)
-        .then(data => {
-            setData(data)
-            setOptionStatusList(data.map((item: selectProps, index: string) => {
-                return {
-                    id: index,
-                    name: item
-                }
-            }))
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
 export default SchoolTable
