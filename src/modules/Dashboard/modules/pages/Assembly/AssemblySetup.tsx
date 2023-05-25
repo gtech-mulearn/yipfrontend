@@ -3,10 +3,9 @@ import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { setupRoutes } from '../../../../../services/urls'
 import * as yup from 'yup'
 import { Error, Success, showAlert } from '../../../components/Error/Alerts'
+import { createAssembly, fetchDistricts } from './assemblyAPI'
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateAssemblyData: Function
@@ -67,36 +66,5 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
             {successMessage && <Success success={successMessage} />}
         </div>)
 }
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log(err))
-}
-function createAssembly(
-    assembly: string,
-    districtId: string,
-    update: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
-) {
-    const postData = {
-        name: assembly,
-        districtId: districtId,
-    }
-    privateGateway.post(setupRoutes.assembly.create, postData)
-        .then(res => {
-            update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
-            console.log('Success :', res.data.message.general[0])
-        })
-        .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response.data.message.general[0])
-        })
-}
+
 export default AssemblySetup

@@ -1,9 +1,8 @@
 import { AssemblyTableProps } from './AssemblyTable'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { tableRoutes } from '../../../../../services/urls'
 import '../../components/Modal.scss'
 import { Error, Success } from '../../../components/Error/Alerts'
+import { deleteModelAssembly } from './assemblyAPI'
 
 interface AssemblyModalProps {
     assembly: AssemblyTableProps
@@ -50,20 +49,6 @@ const Modal: FC<AssemblyModalProps> = ({ assembly, setAssembly, update }) => {
         </div>
     )
 }
-function deleteModelAssembly(id: string, updateAssemblyStatus: Function,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>,
-    setAssembly: Dispatch<SetStateAction<AssemblyTableProps>>
-) {
-    privateGateway.delete(`${tableRoutes.assembly.delete}${id}/`)
-        .then(res => {
-            setSuccessMessage(res?.data?.message?.general[0])
-            setTimeout(() => {
-                updateAssemblyStatus()
-                setAssembly({} as AssemblyTableProps)
-            }, 1000)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
+
 
 export default Modal
