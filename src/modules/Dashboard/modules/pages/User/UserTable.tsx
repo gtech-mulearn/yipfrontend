@@ -30,7 +30,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     const [listForTable, setListForTable] = useState<UserTableProps[]>([])
     const [user, setUser] = useState<UserTableProps>({} as UserTableProps)
     const [userList, setUserList] = useState<UserTableProps[]>([])
-    const [menu, setMenu] = useState<boolean>(false)
+    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
         fetchUsers(setUserList, setListForTable)
         fetchUserRoles(setRoleList)

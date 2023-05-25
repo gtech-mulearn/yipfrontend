@@ -39,7 +39,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [school, setSchool] = useState<SchoolTableProps>({} as SchoolTableProps)
-    const [menu, setMenu] = useState<boolean>(false)
+    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
 
     useEffect(() => {
         fetchDistricts(setDistrictList)

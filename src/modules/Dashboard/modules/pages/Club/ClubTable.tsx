@@ -32,7 +32,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
-    const [menu, setMenu] = useState<boolean>(false)
+    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
         fetchDistricts(setDistrictList)
         fetchClubs(setClubList, setListForTable)
