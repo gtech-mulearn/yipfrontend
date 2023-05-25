@@ -1,0 +1,66 @@
+@use '../../../../abstracts/variables.scss';
+@use '../../../../abstracts/functions.scss';
+@use '../../../../abstracts/colors.scss';
+.left-menu{
+    max-width: variables.$slidebar-width;
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 150;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    img{
+        width:60%;
+        padding: 20px 0;
+    }
+    .logout{
+        position: absolute;
+        bottom: 40px;
+        color: white !important;
+        @include functions.btn();
+        background-color:red;
+    }
+}
+.menu-items{
+    @include functions.flex-center();
+    flex-direction: column;
+    width: 100%;
+}
+.menu-item-container{
+    @include functions.flex-center();
+    width: 100%;
+    &:hover{
+        background-color: aliceblue;
+    }
+}
+.link-item{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    h5{
+        margin-left: 10px;
+        font-size: 15px;
+    }
+}
+.menu-item{
+    display: flex;
+    align-items: center;
+    width: 70% ;
+    margin: 6px;
+    .menu-icon{
+        @include functions.flex-center();
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in;
+    }
+}
+.active{
+    background-color: colors.$theme-color-blue !important; 
+}
+@media only screen and (max-width: 1024px){
+    .left-menu{
+        display: none;
+    }
+}

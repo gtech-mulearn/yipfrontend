@@ -1,0 +1,42 @@
+// @use '../abstracts/variables';
+
+// .dash-container {
+//     margin-left: variables.$slidebar-width;
+//     padding: 0rem variables.$dashboard-padding;
+//     display: flex;
+//     flex-direction: column;
+//     position: relative;
+//     justify-content: center;
+//     background-color: #f5f8fa;
+
+//     @media only screen and (max-width: 1024px) {
+//         margin: 0;
+//         margin-bottom: 5rem;
+//         padding: 1rem;
+//     }
+// }
+
+// .white-container {
+//     height: auto;
+//     position: relative;
+//     background-color: white;
+//     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+//     margin-top: 30px;
+//     border-radius: 20px;
+//     padding: 20px;
+// }
+
+
+// .bottom-tab-container {
+//     display: none;
+// }
+
+// @media only screen and (max-width: 1024px) {
+
+//     .bottom-tab-container {
+//         display: block;
+//         position: fixed;
+//         bottom: 0;
+//         width: 100%;
+//     }
+// }
