@@ -26,7 +26,9 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
+    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const [listForTable, setListForTable] = useState<BlockTableProps[]>([])
+
     useEffect(() => {
         fetchDistricts(setDistrictList)
         fetchBlocks(setBlockList, setListForTable)
@@ -55,18 +57,18 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                 <div className="table-top">
                     <div className='table-header'>
                         <h3>Block List</h3>
-                        <div className='table-header-btn'>
+                        <div className='table-header-btn' onClick={() => setMenu(!menu)}>
                             <li className="fas fa-bars "></li>
                         </div>
                     </div>
-                    <div className='table-fn'>
+                    {menu && <div className='table-fn'>
                         <div className='search-bar'>
                             <input className='search-bar-item'
                                 id='search'
                                 name='search'
                                 type="text"
                                 value={search}
-                                placeholder={`Search Model block`}
+                                placeholder={`Search `}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <li
@@ -74,12 +76,16 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                                 onClick={() => setSearch('')}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
+                        <div className="table-fn-btn cursor" onClick={() => {
+                            window.scrollTo(0, 0)
+                            setViewSetup((prev: boolean) => !prev)
+                        }}>
                             <i className="fa-solid fa-plus"></i>
-                            <p>Add BLock</p>
+                            <p>Add Block</p>
                         </div>
-                        <button className="table-fn-btn show-in-500 cursor">Show Banner</button>
-                        <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
+                        <div className="table-fn-btn cursor" onClick={() => {
+                            setFilterBtn(!filterBtn)
+                        }}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>
                         </div>
@@ -88,14 +94,14 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                             <i className="fa-solid fa-close"></i>
                             <p></p>
                         </div>}
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Filters */}
 
                 {filterBtn && <div className="filter-container">
                     <div className="filter-box">
-                        <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
+                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
                     </div >
                 </div>
                 }
@@ -111,7 +117,7 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                         manageFunction: (item: BlockTableProps) => { setBlock(item) }
                     }}
                 />
-            </div>
+            </div >
         </>
     )
 }
@@ -126,7 +132,10 @@ function filterBlock(blockList: BlockTableProps[], search: string, district: sel
     return list
 }
 function searchBlock(blockList: BlockTableProps[], search: string) {
-    return blockList.filter((block: BlockTableProps) => rawString(block.name).includes(rawString(search)))
+    return blockList.filter((school: BlockTableProps) =>
+        rawString(school.name).includes(rawString(search)) ||
+        rawString(school.district).includes(rawString(search))
+    )
 }
 function rawString(str: string) {
     str = str.toLowerCase()

@@ -5,6 +5,7 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import Modal from './AssemblyModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
+import * as yup from 'yup'
 
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -27,6 +28,7 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [listForTable, setListForTable] = useState<AssemblyTableProps[]>([])
+    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
         fetchDistricts(setDistrictList)
         fetchAssemblys(setAssemblyList, setListForTable)
@@ -55,18 +57,18 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                 <div className="table-top">
                     <div className='table-header'>
                         <h3>Assembly List</h3>
-                        <div className='table-header-btn'>
+                        <div className='table-header-btn' onClick={() => setMenu(!menu)}>
                             <li className="fas fa-bars "></li>
                         </div>
                     </div>
-                    <div className='table-fn'>
+                    {menu && <div className='table-fn'>
                         <div className='search-bar'>
                             <input className='search-bar-item'
                                 id='search'
                                 name='search'
                                 type="text"
                                 value={search}
-                                placeholder={`Search Model assembly`}
+                                placeholder={`Search`}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <li
@@ -74,11 +76,13 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                                 onClick={() => setSearch('')}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
+                        <div className="table-fn-btn cursor" onClick={() => {
+                            window.scrollTo(0, 0)
+                            setViewSetup((prev: boolean) => !prev)
+                        }}>
                             <i className="fa-solid fa-plus"></i>
-                            <p>Add BLock</p>
+                            <p>Add Block</p>
                         </div>
-                        <button className="table-fn-btn show-in-500 cursor">Show Banner</button>
                         <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>
@@ -88,14 +92,14 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                             <i className="fa-solid fa-close"></i>
                             <p></p>
                         </div>}
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Filters */}
 
                 {filterBtn && <div className="filter-container">
                     <div className="filter-box">
-                        <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
+                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
                     </div >
                 </div>
                 }
@@ -126,7 +130,10 @@ function filterAssembly(assemblyList: AssemblyTableProps[], search: string, dist
     return list
 }
 function searchAssembly(assemblyList: AssemblyTableProps[], search: string) {
-    return assemblyList.filter((assembly: AssemblyTableProps) => rawString(assembly.name).includes(rawString(search)))
+    return assemblyList.filter((assembly: AssemblyTableProps) =>
+        rawString(assembly.name).includes(rawString(search)) ||
+        rawString(assembly.district).includes(rawString(search))
+    )
 }
 function rawString(str: string) {
     str = str.toLowerCase()

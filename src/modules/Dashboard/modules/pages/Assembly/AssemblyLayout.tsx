@@ -6,7 +6,6 @@ import '../../components/Layout.scss'
 const AssemblyLayout = () => {
     const [update, setUpdate] = useState<boolean>(false)
     const [viewSetup, setViewSetup] = useState<boolean>(false)
-    const [viewBanner, setViewBanner] = useState<boolean>(true)
     function updateAssemblyData() {
         setUpdate((prev: boolean) => !prev)
     }

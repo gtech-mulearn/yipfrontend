@@ -74,7 +74,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                                 name='search'
                                 type="text"
                                 value={search}
-                                placeholder={`Search Model club`}
+                                placeholder={`Search`}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <li
@@ -103,8 +103,8 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
 
                 {filterBtn && <div className="filter-container">
                     <div className="filter-box">
-                        <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
-                        <CustomSelect option={optionStatusList} value='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
+                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
+                        <CustomSelect option={optionStatusList} header='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
                     </div >
                 </div>
                 }
@@ -150,7 +150,10 @@ function filterClub(clubList: ClubTableProps[], search: string, district: select
     return list
 }
 function searchClub(clubList: ClubTableProps[], search: string) {
-    return clubList.filter((club: ClubTableProps) => rawString(club.name).includes(rawString(search)))
+    return clubList.filter((club: ClubTableProps) =>
+        rawString(club.name).includes(rawString(search)) ||
+        rawString(club.district).includes(rawString(search)) ||
+        rawString(club.club_status).includes(rawString(search)))
 }
 
 function rawString(str: string) {

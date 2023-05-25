@@ -1,72 +1,74 @@
 import { Dispatch, SetStateAction, FC, useEffect, useState } from "react"
-import Select from 'react-select'
+import Select, { Props as SelectProps } from 'react-select'
 import './CustomSelect.scss'
 import { optionProps, intialState } from "../../utils/CustomSelectUtils"
 
-
-export const CustomSelect: FC<{
+interface CustomSelectProps extends SelectProps<optionProps> {
     option: optionProps[]
-    value: string
+    header: string,
     setData?: Dispatch<SetStateAction<optionProps>>
     setValue?: Dispatch<SetStateAction<string>>
     requiredHeader?: boolean
     requiredLabel?: boolean
     requiredData?: boolean
     sentenceCase?: boolean
-    placeHolder?: string
     requirePlaceHolder?: boolean
     customCSS?: {
         className: string
-        classNamePrefix: string
-    }
-}> = ({
+        classNamePrefix: string,
+
+    },
+
+}
+export const CustomSelect: FC<CustomSelectProps> = ({
     option,
-    value,
+    header,
     setData = () => { setData(intialState) },
     setValue = () => { setValue('') },
     requiredHeader = true,
     requiredLabel = false,
     requiredData = true,
     sentenceCase = false,
-    placeHolder = '',
     requirePlaceHolder = false,
     customCSS = {
         className: '',
         classNamePrefix: ""
-    }
+    },
+    ...props
 }) => {
-        const [update, setUpdate] = useState<boolean>(false)
-        return (
-            <div className={customCSS.className ? 'special-setup' : "setup-item"}>
-                {requiredHeader && <p>{value}</p>}
-                <Select
-                    className='react-select-container'
-                    classNamePrefix={customCSS.classNamePrefix}
-                    options={option}
-                    isSearchable={true}
-                    isClearable={true}
-                    noOptionsMessage={() => 'No options'}
-                    placeholder={requirePlaceHolder ? placeHolder : `Select a ${value}`}
-                    getOptionValue={(option: optionProps) => option.id}
-                    getOptionLabel={(option: optionProps) => sentenceCase ? capitalizeString(option.name) : option.name}
-                    onChange={(data: any) => {
-                        try {
-                            if (requiredData) {
-                                setData?.(data?.name ? data : intialState)
-                            }
-                            if (requiredLabel) {
-                                setValue?.(data?.name ? data.name : '')
-                            }
-
-                        } catch (error) {
-                            if (requiredData) setData?.(intialState)
-                            if (requiredLabel) setValue?.('')
+    const [update, setUpdate] = useState<boolean>(false)
+    return (
+        <div className={customCSS.className ? 'special-setup' : "setup-item"}>
+            {requiredHeader && <p>{header}</p>}
+            <Select
+                className='react-select-container'
+                classNamePrefix={customCSS.classNamePrefix}
+                options={option}
+                isClearable={true}
+                isSearchable={true}
+                placeholder={`Select a ${header}`}
+                noOptionsMessage={() => 'No options'}
+                getOptionValue={(option: any): string => option.id}
+                getOptionLabel={(option: any): string => sentenceCase ? capitalizeString(option.name) : option.name}
+                onChange={(data: any) => {
+                    try {
+                        if (requiredData) {
+                            setData?.(data?.name ? data : intialState)
                         }
-                    }}
-                />
-            </div>
-        )
-    }
+                        if (requiredLabel) {
+                            setValue?.(data?.name ? data.name : '')
+                        }
+
+                    } catch (error) {
+                        if (requiredData) setData?.(intialState)
+                        if (requiredLabel) setValue?.('')
+                    }
+                }}
+                {...props}
+            />
+        </div>
+    )
+}
 function capitalizeString(sentence: string): string {
     let capitalizedSentence = sentence.toLowerCase();
     capitalizedSentence = capitalizedSentence.charAt(0).toUpperCase() + capitalizedSentence.slice(1);

@@ -24,7 +24,6 @@ interface UserSetupProps {
 
 const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }) => {
     const [searchName, setSearchName] = useState("")
-    const [searchEmail, setSearchEmail] = useState("")
     const [filterBtn, setFilterBtn] = useState(false)
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [role, setRole] = useState<selectProps>(initialState)
@@ -40,10 +39,10 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
         fetchUsers(setUserList, setListForTable, updateTable)
     }, [updated])
     useEffect(() => {
-        setListForTable(filterUser(userList, searchName, searchEmail, role))
-    }, [searchName, searchEmail, role])
+        setListForTable(filterUser(userList, searchName, role))
+    }, [searchName, role])
     function updateTable(userList: UserTableProps[]) {
-        setListForTable(filterUser(userList, searchName, searchEmail, role))
+        setListForTable(filterUser(userList, searchName, role))
     }
     function resetFilter() {
         setFilterBtn(false)
@@ -72,26 +71,12 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                                 name='search'
                                 type="text"
                                 value={searchName}
-                                placeholder={`Search by name`}
+                                placeholder={`Search`}
                                 onChange={(e) => setSearchName(e.target.value)}
                             />
                             <li
                                 className='fas fa-close cursor'
                                 onClick={() => setSearchName('')}
-                            ></li>
-                        </div>
-                        <div className='search-bar'>
-                            <input className='search-bar-item'
-                                id='search'
-                                name='search'
-                                type="text"
-                                value={searchEmail}
-                                placeholder={`Search by email`}
-                                onChange={(e) => setSearchEmail(e.target.value)}
-                            />
-                            <li
-                                className='fas fa-close cursor'
-                                onClick={() => setSearchEmail('')}
                             ></li>
                         </div>
                         <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
@@ -115,7 +100,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                 {/* Filters */}
                 {filterBtn && <div className="filter-container">
                     <div className="filter-box">
-                        <CustomSelect option={roleList} value='Role' setData={setRole} requiredHeader={false} />
+                        <CustomSelect option={roleList} header='Role' setData={setRole} requiredHeader={false} />
                     </div>
                 </div>}
 
@@ -126,6 +111,15 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                     tableData={listForTable}
                     orderBy={list}
                     capitalize={false}
+                    sortOrder={
+                        {
+                            sortBy: 'role',
+                            orderList: roleList.map(role => role.id),
+                            orderSymbol: {
+                                asc: 'fa-arrow-up-short-wide',
+                                desc: 'fa-arrow-down-wide-short'
+                            }
+                        }}
                     manage={{
                         value: 'View',
                         manageFunction: (item: UserTableProps) => { setUser(item) }
@@ -135,22 +129,21 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
         </>
     )
 }
-function filterUser(userList: UserTableProps[], searchName: string, searchEmail: string, role: selectProps) {
+function filterUser(userList: UserTableProps[], search: string, role: selectProps) {
     let list = userList
-    if (searchName) {
-        list = search(list, searchName)
-    }
-    if (searchEmail) {
-        list = search(list, searchEmail)
-    }
-    if (role.name) {
-        list = list.filter(user => { user.role === role.id })
-    }
+    if (search) list = searchUser(list, search)
+    if (role.id) list = list.filter(user => user.role === role.id)
     return list
 }
-function search(schoolList: UserTableProps[], search: string) {
-    return schoolList.filter((school: UserTableProps) => rawString(school.name).includes(rawString(search)))
+function searchUser(schoolList: UserTableProps[], search: string) {
+    return schoolList.filter((school: UserTableProps) =>
+        rawString(school.name).includes(rawString(search)) ||
+        rawString(school.email).includes(rawString(search)) ||
+        rawString(school.phone).includes(rawString(search)) ||
+        rawString(school.role).includes(rawString(search))
+    )
 }
+
 function rawString(str: string) {
     str = str.toLowerCase()
     str = str.replace(/[^a-zA-Z0-9 ]/g, '')

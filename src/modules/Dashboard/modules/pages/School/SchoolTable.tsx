@@ -95,7 +95,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                                 name='search'
                                 type="text"
                                 value={search}
-                                placeholder={`Search Model School`}
+                                placeholder={`Search `}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <li
@@ -128,10 +128,10 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                             <i className="fa-solid fa-repeat"></i>
                             <p>{`Filter By ${filterByAssembly ? 'Block' : 'Assembly'}`}</p>
                         </div>
-                        <CustomSelect option={districtList} value='District' setData={setDistrict} requiredHeader={false} />
+                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
                         <CustomSelect
                             option={filterByAssembly ? filterBy(assemblyList) : filterBy(blockList)}
-                            value={filterByAssembly ? 'Assembly' : 'Block'}
+                            header={filterByAssembly ? 'Assembly' : 'Block'}
                             setValue={filterByAssembly ? setAssembly : setBlock}
                             requiredHeader={false}
                             requiredData={false}
@@ -139,7 +139,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                             sentenceCase={!filterByAssembly}
 
                         />
-                        <CustomSelect option={optionStatusList} value='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
+                        <CustomSelect option={optionStatusList} header='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
                     </div >
                 </div>
                 }
@@ -191,10 +191,17 @@ function filterSchool(schoolList: SchoolTableProps[], search: string, district: 
     return list
 }
 function searchSchool(schoolList: SchoolTableProps[], search: string) {
-    return schoolList.filter((school: SchoolTableProps) => rawString(school.name).includes(rawString(search)))
+    return schoolList.filter((school: SchoolTableProps) =>
+        rawString(school.name).includes(rawString(search)) ||
+        rawString(school.district).includes(rawString(search)) ||
+        rawString(school.legislative_assembly).includes(rawString(search)) ||
+        rawString(school.block).includes(rawString(search)) ||
+        rawString(school.club_status).includes(rawString(search))
+    )
 }
 
 function rawString(str: string) {
+    if (str === '' || str === null || str === undefined) return ''
     str = str.toLowerCase()
     str = str.replace(/[^a-zA-Z0-9 ]/g, '')
     str = str.replaceAll(' ', '')

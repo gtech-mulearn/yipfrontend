@@ -3,6 +3,8 @@ import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../services/urls'
 import '../../components/Modal.scss'
+import { Error, Success } from '../../../components/Error/Alerts'
+
 import { UserTableProps } from './UserTable'
 interface UserModalProps {
     user: UserTableProps
@@ -11,7 +13,8 @@ interface UserModalProps {
 }
 const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
     const [deleteUser, setDeleteUser] = useState(false)
-
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
     return (
         <div className="modal-overlay">
             <div className='modal'>
@@ -42,8 +45,8 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
                         {deleteUser && <p>Are you sure you want to delete this item?</p>}
                         <div className="modal-buttons">
                             {deleteUser && <button className="confirm-delete" onClick={() => {
-                                deleteThisUser(user.id, updateUserData)
-                                setUser({} as UserTableProps)
+                                deleteThisUser(user.id, updateUserData, setSuccessMessage, setErrorMessage, setUser)
+
                             }}>Confirm Delete</button>}
                             {!deleteUser && <button className="confirm-delete" onClick={() => setDeleteUser(true)}>Delete</button>}
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>
@@ -52,16 +55,25 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
                 </div>
 
             </div>
+            {errorMessage && <Error error={errorMessage} />}
+            {successMessage && <Success success={successMessage} />}
         </div>
     )
 }
-function deleteThisUser(id: string, update: Function) {
+function deleteThisUser(id: string, update: Function,
+    setSuccessMessage: Dispatch<SetStateAction<string>>,
+    setErrorMessage: Dispatch<SetStateAction<string>>,
+    setUser: Dispatch<SetStateAction<UserTableProps>>
+) {
     privateGateway.delete(`${tableRoutes.user.delete}${id}/`)
         .then(res => {
-            console.log('Success :', res?.data?.message?.general[0])
-            update()
+            setSuccessMessage(res?.data?.message?.general[0])
+            setTimeout(() => {
+                update()
+                setUser({} as UserTableProps)
+            }, 1000)
         })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+        .catch(err => setErrorMessage(err?.response?.data?.message?.general[0]))
 }
 
 export default Modal

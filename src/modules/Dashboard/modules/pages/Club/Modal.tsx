@@ -5,6 +5,8 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../services/urls'
 import '../../components/Modal.scss'
+import { Error } from '../../../components/Error/Alerts'
+import { Success } from '../../../components/Error/Alerts'
 interface ClubModalProps {
     club: ClubTableProps
     setClub: Dispatch<SetStateAction<ClubTableProps>>
@@ -12,8 +14,10 @@ interface ClubModalProps {
     update: Function
 }
 const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) => {
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState(club.club_status)
     const [deleteClub, setDeleteClub] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
 
     return (
         <div className="modal-overlay">
@@ -47,12 +51,12 @@ const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) 
                         <div className="content">
                             <CustomSelect
                                 option={optionStatusList}
-                                value='Status'
+                                header='Status'
                                 setValue={setStatus}
                                 requiredHeader={false}
                                 requiredData={false}
                                 requiredLabel={true}
-                                placeHolder={club.club_status}
+                                placeholder={club.club_status}
                                 requirePlaceHolder={true}
                                 customCSS={{
                                     className: "react-select-container",
@@ -63,10 +67,16 @@ const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) 
                         </div>
                     </div>
                     <div>
-                        <div className={`${(status) ? 'btn-update ' : 'btn-disabled'}`}
+                        <div className={`${(status !== club.club_status && status !== '') ? 'btn-update ' : 'btn-disabled'}`}
                             onClick={() => {
-                                if (status) {
-                                    updateClubStatus(club.id, status, setClub, update)
+                                if (status !== club.club_status && status !== '') {
+                                    updateClubStatus(club.id, status, setClub, update, setSuccessMessage, setErrorMessage)
+                                }
+                                else {
+                                    setErrorMessage("Please select status")
+                                    setTimeout(() => {
+                                        setErrorMessage("")
+                                    }, 2000);
                                 }
                             }}>
                             Update Status
@@ -76,35 +86,47 @@ const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) 
                         {deleteClub && <p>Are you sure you want to delete this item?</p>}
                         <div className="modal-buttons">
                             {deleteClub && <button className="confirm-delete" onClick={() => {
-                                deleteModelClub(club.id, update)
-                                setClub({} as ClubTableProps)
+                                deleteModelClub(club.id, update, setSuccessMessage, setErrorMessage, setClub)
                             }}>Confirm Delete</button>}
                             {!deleteClub && <button className="confirm-delete" onClick={() => setDeleteClub(true)}>Delete</button>}
                             <button className="cancel-delete" onClick={() => { setClub({} as ClubTableProps) }}>Cancel</button>
                         </div>
                     </div>
                 </div>
-
+                {errorMessage && <Error error={errorMessage} />}
+                {successMessage && <Success success={successMessage} />}
             </div>
         </div>
     )
 }
-function updateClubStatus(id: string, status: string, setClub: Dispatch<SetStateAction<ClubTableProps>>, updateClubStatus: Function) {
+function updateClubStatus(id: string, status: string,
+    setClub: Dispatch<SetStateAction<ClubTableProps>>, updateClubStatus: Function,
+    setSuccess: Dispatch<SetStateAction<string>>, setError: Dispatch<SetStateAction<string>>
+) {
     privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then(res => {
-            setClub({} as ClubTableProps)
-            updateClubStatus()
             console.log('Success :', res?.data?.message?.general[0])
+            setSuccess(res?.data?.message?.general[0])
+            setTimeout(() => {
+                setClub({} as ClubTableProps)
+                updateClubStatus()
+            }, 1000)
         })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+        .catch(err => setError(err?.response?.data?.message?.general[0]))
 }
-function deleteModelClub(id: string, updateClubStatus: Function) {
+function deleteModelClub(id: string, updateClubStatus: Function, setSuccess: Dispatch<SetStateAction<string>>,
+    setError: Dispatch<SetStateAction<string>>, setClub: Dispatch<SetStateAction<ClubTableProps>>
+) {
     privateGateway.delete(`${tableRoutes.club.delete}${id}/`)
         .then(res => {
             updateClubStatus()
-            console.log('Success :', res?.data?.message?.general[0])
+            setSuccess(res?.data?.message?.general[0])
+            setTimeout(() => {
+                updateClubStatus()
+                setClub({} as ClubTableProps)
+            }, 1000)
         })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+        .catch(err => setError(err?.response?.data?.message?.general[0]))
 }
 
 export default Modal

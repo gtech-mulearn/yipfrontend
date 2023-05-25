@@ -5,6 +5,8 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
+import * as yup from 'yup'
+import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateAssemblyData: Function
@@ -13,6 +15,9 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [assembly, setAssembly] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
+
     const reset = () => {
         setAssembly("")
         setDistrict(initialState)
@@ -21,8 +26,21 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
+    function validateSchema() {
+        const validationSchema = yup.object().shape({
+            name: yup.string().required('Assembly Name is required'),
+            district: yup.string().required('District is required'),
+        })
+        return validationSchema.validate(
+            { name: assembly, district: district.name },
+            { abortEarly: true })
+    }
     function handleCreate() {
-        createAssembly(assembly, district.id, updateAssemblyData, setViewSetup)
+        validateSchema()
+            .then(() => {
+                createAssembly(assembly, district.id, updateAssemblyData, setViewSetup, setSuccessMessage, setErrorMessage)
+            })
+            .catch(err => showAlert(err.message, setErrorMessage))
     }
     return (
         <div className="white-container">
@@ -31,7 +49,7 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                 <div className="setup-filter">
                     <div className="select-container club">
                         <CustomInput value={'Assembly'} setData={setAssembly} data={assembly} />
-                        <CustomSelect option={districtList} value="District" setData={setDistrict} />
+                        <CustomSelect option={districtList} header="District" setData={setDistrict} />
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
@@ -45,6 +63,8 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
+            {errorMessage && <Error error={errorMessage} />}
+            {successMessage && <Success success={successMessage} />}
         </div>)
 }
 function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
@@ -57,7 +77,9 @@ function createAssembly(
     assembly: string,
     districtId: string,
     update: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>
+    setViewSetup: Dispatch<SetStateAction<boolean>>,
+    setSuccessMessage: Dispatch<SetStateAction<string>>,
+    setErrorMessage: Dispatch<SetStateAction<string>>
 ) {
     const postData = {
         name: assembly,
@@ -66,9 +88,15 @@ function createAssembly(
     privateGateway.post(setupRoutes.assembly.create, postData)
         .then(res => {
             update()
+            showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            setTimeout(() => {
+                setViewSetup(false)
+            }, 3000)
             console.log('Success :', res.data.message.general[0])
         })
-        .catch(err => console.log('Error :', err?.response.data.message.general[0]))
-        .finally(() => setViewSetup(false))
+        .catch(err => {
+            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            console.log('Error :', err?.response.data.message.general[0])
+        })
 }
 export default AssemblySetup

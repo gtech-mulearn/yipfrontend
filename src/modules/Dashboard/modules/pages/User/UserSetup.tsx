@@ -79,8 +79,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                         <CustomInput value="Phone" type='phone' setData={setPhone} data={phone} />
                         <CustomSelect
                             option={roleList}
-                            value="Role"
+                            header='Role'
                             setData={setRole}
+                            isSearchable={false}
+
                         />
                         <CustomInput value="Password" type="password" setData={setPassword} data={password} />
                         <div className="create-btn-container">

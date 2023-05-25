@@ -5,14 +5,19 @@ import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
+import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateBlockData: Function
 }
+import * as yup from 'yup'
+
 const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
     const reset = () => {
         setBlock("")
         setDistrict(initialState)
@@ -21,8 +26,21 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
+    function validateSchema() {
+        const validationSchema = yup.object().shape({
+            name: yup.string().required('Assembly Name is required'),
+            district: yup.string().required('District is required'),
+        })
+        return validationSchema.validate(
+            { name: block, district: district.name },
+            { abortEarly: true })
+    }
     function handleCreate() {
-        createBlock(block, district.id, updateBlockData, setViewSetup)
+        validateSchema()
+            .then(() => {
+                createBlock(block, district.id, updateBlockData, setViewSetup, setSuccessMessage, setErrorMessage)
+            })
+            .catch(err => showAlert(err.message, setErrorMessage))
     }
     return (
         <div className="white-container">
@@ -31,7 +49,7 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
                 <div className="setup-filter">
                     <div className="select-container club">
                         <CustomInput value={'Block'} setData={setBlock} data={block} />
-                        <CustomSelect option={districtList} value="District" setData={setDistrict} />
+                        <CustomSelect option={districtList} header="District" setData={setDistrict} />
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
@@ -45,6 +63,8 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
+            {errorMessage && <Error error={errorMessage} />}
+            {successMessage && <Success success={successMessage} />}
         </div>)
 }
 function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
@@ -57,7 +77,9 @@ function createBlock(
     block: string,
     districtId: string,
     update: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>
+    setViewSetup: Dispatch<SetStateAction<boolean>>,
+    setSuccessMessage: Dispatch<SetStateAction<string>>,
+    setErrorMessage: Dispatch<SetStateAction<string>>
 ) {
     const postData = {
         name: block,
@@ -66,9 +88,15 @@ function createBlock(
     privateGateway.post(setupRoutes.block.create, postData)
         .then(res => {
             update()
-            console.log('Success :', res.data.message.general[0])
+            showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            console.log('Success :', res?.data?.message?.general[0])
+            setTimeout(() => {
+                setViewSetup(false)
+            }, 3000)
         })
-        .catch(err => console.log('Error :', err?.response.data.message.general[0]))
-        .finally(() => setViewSetup(false))
+        .catch(err => {
+            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            console.log('Error :', err?.response?.data?.message?.general[0])
+        })
 }
 export default BlockSetup

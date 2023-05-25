@@ -1,11 +1,13 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
-import { CustomSelect, intialState } from '../../../components/CustomSelect/CustomSelect'
+import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
+import * as yup from 'yup'
+import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateClubData: Function
@@ -15,7 +17,8 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
     const [college, setCollege] = useState<selectProps>(initialState)
-
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
     const reset = () => {
         setDistrict(initialState)
         setCollege(initialState)
@@ -31,6 +34,21 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             fetchcolleges(setCollegeList, district.name)
         }
     }, [district?.id])
+    function validateDistrict() {
+        const districtValidator = yup.string().required('District is required')
+        return districtValidator.validate(district.name)
+    }
+    function validateSchema() {
+        const validation = yup.object().shape({
+            college: yup.string().required('College is required'),
+        })
+        return validation.validate(
+            {
+                college: college.name
+            },
+        )
+    }
+
     function handleCreate() {
         type postDataProps = {
             clubName: string,
@@ -44,16 +62,28 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             instituteId: college.id,
             districtId: district.id,
         }
-        createClub<postDataProps>(postData, updateClubData, setViewSetup)
+        validateDistrict()
+            .then(() => {
+                validateSchema().then(() => {
+                    createClub<postDataProps>(postData, updateClubData, setViewSetup, setSuccessMessage, setErrorMessage)
+                })
+                    .catch((err) => {
+                        showAlert(err.message, setErrorMessage)
+                    })
+            })
+            .catch((err) => {
+                showAlert(err.message, setErrorMessage)
+            })
     }
+
     return (
         <div className="white-container">
             <h3>Setup a YIP Club</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
-                        <CustomSelect option={districtList} value="District" setData={setDistrict} />
-                        <CustomSelect option={collegeList} value="college" setData={setCollege} />
+                        <CustomSelect option={districtList} header="District" setData={setDistrict} />
+                        <CustomSelect option={collegeList} header="college" setData={setCollege} />
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
@@ -67,6 +97,8 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
+            {errorMessage && <Error error={errorMessage} />}
+            {successMessage && <Success success={successMessage} />}
         </div>
     )
 }
@@ -88,13 +120,20 @@ function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, distric
         })
         .catch(err => console.log(err))
 }
-function createClub<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>) {
+function createClub<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>, setSuccessMessage: Dispatch<SetStateAction<string>>,
+    setErrorMessage: Dispatch<SetStateAction<string>>) {
     privateGateway.post(setupRoutes.club.create, postData)
         .then(res => {
             update()
-            console.log('Success :', res.data.message.general[0])
+            showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            console.log('Success :', res?.data?.message?.general[0])
+            setTimeout(() => {
+                setViewSetup(false)
+            }, 3000)
         })
-        .catch(err => console.log('Error :', err?.response.data.message.general[0]))
-        .finally(() => setViewSetup(false))
+        .catch(err => {
+            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            console.log('Error :', err?.response?.data?.message?.general[0])
+        })
 }
 export default ClubSetup 
