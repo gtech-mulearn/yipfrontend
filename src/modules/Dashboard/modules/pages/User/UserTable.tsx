@@ -2,9 +2,9 @@ import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { setupRoutes, tableRoutes } from '../../../../../services/urls'
+
 import Modal from './UserModal'
+import { fetchUserRoles, fetchUsers } from './UserApi'
 
 export interface UserTableProps {
     id: string
@@ -150,22 +150,6 @@ function rawString(str: string) {
     str = str.replaceAll(' ', '')
     return str
 }
-async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableProps[]>>, setListForTable: Dispatch<SetStateAction<UserTableProps[]>>, updateTable?: Function) {
-    await privateGateway.get(tableRoutes.user.list)
-        .then(res => res.data.response)
-        .then(data => {
-            setUserList(data)
-            setListForTable(data)
-            if (updateTable) updateTable(data)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.user.roles.list)
-        .then(res => res.data.response.roles)
-        .then(data =>
-            setData(data?.map((item: { value: string, label: string }) =>
-                ({ id: item.value, name: item.label }))))
-        .catch(err => console.log(err))
-}
+
+
 export default UserTable

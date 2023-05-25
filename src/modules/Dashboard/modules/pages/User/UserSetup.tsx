@@ -2,13 +2,11 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
-import { toast } from "react-toastify";
 import { showAlert, Error, Success } from '../../../components/Error/Alerts'
+import { createUser, fetchUserRoles } from './UserApi'
 
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -103,45 +101,6 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         </div>
     )
 }
-function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.user.roles.list)
-        .then(res => res.data.response.roles)
-        .then(data =>
-            setData(data?.map((item: { value: string, label: string }) =>
-                ({ id: item.value, name: item.label }))))
-        .catch(err => console.log(err))
-}
-function createUser(
-    name: string,
-    email: string,
-    phone: string,
-    role: string,
-    password: string,
-    updateUserData: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
-) {
-    const postData = {
-        name: name,
-        email: email,
-        phone: phone,
-        role: role,
-        password: password
-    }
-    privateGateway.post(setupRoutes.user.create, postData)
-        .then(res => {
-            updateUserData()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
-        })
-        .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
-        })
-}
+
 
 export default UserSetup 

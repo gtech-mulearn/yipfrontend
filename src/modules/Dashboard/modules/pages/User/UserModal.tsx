@@ -1,11 +1,9 @@
-import { selectProps } from '../../utils/setupUtils'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { tableRoutes } from '../../../../../services/urls'
 import '../../components/Modal.scss'
 import { Error, Success } from '../../../components/Error/Alerts'
 
 import { UserTableProps } from './UserTable'
+import { deleteThisUser } from './UserApi'
 interface UserModalProps {
     user: UserTableProps
     setUser: Dispatch<SetStateAction<UserTableProps>>
@@ -60,20 +58,6 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
         </div>
     )
 }
-function deleteThisUser(id: string, update: Function,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>,
-    setUser: Dispatch<SetStateAction<UserTableProps>>
-) {
-    privateGateway.delete(`${tableRoutes.user.delete}${id}/`)
-        .then(res => {
-            setSuccessMessage(res?.data?.message?.general[0])
-            setTimeout(() => {
-                update()
-                setUser({} as UserTableProps)
-            }, 1000)
-        })
-        .catch(err => setErrorMessage(err?.response?.data?.message?.general[0]))
-}
+
 
 export default Modal
