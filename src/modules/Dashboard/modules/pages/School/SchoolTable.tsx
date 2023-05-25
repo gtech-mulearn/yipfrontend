@@ -39,6 +39,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [school, setSchool] = useState<SchoolTableProps>({} as SchoolTableProps)
+    const [menu, setMenu] = useState<boolean>(false)
 
     useEffect(() => {
         fetchDistricts(setDistrictList)
@@ -84,10 +85,10 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                     <div className='table-header'>
                         <h3>Model School List</h3>
                         <div className='table-header-btn'>
-                            <li className="fas fa-bars "></li>
+                            <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
                         </div>
                     </div>
-                    <div className='table-fn'>
+                    {menu && <div className='table-fn'>
                         <div className='search-bar'>
                             <input className='search-bar-item'
                                 id='search'
@@ -106,7 +107,6 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                             <i className="fa-solid fa-plus"></i>
                             <p>Add Model School</p>
                         </div>
-                        <button className="table-fn-btn show-in-500 cursor">Show Banner</button>
                         <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>
@@ -116,7 +116,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                             <i className="fa-solid fa-close  "></i>
                             <p></p>
                         </div>}
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Filters */}

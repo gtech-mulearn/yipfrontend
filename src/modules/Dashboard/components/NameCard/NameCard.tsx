@@ -5,7 +5,7 @@ import './NameCard.scss'
 import { fetchUserInfo } from '../api'
 
 const NameCard = () => {
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(window.innerWidth < 500)
     const [data, setData] = React.useState<{ name: string, role: string }>({ name: '', role: '' })
     useEffect(() => {
         fetchUserInfo(setData)
@@ -13,8 +13,8 @@ const NameCard = () => {
     return (
         <>
             {
-                <div className={`name-card ${open ? ' open' : ''}`} onClick={() => setOpen(!open)}>
-                    <i className={`fas ${open ? 'fa-times' : 'fa-user'}`} ></i>
+                <div className={`name-card ${open ? ' open' : ''}`} onClick={() => { if (window.innerWidth > 500) setOpen(!open) }}>
+                    {window.innerWidth > 500 && <i className={`fas ${open ? 'fa-times' : 'fa-user'}`} ></i>}
                     {open &&
                         <div className="name-card-content">
                             <h2>{data?.role}</h2>

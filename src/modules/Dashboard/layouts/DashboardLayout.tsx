@@ -6,8 +6,8 @@ const DashboardLayout = () => {
 
     return (
         <>
-            <LeftDrawer />
             <NameCard />
+            <LeftDrawer />
             <Outlet />
             <BottomTab />
         </>

@@ -34,3 +34,16 @@
     border-radius: 15px;
     background-color: white;
 }
+
+@media screen and (max-width:500px) {
+    .name-card {
+        width: 80%;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+
+        i {
+            display: none;
+        }
+    }
+}
