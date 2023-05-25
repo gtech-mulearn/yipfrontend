@@ -1,0 +1,36 @@
+@use '../../../../abstracts/colors.scss';
+
+.name-card {
+    user-select: none;
+    z-index: 1000;
+    top: 15px;
+    right: 15px;
+    background-color: rgb(90, 194, 255);
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+    width: fit-content;
+    padding: 10px 15px;
+    position: fixed;
+    text-align: right;
+
+
+    .name-card-content {
+        text-align: left;
+    }
+
+    h1 {
+        text-align: left;
+        font-size: 16px;
+    }
+
+    h2 {
+        text-align: left;
+        font-size: 10px;
+    }
+}
+
+.open {
+    box-shadow: 0px 0px 2px 0px black;
+    border-radius: 15px;
+    background-color: white;
+}

@@ -7,6 +7,7 @@ export const bannerRoutes = {
 }
 export const setupRoutes = {
     user: {
+        info: '/api/v1/yip/info/',
         roles: {
             list: "/api/v1/yip/list-roles/",
         },
