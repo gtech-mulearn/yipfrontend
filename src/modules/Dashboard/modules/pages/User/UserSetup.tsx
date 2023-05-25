@@ -6,6 +6,10 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes } from '../../../../../services/urls'
 import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
+import * as yup from 'yup'
+import { toast } from "react-toastify";
+import { showAlert, Error, Success } from '../../../components/Error/Alerts'
+
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -17,6 +21,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [password, setPassword] = useState("")
     const [role, setRole] = useState(initialState)
     const [roleList, setRoleList] = useState<selectProps[]>([])
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
+
+
     const reset = () => {
         setName("")
         setEmail("")
@@ -28,9 +36,38 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     useEffect(() => {
         fetchUserRoles(setRoleList)
     }, [])
-    function handleCreate() {
-        createUser(name, email, phone, role.id, password, updateUserData, setViewSetup)
+
+    function validate() {
+        const validationSchema = yup.object().shape({
+            name: yup.string().required('Name is required')
+                .min(3, 'Name must be at least 3 characters'),
+            email: yup.string().email('Invalid email').required('Email is required'),
+            phone: yup
+                .string()
+                .matches(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/, 'Invalid phone number')
+                .required('Phone number is required'),
+            role: yup.string().required('Role is required'),
+            password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+        })
+        return validationSchema.validate(
+            { name: name, email: email, phone: phone, role: role.id, password: password },
+            { abortEarly: true })
     }
+
+    function handleCreate() {
+
+        validate()
+            .then(() => {
+                createUser(name, email, phone, role.id, password, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage)
+            })
+            .catch((err) => {
+                console.log(err)
+                showAlert(err.message, setErrorMessage)
+            })
+    }
+
+
+
     return (
         <div className="white-container">
             <h3>Setup a User</h3>
@@ -38,14 +75,14 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                 <div className="setup-filter">
                     <div className="select-container club">
                         <CustomInput value="Name" setData={setName} data={name} />
-                        <CustomInput value="Email" setData={setEmail} data={email} />
-                        <CustomInput value="Phone" setData={setPhone} data={phone} />
+                        <CustomInput value="Email" type='email' setData={setEmail} data={email} />
+                        <CustomInput value="Phone" type='phone' setData={setPhone} data={phone} />
                         <CustomSelect
                             option={roleList}
                             value="Role"
                             setData={setRole}
                         />
-                        <CustomInput value="Password" setData={setPassword} data={password} />
+                        <CustomInput value="Password" type="password" setData={setPassword} data={password} />
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
@@ -59,6 +96,8 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
+            {errorMessage && <Error error={errorMessage} />}
+            {successMessage && <Success success={successMessage} />}
         </div>
     )
 }
@@ -77,7 +116,9 @@ function createUser(
     role: string,
     password: string,
     updateUserData: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>
+    setViewSetup: Dispatch<SetStateAction<boolean>>,
+    setSuccessMessage: Dispatch<SetStateAction<string>>,
+    setErrorMessage: Dispatch<SetStateAction<string>>
 ) {
     const postData = {
         name: name,
@@ -88,11 +129,17 @@ function createUser(
     }
     privateGateway.post(setupRoutes.user.create, postData)
         .then(res => {
-            setViewSetup(false)
             updateUserData()
+            showAlert(res?.data?.message?.general[0], setSuccessMessage)
             console.log('Success :', res?.data?.message?.general[0])
+            setTimeout(() => {
+                setViewSetup(false)
+            }, 3000)
         })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+        .catch(err => {
+            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            console.log('Error :', err?.response?.data?.message?.general[0])
+        })
 }
 
 export default UserSetup 

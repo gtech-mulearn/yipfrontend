@@ -1,11 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './modules/Login/pages/Login';
 import { PrivateRoutes, PublicRoutes } from './utils/RoutePrivacy';
-import { link } from './utils/utils';
 import DashboardLayout from './modules/Dashboard/layouts/DashboardLayout';
-import Dashboard from './pages/Dashboard';
-import Table from './components/Table/Table';
-import './pages/Dashboard.scss'
+
 import SchoolLayout from './modules/Dashboard/modules/pages/School/SchoolLayout';
 import ClubLayout from './modules/Dashboard/modules/pages/Club/ClubLayout';
 import UserLayout from './modules/Dashboard/modules/pages/User/UserLayout';

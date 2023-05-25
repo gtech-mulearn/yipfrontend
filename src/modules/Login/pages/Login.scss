@@ -1,12 +1,13 @@
 @use "../../../abstracts/functions";
 @use "../../../abstracts/colors";
 
-.login-background{
+.login-background {
     @include functions.flex-center();
     height: 100vh;
     background: url("../../../assets/login-background.svg");
     background-size: cover;
 }
+
 .login-container {
     width: 20rem;
     background-color: white;
@@ -16,54 +17,59 @@
     flex-flow: column;
     justify-content: center;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    img{
-        width:6rem;
+
+    img {
+        width: 6rem;
         margin-bottom: 40px;
     }
-    form{
+
+    form {
         display: flex;
         flex-flow: column;
         margin-top: 20px;
-        input{
+
+        input {
             border-radius: 12px;
             padding: 12px;
             border: 1px solid #333;
             margin-bottom: 12px;
-            &:focus{
-                outline:none;
-                border: 1px solid rgb(166, 110, 5);
-            }
+
         }
     }
 }
-.show-password{
+
+.show-password {
     margin-bottom: 12px;
     margin-left: 8px;
-    label{
+
+    label {
         font-size: 12px;
         margin-left: 6px;
     }
 }
-#submitBtn{
+
+#submitBtn {
     background-color: black;
     color: white;
     padding: 12px;
     border-radius: 12px;
     border: none;
     text-align: center;
-    &:hover{
+
+    &:hover {
         background-color: rgb(55, 55, 55);
     }
 }
 
 
 @media only screen and (max-width: 460px) {
-    .login-container{
-        h2{
+    .login-container {
+        h2 {
             font-size: 16px;
         }
-        form > input{
-            padding: 8px; 
+
+        form>input {
+            padding: 8px;
         }
     }
 }

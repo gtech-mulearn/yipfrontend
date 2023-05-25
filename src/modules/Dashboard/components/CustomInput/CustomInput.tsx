@@ -1,16 +1,11 @@
+import { FC } from "react"
+import { inputProps } from "../../utils/CustomInputUtils"
 
-import { FC, Dispatch, SetStateAction } from "react"
-interface inputProps {
-    value: string
-    data: string
-    setData: Dispatch<SetStateAction<string>>
-}
-// import './CustomInput.scss'
-export const CustomInput: FC<inputProps> = ({ value, setData, data }) => (
+export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, data, requiredHeader = true }) => (
     <div className="setup-item" >
-        <p>{value}</p>
+        {requiredHeader && <p>{value}</p>}
         <input
-            type="text"
+            type={type}
             name={`name-${value}`}
             placeholder={`Enter ${value}`}
             value={data}

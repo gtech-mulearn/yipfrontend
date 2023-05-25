@@ -30,3 +30,13 @@ export const buttons: urlProps[] = [
         title: 'Block',
     }
 ]
+export const getCurrentPageTitle = (): string => {
+    /**
+* Returns a string containing the title of the current page.
+*
+* @return {string} A string containing the title of the current page.
+*/
+
+    for (let i in buttons) if (window.location.pathname === buttons[i].url) return buttons[i].title
+    return ''
+}

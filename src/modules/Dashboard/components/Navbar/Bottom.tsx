@@ -1,17 +1,8 @@
-import { buttons, urlProps } from "../../utils/navbarUtils"
-import { Link, useNavigate } from "react-router-dom"
+import { buttons, urlProps, getCurrentPageTitle } from "../../utils/navbarUtils"
+import { useNavigate } from "react-router-dom"
 import './BottomTab.scss'
 
-const getCurrentPageUtils = (): urlProps => {
-    /**
-* Returns an object containing the URL properties of the current page.
-*
-* @return {urlProps} An object containing the URL properties of the current page.
-*/
 
-    for (let i in buttons) if (window.location.pathname === buttons[i].url) return buttons[i]
-    return {} as urlProps
-}
 
 export const BottomTab = () => {
     /**
@@ -25,7 +16,7 @@ export const BottomTab = () => {
             <div className="tab-nav">
                 {/* Renders the title of the current page */}
                 <div className="tab-nav-container visible-mob">
-                    {getCurrentPageUtils().title}
+                    {getCurrentPageTitle()}
                 </div>
                 <div className="tab-nav-container">
                     {/* Renders navigation links */}

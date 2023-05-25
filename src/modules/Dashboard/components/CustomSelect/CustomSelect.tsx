@@ -1,16 +1,13 @@
 import { Dispatch, SetStateAction, FC, useEffect, useState } from "react"
 import Select from 'react-select'
 import './CustomSelect.scss'
-interface dummyProps {
-    id: string,
-    name: string
-}
-export const intialState = { id: '', name: '' }
+import { optionProps, intialState } from "../../utils/CustomSelectUtils"
+
 
 export const CustomSelect: FC<{
-    option: dummyProps[]
+    option: optionProps[]
     value: string
-    setData?: Dispatch<SetStateAction<dummyProps>>
+    setData?: Dispatch<SetStateAction<optionProps>>
     setValue?: Dispatch<SetStateAction<string>>
     requiredHeader?: boolean
     requiredLabel?: boolean
@@ -50,8 +47,8 @@ export const CustomSelect: FC<{
                     isClearable={true}
                     noOptionsMessage={() => 'No options'}
                     placeholder={requirePlaceHolder ? placeHolder : `Select a ${value}`}
-                    getOptionValue={(option: dummyProps) => option.id}
-                    getOptionLabel={(option: dummyProps) => sentenceCase ? capitalizeString(option.name) : option.name}
+                    getOptionValue={(option: optionProps) => option.id}
+                    getOptionLabel={(option: optionProps) => sentenceCase ? capitalizeString(option.name) : option.name}
                     onChange={(data: any) => {
                         try {
                             if (requiredData) {

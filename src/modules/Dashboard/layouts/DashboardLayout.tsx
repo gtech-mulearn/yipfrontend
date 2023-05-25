@@ -1,8 +1,7 @@
 import { LeftDrawer } from "../components/Navbar/LeftDrawer"
 import { BottomTab } from "../components/Navbar/Bottom"
 import { Outlet } from "react-router-dom";
-
-const DashboardLayout = (props: { component?: any }) => {
+const DashboardLayout = () => {
 
     return (
         <>
@@ -12,5 +11,4 @@ const DashboardLayout = (props: { component?: any }) => {
         </>
     )
 }
-
 export default DashboardLayout 
