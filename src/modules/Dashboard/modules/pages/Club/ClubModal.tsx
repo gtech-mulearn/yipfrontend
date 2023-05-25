@@ -2,11 +2,10 @@ import { ClubTableProps } from './ClubTable'
 import { selectProps } from '../../utils/setupUtils'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { tableRoutes } from '../../../../../services/urls'
 import '../../components/Modal.scss'
 import { Error } from '../../../components/Error/Alerts'
 import { Success } from '../../../components/Error/Alerts'
+import { deleteModelClub, updateClubStatus } from './clubAPI'
 interface ClubModalProps {
     club: ClubTableProps
     setClub: Dispatch<SetStateAction<ClubTableProps>>
@@ -99,34 +98,6 @@ const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) 
         </div>
     )
 }
-function updateClubStatus(id: string, status: string,
-    setClub: Dispatch<SetStateAction<ClubTableProps>>, updateClubStatus: Function,
-    setSuccess: Dispatch<SetStateAction<string>>, setError: Dispatch<SetStateAction<string>>
-) {
-    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
-        .then(res => {
-            console.log('Success :', res?.data?.message?.general[0])
-            setSuccess(res?.data?.message?.general[0])
-            setTimeout(() => {
-                setClub({} as ClubTableProps)
-                updateClubStatus()
-            }, 1000)
-        })
-        .catch(err => setError(err?.response?.data?.message?.general[0]))
-}
-function deleteModelClub(id: string, updateClubStatus: Function, setSuccess: Dispatch<SetStateAction<string>>,
-    setError: Dispatch<SetStateAction<string>>, setClub: Dispatch<SetStateAction<ClubTableProps>>
-) {
-    privateGateway.delete(`${tableRoutes.club.delete}${id}/`)
-        .then(res => {
-            updateClubStatus()
-            setSuccess(res?.data?.message?.general[0])
-            setTimeout(() => {
-                updateClubStatus()
-                setClub({} as ClubTableProps)
-            }, 1000)
-        })
-        .catch(err => setError(err?.response?.data?.message?.general[0]))
-}
+
 
 export default Modal

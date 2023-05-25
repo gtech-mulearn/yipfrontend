@@ -1,10 +1,11 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
-import Modal from './Modal'
+import Modal from './ClubModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes, tableRoutes } from '../../../../../services/urls'
+import { fetchClubs, fetchDistricts, fetchStatus } from './clubAPI'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateClubData: Function
@@ -164,39 +165,5 @@ function rawString(str: string) {
 }
 
 
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
 
-async function fetchClubs(
-    setData: Dispatch<SetStateAction<ClubTableProps[]>>,
-    setData2: Dispatch<SetStateAction<ClubTableProps[]>>,
-    updateTable?: Function
-) {
-    await privateGateway.get(tableRoutes.club.list)
-        .then(res => res.data.response.clubs)
-        .then(data => {
-            setData(data)
-            setData2(data)
-            if (updateTable) updateTable(data)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatusList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(tableRoutes.status.list)
-        .then(res => res.data.response.clubStatus)
-        .then(data => {
-            setData(data)
-            setOptionStatusList(data.map((item: selectProps, index: string) => {
-                return {
-                    id: index,
-                    name: item
-                }
-            }))
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
 export default ClubTable
