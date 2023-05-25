@@ -114,7 +114,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                     sortOrder={
                         {
                             sortBy: 'role',
-                            orderList: roleList.map(role => role.id),
+                            orderList: roleList.map(role => role.name),
                             orderSymbol: {
                                 asc: 'fa-arrow-up-short-wide',
                                 desc: 'fa-arrow-down-wide-short'
@@ -132,7 +132,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
 function filterUser(userList: UserTableProps[], search: string, role: selectProps) {
     let list = userList
     if (search) list = searchUser(list, search)
-    if (role.id) list = list.filter(user => user.role === role.id)
+    if (role.name) list = list.filter(user => user.role === role.name)
     return list
 }
 function searchUser(schoolList: UserTableProps[], search: string) {
