@@ -1,9 +1,9 @@
 import { BlockTableProps } from './BlockTable'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { tableRoutes } from '../../../../../services/urls'
+
 import '../../components/Modal.scss'
 import { Error, Success } from '../../../components/Error/Alerts'
+import { deleteModelBlock } from './blockAPI'
 
 interface BlockModalProps {
     block: BlockTableProps
@@ -50,20 +50,6 @@ const Modal: FC<BlockModalProps> = ({ block, setBlock, update }) => {
         </div>
     )
 }
-function deleteModelBlock(id: string, updateBlockStatus: Function,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>,
-    setBlock: Dispatch<SetStateAction<BlockTableProps>>
-) {
-    privateGateway.delete(`${tableRoutes.block.delete}${id}/`)
-        .then(res => {
-            setSuccessMessage(res?.data?.message?.general[0])
-            setTimeout(() => {
-                updateBlockStatus()
-                setBlock({} as BlockTableProps)
-            }, 1000)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
+
 
 export default Modal

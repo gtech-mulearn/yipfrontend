@@ -1,10 +1,9 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
-import { setupRoutes, tableRoutes } from '../../../../../services/urls'
-import { privateGateway } from '../../../../../services/apiGateway'
 import Modal from './BlockModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
+import { fetchBlocks, fetchDistricts } from './blockAPI'
 
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -143,25 +142,6 @@ function rawString(str: string) {
     str = str.replaceAll(' ', '')
     return str
 }
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
-function fetchBlocks(
-    setData: Dispatch<SetStateAction<BlockTableProps[]>>,
-    setData2: Dispatch<SetStateAction<BlockTableProps[]>>,
-    updateTable?: Function
-) {
-    privateGateway.get(tableRoutes.block.list)
-        .then(res => res.data.response)
-        .then(data => {
-            setData(data)
-            setData2(data)
-            if (updateTable) updateTable(data)
-        })
-        .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
-}
+
 export default BlockTable
 

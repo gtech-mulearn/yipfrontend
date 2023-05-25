@@ -3,14 +3,14 @@ import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'
-import { privateGateway } from '../../../../../services/apiGateway'
-import { setupRoutes } from '../../../../../services/urls'
+
 import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateBlockData: Function
 }
 import * as yup from 'yup'
+import { createBlock, fetchDistricts } from './blockAPI'
 
 const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
@@ -67,36 +67,5 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
             {successMessage && <Success success={successMessage} />}
         </div>)
 }
-function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.log(err))
-}
-function createBlock(
-    block: string,
-    districtId: string,
-    update: Function,
-    setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
-) {
-    const postData = {
-        name: block,
-        districtId: districtId,
-    }
-    privateGateway.post(setupRoutes.block.create, postData)
-        .then(res => {
-            update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
-        })
-        .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
-        })
-}
+
 export default BlockSetup
