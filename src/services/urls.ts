@@ -8,7 +8,7 @@ export const bannerRoutes = {
 export const setupRoutes = {
     user: {
         roles: {
-            list: "/api/v1/yip/get-roles/",
+            list: "/api/v1/yip/list-roles/",
         },
         create: '/api/v1/yip/create-user/',
     },
