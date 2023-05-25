@@ -1,0 +1,128 @@
+@use '../../abstracts/variables';
+
+.dash-container{
+    margin-left: variables.$slidebar-width;
+    padding: 0rem 6rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    background-color: #f5f8fa;
+}
+
+// Banner-Box
+
+.welcome-banner{
+    height: auto;
+    background-color: #9fcdec;
+    border-radius: 20px;
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    padding:1rem 2rem;
+}
+.white-container{
+    height: auto;
+    position: relative;
+    background-color: white;
+    border: 1px solid black;
+    margin-top: 30px;
+    border-radius:20px ;
+    padding: 20px;
+}
+.banner-container{
+    position: relative;
+    padding-top: 10px;
+    .welcome-image-container{
+        width: 50%;
+        height: 100%;
+        display: flex;
+        position: relative;
+        img{
+            height: 15rem;
+            // position: absolute;
+            bottom: -2.3rem;
+            right: -20px;
+            transition: height 0.3s ease-out;
+        }
+        h1{
+            text-align: right;
+            transition: 0.3s ease-out;
+        }
+        h3{
+            text-align: right;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+    }
+    @media screen and (max-width:770px){
+        .welcome-image-container{
+            display: none;
+        }
+    }
+}
+
+.box{
+    border-radius: 12px;
+    padding:20px 5px;
+    text-align: center;
+    width: 150px;   
+    color: white;
+    text-align: center;
+    h3{
+        font-size: 30px;
+    }
+    p{
+        font-size: 13px;
+    }
+}
+@media screen and (max-width:500px){
+    .box{
+        width: 100%;
+        min-width: 80px;
+        padding: 5px;
+       h3{ font-size: 20px;}
+       p{font-size: px;}
+    }
+}
+.blue-box{
+    background-color: #59b3fa;
+}
+.light-blue-box{
+    background-color: #dceaf5;
+    color: black;
+}
+.count-in{
+    padding-top: 5px;
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+
+}
+.count{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size:15px;
+}
+.statistics{
+    width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly ;
+    gap: 20px;
+}
+.bottom-tab-container{
+    display: none;
+}
+@media only screen and (max-width: 1200px){
+    .dash-container{
+        margin: 0;
+        margin-bottom: 4rem;
+        padding: 1rem;
+    }
+    .bottom-tab-container{
+        display: block;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+}

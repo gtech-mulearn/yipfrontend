@@ -1,22 +1,18 @@
-@use '../../../../abstracts/functions';
-
-.setup-club {
+@use '../../abstracts/functions';
+.setup-club{
     width: 100%;
     display: flex;
     padding-top: 10px;
 }
-
-.setup-club h3 {
+.setup-club h3{
     text-align: left;
 }
-
-.setup-filter {
+.setup-filter{
     width: 100%;
     display: flex;
     padding: 20px 0;
 }
-
-.setup-filter .select-container {
+.setup-filter .select-container{
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -25,26 +21,21 @@
     gap: 10px;
     margin-right: 20px;
 }
-
-.setup-item {
+.setup-item{
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 40%;
     gap: 2px;
     margin-bottom: 8px;
-
-    p {
-        align-self: start;
+    p{
         font-size: 14px;
         font-weight: 600;
         font-size: 13px;
     }
 }
-
-.black-btn {
+.black-btn{
     @include functions.btn();
-    width: 40%;
-    gap: 5px;
+    width: 25%;
     background-color: black;
     color: white;
     font-weight: 300;
@@ -52,26 +43,21 @@
     margin-top: 12px;
 
 }
-
-.setup-item {
+.setup-item{
     text-align: center;
-
-    .black-btn {
+    .black-btn{
         width: 50%;
     }
 }
-
-.setup-error {
+.setup-error{
     background-color: rgba(255, 0, 0, 0.20);
     padding: 20px;
     border-radius: 5px;
 }
-
-.btn {
+.btn{
     width: 50%;
 }
-
-.grey-btn {
+.grey-btn{
     @include functions.btn();
     width: 25%;
     background-color: rgba(0, 0, 0, 0.162);
@@ -82,61 +68,34 @@
     font-size: 16px;
     margin-top: 12px;
 }
-
-.create-btn-container {
+.create_btn_cntr{
     display: flex;
     width: 100%;
-    gap: 1px;
+    gap: px;  
     justify-content: space-around;
 }
-
-.setup-img {
+.setup-img{
     width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    img {
+    img{
         width: 80%;
         height: auto;
     }
 }
 
-@media screen and (min-width: 1025px) and (max-width:1300px),
-(min-width: 0px) and (max-width:500px) {
-    .setup-img {
-        display: none;
-    }
-}
-
-@media only screen and (max-width: 900px) {
-    .setup-item {
+@media only screen and (max-width: 900px){
+    .setup-item{
         width: 100%;
     }
 }
-
-.error,
-.success {
+.error,.success{
     background-color: pink;
     font-size: 13px;
     padding: 10px;
     border-radius: 10px;
 }
-
-.success {
+.success{
     background-color: lightgreen;
-}
-
-@media screen and (max-width: 500px) {
-    .create-btn-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .black-btn {
-        min-width: 100%;
-
-    }
 }
