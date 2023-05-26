@@ -1,0 +1,32 @@
+@use '../../../../../../abstracts/functions.scss';
+
+.campus-sub-container-1 {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    .update-status-button {
+
+        user-select: none;
+        @include functions.btn();
+        background-color: black;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}
+
+.campus-sub-container-2 {
+    width: 100%;
+    margin: 10px 0;
+    background-color: aqua;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
