@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import './TitleNameTag.scss'
-interface TitleNameTagProps {
+export interface TitleNameTagProps {
     title: string
     name: string
 }

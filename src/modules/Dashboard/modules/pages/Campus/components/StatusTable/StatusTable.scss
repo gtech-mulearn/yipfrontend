@@ -1,0 +1,43 @@
+@use '/src/abstracts/functions.scss';
+
+.status-table {
+    width: 100%;
+    margin: 10px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+
+    @media screen and (max-width: 650px) {
+        grid-template-columns: 1fr;
+
+    }
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+
+    p {
+        font-weight: 600;
+    }
+
+    .add-button {
+        @include functions.btn();
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        background-color: #000;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}

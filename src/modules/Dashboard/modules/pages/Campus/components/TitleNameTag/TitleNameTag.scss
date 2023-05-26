@@ -1,13 +1,20 @@
 .title-name-tag {
-    max-width: 387px;
-    min-height: 73px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 20px;
+    border-radius: 10px;
 
     .title-tag {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .name-tag {
-        font-size: 18px;
+        display: flex;
+        border-radius: 12px;
+        align-items: center;
+        margin-top: 5px;
+        font-size: 25px;
         word-wrap: break-word;
+        min-height: 40px;
     }
 }
