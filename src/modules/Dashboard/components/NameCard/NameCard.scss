@@ -19,7 +19,7 @@ $theme-color-light-blue : #dceaf5;
 
     @media screen and (max-width:1024px) {
         position: absolute;
-        width: calc(100% - 30px);
+        width: calc(100% - 30px - 30px);
     }
 
     .open-color {
