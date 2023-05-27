@@ -18,7 +18,7 @@ interface CustomSelectProps extends SelectProps<optionProps> {
         classNamePrefix: string,
 
     },
-
+    defaultValue?: optionProps
 }
 export const CustomSelect: FC<CustomSelectProps> = ({
     option,
@@ -34,9 +34,11 @@ export const CustomSelect: FC<CustomSelectProps> = ({
         className: '',
         classNamePrefix: ""
     },
+    defaultValue,
     ...props
 }) => {
     const [update, setUpdate] = useState<boolean>(false)
+    const [customDefault, setCustomDefault] = useState<optionProps>(defaultValue || option[0])
     return (
         <div className={customCSS.className ? 'special-setup' : "setup-item"}>
             {requiredHeader && <p>{header}</p>}
@@ -45,6 +47,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                 classNamePrefix={customCSS.classNamePrefix}
                 options={option}
                 isClearable={true}
+                isMulti={false}
                 isSearchable={true}
                 placeholder={`Select a ${header}`}
                 noOptionsMessage={() => 'No options'}
@@ -52,13 +55,21 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                 getOptionLabel={(option: any): string => sentenceCase ? capitalizeString(option.name) : option.name}
                 onChange={(data: any) => {
                     try {
-                        if (requiredData) {
-                            setData?.(data?.name ? data : intialState)
+                        if (data === null) {
+                            if (defaultValue?.name) {
+                                if (requiredData) setData?.(defaultValue)
+                                if (requiredLabel) setValue?.(defaultValue.name)
+                            }
                         }
-                        if (requiredLabel) {
-                            setValue?.(data?.name ? data.name : '')
-                        }
+                        else {
+                            if (requiredData) {
+                                setData?.(data?.name ? data : intialState)
 
+                            }
+                            if (requiredLabel) {
+                                setValue?.(data?.name ? data.name : '')
+                            }
+                        }
                     } catch (error) {
                         if (requiredData) setData?.(intialState)
                         if (requiredLabel) setValue?.('')
