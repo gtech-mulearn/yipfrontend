@@ -13,7 +13,7 @@ interface SchoolModalProps {
     optionStatusList: selectProps[]
     updateSchoolData: Function
 }
-const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, updateSchoolData }) => {
+const SchoolModal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, updateSchoolData }) => {
     const [status, setStatus] = useState(school.club_status)
     const [deleteSchool, setDeleteSchool] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -101,4 +101,4 @@ const Modal: FC<SchoolModalProps> = ({ school, setSchool, optionStatusList, upda
 }
 
 
-export default Modal
+export default SchoolModal

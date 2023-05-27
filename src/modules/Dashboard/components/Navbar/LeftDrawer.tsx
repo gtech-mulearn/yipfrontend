@@ -10,8 +10,7 @@ export const LeftDrawer = () => {
     const [newButton, setNewButton] = React.useState(buttons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     useEffect(() => {
-        fetchUserInfo(setUserInfo, buttons, setNewButton)
-
+        fetchUserInfo(setUserInfo)
     }, [])
 
 

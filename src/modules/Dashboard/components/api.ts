@@ -7,16 +7,13 @@ export interface userInfoProps {
     role: string,
     email?: string
 }
-export async function fetchUserInfo(setData: Dispatch<SetStateAction<userInfoProps>>, list: urlProps[], setUrls: Dispatch<SetStateAction<urlProps[]>>) {
-    await privateGateway.get(setupRoutes.user.info)
+const restricted_roles: string[] = ['CA', 'Admin']
+export async function fetchUserInfo(setData: Dispatch<SetStateAction<userInfoProps>>) {
 
+    await privateGateway.get(setupRoutes.user.info)
         .then((res) => {
             setData(res.data.response)
-            for (let role of import.meta.env.VITE_NO_CAMPUS_ACCESS_ROLE.split(',')) {
-                if (res.data.response.role === role) {
-                    setUrls(list.filter((item: urlProps) => item.title !== 'Campus'))
-                }
-            }
+
 
         })
         .catch((err: any) => console.log('Error :', err?.response.data.message.general[0]))

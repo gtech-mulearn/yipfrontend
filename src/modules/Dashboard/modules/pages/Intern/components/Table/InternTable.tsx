@@ -48,8 +48,8 @@ const InternTable = () => {
                     setValue={setView}
                     defaultValue={views[0]}
                     requiredLabel={true}
-                    header={'Select View'}
-                    placeholder={`Interns View `}
+                    header={'Intern'}
+                    placeholder={'Intern'}
                     requiredData={false}
                 />
             </div>

@@ -60,15 +60,20 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                                 if (requiredData) setData?.(defaultValue)
                                 if (requiredLabel) setValue?.(defaultValue.name)
                             }
-                        }
-                        else {
-                            if (requiredData) {
+                            if (requiredData)
                                 setData?.(data?.name ? data : intialState)
 
-                            }
-                            if (requiredLabel) {
+                            if (requiredLabel)
                                 setValue?.(data?.name ? data.name : '')
-                            }
+
+                        }
+                        else {
+                            if (requiredData)
+                                setData?.(data?.name ? data : intialState)
+
+                            if (requiredLabel)
+                                setValue?.(data?.name ? data.name : '')
+
                         }
                     } catch (error) {
                         if (requiredData) setData?.(intialState)

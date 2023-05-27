@@ -6,4 +6,5 @@ export interface inputProps {
     data: string
     requiredHeader?: boolean
     setData: Dispatch<SetStateAction<string>>
+    customCSS?: string
 }

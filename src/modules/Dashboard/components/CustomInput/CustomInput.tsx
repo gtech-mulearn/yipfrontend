@@ -1,8 +1,8 @@
 import { FC } from "react"
 import { inputProps } from "../../utils/CustomInputUtils"
 
-export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, data, requiredHeader = true }) => (
-    <div className="setup-item" >
+export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, data, requiredHeader = true, customCSS = "setup-item" }) => (
+    <div className={customCSS}>
         {requiredHeader && <p>{value}</p>}
         <input
             type={type}
