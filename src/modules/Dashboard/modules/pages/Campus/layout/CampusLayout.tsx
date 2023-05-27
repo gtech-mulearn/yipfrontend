@@ -56,7 +56,6 @@ const CampusLayout = () => {
                     <TitleNameTag title={'Legislative Assembly'} name={campus?.legislativeAssembly} />
                     <TitleNameTag title={'Block '} name={campus?.block} />
                 </div>
-                {/* <CampusModal campuStatus={'Identified'} /> */}
                 <Identified date={campus?.identified} />
                 {campus?.confirmed && <Confirmed date={campus?.confirmed} />}
                 {campus?.connection && <Connection date={campus?.connection?.date} facilitator={campus?.connection?.facilitator} />}

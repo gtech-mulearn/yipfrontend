@@ -1,5 +1,6 @@
 import React from 'react'
 import StatusTable from '../StatusTable/StatusTable'
+import CampusModal from '../CampusModal/CampusModal'
 export interface OrientationCompleteProps {
     location: string
     mode: string
@@ -19,16 +20,16 @@ export interface OrientationProps {
 }
 
 const Orientation = ({ orientation }: { orientation: OrientationProps }) => {
+    const [open, setOpen] = React.useState(false)
     return (
         <div>
+            {open && <CampusModal campuStatus={'Orientation Scheduled'} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Orientation Scheduled'
                 title2='Orientation Date'
                 date={orientation?.completed[orientation?.completed.length - 1]?.date}
-                setAdd={function (value: React.SetStateAction<boolean>): void {
-                    console.log('Need to add function')
-                }}
+                setAdd={setOpen}
                 AddOption={'Add Orientation'}
                 TableHeading={'Orientation Schedules'}
                 tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Date', 'Time', 'Expired']}

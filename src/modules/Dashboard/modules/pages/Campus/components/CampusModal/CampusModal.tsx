@@ -12,7 +12,7 @@ import ExecomModal from '../Execom/ExecomModal'
 const CampusModal = ({ campuStatus, deleteId, cancel }: { campuStatus: string, deleteId?: string, cancel: () => void }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
-    const [status, setStatus] = useState<string>('')
+    const [status, setStatus] = useState<string>(campuStatus)
 
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
@@ -45,10 +45,10 @@ const CampusModal = ({ campuStatus, deleteId, cancel }: { campuStatus: string, d
                             />
                         </div>
                     </div>
-                    {campuStatus === 'Connection established' || status === 'Connection established' && <ConnectionModal cancel={cancel} />}
-                    {campuStatus === 'Orientation Scheduled' || status === 'Orientation Scheduled' && <OrientationScheduleModal cancel={cancel} />}
-                    {campuStatus === 'Orientation Completed' || status === 'Orientation Completed' && <OrientationCompletedModal cancel={cancel} />}
-                    {campuStatus === 'Execom Formed' || status === 'Execom Formed' && <ExecomModal cancel={cancel} />}
+                    {(campuStatus === 'Connection established' || status === 'Connection established') && <ConnectionModal cancel={cancel} />}
+                    {(campuStatus === 'Orientation Scheduled' || status === 'Orientation Scheduled') && <OrientationScheduleModal cancel={cancel} />}
+                    {(campuStatus === 'Orientation Completed' || status === 'Orientation Completed') && <OrientationCompletedModal cancel={cancel} />}
+                    {(campuStatus === 'Execom Formed' || status === 'Execom Formed') && <ExecomModal cancel={cancel} />}
                 </div>
                 <div className='secondary-box'>
                     <div className={`${(status && status !== campuStatus) ? 'btn-update ' : 'btn-disabled'}`}>

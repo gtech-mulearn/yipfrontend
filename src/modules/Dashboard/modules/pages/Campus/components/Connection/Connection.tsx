@@ -1,5 +1,6 @@
 import React from 'react'
 import StatusTable from '../StatusTable/StatusTable'
+import CampusModal from '../CampusModal/CampusModal'
 export interface FacilitatorProps {
     id: string
     name: string
@@ -8,16 +9,16 @@ export interface FacilitatorProps {
     type: string
 }
 const Connection = ({ date, facilitator }: { date: string, facilitator: FacilitatorProps[] }) => {
+    const [open, setOpen] = React.useState(false)
     return (
         <div>
+            {open && <CampusModal campuStatus={'Connection established'} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Connection Established'
                 title2='Date Connection Established'
                 date={date}
-                setAdd={function (value: React.SetStateAction<boolean>): void {
-                    console.log('Need to add function')
-                }}
+                setAdd={setOpen}
                 AddOption={'Add Facilitator'}
                 TableHeading={'Facilitator List'}
                 tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
