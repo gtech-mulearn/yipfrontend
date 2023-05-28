@@ -36,7 +36,7 @@ const router = createBrowserRouter([
           { path: 'legislative-assembly', element: <AssemblyLayout /> },
           { path: 'block', element: <BlockLayout /> },
           { path: 'intern-dashboard', element: <InternLayout /> },
-          { path: 'campus-dashboard', element: <CampusLayout /> }
+          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> }
         ]
       }
     ]

@@ -1,6 +1,3 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
-import SchoolModal from '../../../School/SchoolModal'
-import { SchoolTableProps } from '../../../School/SchoolTable'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import './CampusModal.scss'

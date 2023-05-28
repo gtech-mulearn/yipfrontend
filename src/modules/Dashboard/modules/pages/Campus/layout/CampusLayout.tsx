@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../../../components/Layout.scss'
 import StatusTable from '../components/StatusTable/StatusTable'
 import Identified from '../components/Identified/Identified'
@@ -11,6 +11,9 @@ import Execom, { ExecomProps } from '../components/Execom/Execom'
 import ConnectionModal from '../components/Connection/ConnectionModal'
 import CampusModal from '../components/CampusModal/CampusModal'
 import DeleteModal from '../components/CampusModal/DeleteModal'
+import { SchoolTableProps } from '../../School/SchoolTable'
+import { useParams } from 'react-router-dom'
+
 interface CampusPageProps {
     campus: string
     category: string
@@ -33,14 +36,16 @@ interface CampusPageProps {
     }
 }
 const CampusLayout = () => {
-
+    const { campusId } = useParams()
     const [campus, setCampus] = React.useState({} as CampusPageProps)
     const [deleteCampus, setDeleteCampus] = React.useState(false)
     const [updateCampus, setUpdateCampus] = React.useState(false)
+    useEffect(() => {
+        console.log(campusId)
+    })
     return (
         <div className='dash-container'>
             <div className='white-container'>
-
                 <div className='campus-sub-container-1'>
                     <div className='update-status-button' onClick={() => setDeleteCampus(true)}>Delete Campus </div>
 
@@ -49,7 +54,7 @@ const CampusLayout = () => {
 
 
                 {deleteCampus && <DeleteModal id={''} cancel={() => setDeleteCampus(false)} />}
-                {updateCampus && <CampusModal campuStatus={campus?.status} deleteId={''} cancel={() => setUpdateCampus(false)} />}
+                {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId} cancel={() => setUpdateCampus(false)} />}
 
                 <div className='campus-sub-container-2'>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />

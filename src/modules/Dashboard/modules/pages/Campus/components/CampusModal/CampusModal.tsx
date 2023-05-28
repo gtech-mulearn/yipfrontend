@@ -9,7 +9,9 @@ import Orientation from '../Orientation/Orientation'
 import OrientationScheduleModal from '../Orientation/OrientationScheduleModal'
 import OrientationCompletedModal from '../Orientation/OrientationCompletedModal'
 import ExecomModal from '../Execom/ExecomModal'
-const CampusModal = ({ campuStatus, deleteId, cancel }: { campuStatus: string, deleteId?: string, cancel: () => void }) => {
+import { privateGateway } from '../../../../../../../services/apiGateway'
+import { tableRoutes } from '../../../../../../../services/urls'
+const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, campusId?: string, cancel: () => void }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>(campuStatus)
@@ -50,15 +52,23 @@ const CampusModal = ({ campuStatus, deleteId, cancel }: { campuStatus: string, d
                     {(campuStatus === 'Orientation Completed' || status === 'Orientation Completed') && <OrientationCompletedModal cancel={cancel} />}
                     {(campuStatus === 'Execom Formed' || status === 'Execom Formed') && <ExecomModal cancel={cancel} />}
                 </div>
-                <div className='secondary-box'>
-                    <div className={`${(status && status !== campuStatus) ? 'btn-update ' : 'btn-disabled'}`}>
-                        Update Status
-                    </div>
-                </div>
+                {(campuStatus === 'Identified' || status === 'Identified'
+                    || campuStatus === 'Confirmed' || status === 'Confirmed'
+                ) && <div className='secondary-box'>
+                        <div className={`${(status && status !== campuStatus) ? 'btn-update ' : 'btn-disabled'}`}
+                            onClick={() => updateStatus(campusId as string, status)}
+                        >
+                            Update Status
+                        </div>
+                    </div>}
             </div>
         </div>
     )
 }
-
+function updateStatus(id: string, status: string) {
+    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
+        .then(res => console.log('Success :', res?.data?.message?.general[0]))
+        .catch(err => console.log(err))
+}
 
 export default CampusModal

@@ -5,6 +5,7 @@ import CustomTable from "../../components/CustomTable/CustomTable"
 import '../../components/Table.scss'
 import Modal from "./SchoolModal"
 import { fetchAssemblies, fetchBlocks, fetchDistricts, fetchSchools, fetchStatus } from "./SchoolAPI"
+import { redirect, useNavigate } from "react-router-dom"
 export interface SchoolTableProps {
     id: string
     name: string
@@ -17,6 +18,7 @@ export interface localBodyProps extends selectProps {
     district: string
 }
 const TableTitleList = ["Name", "District", " Assembly", "Block", "Status"]
+
 const list: (keyof SchoolTableProps)[] = ['name', 'district', 'block', 'legislative_assembly', 'club_status']
 interface SchoolSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -24,6 +26,8 @@ interface SchoolSetupProps {
     updated: boolean
 }
 const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, updated }) => {
+    const navigate = useNavigate();
+
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [filterByAssembly, setFilterByAssembly] = useState<boolean>(true)
@@ -163,7 +167,7 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                     }]}
                     manage={{
                         value: 'View',
-                        manageFunction: (item: SchoolTableProps) => { setSchool(item) }
+                        manageFunction: (item: SchoolTableProps) => { navigate(`/campus-dashboard/school/${item.id}`) }
                     }}
                 />
             </div >
