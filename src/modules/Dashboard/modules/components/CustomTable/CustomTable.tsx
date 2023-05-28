@@ -30,6 +30,7 @@ export interface CustomTableProps<TableProps> {
     manage?: {
         value: string
         manageFunction: any
+        icon?: string
     },
     capitalize?: boolean,
     pagination?: boolean,
@@ -196,8 +197,8 @@ function CustomTable<TableProps>({
                                 <td className="">
                                     <div className="manage">
                                         <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
-                                            <i className="fas fa-edit "></i>
-                                            Edit
+                                            <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
+                                            {manage.value}
                                         </div>
                                     </div>
                                 </td>

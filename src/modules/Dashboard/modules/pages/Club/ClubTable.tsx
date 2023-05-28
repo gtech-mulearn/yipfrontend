@@ -131,7 +131,8 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                     }]}
                     manage={{
                         value: 'View',
-                        manageFunction: (item: ClubTableProps) => { navigate(`/campus-dashboard/club/${item.id}`) }
+                        manageFunction: (item: ClubTableProps) => { navigate(`/campus-dashboard/club/${item.id}`) },
+                        icon: 'fa-solid fa-eye'
                     }}
                 />
             </div >

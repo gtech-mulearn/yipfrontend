@@ -167,7 +167,8 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                     }]}
                     manage={{
                         value: 'View',
-                        manageFunction: (item: SchoolTableProps) => { navigate(`/campus-dashboard/school/${item.id}`) }
+                        manageFunction: (item: SchoolTableProps) => { navigate(`/campus-dashboard/school/${item.id}`) },
+                        icon: 'fa-eye'
                     }}
                 />
             </div >
