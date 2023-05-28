@@ -4,7 +4,7 @@ import TitleNameTag from '../TitleNameTag/TitleNameTag'
 
 const Confirmed = ({ date }: { date: string }) => {
     return (
-        <div>
+        <div className='campus-sub-container-2'>
             <TitleNameTag title={'Status'} name={'Confirmed'} />
             <TitleNameTag title={'Date of Confirmation'} name={date ? date : ''} />
         </div>

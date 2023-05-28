@@ -12,7 +12,7 @@ const Connection = ({ date, facilitator }: { date: string, facilitator: Facilita
     const [open, setOpen] = React.useState(false)
     return (
         <div>
-            {open && <CampusModal campuStatus={'Connection established'} cancel={() => setOpen(false)} />}
+            {open && <CampusModal campuStatus={'Confirmed'} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Connection Established'

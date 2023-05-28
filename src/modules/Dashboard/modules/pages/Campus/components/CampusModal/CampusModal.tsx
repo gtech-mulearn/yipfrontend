@@ -14,8 +14,12 @@ import { tableRoutes } from '../../../../../../../services/urls'
 const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, campusId?: string, cancel: () => void }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
-    const [status, setStatus] = useState<string>(campuStatus)
-
+    const [status, setStatus] = useState<string>('')
+    const viewConnection = (status === 'Connection established') || (campuStatus === 'Confirmed' && status === '')
+    const viewScheduled = (status === 'Orientation Scheduled') || (campuStatus === 'Connection established' && status === '')
+    const viewCompleted = (status === 'Orientation Completed') || (campuStatus === 'Orientation Scheduled' && status === '')
+    const viewExecom = (status === 'Execom Formed') || (campuStatus === 'Orientation Completed' && status === '') || (campuStatus === 'Execom Formed' && status === '')
+    const viewUpdateButton = (status === 'Confirmed') || (campuStatus === 'Identified' && status === '') || (status === 'Identified')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
@@ -36,8 +40,9 @@ const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, c
                                 setValue={setStatus}
                                 requiredHeader={false}
                                 requiredData={false}
+                                isClearable={false}
                                 requiredLabel={true}
-                                placeholder={campuStatus}
+                                placeholder={getNextStatus(campuStatus)}
                                 requirePlaceHolder={true}
                                 customCSS={{
                                     className: "react-select-container",
@@ -47,28 +52,41 @@ const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, c
                             />
                         </div>
                     </div>
-                    {(campuStatus === 'Connection established' || status === 'Connection established') && <ConnectionModal cancel={cancel} />}
-                    {(campuStatus === 'Orientation Scheduled' || status === 'Orientation Scheduled') && <OrientationScheduleModal cancel={cancel} />}
-                    {(campuStatus === 'Orientation Completed' || status === 'Orientation Completed') && <OrientationCompletedModal cancel={cancel} />}
-                    {(campuStatus === 'Execom Formed' || status === 'Execom Formed') && <ExecomModal cancel={cancel} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} />}
+                    {viewScheduled && <OrientationScheduleModal cancel={cancel} />}
+                    {viewCompleted && <OrientationCompletedModal cancel={cancel} />}
+                    {viewExecom && <ExecomModal cancel={cancel} />}
                 </div>
-                {(campuStatus === 'Identified' || status === 'Identified'
-                    || campuStatus === 'Confirmed' || status === 'Confirmed'
-                ) && <div className='secondary-box'>
+
+                {viewUpdateButton &&
+                    <div className='secondary-box'>
                         <div className={`${(status && status !== campuStatus) ? 'btn-update ' : 'btn-disabled'}`}
-                            onClick={() => updateStatus(campusId as string, status)}
-                        >
+                            onClick={() => { if (status && status !== campuStatus) updateStatus(campusId as string, status, cancel) }}>
                             Update Status
                         </div>
-                    </div>}
+                    </div>
+                }
             </div>
         </div>
     )
 }
-function updateStatus(id: string, status: string) {
+function updateStatus(id: string, status: string, cancel: () => void) {
     privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
-        .then(res => console.log('Success :', res?.data?.message?.general[0]))
+        .then(res => {
+            cancel()
+            console.log('Success :', res?.data?.message?.general[0])
+        })
         .catch(err => console.log(err))
 }
-
+function getNextStatus(status: string) {
+    switch (status) {
+        case 'Identified': return 'Confirmed'
+        case 'Confirmed': return 'Connection established'
+        case 'Connection established': return 'Orientation Scheduled'
+        case 'Orientation Scheduled': return 'Orientation Completed'
+        case 'Orientation Completed': return 'Execom Formed'
+        case 'Execom Formed': return 'Execom Formed'
+        default: return ''
+    }
+}
 export default CampusModal

@@ -8,11 +8,15 @@ import Confirmed from '../components/Confirmed/Confirmed'
 import Connection, { FacilitatorProps } from '../components/Connection/Connection'
 import Orientation, { OrientationProps } from '../components/Orientation/Orientation'
 import Execom, { ExecomProps } from '../components/Execom/Execom'
-import ConnectionModal from '../components/Connection/ConnectionModal'
 import CampusModal from '../components/CampusModal/CampusModal'
 import DeleteModal from '../components/CampusModal/DeleteModal'
-import { SchoolTableProps } from '../../School/SchoolTable'
 import { useParams } from 'react-router-dom'
+import { ClubTableProps } from '../../Club/ClubTable'
+import { fetchStatus } from '../../School/SchoolAPI'
+import { selectProps } from '../../../utils/setupUtils'
+import { privateGateway } from '../../../../../../services/apiGateway'
+import { tableRoutes } from '../../../../../../services/urls'
+
 
 interface CampusPageProps {
     campus: string
@@ -35,14 +39,28 @@ interface CampusPageProps {
         members: ExecomProps[]
     }
 }
+
 const CampusLayout = () => {
-    const { campusId } = useParams()
+    const { campusId, type } = useParams()
     const [campus, setCampus] = React.useState({} as CampusPageProps)
     const [deleteCampus, setDeleteCampus] = React.useState(false)
     const [updateCampus, setUpdateCampus] = React.useState(false)
+    const [campusX, setCampusX] = React.useState({} as ClubTableProps)
+    const [statusList, setStatusList] = React.useState<selectProps[]>([])
+    const [updateStatus, setUpdateStatus] = React.useState('')
+    const campusContainer = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
-        console.log(campusId)
-    })
+        setCampus((prev) => ({
+            ...prev,
+            status: 'Identified',
+            category: type === 'school' ? 'Model School' : 'YIP Club',
+            campus: 'Model H. S Puthiyangadi',
+            district: "Thrissur",
+            legislativeAssembly: "Wadakkanchery",
+            block: "Irinjalakuda",
+            zone: "Central"
+        }))
+    }, [])
     return (
         <div className='dash-container'>
             <div className='white-container'>
@@ -53,20 +71,23 @@ const CampusLayout = () => {
                 </div>
 
 
-                {deleteCampus && <DeleteModal id={''} cancel={() => setDeleteCampus(false)} />}
+                {deleteCampus && <DeleteModal id={campusId as string} cancel={() => setDeleteCampus(false)} />}
                 {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId} cancel={() => setUpdateCampus(false)} />}
 
-                <div className='campus-sub-container-2'>
+                <div className={'campus-sub-container-2'}
+
+                    id='campusContainer' ref={campusContainer}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
                     <TitleNameTag title={'Category'} name={campus?.category} />
 
                     <TitleNameTag title={'Zone'} name={campus?.zone} />
                     <TitleNameTag title={'District'} name={campus?.district} />
-                    <TitleNameTag title={'Legislative Assembly'} name={campus?.legislativeAssembly} />
-                    <TitleNameTag title={'Block '} name={campus?.block} />
+                    {type === 'school' && <>
+                        <TitleNameTag title={'Legislative Assembly'} name={campus?.legislativeAssembly} />
+                        <TitleNameTag title={'Block '} name={campus?.block} />
+                    </>}
 
                 </div>
-
                 <Identified date={campus?.identified} />
                 {campus?.confirmed && <Confirmed date={campus?.confirmed} />}
                 {campus?.connection && <Connection date={campus?.connection?.date} facilitator={campus?.connection?.facilitator} />}

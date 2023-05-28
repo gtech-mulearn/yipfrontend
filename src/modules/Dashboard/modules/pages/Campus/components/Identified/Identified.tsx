@@ -15,4 +15,4 @@ const Identified = ({ date }: { date: string }) => {
     )
 }
 
-export default Identified
+export default Identified   

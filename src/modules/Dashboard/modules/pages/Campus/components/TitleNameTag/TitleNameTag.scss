@@ -3,6 +3,9 @@
     flex-direction: column;
     padding: 5px 20px;
     border-radius: 10px;
+    padding: 30px;
+    padding-left: 25px;
+    box-shadow: 0 0 5px 1px rgb(234, 234, 234);
 
     .title-tag {
         font-size: 13px;
@@ -13,7 +16,7 @@
         border-radius: 12px;
         align-items: center;
         margin-top: 5px;
-        font-size: 25px;
+        font-size: 21px;
         word-wrap: break-word;
         min-height: 40px;
     }
