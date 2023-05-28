@@ -52,6 +52,11 @@ const InternTable = () => {
                     placeholder={'Intern'}
                     requiredData={false}
                 />
+                <div className="table-fn-btn  cursor" onClick={() => setFilterBtn(!filterBtn)}>
+                    <p></p>
+                    <i className="fa-solid fa-close  "></i>
+                    <p></p>
+                </div>
             </div>
             <div className="white-container">
                 <div className="table-top">
