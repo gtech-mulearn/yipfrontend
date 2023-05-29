@@ -67,5 +67,8 @@ export const campusRoutes = {
         create: '/api/v1/yip/create-sub-user/',
         list: '/api/v1/yip/list-sub-user/',
         delete: '/api/v1/yip/delete-sub-user/'
+    },
+    campus: {
+        info: '/api/v1/yip/club-info/',
     }
 }

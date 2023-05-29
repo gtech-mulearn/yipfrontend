@@ -19,21 +19,21 @@ export interface OrientationProps {
     completed: OrientationCompleteProps[]
 }
 
-const Orientation = ({ orientation }: { orientation: OrientationProps }) => {
+const Orientation = ({ date = '', campusId }: { date: string, campusId: string }) => {
     const [open, setOpen] = React.useState(false)
     return (
         <div>
-            {open && <CampusModal campuStatus={'Orientation Scheduled'} cancel={() => setOpen(false)} />}
+            {open && <CampusModal campuStatus={'Orientation Scheduled'} campusId={campusId} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Orientation Scheduled'
                 title2='Orientation Date'
-                date={orientation?.completed[orientation?.completed.length - 1]?.date}
+                date={date}
                 setAdd={setOpen}
                 AddOption={'Add Orientation'}
                 TableHeading={'Orientation Schedules'}
                 tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Date', 'Time', 'Expired']}
-                tableData={orientation ? orientation?.completed : []}
+                tableData={[]}
                 orderBy={['mode', 'coordinatorName', 'location', 'noOfParticipants', 'remarks', 'date', 'time', 'expired']}
                 pagination={false}
             /></div>

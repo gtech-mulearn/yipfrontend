@@ -22,6 +22,9 @@ const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, c
     const viewUpdateButton = (status === 'Confirmed') || (campuStatus === 'Identified' && status === '') || (status === 'Identified')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
+        if (campuStatus === 'Identified') {
+            setStatus('Confirmed')
+        }
     }, [])
     return (
         <div className="modal-overlay">

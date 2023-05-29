@@ -15,7 +15,7 @@ import { ClubTableProps } from '../../Club/ClubTable'
 import { fetchStatus } from '../../School/SchoolAPI'
 import { selectProps } from '../../../utils/setupUtils'
 import { privateGateway } from '../../../../../../services/apiGateway'
-import { tableRoutes } from '../../../../../../services/urls'
+import { campusRoutes, tableRoutes } from '../../../../../../services/urls'
 
 
 interface CampusPageProps {
@@ -28,16 +28,9 @@ interface CampusPageProps {
     status: string
     identified: string
     confirmed: string
-    connection: {
-        date: string,
-        facilitator: FacilitatorProps[]
-    }
-    orientation: OrientationProps,
-    execom: {
-        id: string
-        date: string
-        members: ExecomProps[]
-    }
+    connection: string
+    orientation: string
+    execom: string
 }
 
 const CampusLayout = () => {
@@ -50,16 +43,7 @@ const CampusLayout = () => {
     const [updateStatus, setUpdateStatus] = React.useState('')
     const campusContainer = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
-        setCampus((prev) => ({
-            ...prev,
-            status: 'Identified',
-            category: type === 'school' ? 'Model School' : 'YIP Club',
-            campus: 'Model H. S Puthiyangadi',
-            district: "Thrissur",
-            legislativeAssembly: "Wadakkanchery",
-            block: "Irinjalakuda",
-            zone: "Central"
-        }))
+        getCampusInfo(campusId as string, setCampus)
     }, [])
     return (
         <div className='dash-container'>
@@ -78,7 +62,7 @@ const CampusLayout = () => {
 
                     id='campusContainer' ref={campusContainer}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
-                    <TitleNameTag title={'Category'} name={campus?.category} />
+                    <TitleNameTag title={'Category'} name={getCategory(campus?.category)} />
 
                     <TitleNameTag title={'Zone'} name={campus?.zone} />
                     <TitleNameTag title={'District'} name={campus?.district} />
@@ -88,18 +72,56 @@ const CampusLayout = () => {
                     </>}
 
                 </div>
-                <Identified date={campus?.identified} />
-                {campus?.confirmed && <Confirmed date={campus?.confirmed} />}
-                {campus?.connection && <Connection date={campus?.connection?.date} campusId={campusId as string} />}
-                {campus?.orientation && <Orientation orientation={campus?.orientation} />}
-                {campus?.execom && <Execom date={campus?.execom?.date} members={campus?.execom?.members} />}
-                <Confirmed date={campus?.confirmed} />
-                <Connection date={campus?.connection?.date} campusId={campusId as string} />
-                <Orientation orientation={campus?.orientation} />
-                <Execom date={campus?.execom?.date} members={campus?.execom?.members} />
+                <Identified date={formatDateStyle(campus?.identified)} />
+                {campus?.confirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
+                {campus?.connection && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />}
+                {campus?.orientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} />}
+                {campus?.execom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
+                {/* <Confirmed date={formatDateStyle(campus?.confirmed)} />
+                <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />
+                <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} />
+                <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} /> */}
             </div >
         </div >
     )
 }
-
+function getCampusInfo(id: string, setCampus: React.Dispatch<React.SetStateAction<CampusPageProps>>) {
+    privateGateway.get(`${campusRoutes.campus.info}${id}/`)
+        .then((res) => res.data.response)
+        .then((data) => {
+            setCampus((campusData) => ({
+                ...campusData,
+                campus: data.name,
+                category: data.institute_type,
+                district: data.district,
+                status: data.club_status,
+                zone: data.zone,
+                identified: data.date_of_identification,
+                confirmed: data.date_of_confirmation,
+                connection: data.date_of_connection,
+                orientation: data.date_of_orientation,
+                execom: data.date_of_execom_formation,
+            }))
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+function formatDateStyle(value: string) {
+    if (value === null || value === '' || value === undefined) {
+        return ''
+    }
+    const date = new Date(value);
+    const formattedDate = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    return formattedDate// Output: "29 May 2023"
+}
+function getCategory(value: string) {
+    if (value === 'School') {
+        return 'Model School'
+    }
+    if (value === 'College') {
+        return 'YIP Club'
+    }
+    return ''
+}
 export default CampusLayout

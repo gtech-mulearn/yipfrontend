@@ -8,11 +8,11 @@ export interface ExecomProps {
     email: string
     phone: string
 }
-const Execom = ({ date, members }: { date: string, members: ExecomProps[] }) => {
+const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
     const [open, setOpen] = React.useState(false)
     return (
         <div>
-            {open && <CampusModal campuStatus={'Execom Formed'} cancel={() => setOpen(false)} />}
+            {open && <CampusModal campuStatus={'Execom Formed'} campusId={campusId} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Connection Established'
@@ -22,7 +22,7 @@ const Execom = ({ date, members }: { date: string, members: ExecomProps[] }) => 
                 AddOption={'Add Member'}
                 TableHeading={'Execom '}
                 tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
-                tableData={members ? members : []}
+                tableData={[]}
                 orderBy={['role', 'name', 'email', 'phone',]}
                 pagination={false}
             /></div>
