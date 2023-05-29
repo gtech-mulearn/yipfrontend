@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../../../components/CustomTable/CustomTable'
+import './InternTable.scss'
 interface commonViewProps {
     preRegister: string
     voiceOfStakeholder: string
@@ -22,7 +23,7 @@ interface AssignViewProps extends districtViewProps {
     district: string
 }
 const views = [{ id: '0', name: 'Intern' }, { id: '1', name: 'Campus' }, { id: '2', name: 'Designation' }, { id: '3', name: 'District' }, { id: '4', name: 'Zone' }]
-const InternTable = () => {
+const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [view, setView] = useState<(string)>('Intern')
@@ -52,10 +53,9 @@ const InternTable = () => {
                     placeholder={'Intern'}
                     requiredData={false}
                 />
-                <div className="table-fn-btn  cursor" onClick={() => setFilterBtn(!filterBtn)}>
-                    <p></p>
-                    <i className="fa-solid fa-close  "></i>
-                    <p></p>
+                <div className="table-fn-btn cursor" >
+                    <i className="fa-solid fa-plus"></i>
+                    <p>Add Data</p>
                 </div>
             </div>
             <div className="white-container">
@@ -85,7 +85,7 @@ const InternTable = () => {
                                 onClick={() => { }}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => { }}>
+                        <div className="table-fn-btn cursor" onClick={openSetup}>
                             <i className="fa-solid fa-plus"></i>
                             <p>Assign Campus </p>
                         </div>
