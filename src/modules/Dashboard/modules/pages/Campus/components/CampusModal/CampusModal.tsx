@@ -11,7 +11,7 @@ import OrientationCompletedModal from '../Orientation/OrientationCompletedModal'
 import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
-const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, campusId?: string, cancel: () => void }) => {
+const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, campusId: string, cancel: () => void }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>('')
@@ -52,7 +52,7 @@ const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, c
                             />
                         </div>
                     </div>
-                    {viewConnection && <ConnectionModal cancel={cancel} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} />}
                     {viewExecom && <ExecomModal cancel={cancel} />}

@@ -72,7 +72,7 @@ const CampusLayout = () => {
 
 
                 {deleteCampus && <DeleteModal id={campusId as string} cancel={() => setDeleteCampus(false)} />}
-                {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId} cancel={() => setUpdateCampus(false)} />}
+                {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId as string} cancel={() => setUpdateCampus(false)} />}
 
                 <div className={'campus-sub-container-2'}
 
@@ -90,11 +90,11 @@ const CampusLayout = () => {
                 </div>
                 <Identified date={campus?.identified} />
                 {campus?.confirmed && <Confirmed date={campus?.confirmed} />}
-                {campus?.connection && <Connection date={campus?.connection?.date} facilitator={campus?.connection?.facilitator} />}
+                {campus?.connection && <Connection date={campus?.connection?.date} campusId={campusId as string} />}
                 {campus?.orientation && <Orientation orientation={campus?.orientation} />}
                 {campus?.execom && <Execom date={campus?.execom?.date} members={campus?.execom?.members} />}
                 <Confirmed date={campus?.confirmed} />
-                <Connection date={campus?.connection?.date} facilitator={campus?.connection?.facilitator} />
+                <Connection date={campus?.connection?.date} campusId={campusId as string} />
                 <Orientation orientation={campus?.orientation} />
                 <Execom date={campus?.execom?.date} members={campus?.execom?.members} />
             </div >

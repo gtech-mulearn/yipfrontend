@@ -4,7 +4,8 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import '../CampusModal/CampusModal.scss'
-const ConnectionModal = ({ cancel }: { cancel: () => void }) => {
+import { campusRoutes } from '../../../../../../../services/urls'
+const ConnectionModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([])
     const [designation, setDesignation] = useState<selectProps>({} as selectProps)
     const [name, setName] = useState('')
@@ -46,7 +47,7 @@ const ConnectionModal = ({ cancel }: { cancel: () => void }) => {
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => assignpoc(designation.name as string, name, email, mobile)}>Add Facilitator</button>
+                    <button className='btn-update ' onClick={() => assignpoc(campusId, designation.id as string, name, email, mobile, cancel)}>Add Facilitator</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -55,23 +56,29 @@ const ConnectionModal = ({ cancel }: { cancel: () => void }) => {
     )
 }
 function listpocchoices(setDesignationList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get('/api/v1/yip/list-poc-choices/')
-        .then((res) => (res.data.response.poc_types))
+    privateGateway.get(campusRoutes.designation.list)
+        .then((res) => (res.data.response.sub_user_roles))
         .then((data) =>
             setDesignationList(
-                data.map((item: selectProps, index: string) => ({ id: index, name: item }))
+                data.map((item: { value: string, label: string }, index: string) => ({ id: item.value, name: item.label }))
             ))
 }
-function assignpoc(designation: string, name: string, email: string, mobile: string) {
-    privateGateway.post('/api/v1/yip/assign-poc/', {
-        type: designation,
+function assignpoc(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void) {
+    const postData = {
+        clubId: id,
+        type: 'POC',
         name: name,
         email: email,
-        mobile: mobile
-    }).then((res) => {
+        phone: mobile,
+        role: designation,
+    }
+    console.log(postData)
+    privateGateway.post(campusRoutes.subUser.create, postData).then((res) => {
         console.log(res)
+        cancel()
     }).catch((err) => {
         console.log(err)
     })
 }
+
 export default ConnectionModal
