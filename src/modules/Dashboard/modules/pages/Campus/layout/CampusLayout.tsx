@@ -5,17 +5,17 @@ import Identified from '../components/Identified/Identified'
 import './CampusLayout.scss'
 import TitleNameTag from '../components/TitleNameTag/TitleNameTag'
 import Confirmed from '../components/Confirmed/Confirmed'
-import Connection, { FacilitatorProps } from '../components/Connection/Connection'
-import Orientation, { OrientationProps } from '../components/Orientation/Orientation'
-import Execom, { ExecomProps } from '../components/Execom/Execom'
+import Connection from '../components/Connection/Connection'
+import Orientation from '../components/Orientation/Orientation'
+import Execom from '../components/Execom/Execom'
 import CampusModal from '../components/CampusModal/CampusModal'
 import DeleteModal from '../components/CampusModal/DeleteModal'
 import { useParams } from 'react-router-dom'
 import { ClubTableProps } from '../../Club/ClubTable'
-import { fetchStatus } from '../../School/SchoolAPI'
 import { selectProps } from '../../../utils/setupUtils'
 import { privateGateway } from '../../../../../../services/apiGateway'
-import { campusRoutes, tableRoutes } from '../../../../../../services/urls'
+import { campusRoutes } from '../../../../../../services/urls'
+import { Error, Success } from '../../../../components/Error/Alerts'
 
 
 interface CampusPageProps {
@@ -41,10 +41,13 @@ const CampusLayout = () => {
     const [campusX, setCampusX] = React.useState({} as ClubTableProps)
     const [statusList, setStatusList] = React.useState<selectProps[]>([])
     const [updateStatus, setUpdateStatus] = React.useState('')
-    const campusContainer = React.useRef<HTMLDivElement>(null)
+    const [errorMessage, setErrorMessage] = React.useState("")
+    const [successMessage, setSuccessMessage] = React.useState("")
     useEffect(() => {
         getCampusInfo(campusId as string, setCampus)
-    }, [])
+        console.log("hi i am working")
+        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+    }, [updateCampus])
     return (
         <div className='dash-container'>
             <div className='white-container'>
@@ -58,9 +61,7 @@ const CampusLayout = () => {
                 {deleteCampus && <DeleteModal id={campusId as string} cancel={() => setDeleteCampus(false)} />}
                 {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId as string} cancel={() => setUpdateCampus(false)} />}
 
-                <div className={'campus-sub-container-2'}
-
-                    id='campusContainer' ref={campusContainer}>
+                <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
                     <TitleNameTag title={'Category'} name={getCategory(campus?.category)} />
 
@@ -77,15 +78,17 @@ const CampusLayout = () => {
                 {campus?.connection && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />}
                 {campus?.orientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} />}
                 {campus?.execom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
-                {/* <Confirmed date={formatDateStyle(campus?.confirmed)} />
-                <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />
-                <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} />
-                <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} /> */}
+                {errorMessage && <Error error={errorMessage} />}
+                {successMessage && <Success success={successMessage} />}
             </div >
         </div >
     )
 }
-function getCampusInfo(id: string, setCampus: React.Dispatch<React.SetStateAction<CampusPageProps>>) {
+function getCampusInfo(
+    id: string,
+    setCampus: React.Dispatch<React.SetStateAction<CampusPageProps>>,
+
+) {
     privateGateway.get(`${campusRoutes.campus.info}${id}/`)
         .then((res) => res.data.response)
         .then((data) => {
@@ -96,6 +99,8 @@ function getCampusInfo(id: string, setCampus: React.Dispatch<React.SetStateActio
                 district: data.district,
                 status: data.club_status,
                 zone: data.zone,
+                legislativeAssembly: data.legislative_assembly,
+                block: data.block,
                 identified: data.date_of_identification,
                 confirmed: data.date_of_confirmation,
                 connection: data.date_of_connection,

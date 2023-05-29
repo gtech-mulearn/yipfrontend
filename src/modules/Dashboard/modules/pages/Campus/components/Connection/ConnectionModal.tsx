@@ -4,7 +4,7 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import '../CampusModal/CampusModal.scss'
-import { campusRoutes } from '../../../../../../../services/urls'
+import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
 const ConnectionModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([])
     const [designation, setDesignation] = useState<selectProps>({} as selectProps)
@@ -47,7 +47,7 @@ const ConnectionModal = ({ cancel, campusId }: { cancel: () => void, campusId: s
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => assignpoc(campusId, designation.id as string, name, email, mobile, cancel)}>Add Facilitator</button>
+                    <button className='btn-update ' onClick={() => assignFacilitator(campusId, designation.id as string, name, email, mobile, cancel)}>Add Facilitator</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -63,7 +63,7 @@ function listpocchoices(setDesignationList: Dispatch<SetStateAction<selectProps[
                 data.map((item: { value: string, label: string }, index: string) => ({ id: item.value, name: item.label }))
             ))
 }
-function assignpoc(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void) {
+function assignFacilitator(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void) {
     const postData = {
         clubId: id,
         type: 'POC',
@@ -74,6 +74,12 @@ function assignpoc(id: string, designation: string, name: string, email: string,
     }
     console.log(postData)
     privateGateway.post(campusRoutes.subUser.create, postData).then((res) => {
+        privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: 'Connection Established' })
+            .then(res => {
+                console.log('Success :', res?.data?.message?.general[0])
+                setTimeout(() => {
+                }, 1000)
+            })
         console.log(res)
         cancel()
     }).catch((err) => {

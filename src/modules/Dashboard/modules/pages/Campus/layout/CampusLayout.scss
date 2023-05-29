@@ -27,10 +27,9 @@
 
 .campus-sub-container-2 {
     width: 100%;
-    margin: 10px 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    column-gap: 30px;
 
     @media screen and (max-width: 650px) {
         grid-template-columns: 1fr;
