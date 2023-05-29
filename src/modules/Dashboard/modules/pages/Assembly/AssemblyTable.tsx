@@ -109,8 +109,9 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                     tableData={listForTable}
                     orderBy={list}
                     manage={{
-                        value: 'View',
-                        manageFunction: (item: AssemblyTableProps) => { setAssembly(item) }
+                        value: 'Delete',
+                        manageFunction: (item: AssemblyTableProps) => { setAssembly(item) },
+                        icon: 'fa-trash'
                     }}
                 />
             </div>
