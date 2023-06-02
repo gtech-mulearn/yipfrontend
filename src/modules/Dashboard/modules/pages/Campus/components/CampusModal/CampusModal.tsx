@@ -11,12 +11,13 @@ import OrientationCompletedModal from '../Orientation/OrientationCompletedModal'
 import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
-const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, campusId: string, cancel: () => void }) => {
+const CampusModal = ({ campuStatus, campusId, cancel, district }: { campuStatus: string, campusId: string, cancel: () => void, district?: string }) => {
+    console.log(district)
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>('')
-    const viewConnection = (status === 'Connection stablished') || (campuStatus === 'Confirmed' && status === '')
-    const viewScheduled = (status === 'Orientation Scheduled') || (campuStatus === 'Connection stablished' && status === '')
+    const viewConnection = (status === 'Connection Established') || (campuStatus === 'Confirmed' && status === '')
+    const viewScheduled = (status === 'Orientation Scheduled') || (campuStatus === 'Connection Established' && status === '')
     const viewCompleted = (status === 'Orientation Completed') || (campuStatus === 'Orientation Scheduled' && status === '')
     const viewExecom = (status === 'Execom Formed') || (campuStatus === 'Orientation Completed' && status === '') || (campuStatus === 'Execom Formed' && status === '')
     const viewUpdateButton = (status === 'Confirmed') || (campuStatus === 'Identified' && status === '') || (status === 'Identified')
@@ -56,7 +57,7 @@ const CampusModal = ({ campuStatus, campusId, cancel }: { campuStatus: string, c
                         </div>
                     </div>
                     {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
-                    {viewScheduled && <OrientationScheduleModal cancel={cancel} />}
+                    {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} />}
                     {viewExecom && <ExecomModal cancel={cancel} />}
                 </div>
@@ -84,8 +85,8 @@ function updateStatus(id: string, status: string, cancel: () => void) {
 function getNextStatus(status: string) {
     switch (status) {
         case 'Identified': return 'Confirmed'
-        case 'Confirmed': return 'Connection stablished'
-        case 'Connection stablished': return 'Orientation Scheduled'
+        case 'Confirmed': return 'Connection Established'
+        case 'Connection Established': return 'Orientation Scheduled'
         case 'Orientation Scheduled': return 'Orientation Completed'
         case 'Orientation Completed': return 'Execom Formed'
         case 'Execom Formed': return 'Execom Formed'

@@ -11,7 +11,7 @@ export const setupRoutes = {
         roles: {
             list: "/api/v1/yip/list-roles/",
         },
-        create: '/api/v1/yip/create-user/',
+        create: '/api/v1/yip/user-management/create-user/',
     },
     assembly: {
         create: '/api/v1/yip/create-legislative-assembly/',
@@ -55,8 +55,8 @@ export const tableRoutes = {
         update: '/api/v1/yip/update-club/'
     },
     user: {
-        list: '/api/v1/yip/list-users/',
-        delete: '/api/v1/yip/delete-user/'
+        list: '/api/v1/yip/user-management/list-users/',
+        delete: '/api/v1/yip/user-management/delete-user/'
     }
 }
 export const campusRoutes = {
@@ -68,7 +68,13 @@ export const campusRoutes = {
         list: '/api/v1/yip/list-sub-user/',
         delete: '/api/v1/yip/delete-sub-user/'
     },
+    districtCoordinator: {
+        listByDistrict: '/api/v1/yip/list-district-cordinator/',
+    },
     campus: {
         info: '/api/v1/yip/club-info/',
-    }
+    },
+    createEvent: '/api/v1/yip/create-event/',
+    listEvent: '/api/v1/yip/list-events/',
+
 }

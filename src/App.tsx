@@ -29,6 +29,7 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <DashboardLayout />,
+
         children: [
           { path: 'school-dashboard', element: <SchoolLayout /> },
           { path: 'club-dashboard', element: <ClubLayout /> },

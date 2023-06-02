@@ -7,6 +7,7 @@ import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
 import { showAlert, Error, Success } from '../../../components/Error/Alerts'
 import { createUser, fetchUserRoles } from './UserApi'
+import { fetchDistricts } from '../School/SchoolAPI'
 
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -19,6 +20,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [password, setPassword] = useState("")
     const [role, setRole] = useState(initialState)
     const [roleList, setRoleList] = useState<selectProps[]>([])
+    const [district, setDistrict] = useState<selectProps>({} as selectProps)
+    const [districtList, setDistrictList] = useState<selectProps[]>([])
+    const [zone, setZone] = useState<selectProps>({} as selectProps)
+    const [zoneList, setZoneList] = useState<selectProps[]>([{ id: '0', name: 'North' }, { id: '1', name: 'South' }, { id: '2', name: 'Central' }])
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
 
@@ -33,6 +38,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     }
     useEffect(() => {
         fetchUserRoles(setRoleList)
+        fetchDistricts(setDistrictList)
     }, [])
 
     function validate() {
@@ -56,7 +62,8 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
         validate()
             .then(() => {
-                createUser(name, email, phone, role.id, password, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage)
+                console.log(district)
+                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage)
             })
             .catch((err) => {
                 console.log(err)
@@ -82,6 +89,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             isSearchable={false}
 
                         />
+                        {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator') && <CustomSelect
+                            option={role.name === 'District Coordinator' ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
+                            header={role.name === 'District Coordinator' ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
+                            setData={role.name === 'District Coordinator' ? setDistrict : setZone}
+                            isSearchable={false}
+
+                        />}
                         <CustomInput value="Password" type="password" setData={setPassword} data={password} />
                         <div className="create-btn-container">
                             <button className="black-btn"

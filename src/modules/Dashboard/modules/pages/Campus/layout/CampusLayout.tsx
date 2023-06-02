@@ -16,6 +16,7 @@ import { selectProps } from '../../../utils/setupUtils'
 import { privateGateway } from '../../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../../services/urls'
 import { Error, Success } from '../../../../components/Error/Alerts'
+import { listEvent } from '../components/Orientation/OrientationScheduleModal'
 
 
 interface CampusPageProps {
@@ -44,6 +45,9 @@ const CampusLayout = () => {
     const [errorMessage, setErrorMessage] = React.useState("")
     const [successMessage, setSuccessMessage] = React.useState("")
     useEffect(() => {
+        listEvent(campusId as string)
+    }, [])
+    useEffect(() => {
         getCampusInfo(campusId as string, setCampus)
         console.log("hi i am working")
         window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
@@ -57,9 +61,8 @@ const CampusLayout = () => {
                     <div className='update-status-button' onClick={() => setUpdateCampus(true)}>Update Status</div>
                 </div>
 
-
                 {deleteCampus && <DeleteModal id={campusId as string} cancel={() => setDeleteCampus(false)} />}
-                {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId as string} cancel={() => setUpdateCampus(false)} />}
+                {updateCampus && <CampusModal campuStatus={campus?.status} campusId={campusId as string} cancel={() => setUpdateCampus(false)} district={campus?.district} />}
 
                 <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
@@ -76,7 +79,7 @@ const CampusLayout = () => {
                 <Identified date={formatDateStyle(campus?.identified)} />
                 {campus?.confirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
                 {campus?.connection && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />}
-                {campus?.orientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} />}
+                {campus?.orientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} />}
                 {campus?.execom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
                 {errorMessage && <Error error={errorMessage} />}
                 {successMessage && <Success success={successMessage} />}
