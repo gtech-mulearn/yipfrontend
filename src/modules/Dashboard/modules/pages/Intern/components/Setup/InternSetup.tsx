@@ -1,7 +1,7 @@
 import React from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 
-const InternSetup = () => {
+const InternSetup = ({ close }: { close: () => void }) => {
     return (
         <div className="white-container">
             <h3>Assign Campus   </h3>
@@ -16,7 +16,7 @@ const InternSetup = () => {
                             <button className="black-btn"
                                 onClick={() => { }}>Assign</button>
                             <button className="black-btn"
-                                onClick={() => { }}
+                                onClick={() => close()}
                             >Cancel</button>
                         </div>
                     </div>

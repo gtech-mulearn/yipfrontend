@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
-import CampusModal from '../CampusModal/CampusModal'
+import CampusModal, { AddFacilitatorModal } from '../CampusModal/CampusModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../../../services/urls'
 import DeleteModal from '../CampusModal/DeleteModal'
+import { CampusPageProps } from '../../utils'
+import TitleNameTag from '../TitleNameTag/TitleNameTag'
+import CustomTable from '../../../../components/CustomTable/CustomTable'
 export interface FacilitatorProps {
     id: string
     name: string
@@ -11,7 +14,7 @@ export interface FacilitatorProps {
     phone: string
     type: string
 }
-const Connection = ({ date, campusId }: { date: string, campusId: string }) => {
+const Connection = ({ date, campusId, campus }: { date: string, campusId: string, campus: CampusPageProps }) => {
     const [facilitator, setFacilitator] = React.useState<FacilitatorProps[]>([])
     const [open, setOpen] = React.useState(false)
     const [subUserId, setSubUserId] = React.useState('' as string)
@@ -21,7 +24,6 @@ const Connection = ({ date, campusId }: { date: string, campusId: string }) => {
     }, [open, subUserId])
     return (
         <div>
-            {open && <CampusModal campuStatus={'Confirmed'} campusId={campusId} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Connection Established'
@@ -40,7 +42,36 @@ const Connection = ({ date, campusId }: { date: string, campusId: string }) => {
                 }}
                 capitalize={false}
             />
+            <div>
+                <div className='status-table'>
+                    <TitleNameTag title={'Status'} name={'Connection Established'} />
+                    <TitleNameTag title={'Date Connection Established'} name={date} />
+                </div>
+                <div>
+                    <div className='top-bar'>
+                        <p>Facilitator List</p>
+                        <div className='add-button' onClick={() => setOpen((prev: boolean) => !prev)}>
+                            <i className='fas fa-add'></i>
+                            <p>Add Facilitator</p>
+                        </div>
+                    </div>
+                    <CustomTable<FacilitatorProps>
+                        tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
+                        tableData={facilitator ? facilitator : []}
+                        orderBy={['name', 'email', 'phone', 'type']}
+                        manage={{
+                            value: 'Delete',
+                            manageFunction: (user: any) => { setSubUserId(user.id) },
+                            icon: 'fa-trash'
+                        }}
+                        capitalize={false}
+                        pagination={false}
+                        filter={false}
+                    />
+                </div>
+            </div >
             {subUserId && <DeleteModal id={subUserId} cancel={() => setSubUserId('')} customFunction={() => deleteASubUser(subUserId, () => setSubUserId(''))} />}
+            {open && <AddFacilitatorModal campusId={campusId} cancel={() => setOpen(false)} />}
 
         </div>
     )
@@ -48,7 +79,6 @@ const Connection = ({ date, campusId }: { date: string, campusId: string }) => {
 function listSubUser(setData: Dispatch<SetStateAction<FacilitatorProps[]>>, id: string = '') {
     privateGateway.get(`${campusRoutes.subUser.list}${id}/POC/`)
         .then((res) => {
-            console.log('list sub user')
             setData(res.data.response)
         }).catch((err) => {
             console.log(err)

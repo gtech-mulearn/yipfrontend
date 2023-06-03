@@ -11,19 +11,20 @@ import OrientationCompletedModal from '../Orientation/OrientationCompletedModal'
 import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
-const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { campuStatus: string, campusId: string, cancel: () => void, district?: string, eventId?: string }) => {
+import { CampusPageProps } from '../../utils'
+const CampusModal = ({ campusId, campus, cancel, district, eventId }: { campusId: string, campus: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
     console.log(district)
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>('')
-    const viewConnection = (status === 'Connection Established') || (campuStatus === 'Confirmed' && status === '')
-    const viewScheduled = (status === 'Orientation Scheduled') || (campuStatus === 'Connection Established' && status === '')
-    const viewCompleted = (status === 'Orientation Completed') || (campuStatus === 'Orientation Scheduled' && status === '')
-    const viewExecom = (status === 'Execom Formed') || (campuStatus === 'Orientation Completed' && status === '') || (campuStatus === 'Execom Formed' && status === '')
-    const viewUpdateButton = (status === 'Confirmed') || (campuStatus === 'Identified' && status === '') || (status === 'Identified')
+    const viewConnection = (status === 'Connection Established') || (campus.status === 'Confirmed' && status === '')
+    const viewScheduled = (status === 'Orientation Scheduled') || (campus.status === 'Connection Established' && status === '')
+    const viewCompleted = (status === 'Orientation Completed') || (campus.status === 'Orientation Scheduled' && status === '')
+    const viewExecom = (status === 'Execom Formed') || (campus.status === 'Orientation Completed' && status === '') || (campus.status === 'Execom Formed' && status === '')
+    const viewUpdateButton = (status === 'Confirmed') || (campus.status === 'Identified' && status === '') || (status === 'Identified')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
-        if (campuStatus === 'Identified') {
+        if (campus.status === 'Identified') {
             setStatus('Confirmed')
         }
     }, [])
@@ -46,7 +47,7 @@ const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { cam
                                 requiredData={false}
                                 isClearable={false}
                                 requiredLabel={true}
-                                placeholder={getNextStatus(campuStatus)}
+                                placeholder={getNextStatus(campus.status)}
                                 requirePlaceHolder={true}
                                 customCSS={{
                                     className: "react-select-container",
@@ -56,7 +57,7 @@ const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { cam
                             />
                         </div>
                     </div>
-                    {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} isNotConnected={campus.connection === ''} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
                     {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}
@@ -64,8 +65,8 @@ const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { cam
 
                 {viewUpdateButton &&
                     <div className='secondary-box'>
-                        <div className={`${(status && status !== campuStatus) ? 'btn-update ' : 'btn-disabled'}`}
-                            onClick={() => { if (status && status !== campuStatus) updateStatus(campusId as string, status, cancel) }}>
+                        <div className={`${(status && status !== campus.status) ? 'btn-update ' : 'btn-disabled'}`}
+                            onClick={() => { if (status && status !== campus.status) updateStatus(campusId as string, status, cancel) }}>
                             Update Status
                         </div>
                     </div>
@@ -94,3 +95,18 @@ function getNextStatus(status: string) {
     }
 }
 export default CampusModal
+export const AddFacilitatorModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
+    return (<div className="modal-overlay">
+        <div className='modal'>
+            <div className='heading'>
+                <div className="title">Update Status</div>
+                <div className="close-btn" onClick={cancel}><i className="fa fa-close"></i>
+                </div>
+            </div>
+            <div className='secondary-box'>
+                <ConnectionModal cancel={cancel} isNotConnected={true} campusId={campusId as string} />
+            </div>
+        </div>
+    </div>
+    )
+}
