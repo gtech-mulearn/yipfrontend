@@ -56,7 +56,7 @@ const ConnectionModal = ({ cancel, campusId }: { cancel: () => void, campusId: s
     )
 }
 function listpocchoices(setDesignationList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(campusRoutes.designation.list)
+    privateGateway.get(campusRoutes.designation.list.facilitator)
         .then((res) => (res.data.response.sub_user_roles))
         .then((data) =>
             setDesignationList(

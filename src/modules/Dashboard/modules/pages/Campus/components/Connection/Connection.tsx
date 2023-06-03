@@ -46,7 +46,7 @@ const Connection = ({ date, campusId }: { date: string, campusId: string }) => {
     )
 }
 function listSubUser(setData: Dispatch<SetStateAction<FacilitatorProps[]>>, id: string = '') {
-    privateGateway.get(`${campusRoutes.subUser.list}${id}/`)
+    privateGateway.get(`${campusRoutes.subUser.list}${id}/POC/`)
         .then((res) => {
             console.log('list sub user')
             setData(res.data.response)

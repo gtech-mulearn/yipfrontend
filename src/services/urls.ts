@@ -61,12 +61,17 @@ export const tableRoutes = {
 }
 export const campusRoutes = {
     designation: {
-        list: '/api/v1/yip/sub-user-role-choices/'
+        list: {
+            facilitator: '/api/v1/yip/sub-user-role-choices/POC/',
+            execom: '/api/v1/yip/sub-user-role-choices/Execom/',
+        }
+
     },
     subUser: {
         create: '/api/v1/yip/create-sub-user/',
         list: '/api/v1/yip/list-sub-user/',
-        delete: '/api/v1/yip/delete-sub-user/'
+        listExecom: '/api/v1/yip/list-sub-user/',
+        delete: '/api/v1/yip/delete-sub-user/',
     },
     districtCoordinator: {
         listByDistrict: '/api/v1/yip/list-district-cordinator/',

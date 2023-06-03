@@ -59,7 +59,7 @@ const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { cam
                     {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
-                    {viewExecom && <ExecomModal cancel={cancel} />}
+                    {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}
                 </div>
 
                 {viewUpdateButton &&
