@@ -12,19 +12,19 @@ import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import { CampusPageProps } from '../../utils'
-const CampusModal = ({ campusId, campus, cancel, district, eventId }: { campusId: string, campus: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
+const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
     console.log(district)
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>('')
-    const viewConnection = (status === 'Connection Established') || (campus.status === 'Confirmed' && status === '')
-    const viewScheduled = (status === 'Orientation Scheduled') || (campus.status === 'Connection Established' && status === '')
-    const viewCompleted = (status === 'Orientation Completed') || (campus.status === 'Orientation Scheduled' && status === '')
-    const viewExecom = (status === 'Execom Formed') || (campus.status === 'Orientation Completed' && status === '') || (campus.status === 'Execom Formed' && status === '')
-    const viewUpdateButton = (status === 'Confirmed') || (campus.status === 'Identified' && status === '') || (status === 'Identified')
+    const viewConnection = (status === 'Connection Established') || (campus?.status === 'Confirmed' && status === '')
+    const viewScheduled = (status === 'Orientation Scheduled') || (campus?.status === 'Connection Established' && status === '')
+    const viewCompleted = (status === 'Orientation Completed') || (campus?.status === 'Orientation Scheduled' && status === '')
+    const viewExecom = (status === 'Execom Formed') || (campus?.status === 'Orientation Completed' && status === '') || (campus?.status === 'Execom Formed' && status === '')
+    const viewUpdateButton = (status === 'Confirmed') || (campus?.status === 'Identified' && status === '') || (status === 'Identified')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
-        if (campus.status === 'Identified') {
+        if (campus?.status === 'Identified') {
             setStatus('Confirmed')
         }
     }, [])
@@ -47,7 +47,7 @@ const CampusModal = ({ campusId, campus, cancel, district, eventId }: { campusId
                                 requiredData={false}
                                 isClearable={false}
                                 requiredLabel={true}
-                                placeholder={getNextStatus(campus.status)}
+                                // placeholder={getNextStatus(campus?.status)}
                                 requirePlaceHolder={true}
                                 customCSS={{
                                     className: "react-select-container",
@@ -57,7 +57,7 @@ const CampusModal = ({ campusId, campus, cancel, district, eventId }: { campusId
                             />
                         </div>
                     </div>
-                    {viewConnection && <ConnectionModal cancel={cancel} isNotConnected={campus.connection === ''} campusId={campusId as string} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} isNotConnected={campus?.connection === ''} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
                     {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}
@@ -65,8 +65,8 @@ const CampusModal = ({ campusId, campus, cancel, district, eventId }: { campusId
 
                 {viewUpdateButton &&
                     <div className='secondary-box'>
-                        <div className={`${(status && status !== campus.status) ? 'btn-update ' : 'btn-disabled'}`}
-                            onClick={() => { if (status && status !== campus.status) updateStatus(campusId as string, status, cancel) }}>
+                        <div className={`${(status && status !== campus?.status) ? 'btn-update ' : 'btn-disabled'}`}
+                            onClick={() => { if (status && status !== campus?.status) updateStatus(campusId as string, status, cancel) }}>
                             Update Status
                         </div>
                     </div>
