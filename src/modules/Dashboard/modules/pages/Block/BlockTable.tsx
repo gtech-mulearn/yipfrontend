@@ -112,8 +112,9 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                     tableData={listForTable}
                     orderBy={list}
                     manage={{
-                        value: 'View',
-                        manageFunction: (item: BlockTableProps) => { setBlock(item) }
+                        value: 'Delete',
+                        manageFunction: (item: BlockTableProps) => { setBlock(item) },
+                        icon: 'fa-trash'
                     }}
                 />
             </div >

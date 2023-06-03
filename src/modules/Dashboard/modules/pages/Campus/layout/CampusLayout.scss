@@ -1,0 +1,38 @@
+.campus-sub-container-1 {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    .update-status-button {
+        display: flex;
+        user-select: none;
+        padding: 6px 30px;
+        border-radius: 8px;
+        height: max-content;
+        font-size: 12px;
+        font-weight: 600;
+        background-color: black;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}
+
+.campus-sub-container-2 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+
+    @media screen and (max-width: 650px) {
+        grid-template-columns: 1fr;
+
+    }
+}

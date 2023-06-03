@@ -2,25 +2,38 @@ import React, { useEffect } from 'react'
 
 
 import './NameCard.scss'
-import { fetchUserInfo } from '../api'
-
+import { fetchUserInfo, userInfoProps } from '../api'
+import { Engagespot } from "@engagespot/react-component";
+const theme = {
+    notificationButton: {
+        iconFill: 'black',
+        hoverBackground: '#59b3fa'
+    },
+    colors: {
+        brandingPrimary: '#59b3fa',
+    },
+}
 const NameCard = () => {
     const [open, setOpen] = React.useState(false)
-    const [data, setData] = React.useState<{ name: string, role: string }>({ name: '', role: '' })
+    const [data, setData] = React.useState<userInfoProps>({} as userInfoProps)
     useEffect(() => {
         fetchUserInfo(setData)
+
     }, [])
     return (
         <>
-            {
-                <div className={`name-card ${open ? ' open' : ''}`} onClick={() => { setOpen(!open) }}>
-                    {<i className={`fas ${open ? 'fa-times' : 'fa-user'}`} ></i>}
-                    {open &&
-                        <div className="name-card-content">
-                            <h2>{data?.role}</h2>
-                            <h1>{data?.name}</h1>
-                        </div>
-                    }
+
+            <div className={`name-card`} >
+                {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />}
+
+                <div className={'open-color'} onClick={() => { setOpen(!open) }}>
+                    <i className={`fas fa-user`} ></i>
+                </div>
+            </div>
+            {open &&
+                <div className="open">
+                    <h2>Role : {data?.role}</h2>
+                    <h1>{data?.name}</h1>
                 </div>
             }
         </>

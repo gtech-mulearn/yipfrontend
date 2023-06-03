@@ -8,6 +8,8 @@ import ClubLayout from './modules/Dashboard/modules/pages/Club/ClubLayout';
 import UserLayout from './modules/Dashboard/modules/pages/User/UserLayout';
 import AssemblyLayout from './modules/Dashboard/modules/pages/Assembly/AssemblyLayout';
 import BlockLayout from './modules/Dashboard/modules/pages/Block/BlockLayout';
+import InternLayout from './modules/Dashboard/modules/pages/Intern/layout/InternLayout';
+import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/CampusLayout';
 
 const router = createBrowserRouter([
   {
@@ -27,12 +29,15 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <DashboardLayout />,
+
         children: [
           { path: 'school-dashboard', element: <SchoolLayout /> },
           { path: 'club-dashboard', element: <ClubLayout /> },
           { path: 'user', element: <UserLayout /> },
           { path: 'legislative-assembly', element: <AssemblyLayout /> },
           { path: 'block', element: <BlockLayout /> },
+          { path: 'intern-dashboard', element: <InternLayout /> },
+          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> }
         ]
       }
     ]
@@ -40,7 +45,6 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-
   return (
     <RouterProvider router={router} />
   );

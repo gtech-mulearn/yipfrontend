@@ -1,0 +1,22 @@
+.white-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .table-fn-btn {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        background-color: black;
+        width: fit-content;
+        color: white;
+        padding: 10px;
+        font-size: 12.5px;
+        border-radius: 10px;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+}

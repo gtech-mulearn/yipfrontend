@@ -6,6 +6,7 @@ import CustomTable from '../../components/CustomTable/CustomTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes, tableRoutes } from '../../../../../services/urls'
 import { fetchClubs, fetchDistricts, fetchStatus } from './clubAPI'
+import { useNavigate } from 'react-router-dom'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateClubData: Function
@@ -22,6 +23,7 @@ export interface ClubTableProps {
 const TableTitleList = ["Name", "District", "Status"]
 const list: (keyof ClubTableProps)[] = ['name', 'district', 'club_status']
 const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }) => {
+    const navigate = useNavigate()
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [status, setStatus] = useState<string>('')
@@ -129,7 +131,8 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                     }]}
                     manage={{
                         value: 'View',
-                        manageFunction: (item: ClubTableProps) => { setClub(item) }
+                        manageFunction: (item: ClubTableProps) => { navigate(`/campus-dashboard/club/${item.id}`) },
+                        icon: 'fa-solid fa-eye'
                     }}
                 />
             </div >

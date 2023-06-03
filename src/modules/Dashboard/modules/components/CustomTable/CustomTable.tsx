@@ -11,6 +11,31 @@ function paginateArray<T>(array: T[], page: number): T[] {
     const endIndex = startIndex + 10;
     return array.slice(startIndex, endIndex);
 }
+export interface CustomTableProps<TableProps> {
+    tableHeadList: string[]
+    tableData: TableProps[]
+    orderBy: (keyof TableProps)[]
+    sortOrder?: {
+        sortBy: keyof TableProps
+        orderList: string[]
+        orderSymbol: {
+            asc: string
+            desc: string
+        }
+    },
+    customCSS?: {
+        name: string
+        css: string
+    }[]
+    manage?: {
+        value: string
+        manageFunction: any
+        icon?: string
+    },
+    capitalize?: boolean,
+    pagination?: boolean,
+    filter?: boolean
+}
 function CustomTable<TableProps>({
     tableHeadList,
     tableData,
@@ -19,29 +44,10 @@ function CustomTable<TableProps>({
     customCSS,
     manage,
     capitalize = true,
+    pagination = true,
+    filter = true
 }:
-    {
-        tableHeadList: string[]
-        tableData: TableProps[]
-        orderBy: (keyof TableProps)[]
-        sortOrder?: {
-            sortBy: keyof TableProps
-            orderList: string[]
-            orderSymbol: {
-                asc: string
-                desc: string
-            }
-        },
-        customCSS?: {
-            name: string
-            css: string
-        }[]
-        manage?: {
-            value: string
-            manageFunction: any
-        },
-        capitalize?: boolean
-    }) {
+    CustomTableProps<TableProps>) {
     const [page, setPage] = useState(1)
     const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
@@ -152,12 +158,14 @@ function CustomTable<TableProps>({
                         </th>
                         {tableHeadList.map((item: string, index: number) => (
                             <th key={index} onClick={() => {
-                                setPage(1)
-                                sortOrderByRequired(index)
-                                setSelectedHeading(index)
+                                if (filter) {
+                                    setPage(1)
+                                    sortOrderByRequired(index)
+                                    setSelectedHeading(index)
+                                }
                             }}>
-                                <div className="th-wrap cursor">
-                                    <i className={`fa-solid ${getIconStyleForSortedHeading(index)}`}></i>
+                                <div className={`th-wrap ${filter ? 'cursor' : ''} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`}>
+                                    <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
                                     <div>{item}</div>
 
                                 </div>
@@ -182,16 +190,15 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <td className={`${customCssByRequired(index)}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
-                                )
-                                )
+                                    <td className={`${customCssByRequired(index)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
+                                ))
                             }
                             {manage?.value &&
                                 <td className="">
                                     <div className="manage">
                                         <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
-                                            <i className="fas fa-edit "></i>
-                                            Edit
+                                            <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
+                                            {manage.value}
                                         </div>
                                     </div>
                                 </td>
@@ -204,7 +211,7 @@ function CustomTable<TableProps>({
             {!sortedTable.length && <div className="no-data">No Data to show </div>}
             {/* Pagination */}
 
-            <div className='paginator' >
+            {pagination && <div className='paginator' >
                 <div>
                     <div onClick={() => { setPage(1) }}>
                         <i   >{"|<<"}</i>
@@ -221,7 +228,7 @@ function CustomTable<TableProps>({
                         <i >{">>|"}</i>
                     </div>
                 </div>
-            </div >
+            </div >}
         </div>
     )
 }

@@ -28,6 +28,11 @@ export const buttons: urlProps[] = [
         icon: 'fa-building',
         url: '/block',
         title: 'Block',
+    },
+    {
+        icon: 'fa-user-secret',
+        url: '/intern-dashboard',
+        title: 'Internship',
     }
 ]
 export const getCurrentPageTitle = (): string => {

@@ -34,6 +34,8 @@ export function createUser(
     phone: string,
     role: string,
     password: string,
+    district: string,
+    zone: string,
     updateUserData: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
@@ -44,9 +46,13 @@ export function createUser(
         email: email,
         phone: phone,
         role: role,
-        password: password
+        password: password,
+        district: district,
+        zone: zone
     }
-    privateGateway.post(setupRoutes.user.create, postData)
+
+
+    privateGateway.post(setupRoutes.user.create, selectPostData(postData))
         .then(res => {
             updateUserData()
             showAlert(res?.data?.message?.general[0], setSuccessMessage)
@@ -69,4 +75,20 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
             if (updateTable) updateTable(data)
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+}
+function selectPostData(postData: any) {
+    const commonPostData = {
+        name: postData.name,
+        email: postData.email,
+        phone: postData.phone,
+        role: postData.role,
+        password: postData.password
+    }
+    if (postData.role === 'DC') {
+        return { ...commonPostData, district: postData.district, }
+    }
+    if (postData.role === 'ZC') {
+        return { ...commonPostData, zone: postData.zone }
+    }
+    return commonPostData
 }
