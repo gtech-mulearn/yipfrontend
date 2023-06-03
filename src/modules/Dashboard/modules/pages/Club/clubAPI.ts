@@ -10,13 +10,13 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
     privateGateway.get(`${bannerRoutes.clubBanner}`)
         .then(res => res.data.response)
         .then(res => setCount(res))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(setupRoutes.district.list)
         .then(res => res.data.response.districts)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 
 export function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, districtName: string) {
@@ -28,7 +28,7 @@ export function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, 
         .then(data => {
             setData(data.map((item: any) => ({ id: item.id, name: item.title, })))
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function createClub<postDataProps>
     (

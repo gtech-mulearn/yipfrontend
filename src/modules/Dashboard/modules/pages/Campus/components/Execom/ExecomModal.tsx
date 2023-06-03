@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import { selectProps } from '../../../../utils/setupUtils'
+import { privateGateway } from '../../../../../../../services/apiGateway'
+import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
 
-const ExecomModal = ({ cancel }: { cancel: () => void }) => {
+const ExecomModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [role, setRole] = useState<selectProps>({} as selectProps)
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [mobile, setMobile] = useState('')
-
+    useEffect(() => {
+        getExecomRoles(setRoleList)
+    }, [])
     return (
         <div className='secondary-box'>
             <div className="data-box">
@@ -43,13 +47,49 @@ const ExecomModal = ({ cancel }: { cancel: () => void }) => {
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => { }}>Add Member</button>
+                    <button className='btn-update ' onClick={() => assignExecom(campusId, role.id, name, email, mobile, cancel)}>Add Member</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
         </div>
-
     )
 }
-
+function getExecomRoles(setData: React.Dispatch<React.SetStateAction<selectProps[]>>) {
+    privateGateway.get(campusRoutes.designation.list.execom)
+        .then((res) => {
+            setData(res.data.response.sub_user_roles.map((item: any) => {
+                console.log(item)
+                return {
+                    name: item.label,
+                    id: item.value
+                }
+            }))
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
 export default ExecomModal
+function assignExecom(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void) {
+    const postData = {
+        clubId: id,
+        type: 'Execom',
+        name: name,
+        email: email,
+        phone: mobile,
+        role: designation,
+    }
+    console.log(postData)
+    privateGateway.post(campusRoutes.subUser.create, postData).then((res) => {
+        privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: 'Execom Formed' })
+            .then(res => {
+                console.log('Success :', res?.data?.message?.general[0])
+                setTimeout(() => {
+                }, 1000)
+            })
+        console.log(res)
+        cancel()
+    }).catch((err) => {
+        console.error(err)
+    })
+}

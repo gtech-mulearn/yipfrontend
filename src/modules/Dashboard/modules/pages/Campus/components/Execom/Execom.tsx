@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
 import CampusModal from '../CampusModal/CampusModal'
+import { privateGateway } from '../../../../../../../services/apiGateway'
+import { campusRoutes } from '../../../../../../../services/urls'
 export interface ExecomProps {
     id: string
     role: string
@@ -10,6 +12,10 @@ export interface ExecomProps {
 }
 const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
     const [open, setOpen] = React.useState(false)
+    const [list, setList] = React.useState<ExecomProps[]>([])
+    useEffect(() => {
+        listSubUser(setList, campusId)
+    }, [])
     return (
         <div>
             {open && <CampusModal campuStatus={'Execom Formed'} campusId={campusId} cancel={() => setOpen(false)} />}
@@ -22,11 +28,21 @@ const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
                 AddOption={'Add Member'}
                 TableHeading={'Execom '}
                 tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
-                tableData={[]}
-                orderBy={['role', 'name', 'email', 'phone',]}
+                tableData={list}
+                orderBy={['name', 'email', 'phone', 'role']}
+                capitalize={false}
                 pagination={false}
             /></div>
     )
+}
+function listSubUser(setData: Dispatch<SetStateAction<ExecomProps[]>>, id: string = '') {
+    privateGateway.get(`${campusRoutes.subUser.listExecom}${id}/Execom/`)
+        .then((res) => {
+            console.log(res)
+            setData(res.data.response)
+        }).catch((err) => {
+            console.log(err)
+        })
 }
 
 export default Execom

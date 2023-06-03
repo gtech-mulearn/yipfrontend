@@ -4,9 +4,10 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import '../CampusModal/CampusModal.scss'
+import { campusRoutes } from '../../../../../../../services/urls'
 
 
-const OrientationCompletedModal = ({ cancel }: { cancel: () => void }) => {
+const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, eventId: string }) => {
     const [groupFormed, setGroupFormed] = useState<selectProps>({} as selectProps)
     const [nop, setNop] = useState('')
     const [remarks, setRemark] = useState('')
@@ -15,7 +16,7 @@ const OrientationCompletedModal = ({ cancel }: { cancel: () => void }) => {
     }, [])
     return (
         <div className='secondary-box'>
-            <div className="data-box">
+            {/* <div className="data-box">
                 <div className="content">
                     <CustomSelect
                         option={[{ id: '0', name: 'Yes' }, { id: '1', name: 'No' }]}
@@ -28,7 +29,7 @@ const OrientationCompletedModal = ({ cancel }: { cancel: () => void }) => {
                         setData={setGroupFormed}
                     />
                 </div>
-            </div>
+            </div> */}
             <div className="data-box">
                 <div className="content">
                     <CustomInput value={'No of Participants'} data={nop} setData={setNop} customCSS={'setup-item'} />
@@ -42,12 +43,22 @@ const OrientationCompletedModal = ({ cancel }: { cancel: () => void }) => {
 
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => { }}>Add Orientation Details</button>
+                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks)}>Add Orientation Details</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
         </div>
 
     )
+}
+function updateEvent(eventId: string, nop: string, remarks: string) {
+    privateGateway.put(`${campusRoutes.updateEvent}${eventId}/`, {
+        no_of_participants: nop,
+        remarks: remarks,
+        status: 'Completed',
+    })
+        .then((res) => {
+            console.log(res)
+        })
 }
 export default OrientationCompletedModal

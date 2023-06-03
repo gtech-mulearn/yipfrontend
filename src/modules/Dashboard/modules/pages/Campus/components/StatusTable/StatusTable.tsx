@@ -10,9 +10,10 @@ interface StatusTableProps<TableProps> extends CustomTableProps<TableProps> {
     setAdd: Dispatch<SetStateAction<boolean>>
     AddOption: string
     TableHeading: string
+    headingSwitch?: boolean
 }
 
-function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHeading, AddOption, ...props }: StatusTableProps<TableProps>) {
+function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHeading, AddOption, headingSwitch = true, ...props }: StatusTableProps<TableProps>) {
     return (
         <div>
             <div className='status-table'>
@@ -22,10 +23,10 @@ function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHead
             <div>
                 <div className='top-bar'>
                     <p>{TableHeading}</p>
-                    <div className='add-button' onClick={() => setAdd((prev: boolean) => !prev)}>
+                    {headingSwitch && <div className='add-button' onClick={() => setAdd((prev: boolean) => !prev)}>
                         <i className='fas fa-add'></i>
                         <p >{AddOption}</p>
-                    </div>
+                    </div>}
                 </div>
                 <CustomTable<TableProps>
                     {...props}
