@@ -51,7 +51,7 @@ function listSubUser(setData: Dispatch<SetStateAction<FacilitatorProps[]>>, id: 
             console.log('list sub user')
             setData(res.data.response)
         }).catch((err) => {
-            console.error(err)
+            console.log(err)
         })
 }
 function deleteASubUser(id: string, close: () => void) {
@@ -60,7 +60,7 @@ function deleteASubUser(id: string, close: () => void) {
             console.log(res)
             close()
         }).catch((err) => {
-            console.error(err)
+            console.log(err)
         })
 }
 export default Connection

@@ -44,7 +44,11 @@ const CampusLayout = () => {
     const [updateStatus, setUpdateStatus] = React.useState('')
     const [errorMessage, setErrorMessage] = React.useState("")
     const [successMessage, setSuccessMessage] = React.useState("")
-
+    const viewExecom = campus.status === 'Execom Formed'
+    const viewOrientation = campus.status === 'Orientation Scheduled' || campus.status === 'Orientation Completed' || viewExecom
+    const viewConnected = campus.status === 'Connection Established' || viewOrientation || viewExecom
+    const viewConfirmed = campus.status === 'Confirmed' || viewConnected || viewOrientation || viewExecom
+    const viewIdentified = campus.status === 'Identified' || viewConfirmed || viewOrientation || viewConnected || viewExecom
     useEffect(() => {
         getCampusInfo(campusId as string, setCampus)
 
@@ -64,8 +68,6 @@ const CampusLayout = () => {
 
                 <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
-                </div>
-                <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Category'} name={getCategory(campus?.category)} />
 
                     <TitleNameTag title={'Zone'} name={campus?.zone} />
@@ -76,10 +78,10 @@ const CampusLayout = () => {
                     </>}
                 </div>
                 <Identified date={formatDateStyle(campus?.identified)} />
-                {campus?.confirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
-                {campus?.connection && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />}
-                {campus?.orientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} />}
-                {campus?.execom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
+                {viewConfirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
+                {viewConnected && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} />}
+                {viewOrientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} />}
+                {viewExecom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
                 {errorMessage && <Error error={errorMessage} />}
                 {successMessage && <Success success={successMessage} />}
             </div >
