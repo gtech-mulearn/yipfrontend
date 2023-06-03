@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import { selectProps } from '../../../../utils/setupUtils'
@@ -10,7 +10,9 @@ const ExecomModal = ({ cancel }: { cancel: () => void }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [mobile, setMobile] = useState('')
-
+    useEffect(() => {
+        getExecomRoles(setRoleList)
+    }, [])
     return (
         <div className='secondary-box'>
             <div className="data-box">
