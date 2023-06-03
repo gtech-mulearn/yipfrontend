@@ -26,7 +26,7 @@ export function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>)
         .then(data =>
             setData(data?.map((item: { value: string, label: string }) =>
                 ({ id: item.value, name: item.label }))))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function createUser(
     name: string,

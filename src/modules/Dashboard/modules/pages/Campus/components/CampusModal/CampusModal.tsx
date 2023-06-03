@@ -11,7 +11,7 @@ import OrientationCompletedModal from '../Orientation/OrientationCompletedModal'
 import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
-const CampusModal = ({ campuStatus, campusId, cancel, district }: { campuStatus: string, campusId: string, cancel: () => void, district?: string }) => {
+const CampusModal = ({ campuStatus, campusId, cancel, district, eventId }: { campuStatus: string, campusId: string, cancel: () => void, district?: string, eventId?: string }) => {
     console.log(district)
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
@@ -57,8 +57,8 @@ const CampusModal = ({ campuStatus, campusId, cancel, district }: { campuStatus:
                         </div>
                     </div>
                     {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
-                    {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} />}
-                    {viewCompleted && <OrientationCompletedModal cancel={cancel} />}
+                    {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
+                    {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
                     {viewExecom && <ExecomModal cancel={cancel} />}
                 </div>
 
@@ -80,7 +80,7 @@ function updateStatus(id: string, status: string, cancel: () => void) {
             cancel()
             console.log('Success :', res?.data?.message?.general[0])
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 function getNextStatus(status: string) {
     switch (status) {

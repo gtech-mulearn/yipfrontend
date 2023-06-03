@@ -44,14 +44,12 @@ const CampusLayout = () => {
     const [updateStatus, setUpdateStatus] = React.useState('')
     const [errorMessage, setErrorMessage] = React.useState("")
     const [successMessage, setSuccessMessage] = React.useState("")
-    useEffect(() => {
-        listEvent(campusId as string)
-    }, [])
+
     useEffect(() => {
         getCampusInfo(campusId as string, setCampus)
-        console.log("hi i am working")
-        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+
     }, [updateCampus])
+
     return (
         <div className='dash-container'>
             <div className='white-container'>
@@ -66,6 +64,8 @@ const CampusLayout = () => {
 
                 <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
+                </div>
+                <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Category'} name={getCategory(campus?.category)} />
 
                     <TitleNameTag title={'Zone'} name={campus?.zone} />
@@ -74,7 +74,6 @@ const CampusLayout = () => {
                         <TitleNameTag title={'Legislative Assembly'} name={campus?.legislativeAssembly} />
                         <TitleNameTag title={'Block '} name={campus?.block} />
                     </>}
-
                 </div>
                 <Identified date={formatDateStyle(campus?.identified)} />
                 {campus?.confirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
@@ -107,12 +106,14 @@ function getCampusInfo(
                 identified: data.date_of_identification,
                 confirmed: data.date_of_confirmation,
                 connection: data.date_of_connection,
-                orientation: data.date_of_orientation,
+                orientation: data.date_of_orientaion,
                 execom: data.date_of_execom_formation,
             }))
+            console.log(data.date_of_orientation)
+
         })
         .catch((err) => {
-            console.log(err)
+            console.error(err)
         })
 }
 function formatDateStyle(value: string) {

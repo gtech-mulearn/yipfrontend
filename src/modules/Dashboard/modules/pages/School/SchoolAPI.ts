@@ -10,7 +10,7 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
     privateGateway.get(`${bannerRoutes.schoolBanner}`)
         .then(res => res.data.response)
         .then(res => setCount(res))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function updateSchoolStatus(id: string, status: string, setSchool: Dispatch<SetStateAction<SchoolTableProps>>, update: Function,
     setSuccess: Dispatch<SetStateAction<string>>,
@@ -46,19 +46,19 @@ export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>)
     privateGateway.get(setupRoutes.district.list)
         .then(res => res.data.response.districts)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function fetchDistrictAssemblies(setData: Dispatch<SetStateAction<selectProps[]>>, districtId: string) {
     privateGateway.get(`${setupRoutes.district.assembly}${districtId}/`)
         .then(res => res.data.response.legislativeAssembly)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function fetchDistrictBlocks(setData: Dispatch<SetStateAction<selectProps[]>>, districtId: string) {
     privateGateway.get(`${setupRoutes.district.block}${districtId}/`)
         .then(res => res.data.response.block)
         .then(data => { setData(data) })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function fetchDistrictSchools(setData: Dispatch<SetStateAction<selectProps[]>>, districtName: string) {
     const reqData: any = {
@@ -67,7 +67,7 @@ export function fetchDistrictSchools(setData: Dispatch<SetStateAction<selectProp
     privateGateway.post(setupRoutes.district.school, reqData)
         .then(res => res.data.response.institutions)
         .then(data => setData(data.map((item: any) => ({ id: item.id, name: item.title, }))))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function createSchool<postDataProps>(postData: postDataProps, update: Function, setViewSetup: Dispatch<SetStateAction<boolean>>,
     setSuccessMessage: Dispatch<SetStateAction<string>>,

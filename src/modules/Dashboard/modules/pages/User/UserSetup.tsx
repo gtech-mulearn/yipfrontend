@@ -66,7 +66,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                 createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage)
             })
             .catch((err) => {
-                console.log(err)
+                console.error(err)
                 showAlert(err.message, setErrorMessage)
             })
     }

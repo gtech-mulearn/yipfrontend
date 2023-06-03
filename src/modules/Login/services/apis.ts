@@ -23,6 +23,6 @@ export const login = (
         })
         .catch((err) => {
             setErrorStatus(true)
-            console.log('Error :', err?.response?.data?.message?.general[0])
+            console.error('Error :', err?.response?.data?.message?.general[0])
         })
 }

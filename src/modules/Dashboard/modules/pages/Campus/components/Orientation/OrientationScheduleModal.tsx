@@ -4,8 +4,10 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import '../CampusModal/CampusModal.scss'
-import { campusRoutes } from '../../../../../../../services/urls'
-const OrientationScheduleModal = ({ cancel, district }: { cancel: () => void, district: string }) => {
+import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
+import { updateClubStatus } from '../../../Club/clubAPI'
+import { OrientationCompleteProps } from './Orientation'
+const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () => void, district: string, campusId: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
     const [mod, setMod] = useState('')
@@ -13,8 +15,6 @@ const OrientationScheduleModal = ({ cancel, district }: { cancel: () => void, di
     const [place, setPlace] = useState('')
     console.log(district)
     useEffect(() => {
-
-        listEvent()
         getListOfCoordinatorByDistrict(district, setCoordinatorList)
     }, [])
     return (
@@ -50,7 +50,7 @@ const OrientationScheduleModal = ({ cancel, district }: { cancel: () => void, di
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => createEvent(date, place, mod, coordinator.id)}>Add Orientation</button>
+                    <button className='btn-update ' onClick={() => createEvent(date, place, mod, coordinator.id, campusId)}>Add Orientation</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -63,9 +63,9 @@ function getListOfCoordinatorByDistrict(district: string, setCoordinatorList: Di
     privateGateway.get(`${campusRoutes.districtCoordinator.listByDistrict}${district}/`)
         .then(res => res.data.response)
         .then(data => setCoordinatorList(data))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
-function createEvent(date: string, place: string, mod: string, coordinatorId: string) {
+function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string) {
 
     privateGateway.post(campusRoutes.createEvent, {
         date_time: date,
@@ -73,13 +73,21 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
         place: place,
         description: 'Orientation Scheduling',
         status: 'Scheduled',
-        districtCordinator: coordinatorId
+        districtCordinator: coordinatorId,
+        clubId: campusId
     })
-
+        .then(res => {
+            privateGateway.put(tableRoutes.status.update, { clubId: campusId, clubStatus: 'Orientation Scheduled' })
+                .then(res => {
+                    console.log('Success :', res?.data?.message?.general[0])
+                })
+                .catch(err => console.error(err))
+        }
+        ).catch(err => console.error(err))
 }
-export function listEvent(campusId: string) {
+export function listEvent(campusId: string, setData: Dispatch<SetStateAction<OrientationCompleteProps[]>>) {
     privateGateway.get(`${campusRoutes.listEvent}${campusId}/`)
         .then(res => res.data.response)
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
+        .then(data => setData(data))
+        .catch(err => console.error(err))
 }

@@ -76,5 +76,5 @@ export const campusRoutes = {
     },
     createEvent: '/api/v1/yip/create-event/',
     listEvent: '/api/v1/yip/list-events/',
-
+    updateEvent: '/api/v1/yip/edit-event/',
 }

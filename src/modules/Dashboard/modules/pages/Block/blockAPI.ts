@@ -24,7 +24,7 @@ export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>)
     privateGateway.get(setupRoutes.district.list)
         .then(res => res.data.response.districts)
         .then(data => setData(data))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
 }
 export function createBlock(
     block: string,

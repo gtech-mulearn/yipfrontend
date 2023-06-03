@@ -83,7 +83,7 @@ function assignFacilitator(id: string, designation: string, name: string, email:
         console.log(res)
         cancel()
     }).catch((err) => {
-        console.log(err)
+        console.error(err)
     })
 }
 

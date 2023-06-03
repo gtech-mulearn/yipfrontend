@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import { selectProps } from '../../../../utils/setupUtils'
+import { privateGateway } from '../../../../../../../services/apiGateway'
 
 const ExecomModal = ({ cancel }: { cancel: () => void }) => {
     const [roleList, setRoleList] = useState<selectProps[]>([])
@@ -48,8 +49,15 @@ const ExecomModal = ({ cancel }: { cancel: () => void }) => {
                 </div>
             </div>
         </div>
-
     )
 }
-
+function getExecomRoles(setData: React.Dispatch<React.SetStateAction<selectProps[]>>) {
+    privateGateway.get(`/api/v1/yip/execom/roles`)
+        .then((res) => {
+            setData(res.data.response)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
 export default ExecomModal
