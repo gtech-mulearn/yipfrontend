@@ -7,22 +7,21 @@ import {
     selectProps,
 } from "../../utils/setupUtils";
 import * as Yup from "yup";
-import { Error, Success, showAlert } from "../../../components/Error/Alerts";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
     createClub,
     fetchDistricts,
     fetchcolleges,
-    updateResponse,
 } from "./clubAPI";
 import { Form, Formik } from "formik";
-import FormikReactSelect, {
-    MyOption,
-} from "../../components/Formik/FormikComponents";
+import FormikReactSelect from "../../components/Formik/FormikComponents";
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>;
     updateClubData: Function;
 }
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
+	const notify = () => toast("Wow so easy !");
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
     const [districtListEdited, setDistrictListEdited] = useState<
         selectEditedProps[]
@@ -38,6 +37,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const [selectedOption, setSelectedOption] = useState();
     const [none, setNone] = useState();
     const reset = () => {
+		notify();
         setDistrict(initialState);
         setCollege(initialState);
         setDistrictList([]);
@@ -54,7 +54,6 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setCollegeList,
             String(selectedOption)
         );
-        console.log(selectedOption);
     }, [selectedOption]);
 
     function handleCreate(college: string, district: string) {
@@ -87,6 +86,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setSuccessMessage,
             setErrorMessage
         );
+
     }
 	const validateSchema = Yup.object().shape({
         district: Yup.string()

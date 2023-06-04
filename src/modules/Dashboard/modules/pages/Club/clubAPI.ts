@@ -3,8 +3,10 @@ import { CountResponse } from "./ClubBanner"
 import { bannerRoutes, setupRoutes, tableRoutes } from "../../../../../services/urls"
 import { privateGateway } from "../../../../../services/apiGateway"
 import { selectEditedProps, selectProps } from "../../utils/setupUtils"
-import { showAlert } from "../../../components/Error/Alerts"
+import { Success, showAlert } from "../../../components/Error/Alerts"
 import { ClubTableProps } from "./ClubTable"
+import { toast } from "react-toastify"
+import { error, errorCheck, success } from "../../../components/Toastify/ToastifyConsts"
 
 export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
     privateGateway.get(`${bannerRoutes.clubBanner}`)
@@ -55,14 +57,10 @@ export function fetchcolleges(
                     data.map((item: any) => ({ id: item.id, name: item.title }))
                 )
             );
-            console.log(
-                updateResponse(
-                    data.map((item: any) => ({ id: item.id, name: item.title }))
-                )
-            );
         })
         .catch((err) => console.error(err));
 }
+
 export function createClub<postDataProps>
     (
         postData: postDataProps,
@@ -73,14 +71,12 @@ export function createClub<postDataProps>
     ) {
     privateGateway.post(setupRoutes.club.create, postData)
         .then(res => {
+			success();
             update()
             showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
         })
         .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+			errorCheck(err.response);
         })
 }
 export function updateClubStatus(id: string, status: string,
