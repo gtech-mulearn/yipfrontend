@@ -10,11 +10,11 @@ export const LeftDrawer = () => {
     const [newButton, setNewButton] = React.useState(buttons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     useEffect(() => {
-        if(userInfo.role === '') {
+        if (userInfo.role === '') {
             fetchUserInfo(setUserInfo)
         }
-        
-        console.log(userInfo)
+
+        // console.log(userInfo)
 
         const filteredButtons = buttons.filter((item: urlProps) => {
             if (item && item.roles && item.roles.includes(userInfo.role)) {
