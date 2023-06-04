@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { showAlert, Error, Success } from '../../../components/Error/Alerts'
 import { createUser, fetchUserByRoles, fetchUserRoles } from './UserApi'
 import { fetchDistricts } from '../School/SchoolAPI'
+import Select from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -30,6 +31,17 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [successMessage, setSuccessMessage] = useState("")
     const [coordinatorInternRole, setCoordinatorInternRole] = useState<selectProps>({} as selectProps)
     const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
+    const [instituteList, setInstituteList] = useState<selectProps[]>([
+        { id: '0', name: 'Kindergarten' },
+        { id: '1', name: 'School' },
+        { id: '2', name: 'College' },
+        { id: '3', name: 'University' },
+        { id: '4', name: 'Other' },
+        { id: '5', name: 'Philosophy' },
+        { id: '6', name: 'Psychology' },
+        { id: '7', name: 'Sociology' },
+    ])
+    const [selectedInstituteList, setSelectedInstituteList] = useState<selectProps[]>([])
     const reset = () => {
         setName("")
         setEmail("")
@@ -114,6 +126,27 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                     setData={setCoordinator}
                                     isSearchable={false}
                                 />}
+                                <div className={"setup-item"}>
+                                    <p>Select Institutes</p>
+                                    <Select
+                                        className='react-select-container'
+                                        options={instituteList}
+                                        placeholder={'Select Institutes'}
+                                        isMulti={true}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                        onChange={(data: any) => {
+                                            if (data) {
+                                                setSelectedInstituteList(data)
+                                                console.log(data)
+                                            }
+                                            else
+                                                setSelectedInstituteList([])
+
+                                        }}
+                                    />
+                                </div>
+
                             </>
                         }
                         <CustomInput value="Password" type="password" setData={setPassword} data={password} />

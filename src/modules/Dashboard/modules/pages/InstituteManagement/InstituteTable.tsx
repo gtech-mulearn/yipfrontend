@@ -5,10 +5,13 @@ import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchDistricts } from '../School/SchoolAPI'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
+import Modal from '../Club/ClubModal'
 export interface InstituteTableProps {
     name: string
     district: string
-    ict: string
+    ict_id: string
+    id: string
+
 }
 // name,id,distict,ict_id
 const InstituteTable = () => {
@@ -24,7 +27,7 @@ const InstituteTable = () => {
     const [club, setClub] = useState<InstituteTableProps>({} as InstituteTableProps)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const TableTitleList = ['Name', 'District', 'ICT Id']
-    const list: (keyof InstituteTableProps)[] = []
+    const list: (keyof InstituteTableProps)[] = ['name', 'district', 'ict_id']
     function resetFilter() {
         setFilterBtn(false)
         setDistrict({} as selectProps)
@@ -32,7 +35,11 @@ const InstituteTable = () => {
     }
     useEffect(() => {
         fetchDistricts(setDistrictList)
+        fetchInstitutes(setClubList)
     }, [])
+    useEffect(() => {
+        updateTable(clubList)
+    }, [search, district])
     function updateTable(clubList: InstituteTableProps[]) {
         setListForTable(filterClub(clubList, search, district))
     }
@@ -40,7 +47,7 @@ const InstituteTable = () => {
         <div className='white-container'>
             <div className="table-top">
                 <div className='table-header'>
-                    <h3>Model club List</h3>
+                    <h3>ICT Connected Institutes List</h3>
                     <div className='table-header-btn'>
                         <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
                     </div>
@@ -96,6 +103,7 @@ const InstituteTable = () => {
                     }
                 }}
             />
+            {/* {open && <Modal instituteID />} */}
         </div>
     )
 }
@@ -120,5 +128,22 @@ function rawString(str: string) {
     str = str.replace(/[^a-zA-Z0-9 ]/g, '')
     str = str.replaceAll(' ', '')
     return str
+}
+function fetchInstitutes(setClubList: React.Dispatch<React.SetStateAction<InstituteTableProps[]>>) {
+    privateGateway.get(`${campusRoutes.listInstitutes}`)
+        .then(res => {
+            setClubList(res.data.response)
+        })
+}
+function editIctId(ictId: string, instituteId: string) {
+    privateGateway.put(`${campusRoutes.editIctId}${instituteId}/`, {
+        ict_id: ictId
+    })
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }
 export default InstituteTable
