@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react"
 import { CountResponse } from "./ClubBanner"
 import { bannerRoutes, setupRoutes, tableRoutes } from "../../../../../services/urls"
 import { privateGateway } from "../../../../../services/apiGateway"
-import { selectProps } from "../../utils/setupUtils"
+import { selectEditedProps, selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
 import { ClubTableProps } from "./ClubTable"
 
@@ -12,23 +12,56 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
         .then(res => setCount(res))
         .catch(err => console.error(err))
 }
-export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.error(err))
+export function fetchDistricts(
+    setData: Dispatch<SetStateAction<selectEditedProps[]>>,
+    setData1: Dispatch<SetStateAction<selectProps[]>>
+) {
+    privateGateway
+        .get(setupRoutes.district.list)
+        .then((res) => res.data.response.districts)
+        .then((data) => {
+			setData1(data)
+            setData(updateResponse(data));
+        })
+        .catch((err) => console.error(err));
 }
 
-export function fetchcolleges(setData: Dispatch<SetStateAction<selectProps[]>>, districtName: string) {
-    const reqData: any = {
-        district: districtName
+	export function updateResponse(data:any) {
+        return data.map((item: { id: any; name: any }) => ({
+            value: item.name,
+            label: item.name,
+        }));
     }
-    privateGateway.post(setupRoutes.district.college, reqData)
-        .then(res => res.data.response.institutions)
-        .then(data => {
-            setData(data.map((item: any) => ({ id: item.id, name: item.title, })))
+	
+
+
+export function fetchcolleges(
+    setData: Dispatch<SetStateAction<selectEditedProps[]>>,
+    setData1: Dispatch<SetStateAction<selectProps[]>>,
+    districtName: string
+) {
+    const reqData: any = {
+        district: districtName,
+    };
+    privateGateway
+        .post(setupRoutes.district.college, reqData)
+        .then((res) => res.data.response.institutions)
+        .then((data) => {
+			setData1(
+                data.map((item: any) => ({ id: item.id, name: item.title }))
+            );
+            setData(
+                updateResponse(
+                    data.map((item: any) => ({ id: item.id, name: item.title }))
+                )
+            );
+            console.log(
+                updateResponse(
+                    data.map((item: any) => ({ id: item.id, name: item.title }))
+                )
+            );
         })
-        .catch(err => console.error(err))
+        .catch((err) => console.error(err));
 }
 export function createClub<postDataProps>
     (
