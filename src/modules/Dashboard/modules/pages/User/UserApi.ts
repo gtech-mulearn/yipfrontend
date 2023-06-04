@@ -39,7 +39,8 @@ export function createUser(
     updateUserData: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
+    setErrorMessage: Dispatch<SetStateAction<string>>,
+    coordinatorId?: string
 ) {
     const postData = {
         name: name,
@@ -48,7 +49,8 @@ export function createUser(
         role: role,
         password: password,
         district: district,
-        zone: zone
+        zone: zone,
+        coordinatorId: coordinatorId
     }
 
 
@@ -65,6 +67,12 @@ export function createUser(
             showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
             console.log('Error :', err?.response?.data?.message?.general[0])
         })
+}
+export function fetchUserByRoles(role: string, setUserList: Dispatch<SetStateAction<UserTableProps[]>>) {
+    privateGateway.get(`${tableRoutes.user.listByRoles}${role}/`)
+        .then(
+            res => { setUserList(res.data.response) })
+        .catch(err => console.log(err))
 }
 export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableProps[]>>, setListForTable: Dispatch<SetStateAction<UserTableProps[]>>, updateTable?: Function) {
     await privateGateway.get(tableRoutes.user.list)
@@ -84,11 +92,14 @@ function selectPostData(postData: any) {
         role: postData.role,
         password: postData.password
     }
-    if (postData.role === 'DC') {
+    if (postData.role === 'DC' || postData.role === 'PE') {
         return { ...commonPostData, district: postData.district, }
     }
     if (postData.role === 'ZC') {
         return { ...commonPostData, zone: postData.zone }
+    }
+    if (postData.role === 'IN') {
+        return { ...commonPostData, coordinatorId: postData.coordinatorId }
     }
     return commonPostData
 }

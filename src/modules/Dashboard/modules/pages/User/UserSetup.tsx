@@ -6,9 +6,9 @@ import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
 import { showAlert, Error, Success } from '../../../components/Error/Alerts'
-import { createUser, fetchUserRoles } from './UserApi'
+import { createUser, fetchUserByRoles, fetchUserRoles } from './UserApi'
 import { fetchDistricts } from '../School/SchoolAPI'
-
+import { UserTableProps as UserProps } from './UserTable'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -24,10 +24,12 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [zone, setZone] = useState<selectProps>({} as selectProps)
     const [zoneList, setZoneList] = useState<selectProps[]>([{ id: '0', name: 'North' }, { id: '1', name: 'South' }, { id: '2', name: 'Central' }])
+    const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
+    const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
-
-
+    const [coordinatorInternRole, setCoordinatorInternRole] = useState<selectProps>({} as selectProps)
+    const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
     const reset = () => {
         setName("")
         setEmail("")
@@ -39,8 +41,12 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     useEffect(() => {
         fetchUserRoles(setRoleList)
         fetchDistricts(setDistrictList)
-    }, [])
 
+    }, [])
+    useEffect(() => {
+        if (coordinatorInternRole)
+            fetchUserByRoles(coordinatorInternRole.id, setCoordinatorRoleBasedList)
+    }, [coordinatorInternRole])
     function validate() {
         const validationSchema = yup.object().shape({
             name: yup.string().required('Name is required')
@@ -62,8 +68,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
         validate()
             .then(() => {
-                console.log(district)
-                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage)
+                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id)
             })
             .catch((err) => {
                 console.error(err)
@@ -87,15 +92,30 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             header='Role'
                             setData={setRole}
                             isSearchable={false}
-
                         />
-                        {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator') && <CustomSelect
-                            option={role.name === 'District Coordinator' ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
-                            header={role.name === 'District Coordinator' ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
-                            setData={role.name === 'District Coordinator' ? setDistrict : setZone}
+                        {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator' || role.name === 'Programme Executive') && <CustomSelect
+                            option={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
+                            header={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
+                            setData={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? setDistrict : setZone}
                             isSearchable={false}
-
                         />}
+                        {(role.name === 'Intern') &&
+                            <>
+                                <CustomSelect
+                                    option={[{ id: 'PE', name: 'Programme Executive' }, { id: 'DC', name: 'District Coordinator' }]}
+                                    header='Assign to'
+                                    placeholder={'Assign to '}
+                                    setData={setCoordinatorInternRole}
+                                    isSearchable={false}
+                                />
+                                {coordinatorInternRole && <CustomSelect
+                                    option={role.name === 'Intern' ? coordinatorRoleBasedList : []}
+                                    header={'Coordinator'}
+                                    setData={setCoordinator}
+                                    isSearchable={false}
+                                />}
+                            </>
+                        }
                         <CustomInput value="Password" type="password" setData={setPassword} data={password} />
                         <div className="create-btn-container">
                             <button className="black-btn"
@@ -107,7 +127,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                     </div>
                 </div>
                 <div className="setup-img">
-                    <img src={setupImg} alt="HI" />
+                    <img src={setupImg} alt="  " />
                 </div>
             </div>
             {errorMessage && <Error error={errorMessage} />}

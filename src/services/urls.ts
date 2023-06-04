@@ -56,7 +56,8 @@ export const tableRoutes = {
     },
     user: {
         list: '/api/v1/yip/user-management/list-users/',
-        delete: '/api/v1/yip/user-management/delete-user/'
+        delete: '/api/v1/yip/user-management/delete-user/',
+        listByRoles: 'api/v1/yip/user-management/list-users-by-roles/',
     }
 }
 export const campusRoutes = {
