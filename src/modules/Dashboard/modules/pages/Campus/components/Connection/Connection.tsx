@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
-import CampusModal, { AddFacilitatorModal } from '../CampusModal/CampusModal'
+import CampusModal from '../CampusModal/CampusModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../../../services/urls'
 import DeleteModal from '../CampusModal/DeleteModal'
@@ -42,36 +42,9 @@ const Connection = ({ date, campusId, campus }: { date: string, campusId: string
                 }}
                 capitalize={false}
             />
-            <div>
-                <div className='status-table'>
-                    <TitleNameTag title={'Status'} name={'Connection Established'} />
-                    <TitleNameTag title={'Date Connection Established'} name={date} />
-                </div>
-                <div>
-                    <div className='top-bar'>
-                        <p>Facilitator List</p>
-                        <div className='add-button' onClick={() => setOpen((prev: boolean) => !prev)}>
-                            <i className='fas fa-add'></i>
-                            <p>Add Facilitator</p>
-                        </div>
-                    </div>
-                    <CustomTable<FacilitatorProps>
-                        tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
-                        tableData={facilitator ? facilitator : []}
-                        orderBy={['name', 'email', 'phone', 'type']}
-                        manage={{
-                            value: 'Delete',
-                            manageFunction: (user: any) => { setSubUserId(user.id) },
-                            icon: 'fa-trash'
-                        }}
-                        capitalize={false}
-                        pagination={false}
-                        filter={false}
-                    />
-                </div>
-            </div >
+
             {subUserId && <DeleteModal id={subUserId} cancel={() => setSubUserId('')} customFunction={() => deleteASubUser(subUserId, () => setSubUserId(''))} />}
-            {open && <AddFacilitatorModal campusId={campusId} cancel={() => setOpen(false)} />}
+            {open && <CampusModal campuStatus='Confirmed' campusId={campusId as string} campus={campus} cancel={() => setOpen(false)} district={campus?.district} />}
 
         </div>
     )

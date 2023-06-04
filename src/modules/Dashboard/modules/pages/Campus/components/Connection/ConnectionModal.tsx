@@ -18,7 +18,7 @@ const ConnectionModal = ({ cancel, campusId, isNotConnected }: { cancel: () => v
     return (
         <div className='secondary-box'>
             {
-                isNotConnected &&
+
                 <>
                     <div className="data-box">
                         <div className="content">
@@ -53,9 +53,7 @@ const ConnectionModal = ({ cancel, campusId, isNotConnected }: { cancel: () => v
             }
             <div className='last-container'>
                 <div className="modal-buttons">
-                    {isNotConnected ? <button className='btn-update ' onClick={() => assignFacilitator(campusId, designation.id as string, name, email, mobile, cancel)}>Add Facilitator</button> :
-                        <button className='btn-update ' onClick={() => updateCampusStatus(campusId, 'Connection Established', cancel)}>Update Status</button>
-                    }
+                    <button className='btn-update ' onClick={() => assignFacilitator(campusId, designation.id as string, name, email, mobile, cancel)}>Add Facilitator</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>

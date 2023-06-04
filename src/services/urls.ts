@@ -34,6 +34,9 @@ export const setupRoutes = {
     }
 }
 export const tableRoutes = {
+    institutes: {
+        list: '/api/v1/yip/list-institutes/',
+    },
     school: {
         list: '/api/v1/yip/get-model-schools/',
         delete: '/api/v1/yip/delete-model-schools/'
@@ -56,7 +59,8 @@ export const tableRoutes = {
     },
     user: {
         list: '/api/v1/yip/user-management/list-users/',
-        delete: '/api/v1/yip/user-management/delete-user/'
+        delete: '/api/v1/yip/user-management/delete-user/',
+        listByRoles: 'api/v1/yip/user-management/list-users-by-roles/',
     }
 }
 export const campusRoutes = {
@@ -82,4 +86,8 @@ export const campusRoutes = {
     createEvent: '/api/v1/yip/create-event/',
     listEvent: '/api/v1/yip/list-events/',
     updateEvent: '/api/v1/yip/edit-event/',
+    listInstitutesByDistrict: '/api/v1/protected/organisation/get-institutes/',
+    connectIctToInstitute: "api/v1/yip/institute-management/create-institute/",
+    listInstitutes: '/api/v1/yip/institute-management/list-institutes/',
+    editIctId: 'api/v1/yip/institute-management/edit-institute/',
 }

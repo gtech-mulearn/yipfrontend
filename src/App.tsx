@@ -10,6 +10,7 @@ import AssemblyLayout from './modules/Dashboard/modules/pages/Assembly/AssemblyL
 import BlockLayout from './modules/Dashboard/modules/pages/Block/BlockLayout';
 import InternLayout from './modules/Dashboard/modules/pages/Intern/layout/InternLayout';
 import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/CampusLayout';
+import InstituteSetup from './modules/Dashboard/modules/pages/InstituteManagement/InstituteSetup';
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,8 @@ const router = createBrowserRouter([
           { path: 'legislative-assembly', element: <AssemblyLayout /> },
           { path: 'block', element: <BlockLayout /> },
           { path: 'intern-dashboard', element: <InternLayout /> },
-          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> }
+          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> },
+          { path: 'institute-management', element: <InstituteSetup /> }
         ]
       }
     ]
