@@ -14,8 +14,10 @@ import {
     fetchDistricts,
     fetchcolleges,
 } from "./clubAPI";
-import { Form, Formik } from "formik";
+import { Form, Formik, ErrorMessage } from "formik";
 import FormikReactSelect from "../../components/Formik/FormikComponents";
+
+
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>;
     updateClubData: Function;
@@ -96,53 +98,63 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
 
     return (
         <div className="white-container">
-			<div className="formikContainer">
-
-            <h3>Setup a YIP Club</h3>
-            <Formik
-                onSubmit={(values) => {
-                    handleCreate(values.college, values.district);
-                }}
-				validationSchema={validateSchema}
-                initialValues={{
-                    district: "",
-                    college: "",
-                }}
-                enableReinitialize
-            >
-                <Form className="reactInputContainer">
-					<div className="inputBoxOuter">
-
-                    <FormikReactSelect
-                        name="district"
-                        isMulti={false}
-                        isSearchable
-                        options={districtListEdited}
-                        setSelectedOption={setSelectedOption}
-                        label={"District"}
-                    />
-                    {
-                        <FormikReactSelect
-                            name="college"
-                            isMulti={false}
-                            isSearchable
-                            options={collegeListEdited}
-                            setSelectedOption={setNone}
-                            label={"College"}
-                        />
-                    }
-					</div>
-                    <div className="create-btn-container">
-                        <button type="submit" className="black-btn">
-                            Create
-                        </button>
-                        <button className="black-btn" onClick={reset}>
-                            Cancel
-                        </button>
-                    </div>
-                </Form>
-            </Formik>
-			</div>
+            <div className="formikContainer">
+                <h3>Setup a YIP Club</h3>
+                <Formik
+                    onSubmit={(values) => {
+                        handleCreate(values.college, values.district);
+                    }}
+                    validationSchema={validateSchema}
+                    initialValues={{
+                        district: "",
+                        college: "",
+                    }}
+                    enableReinitialize
+                >
+                    <Form className="reactInputContainer">
+                        <div className="inputBoxOuter">
+                            <div className="inputBoxInner">
+                                <FormikReactSelect
+                                    name="district"
+                                    isMulti={false}
+                                    isSearchable
+                                    options={districtListEdited}
+                                    setSelectedOption={setSelectedOption}
+                                    label={"District"}
+                                />
+                                <ErrorMessage
+                                    name="district"
+                                    component="div"
+                                    className="error-message"
+                                />
+                            </div>
+                            <div className="inputBoxInner">
+                                <FormikReactSelect
+                                    name="college"
+                                    isMulti={false}
+                                    isSearchable
+                                    options={collegeListEdited}
+                                    setSelectedOption={setNone}
+                                    label={"College"}
+                                />
+                                <ErrorMessage
+                                    name="college"
+                                    component="div"
+                                    className="error-message"
+                                />
+                            </div>
+                        </div>
+                        <div className="create-btn-container">
+                            <button type="submit" className="black-btn">
+                                Create
+                            </button>
+                            <button className="black-btn" onClick={reset}>
+                                Cancel
+                            </button>
+                        </div>
+                    </Form>
+                </Formik>
+            </div>
         </div>
     );
 };
