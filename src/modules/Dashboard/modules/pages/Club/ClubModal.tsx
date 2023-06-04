@@ -22,7 +22,7 @@ const Modal: FC<ClubModalProps> = ({ club, setClub, optionStatusList, update }) 
         <div className="modal-overlay">
             <div className='modal'>
                 <div className='heading'>
-                    <div className="title">Manage Model club</div>
+                    <div className="title">Manage YIP club</div>
                     <div className="close-btn" onClick={() => setClub({} as ClubTableProps)}><i className="fa fa-close"></i>
                     </div>
                 </div>

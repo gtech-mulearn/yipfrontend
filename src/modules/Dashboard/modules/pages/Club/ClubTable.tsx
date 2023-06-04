@@ -65,7 +65,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
 
                 <div className="table-top">
                     <div className='table-header'>
-                        <h3>Model club List</h3>
+                        <h3>YIP Club List</h3>
                         <div className='table-header-btn'>
                             <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
                         </div>
@@ -87,7 +87,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                         </div>
                         <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
                             <i className="fa-solid fa-plus"></i>
-                            <p>Add Model club</p>
+                            <p>Add YIP Club</p>
                         </div>
                         <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
