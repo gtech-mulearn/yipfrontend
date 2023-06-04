@@ -13,10 +13,9 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import { CampusPageProps } from '../../utils'
 const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
-    console.log(district)
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
-    const [status, setStatus] = useState<string>('')
+    const [status, setStatus] = useState<string>(getNextStatus(campuStatus ? campuStatus : campus?.status as string))
     const viewConnection = (status === 'Connection Established') || (campus?.status === 'Confirmed' && status === '')
     const viewScheduled = (status === 'Orientation Scheduled') || (campus?.status === 'Connection Established' && status === '')
     const viewCompleted = (status === 'Orientation Completed') || (campus?.status === 'Orientation Scheduled' && status === '')
@@ -24,9 +23,6 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     const viewUpdateButton = (status === 'Confirmed') || (campus?.status === 'Identified' && status === '') || (status === 'Identified')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
-        if (campus?.status === 'Identified') {
-            setStatus('Confirmed')
-        }
     }, [])
     return (
         <div className="modal-overlay">
@@ -37,7 +33,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                     </div>
                 </div>
                 <div className='secondary-box'>
-                    <div className="data-box">
+                    {!campuStatus && <div className="data-box">
                         <div className="content">
                             <CustomSelect
                                 option={optionStatusList}
@@ -47,7 +43,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                                 requiredData={false}
                                 isClearable={false}
                                 requiredLabel={true}
-                                // placeholder={getNextStatus(campus?.status)}
+                                placeholder={getNextStatus(campuStatus ? campuStatus : campus?.status as string)}
                                 requirePlaceHolder={true}
                                 customCSS={{
                                     className: "react-select-container",
@@ -56,7 +52,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                                 }
                             />
                         </div>
-                    </div>
+                    </div>}
                     {viewConnection && <ConnectionModal cancel={cancel} isNotConnected={campus?.connection === ''} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
@@ -95,18 +91,3 @@ function getNextStatus(status: string) {
     }
 }
 export default CampusModal
-export const AddFacilitatorModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
-    return (<div className="modal-overlay">
-        <div className='modal'>
-            <div className='heading'>
-                <div className="title">Update Status</div>
-                <div className="close-btn" onClick={cancel}><i className="fa fa-close"></i>
-                </div>
-            </div>
-            <div className='secondary-box'>
-                <ConnectionModal cancel={cancel} isNotConnected={true} campusId={campusId as string} />
-            </div>
-        </div>
-    </div>
-    )
-}
