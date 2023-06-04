@@ -34,11 +34,12 @@ const InstituteTable = () => {
         setStatus('')
     }
     useEffect(() => {
+        console.log('hi')
         fetchDistricts(setDistrictList)
-        fetchInstitutes(setClubList)
+        fetchInstitutes(setListForTable)
     }, [])
     useEffect(() => {
-        updateTable(clubList)
+        updateTable(listForTable)
     }, [search, district])
     function updateTable(clubList: InstituteTableProps[]) {
         setListForTable(filterClub(clubList, search, district))
@@ -94,14 +95,6 @@ const InstituteTable = () => {
                 tableHeadList={TableTitleList}
                 tableData={listForTable}
                 orderBy={list}
-                sortOrder={{
-                    sortBy: 'club_status' as keyof InstituteTableProps,
-                    orderList: statusList,
-                    orderSymbol: {
-                        asc: 'fa-arrow-up-short-wide',
-                        desc: 'fa-arrow-down-wide-short'
-                    }
-                }}
             />
             {/* {open && <Modal instituteID />} */}
         </div>
@@ -132,7 +125,11 @@ function rawString(str: string) {
 function fetchInstitutes(setClubList: React.Dispatch<React.SetStateAction<InstituteTableProps[]>>) {
     privateGateway.get(`${campusRoutes.listInstitutes}`)
         .then(res => {
+            console.log(res.data.response)
             setClubList(res.data.response)
+        })
+        .catch(err => {
+            console.log(err)
         })
 }
 function editIctId(ictId: string, instituteId: string) {
