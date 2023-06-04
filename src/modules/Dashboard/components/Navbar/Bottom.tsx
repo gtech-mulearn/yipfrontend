@@ -1,6 +1,8 @@
 import { buttons, urlProps, getCurrentPageTitle } from "../../utils/navbarUtils"
 import { useNavigate } from "react-router-dom"
 import './BottomTab.scss'
+import React, { useEffect } from "react";
+import { fetchUserInfo } from "../api";
 
 
 
@@ -10,6 +12,23 @@ export const BottomTab = () => {
      * @return {JSX.Element} The bottom tab component.
      */
     const navigate = useNavigate();
+    const [newButton, setNewButton] = React.useState(buttons)
+    const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
+    useEffect(() => {
+        if (userInfo.role === '') {
+            fetchUserInfo(setUserInfo)
+        }
+
+        // console.log(userInfo)
+
+        const filteredButtons = buttons.filter((item: urlProps) => {
+            if (item && item.roles && item.roles.includes(userInfo.role)) {
+                return item
+            }
+        })
+
+        setNewButton(filteredButtons)
+    }, [userInfo])
 
     return (
         <div className="bottom-tab-container">
@@ -19,7 +38,7 @@ export const BottomTab = () => {
                 <div className="tab-nav-container">
                     <div className="tab-adjust-container">
                         {/* Renders navigation links */}
-                        {buttons.map((button: urlProps, index: number) => (
+                        {newButton.map((button: urlProps, index: number) => (
                             <div key={index} onClick={() => navigate(button.url)} >
                                 <div
                                     className={`tab ${window.location.pathname === button.url ? "active" : ""} `}

@@ -50,7 +50,7 @@ const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () =
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => createEvent(date, place, mod, coordinator.id, campusId)}>Add Orientation</button>
+                    <button className='btn-update ' onClick={() => createEvent(date, place, mod, coordinator.id, campusId, cancel)}>Add Orientation</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -65,10 +65,10 @@ function getListOfCoordinatorByDistrict(district: string, setCoordinatorList: Di
         .then(data => setCoordinatorList(data))
         .catch(err => console.error(err))
 }
-function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string) {
+function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void) {
 
     privateGateway.post(campusRoutes.createEvent, {
-        date_time: date,
+        scheduled_date: date,
         mode_of_delivery: mod,
         place: place,
         description: 'Orientation Scheduling',
@@ -80,6 +80,7 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
             privateGateway.put(tableRoutes.status.update, { clubId: campusId, clubStatus: 'Orientation Scheduled' })
                 .then(res => {
                     console.log('Success :', res?.data?.message?.general[0])
+                    cancel()
                 })
                 .catch(err => console.error(err))
         }

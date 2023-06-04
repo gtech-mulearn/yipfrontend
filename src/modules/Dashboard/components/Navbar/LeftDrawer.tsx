@@ -10,8 +10,20 @@ export const LeftDrawer = () => {
     const [newButton, setNewButton] = React.useState(buttons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     useEffect(() => {
-        fetchUserInfo(setUserInfo)
-    }, [])
+        if (userInfo.role === '') {
+            fetchUserInfo(setUserInfo)
+        }
+
+        // console.log(userInfo)
+
+        const filteredButtons = buttons.filter((item: urlProps) => {
+            if (item && item.roles && item.roles.includes(userInfo.role)) {
+                return item
+            }
+        })
+
+        setNewButton(filteredButtons)
+    }, [userInfo])
 
 
     return (
@@ -19,7 +31,7 @@ export const LeftDrawer = () => {
             <img src={YIPlogo} alt="logo" />
             <div className="menu-items">
                 {
-                    (newButton).map((item: urlProps, index: number) =>
+                    newButton.map((item: urlProps, index: number) =>
                         <div className="menu-item-container " key={index} onClick={() => navigate(item.url)}>
                             <div className="link-item" >
                                 <li className="menu-item">
