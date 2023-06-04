@@ -13,7 +13,7 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
         .catch(err => console.error(err))
 }
 export function fetchDistricts(
-    setData: Dispatch<SetStateAction<selectEditedProps[]>>,
+    setData: Dispatch<SetStateAction<selectEditedProps[]>> | Dispatch<SetStateAction<selectProps[]>>,
     setData1?: Dispatch<SetStateAction<selectProps[]>>
 ) {
     privateGateway
