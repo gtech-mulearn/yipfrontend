@@ -3,3 +3,9 @@ export interface selectProps {
     name: string
 }
 export const initialState = { id: "", name: "" }
+
+export interface selectEditedProps {
+    value: string
+    label: string
+}
+export const initialEditedState = { value: "", label: "" }
