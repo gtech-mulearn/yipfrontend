@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 
 import './NameCard.scss'
 import { fetchUserInfo, userInfoProps } from '../api'
-import { Engagespot } from "@engagespot/react-component";
+// import { Engagespot } from "@engagespot/react-component";
 const theme = {
     notificationButton: {
         iconFill: 'black',
@@ -24,7 +24,7 @@ const NameCard = () => {
         <>
 
             <div className={`name-card`} >
-                {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />}
+                {/* {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />} */}
 
                 <div className={'open-color'} onClick={() => { setOpen(!open) }}>
                     <i className={`fas fa-user`} ></i>
