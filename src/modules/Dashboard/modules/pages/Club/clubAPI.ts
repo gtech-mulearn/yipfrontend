@@ -14,13 +14,13 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
 }
 export function fetchDistricts(
     setData: Dispatch<SetStateAction<selectEditedProps[]>>,
-    setData1: Dispatch<SetStateAction<selectProps[]>>
+    setData1?: Dispatch<SetStateAction<selectProps[]>>
 ) {
     privateGateway
         .get(setupRoutes.district.list)
         .then((res) => res.data.response.districts)
         .then((data) => {
-			setData1(data)
+			if(setData1)setData1(data)
             setData(updateResponse(data));
         })
         .catch((err) => console.error(err));
