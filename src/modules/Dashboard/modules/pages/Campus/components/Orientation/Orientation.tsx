@@ -10,7 +10,7 @@ export interface OrientationCompleteProps {
     no_of_participants: string
     remarks: string
     status: string
-    date_time: string
+    completed_date: string
     description: string
 }
 export interface OrientationProps {
@@ -40,7 +40,7 @@ const Orientation = ({ date = '', campusId, district }: { date: string, campusId
                 TableHeading={'Orientation Schedules'}
                 tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Date', 'Status']}
                 tableData={orientationList}
-                orderBy={['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'date_time', 'status']}
+                orderBy={['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'completed_date', 'status']}
                 pagination={false}
                 capitalize={false}
                 manage={

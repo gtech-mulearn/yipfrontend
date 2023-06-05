@@ -13,6 +13,7 @@ export interface FacilitatorProps {
     email: string
     phone: string
     type: string
+    role: string
 }
 const Connection = ({ date, campusId, campus }: { date: string, campusId: string, campus: CampusPageProps }) => {
     const [facilitator, setFacilitator] = React.useState<FacilitatorProps[]>([])
@@ -27,7 +28,7 @@ const Connection = ({ date, campusId, campus }: { date: string, campusId: string
             <StatusTable
                 title1='Status'
                 name='Connection Established'
-                title2='Date Connection Established'
+                title2='Date of Connection Established'
                 date={date}
                 setAdd={setOpen}
                 AddOption={'Add Facilitator'}

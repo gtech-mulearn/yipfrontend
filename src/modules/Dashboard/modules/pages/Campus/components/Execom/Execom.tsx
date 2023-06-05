@@ -22,7 +22,7 @@ const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
             <StatusTable
                 title1='Status'
                 name='Connection Established'
-                title2='Date Connection Established'
+                title2='Date of Connection Established'
                 date={date}
                 setAdd={setOpen}
                 AddOption={'Add Member'}
