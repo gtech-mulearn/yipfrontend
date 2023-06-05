@@ -33,3 +33,12 @@ export const errorCheck = (err:any) => {
         error("Something went wrong");
     }
 }
+
+export const errorMessage = (err:any) => {
+	err.data.message.general.map((msg: any) => {
+        //extract the key frm the msg object
+        Object.keys(msg).forEach(function (key) {
+            error(String(msg[key][0].replace("This", key)));
+        });
+    });
+}
