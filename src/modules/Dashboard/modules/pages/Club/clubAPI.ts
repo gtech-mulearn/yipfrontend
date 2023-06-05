@@ -73,7 +73,7 @@ export function createClub<postDataProps>
         .then(res => {
 			success(); 
             update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            // showAlert(res?.data?.message?.general[0], setSuccessMessage)
         })
         .catch(err => {
 			errorCheck(err.response);
