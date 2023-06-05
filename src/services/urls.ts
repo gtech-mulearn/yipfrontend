@@ -99,4 +99,7 @@ export const yip5Routes = {
     zoneList: '/api/v1/yip/zone-management/list-zones/',
     campusList: '/api/v1/yip/user-management/list-campus-details/',
     internList: '/api/v1/yip/user-management/list-intern-details/',
+    listPE: '/api/v1/yip/user-management/list-pe-or-dc-details/PE/',
+    listDC: '/api/v1/yip/user-management/list-pe-or-dc-details/DC/',
+    listDistrict: '/api/v1/yip/user-management/list-district-details/',
 }
