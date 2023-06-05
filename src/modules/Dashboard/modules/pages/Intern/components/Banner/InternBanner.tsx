@@ -38,10 +38,10 @@ const InternBanner = () => {
                 </div >
             </div>
             <div className="statistics">
-                {/* <div className={`box blue-box`} >
+                <div className={`box blue-box`} >
                     <h3>{100}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>Total Strength</p>
-                </div> */}
+                </div>
                 <div className={`box blue-box`} >
                     <h3>{banner.preRegistration}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Pre-registration'}</p>
