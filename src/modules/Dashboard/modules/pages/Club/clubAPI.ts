@@ -71,9 +71,9 @@ export function createClub<postDataProps>
     ) {
     privateGateway.post(setupRoutes.club.create, postData)
         .then(res => {
-			success();
+			success(); 
             update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            // showAlert(res?.data?.message?.general[0], setSuccessMessage)
         })
         .catch(err => {
 			errorCheck(err.response);

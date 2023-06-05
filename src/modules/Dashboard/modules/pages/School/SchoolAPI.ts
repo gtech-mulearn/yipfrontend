@@ -5,6 +5,7 @@ import { CountResponse } from "./SchoolBanner"
 import { SchoolTableProps, localBodyProps } from "./SchoolTable"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
+import { errorCheck, success } from "../../../components/Toastify/ToastifyConsts"
 
 export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
     privateGateway.get(`${bannerRoutes.schoolBanner}`)
@@ -75,15 +76,11 @@ export function createSchool<postDataProps>(postData: postDataProps, update: Fun
     privateGateway.post(setupRoutes.school.create, postData)
         .then(res => {
             update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
             console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
+            success();
         })
         .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
+            errorCheck(err.response);
         })
 }
 
