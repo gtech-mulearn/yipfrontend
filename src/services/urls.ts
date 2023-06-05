@@ -97,4 +97,5 @@ export const campusRoutes = {
 export const yip5Routes = {
     bannerData: '/api/v1/yip/user-management/get-submissions/',
     zoneList: '/api/v1/yip/zone-management/list-zones/',
+    campusList: '/api/v1/yip/user-management/list-campus-details/',
 }
