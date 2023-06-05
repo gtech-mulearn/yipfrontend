@@ -89,8 +89,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         if (view === 'District Coordinator' || view === 'Programme Executive')
             setAssigneetable(filterCoordinator(assigneeList, search, districtFilter.name, zoneFilter.name));
         if (view === 'District')
-            setDistricttable(filterDistrict(districtList, search, districtFilter.name));
-    }, [search])
+            setDistricttable(filterDistrict(districtList, search, districtFilter.name, zoneFilter.name));
+    }, [search, districtFilter, zoneFilter])
     useEffect(() => {
         if (view === 'Campus')
             fetchCampus(setCampusList, setCampusTableList);
@@ -148,7 +148,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     }
                 )
                 .then((response) => {
-                    console.log(response);
+                    // console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -436,7 +436,7 @@ function fetchCampus(setData: Dispatch<SetStateAction<CampusViewProps[]>>
 function fetchDistrictCoordinator(setData: Dispatch<SetStateAction<AssignViewProps[]>>, setData2: Dispatch<SetStateAction<AssignViewProps[]>>) {
     privateGateway.get(yip5Routes.listDC)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             setData(res.data.response)
             setData2(res.data.response)
         })
@@ -496,13 +496,16 @@ const filterCoordinator = (coordinatorList: AssignViewProps[], search: string, d
     }
     return list
 }
-const filterDistrict = (districtList: districtViewProps[], search: string, zone: string) => {
+const filterDistrict = (districtList: districtViewProps[], search: string, district: string, zone: string) => {
     let list = districtList
     if (search) {
         list = searchDistrict(list, search)
     }
     if (zone) {
         list = list.filter(club => club.zone === zone)
+    }
+    if (district) {
+        list = list.filter(club => club.district === district)
     }
     return list
 }
@@ -526,14 +529,16 @@ function searchCoordinator(coordinatorList: AssignViewProps[], search: string) {
     )
 }
 function filterCampus(clubList: CampusViewProps[], search: string, district: string, zone: string) {
-    console.log(clubList, search, district, zone)
     let list = clubList
     if (search) {
         list = searchCampus(list, search)
     }
-    if (zone) {
-        list = list.filter(club => club.zone === zone)
-    }
+    list = list.filter(club => {
+        console.log(club.zone === zone)
+
+        return club.zone === zone
+    })
+
     if (district) {
         list = list.filter(club => club.district === district)
     }
