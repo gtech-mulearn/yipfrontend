@@ -52,7 +52,7 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
 
     )
 }
-function updateEvent(eventId: string, nop: string, remarks: string) {
+function updateEvent(eventId: string, nop: string, remarks: string, cancel: () => void) {
     privateGateway
         .put(`${campusRoutes.updateEvent}${eventId}/`, {
             no_of_participants: nop,
