@@ -37,7 +37,7 @@ export const LeftDrawer = () => {
                             return (
                                 <>
 
-                                    {item.title === 'Users' && <div className="menu-item-container " key={index} onClick={() => setOpen((prev: boolean) => !prev)}>
+                                    {item.title === 'Users' && <div className="menu-item-container " key={index} onClick={() => { navigate('/user'); setOpen((prev: boolean) => !prev) }}>
                                         <div className="link-item" >
                                             <li className="menu-item">
                                                 <div className={`menu-icon ${window.location.pathname === '/user'
@@ -52,7 +52,7 @@ export const LeftDrawer = () => {
                                     </div>}
                                     {open && <div className="menu-item-container " key={index} onClick={() => navigate(item.url)}>
                                         <div className="link-item" >
-                                            <li className="menu-item">
+                                            <li className="menu-item side">
                                                 <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
                                                     <i className={`fa-sharp fa-solid ${item.icon}`}></i>
                                                 </div>
