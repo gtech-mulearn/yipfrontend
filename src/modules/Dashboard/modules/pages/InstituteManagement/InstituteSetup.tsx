@@ -38,6 +38,7 @@ const InstituteSetup = () => {
         setInstitute({} as selectProps)
         setDistrictList([])
         setInstituteList([])
+        setViewSetup(false)
     }
     return (
         <div className='dash-container'>
