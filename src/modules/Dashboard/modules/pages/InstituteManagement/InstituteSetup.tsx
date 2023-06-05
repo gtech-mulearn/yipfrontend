@@ -54,13 +54,13 @@ const InstituteSetup = () => {
                     <div className="setup-filter">
                         <div className="select-container club">
                             {close && <CustomSelect option={districtList} header="District" setData={setDistrict} />}
-                            {district.id && <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />}
+                            {close && <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />}
                             <CustomInput requiredHeader={true} value="ICT Id" setData={setICT} data={ICT} />
                             <div className="create-btn-container">
                                 <button className="black-btn"
                                     onClick={handleConnect}>Create</button>
                                 <button className="black-btn"
-                                    onClick={reset}
+                                    onClick={() => setViewSetup(false)}
                                 >Cancel</button>
                             </div>
                         </div>
@@ -81,7 +81,7 @@ function fetchInstitutes(district: string, setData: Dispatch<SetStateAction<sele
         .then(data =>
             setData(data.map((institute: { id: string, title: string, district: string }) => ({
                 id: institute.id,
-                name: institute.title
+                name: institute.title,
             }))))
         .catch(err => console.log(err))
 }

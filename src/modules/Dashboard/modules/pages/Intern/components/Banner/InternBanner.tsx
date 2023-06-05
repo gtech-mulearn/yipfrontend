@@ -104,9 +104,9 @@ function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectPro
 }
 function fetchCollege(district: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listInstitutes}${district}/`)
-        .then(res => setData(res.data.response.institutes.map((item: any) => ({
+        .then(res => setData(res.data.response.map((item: any) => ({
             id: item.id,
-            name: item.title
+            name: item.name
         }))))
         .catch(err => console.log(err))
 }

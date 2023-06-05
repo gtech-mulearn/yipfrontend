@@ -1,19 +1,22 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect";
 import CustomTable from "../../../../components/CustomTable/CustomTable";
 import "./InternTable.scss";
 import { uploadSubmissions } from "../../InternApi";
 import axios, { AxiosRequestConfig } from "axios";
-import { tableRoutes } from "../../../../../../../services/urls";
+import { setupRoutes, tableRoutes, yip5Routes } from "../../../../../../../services/urls";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchUserInfo } from "../../../../../components/api";
 import roles from "../../../../../../../utils/roles";
+import { privateGateway } from "../../../../../../../services/apiGateway";
+import { selectProps } from "../../../../utils/setupUtils";
+import { fetchDistrictSchools } from "../../../School/SchoolAPI";
 interface commonViewProps {
-    preRegister: string;
-    voiceOfStakeholder: string;
-    groupFormation: string;
-    submission: string;
+    pre_registrations: string,
+    vos: string,
+    group_formation: string,
+    idea_submission: string
 }
 interface viewsSingleProps {
     title: string;
@@ -29,31 +32,53 @@ interface districtViewProps extends zoneViewProps {
 interface AssignViewProps extends districtViewProps {
     district: string;
 }
+interface CampusViewProps extends commonViewProps {
+    institute: string,
+    district: string,
+    id: string,
+    zone: string,
+}
 const views = [
     { id: "0", name: "Intern" },
     { id: "1", name: "Campus" },
-    { id: "2", name: "Designation" },
-    { id: "3", name: "District" },
-    { id: "4", name: "Zone" },
+    // { id: "2", name: "Designation" },
+    // { id: "3", name: "District" },
+    // { id: "4", name: "Zone" },
 ];
 const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [search, setSearch] = useState<string>("");
     const [filterBtn, setFilterBtn] = useState<boolean>(false);
-    const [view, setView] = useState<string>("Intern");
+    const [view, setView] = useState<string>("Campus");
     const [assigneeList, setAssigneeList] = useState<AssignViewProps[]>([]);
     const [assigneetable, setAssigneetable] = useState<AssignViewProps[]>([]);
     const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
+    const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
+    const [campusTableList, setCampusTableList] = useState<CampusViewProps[]>([])
     const [districttable, setDistricttable] = useState<districtViewProps[]>([]);
     const [zoneList, setZoneList] = useState<zoneViewProps[]>([]);
     const [zonetable, setZonetable] = useState<zoneViewProps[]>([]);
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768);
+    const [districtFilterList, setDistrictFilterList] = useState<selectProps[]>([]);
+    const [districtFilter, setDistrictFilter] = useState<selectProps>({} as selectProps);
+    const [zoneFilterList, setZoneFilterList] = useState<selectProps[]>([]);
+    const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        fetchCampus(setCampusList, setCampusTableList);
+        fetchZoneFilter(setZoneFilterList)
+        fetchDistrictFilter(setDistrictFilterList)
+    }, [])
+    useEffect(() => {
+        setCampusTableList(filterCampus(campusList, search, districtFilter.name, zoneFilter.name));
+    }, [search, districtFilter, zoneFilter, filterBtn])
+    useEffect(() => {
+        if (view === 'Campus')
+            fetchCampus(setCampusList, setCampusTableList);
+        if (view === 'Intern')
+            fetchIntern(setZoneList, setZonetable);
+    }, [view]);
 
-    function searchTable() {
-        if (view === "Intern" || view === "Campus" || view === "Designation") {
-        }
-    }
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
@@ -85,8 +110,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
             axios
                 .post(
-                    `${import.meta.env.VITE_BACKEND_URL}\\${
-                        tableRoutes.user.uploadSubmissions
+                    `${import.meta.env.VITE_BACKEND_URL}\\${tableRoutes.user.uploadSubmissions
                     }`,
                     formData,
                     {
@@ -132,8 +156,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     setValue={setView}
                     defaultValue={views[0]}
                     requiredLabel={true}
-                    header={"Intern"}
-                    placeholder={"Intern"}
+                    header={view}
+                    placeholder={view}
                     requiredData={false}
                 />
 
@@ -191,16 +215,16 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 />
                                 <li
                                     className="fas fa-close cursor"
-                                    onClick={() => {}}
+                                    onClick={() => { }}
                                 ></li>
                             </div>
-                            <div
+                            {/* <div
                                 className="table-fn-btn cursor"
                                 onClick={openSetup}
                             >
                                 <i className="fa-solid fa-plus"></i>
                                 <p>Assign Campus </p>
-                            </div>
+                            </div> */}
                             <div
                                 className="table-fn-btn cursor"
                                 onClick={() => setFilterBtn(!filterBtn)}
@@ -227,46 +251,49 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     <div className="filter-container">
                         <div className="filter-box">
                             <CustomSelect
-                                option={[]}
+                                option={zoneFilterList}
                                 header=""
                                 placeholder={"Filter By Zone"}
                                 requiredHeader={false}
+                                setData={setZoneFilter}
                             />
                             <CustomSelect
-                                option={[]}
+                                option={districtFilterList}
                                 header=""
                                 placeholder={"Filter By District"}
                                 requiredHeader={false}
+                                setData={setDistrictFilter}
                             />
                         </div>
                     </div>
                 )}
                 {/* Table */}
-                {(view === "Intern" ||
+                {(
                     view === "Campus" ||
                     view === "Designation") && (
-                    <CustomTable<AssignViewProps>
-                        tableHeadList={[
-                            "Name",
-                            "District",
-                            "Zone",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={assigneetable}
-                        orderBy={[
-                            "name",
-                            "district",
-                            "zone",
-                            "preRegister",
-                            "voiceOfStakeholder",
-                            "groupFormation",
-                            "submission",
-                        ]}
-                    />
-                )}
+                        <CustomTable<CampusViewProps>
+                            tableHeadList={[
+                                "Name",
+                                "District",
+                                "Zone",
+                                "Pre-registration",
+                                "Voice of Stakeholder",
+                                "Group Formation",
+                                "Idea Submission",
+                            ]}
+                            tableData={campusTableList}
+                            orderBy={[
+                                "institute",
+                                "district",
+                                "zone",
+                                "pre_registrations",
+                                "vos",
+                                "group_formation",
+                                "idea_submission",
+                            ]}
+                            capitalize={false}
+                        />
+                    )}
                 {view === "District" && (
                     <CustomTable<districtViewProps>
                         tableHeadList={[
@@ -277,18 +304,19 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                             "Group Formation",
                             "Idea Submission",
                         ]}
+
                         tableData={districttable}
                         orderBy={[
                             "name",
                             "zone",
-                            "preRegister",
-                            "voiceOfStakeholder",
-                            "groupFormation",
-                            "submission",
+                            "pre_registrations",
+                            "vos",
+                            "group_formation",
+                            "idea_submission",
                         ]}
                     />
                 )}
-                {view === "Zone" && (
+                {view === "Intern" && (
                     <CustomTable<zoneViewProps>
                         tableHeadList={[
                             "Name",
@@ -300,10 +328,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         tableData={zonetable}
                         orderBy={[
                             "name",
-                            "preRegister",
-                            "voiceOfStakeholder",
-                            "groupFormation",
-                            "submission",
+                            "pre_registrations",
+                            "vos",
+                            "group_formation",
+                            "idea_submission",
                         ]}
                     />
                 )}
@@ -312,11 +340,73 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     );
 };
 
+function fetchCampus(setData: Dispatch<SetStateAction<CampusViewProps[]>>
+    ,
+    setData2: Dispatch<SetStateAction<CampusViewProps[]>>
+) {
+    privateGateway.get(yip5Routes.campusList)
+        .then(res => {
+            setData(res.data.response)
+            setData2(res.data.response)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+function fetchIntern(setData: Dispatch<SetStateAction<zoneViewProps[]>>, setData2: Dispatch<SetStateAction<zoneViewProps[]>>) {
+    privateGateway.get(yip5Routes.internList)
+        .then(res => {
+            setData(res.data.response)
+            setData2(res.data.response)
+        })
+        .catch(err => console.log(err))
+}
+const filterIntern = (internList: zoneViewProps[], search: string) => {
+    let list = internList
+    if (search) {
+        list = searchIntern(list, search)
+    }
+    return list
+}
+function searchIntern(internList: zoneViewProps[], search: string) {
+    return internList.filter((intern: zoneViewProps) =>
+        rawString(intern.name).includes(rawString(search))
+    )
+}
+function filterCampus(clubList: CampusViewProps[], search: string, district: string, zone: string) {
+    let list = clubList
+    if (search) {
+        list = searchCampus(list, search)
+    }
+    if (zone) {
+        list = list.filter(club => club.zone === zone)
+    }
+    if (district) {
+        list = list.filter(club => club.district === district)
+    }
+    return list
+}
+function fetchZoneFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(yip5Routes.zoneList)
+        .then(res => setData(res.data.response))
+        .catch(err => console.log(err))
+}
+function searchCampus(clubList: CampusViewProps[], search: string) {
+    return clubList.filter((club: CampusViewProps) =>
+        rawString(club.institute).includes(rawString(search)) ||
+        rawString(club.district).includes(rawString(search)) ||
+        rawString(club.zone).includes(rawString(search)))
+}
 function rawString(str: string) {
     str = str.toLowerCase();
     str = str.replace(/[^a-zA-Z0-9 ]/g, "");
     str = str.replaceAll(" ", "");
     return str;
 }
-
+export function fetchDistrictFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(setupRoutes.district.list)
+        .then(res => res.data.response.districts)
+        .then(data => setData(data))
+        .catch(err => console.error(err))
+}
 export default InternTable;
