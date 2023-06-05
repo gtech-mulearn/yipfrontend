@@ -53,19 +53,19 @@ const InternBanner = () => {
 
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{(Number(banner.vos) / (Number(banner.preRegistration) === 0 ? 1 : Number(banner.preRegistration)) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.vos)} Stakeholders</p>
-                    <p>{'Voice Of Stakeholder '}</p>
+                    <h3>{banner && Number.isNaN(Math.round(banner.vos/banner.preRegistration * 100))?0:Math.round(banner.vos/banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.vos)}</p>
+                    <p>{'VOS Completed '}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{showDecimal((Number(banner.groupFormation) / (Number(banner.vos) === 0 ? 1 : Number(banner.vos))) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.groupFormation)} Groups Formed</p>
+                    <h3>{banner && Number.isNaN(Math.round(banner.groupFormation/banner.vos * 100))?0:Math.round(banner.groupFormation/banner.vos * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.groupFormation)}</p>
                     <p>{'Group Formation'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{showDecimal((Number(banner.ideaSubmission) / (Number(banner.groupFormation) === 0 ? 1 : Number(banner.groupFormation))) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.ideaSubmission)} Submissions</p>
-                    <p>{'Idea Submission'}</p>
+                    <h3>{banner && Number.isNaN(Math.round(banner.ideaSubmission/banner.groupFormation * 100))?0:Math.round(banner.ideaSubmission/banner.groupFormation* 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.ideaSubmission)}</p>
+                    <p>{'Idea Submission Completed'}</p>
                 </div>
             </div>
         </div>

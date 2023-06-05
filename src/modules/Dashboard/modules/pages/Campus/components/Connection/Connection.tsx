@@ -34,7 +34,7 @@ const Connection = ({ date, campusId, campus }: { date: string, campusId: string
                 TableHeading={'Facilitator List'}
                 tableHeadList={['Name', 'Email', 'Phone', 'Designation']}
                 tableData={facilitator ? facilitator : []}
-                orderBy={['name', 'email', 'phone', 'type']}
+                orderBy={['name', 'email', 'phone', 'role']}
                 manage={{
                     value: 'Delete',
                     manageFunction: (user: any) => { setSubUserId(user.id) },

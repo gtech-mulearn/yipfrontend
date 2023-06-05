@@ -36,7 +36,7 @@ const Orientation = ({ date = '', campusId, district }: { date: string, campusId
                 title2='Orientation Date'
                 date={date}
                 setAdd={setOpen}
-                AddOption={'Add Orientation'}
+                
                 TableHeading={'Orientation Schedules'}
                 tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Date', 'Status']}
                 tableData={orientationList}

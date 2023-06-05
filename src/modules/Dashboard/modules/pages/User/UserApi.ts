@@ -4,6 +4,7 @@ import { setupRoutes, tableRoutes } from "../../../../../services/urls"
 import { privateGateway } from "../../../../../services/apiGateway"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
+import { errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
 
 export function deleteThisUser(id: string, update: Function,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
@@ -60,15 +61,14 @@ export function createUser(
 
         .then(res => {
             updateUserData()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
+            // showAlert(res?.data?.message?.general[0], setSuccessMessage)
+            // console.log('Success :', res?.data?.message?.general[0])
+            success();
         })
         .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
+            // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+			errorMessage(err.response)
+			errorCheck(err.response)
         })
 }
 export function fetchUserByRoles(role: string, setUserList: Dispatch<SetStateAction<UserTableProps[]>>) {
