@@ -8,6 +8,30 @@ export interface urlProps {
 }
 export const buttons: urlProps[] = [
     {
+        icon: "fa-user-secret",
+        url: "/intern-dashboard",
+        title: "YIP 5.0",
+        roles: [
+            roles.SUPER_ADMIN,
+            roles.ADMIN,
+            roles.HQ_STAFF,
+            roles.ZONAL_COORDINATOR,
+            roles.DISTRICT_COORDINATOR,
+            roles.PROGRAMME_EXECUTIVE,
+            roles.INTERN,
+        ],
+    },
+    {
+        icon: "fa-building",
+        url: "/institute-management",
+        title: "Institute Management",
+        roles: [
+            roles.SUPER_ADMIN,
+            roles.ADMIN,
+            roles.HQ_STAFF
+        ],
+    },
+    {
         icon: "fa-school",
         url: "/school-dashboard",
         title: "Model School",
@@ -57,30 +81,6 @@ export const buttons: urlProps[] = [
         url: "/block",
         title: "Block",
         roles: [roles.SUPER_ADMIN, roles.ADMIN],
-    },
-    {
-        icon: "fa-user-secret",
-        url: "/intern-dashboard",
-        title: "Internship",
-        roles: [
-            roles.SUPER_ADMIN,
-            roles.ADMIN,
-            roles.HQ_STAFF,
-            roles.ZONAL_COORDINATOR,
-            roles.DISTRICT_COORDINATOR,
-            roles.PROGRAMME_EXECUTIVE,
-            roles.INTERN,
-        ],
-    },
-    {
-        icon: "fa-solid fa-building-columns",
-        url: "/institute-management",
-        title: "Institute Management",
-        roles: [
-            roles.SUPER_ADMIN,
-            roles.ADMIN,
-			roles.HQ_STAFF
-        ],
     },
 ];
 export const getCurrentPageTitle = (): string => {
