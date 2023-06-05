@@ -43,7 +43,7 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
 
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks)}>Add Orientation Details</button>
+                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks, cancel)}>Add Orientation Details</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -51,7 +51,7 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
 
     )
 }
-function updateEvent(eventId: string, nop: string, remarks: string) {
+function updateEvent(eventId: string, nop: string, remarks: string, cancel: () => void) {
     privateGateway.put(`${campusRoutes.updateEvent}${eventId}/`, {
         no_of_participants: nop,
         remarks: remarks,
@@ -59,6 +59,7 @@ function updateEvent(eventId: string, nop: string, remarks: string) {
     })
         .then((res) => {
             console.log(res)
+            cancel();
         })
 }
 export default OrientationCompletedModal
