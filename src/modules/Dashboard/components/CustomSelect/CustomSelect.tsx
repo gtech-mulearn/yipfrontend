@@ -2,11 +2,13 @@ import { Dispatch, SetStateAction, FC, useEffect, useState } from "react"
 import Select, { Props as SelectProps } from 'react-select'
 import './CustomSelect.scss'
 import { optionProps, intialState } from "../../utils/CustomSelectUtils"
+import { selectProps } from "../../modules/utils/setupUtils"
 
 interface CustomSelectProps extends SelectProps<optionProps> {
     option: optionProps[]
     header: string,
     setData?: Dispatch<SetStateAction<optionProps>>
+    data?: selectProps,
     setValue?: Dispatch<SetStateAction<string>>
     requiredHeader?: boolean
     requiredLabel?: boolean
@@ -25,6 +27,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({
     header,
     setData = () => { setData(intialState) },
     setValue = () => { setValue('') },
+    data,
     requiredHeader = true,
     requiredLabel = false,
     requiredData = true,
@@ -48,6 +51,14 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                 options={option}
                 isClearable={true}
                 isMulti={false}
+
+                value={option.find(
+                    option =>
+                        option?.name !==
+                            "" &&
+                        option?.id ===
+                            data?.id
+                )}
                 isSearchable={true}
                 placeholder={`Select a ${header}`}
                 noOptionsMessage={() => 'No options'}
