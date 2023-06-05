@@ -22,7 +22,7 @@ interface districtViewProps extends zoneViewProps {
 interface AssignViewProps extends districtViewProps {
     district: string
 }
-const views = [{ id: '0', name: 'Intern' }, { id: '1', name: 'Campus' }, { id: '2', name: 'Designation' }, { id: '3', name: 'District' }, { id: '4', name: 'Zone' }]
+const views = [{ id: '0', name: 'Intern' }, { id: '1', name: 'Campus' }, { id: '2', name: 'District Coordinator' }, { id: '3', name: 'Program Executive' }, { id: '4', name: 'District' }, { id: '5', name: 'Zone' }]
 const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
@@ -85,10 +85,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 onClick={() => { }}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={openSetup}>
+                        {/* <div className="table-fn-btn cursor" onClick={openSetup}>
                             <i className="fa-solid fa-plus"></i>
                             <p>Assign Campus </p>
-                        </div>
+                        </div> */}
                         <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
                             <p>Filter</p>

@@ -9,7 +9,7 @@ const InternLayout = () => {
     return (
         <div className='dash-container'>
             <InternBanner />
-            {openSetup && <InternSetup close={() => setOpenSetup(false)} />}
+            {/* {openSetup && <InternSetup close={() => setOpenSetup(false)} />} */}
             <InternTable openSetup={() => setOpenSetup(!openSetup)} />
         </div>
     )

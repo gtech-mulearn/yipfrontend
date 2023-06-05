@@ -10,6 +10,8 @@ import { createUser, fetchUserByRoles, fetchUserRoles } from './UserApi'
 import { fetchDistricts } from '../School/SchoolAPI'
 import Select from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
+import { privateGateway } from '../../../../../services/apiGateway'
+import { campusRoutes } from '../../../../../services/urls'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -31,17 +33,8 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [successMessage, setSuccessMessage] = useState("")
     const [coordinatorInternRole, setCoordinatorInternRole] = useState<selectProps>({} as selectProps)
     const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
-    const [instituteList, setInstituteList] = useState<selectProps[]>([
-        { id: '0', name: 'Kindergarten' },
-        { id: '1', name: 'School' },
-        { id: '2', name: 'College' },
-        { id: '3', name: 'University' },
-        { id: '4', name: 'Other' },
-        { id: '5', name: 'Philosophy' },
-        { id: '6', name: 'Psychology' },
-        { id: '7', name: 'Sociology' },
-    ])
-    const [selectedInstituteList, setSelectedInstituteList] = useState<selectProps[]>([])
+    const [instituteList, setInstituteList] = useState<selectProps[]>([])
+    const [selectedInstitute, setSelectedInstitute] = useState<selectProps[]>([])
     const reset = () => {
         setName("")
         setEmail("")
@@ -58,6 +51,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     useEffect(() => {
         if (coordinatorInternRole)
             fetchUserByRoles(coordinatorInternRole.id, setCoordinatorRoleBasedList)
+        getSelectedInstitutes(setInstituteList)
     }, [coordinatorInternRole])
     function validate() {
         const validationSchema = yup.object().shape({
@@ -80,16 +74,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
         validate()
             .then(() => {
-                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id)
+                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
             })
             .catch((err) => {
                 console.error(err)
                 showAlert(err.message, setErrorMessage)
             })
     }
-
-
-
     return (
         <div className="white-container">
             <h3>Setup a User</h3>
@@ -137,12 +128,11 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                         getOptionValue={(option) => option.id}
                                         onChange={(data: any) => {
                                             if (data) {
-                                                setSelectedInstituteList(data)
+                                                setSelectedInstitute(data)
                                                 console.log(data)
                                             }
                                             else
-                                                setSelectedInstituteList([])
-
+                                                setSelectedInstitute([])
                                         }}
                                     />
                                 </div>
@@ -168,6 +158,14 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         </div>
     )
 }
-
+function getSelectedInstitutes(setInstituteList: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(campusRoutes.listInstitutes)
+        .then((res) => {
+            setInstituteList(res.data.response)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
 
 export default UserSetup 
