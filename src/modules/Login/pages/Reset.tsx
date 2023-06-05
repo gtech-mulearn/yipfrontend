@@ -4,24 +4,20 @@ import ErrorBox from "../components/ErrorBox/ErrorBox"
 import { login } from "../services/apis"
 import './Login.scss'
 
-function Login() {
+function Reset() {
     const [errorStatus, setErrorStatus] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [password, setPassword] = useState<string>("")
     const [email, setEmail] = useState("")
+    const [user, setUser] = useState('')
     return (
         <div className="login-background">
             <div className="login-container">
                 <img src={YIPlogo} alt="YIP-Logo" />
-                <h2>Login</h2>
+                <h2>Reset Password</h2>
+                <p>{user} reset your password</p>
                 <form>
-                    <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        placeholder="Email ID"
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+
                     <input
                         id="password"
                         name="password"
@@ -40,12 +36,11 @@ function Login() {
                             />
                             <label>Show Password</label>
                         </div>
-                        <label><a href="/reset-req-password">Reset Password?</a></label>
                     </div>
                     <button type="button" id="submitBtn" onClick={
                         () => login(email, password, setErrorStatus)}
                     >
-                        Login
+                        Reset Password
                     </button>
                     {errorStatus ? <ErrorBox /> : <></>}
                 </form>
@@ -53,4 +48,4 @@ function Login() {
         </div >
     )
 }
-export default Login
+export default Reset
