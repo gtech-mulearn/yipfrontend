@@ -7,22 +7,23 @@ import {
     selectProps,
 } from "../../utils/setupUtils";
 import * as Yup from "yup";
-import { Error, Success, showAlert } from "../../../components/Error/Alerts";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
     createClub,
     fetchDistricts,
     fetchcolleges,
-    updateResponse,
 } from "./clubAPI";
-import { Form, Formik } from "formik";
-import FormikReactSelect, {
-    MyOption,
-} from "../../components/Formik/FormikComponents";
+import { Form, Formik, ErrorMessage } from "formik";
+import FormikReactSelect from "../../components/Formik/FormikComponents";
+
+
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>;
     updateClubData: Function;
 }
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
+	const notify = () => toast("Wow so easy !");
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
     const [districtListEdited, setDistrictListEdited] = useState<
         selectEditedProps[]
@@ -38,6 +39,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const [selectedOption, setSelectedOption] = useState();
     const [none, setNone] = useState();
     const reset = () => {
+		notify();
         setDistrict(initialState);
         setCollege(initialState);
         setDistrictList([]);
@@ -54,7 +56,6 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setCollegeList,
             String(selectedOption)
         );
-        console.log(selectedOption);
     }, [selectedOption]);
 
     function handleCreate(college: string, district: string) {
@@ -87,6 +88,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setSuccessMessage,
             setErrorMessage
         );
+
     }
 	const validateSchema = Yup.object().shape({
         district: Yup.string()
@@ -96,53 +98,63 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
 
     return (
         <div className="white-container">
-			<div className="formikContainer">
-
-            <h3>Setup a YIP Club</h3>
-            <Formik
-                onSubmit={(values) => {
-                    handleCreate(values.college, values.district);
-                }}
-				validationSchema={validateSchema}
-                initialValues={{
-                    district: "",
-                    college: "",
-                }}
-                enableReinitialize
-            >
-                <Form className="reactInputContainer">
-					<div className="inputBoxOuter">
-
-                    <FormikReactSelect
-                        name="district"
-                        isMulti={false}
-                        isSearchable
-                        options={districtListEdited}
-                        setSelectedOption={setSelectedOption}
-                        label={"District"}
-                    />
-                    {
-                        <FormikReactSelect
-                            name="college"
-                            isMulti={false}
-                            isSearchable
-                            options={collegeListEdited}
-                            setSelectedOption={setNone}
-                            label={"College"}
-                        />
-                    }
-					</div>
-                    <div className="create-btn-container">
-                        <button type="submit" className="black-btn">
-                            Create
-                        </button>
-                        <button className="black-btn" onClick={reset}>
-                            Cancel
-                        </button>
-                    </div>
-                </Form>
-            </Formik>
-			</div>
+            <div className="formikContainer">
+                <h3>Setup a YIP Club</h3>
+                <Formik
+                    onSubmit={(values) => {
+                        handleCreate(values.college, values.district);
+                    }}
+                    validationSchema={validateSchema}
+                    initialValues={{
+                        district: "",
+                        college: "",
+                    }}
+                    enableReinitialize
+                >
+                    <Form className="reactInputContainer">
+                        <div className="inputBoxOuter">
+                            <div className="inputBoxInner">
+                                <FormikReactSelect
+                                    name="district"
+                                    isMulti={false}
+                                    isSearchable
+                                    options={districtListEdited}
+                                    setSelectedOption={setSelectedOption}
+                                    label={"District"}
+                                />
+                                <ErrorMessage
+                                    name="district"
+                                    component="div"
+                                    className="error-message"
+                                />
+                            </div>
+                            <div className="inputBoxInner">
+                                <FormikReactSelect
+                                    name="college"
+                                    isMulti={false}
+                                    isSearchable
+                                    options={collegeListEdited}
+                                    setSelectedOption={setNone}
+                                    label={"College"}
+                                />
+                                <ErrorMessage
+                                    name="college"
+                                    component="div"
+                                    className="error-message"
+                                />
+                            </div>
+                        </div>
+                        <div className="create-btn-container">
+                            <button type="submit" className="black-btn">
+                                Create
+                            </button>
+                            <button className="black-btn" onClick={reset}>
+                                Cancel
+                            </button>
+                        </div>
+                    </Form>
+                </Formik>
+            </div>
         </div>
     );
 };
