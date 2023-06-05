@@ -143,16 +143,44 @@
 
 // Table 
 
-.status {
-    all: unset;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
-    color: white;
-    font-size: 12px;
-    background-color: #0bd815;
-    border-radius: 15px;
-    width: 130px;
-    user-select: none;
+.status-orientation-scheduled,
+.status-identified,
+.status-confirmed,
+.status-execom-formed,
+.status-orientation-completed,
+.status-connection-established {
+  all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  color: #303030;
+  font-size: 12px;
+  border-radius: 15px;
+  width: 130px;
+  user-select: none;
+}
+
+.status-execom-formed {
+    background-color: #6EFF00;
+  }
+
+.status-orientation-completed {
+  background-color: #8CFF00;
+}
+
+.status-orientation-scheduled {
+  background-color: #A9FF00
+}
+
+.status-connection-established {
+  background-color: #C6FF00;
+}
+
+.status-confirmed {
+  background-color: #E2FF00;
+}
+
+.status-identified {
+  background-color: #FFFF00;
 }
