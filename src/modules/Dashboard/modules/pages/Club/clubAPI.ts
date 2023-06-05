@@ -22,19 +22,20 @@ export function fetchDistricts(
         .get(setupRoutes.district.list)
         .then((res) => res.data.response.districts)
         .then((data) => {
-			if(setData1)setData1(data)
-            setData(updateResponse(data));
+            console.log(data);
+            if (setData1) setData1(data)
+            setData((data));
         })
         .catch((err) => console.error(err));
 }
 
-	export function updateResponse(data:any) {
-        return data.map((item: { id: any; name: any }) => ({
-            value: item.name,
-            label: item.name,
-        }));
-    }
-	
+export function updateResponse(data: any) {
+    return data.map((item: { id: any; name: any }) => ({
+        value: item.id,
+        label: item.name,
+    }));
+}
+
 
 
 export function fetchcolleges(
@@ -49,7 +50,7 @@ export function fetchcolleges(
         .post(setupRoutes.district.college, reqData)
         .then((res) => res.data.response.institutions)
         .then((data) => {
-			setData1(
+            setData1(
                 data.map((item: any) => ({ id: item.id, name: item.title }))
             );
             setData(
@@ -71,12 +72,12 @@ export function createClub<postDataProps>
     ) {
     privateGateway.post(setupRoutes.club.create, postData)
         .then(res => {
-			success(); 
+            success();
             update()
             // showAlert(res?.data?.message?.general[0], setSuccessMessage)
         })
         .catch(err => {
-			errorCheck(err.response);
+            errorCheck(err.response);
         })
 }
 export function updateClubStatus(id: string, status: string,
