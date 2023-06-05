@@ -4,6 +4,7 @@ import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelec
 import { selectProps } from '../../../../utils/setupUtils'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
+import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 
 const ExecomModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
     const [roleList, setRoleList] = useState<selectProps[]>([])
@@ -83,13 +84,12 @@ function assignExecom(id: string, designation: string, name: string, email: stri
     privateGateway.post(campusRoutes.subUser.create, postData).then((res) => {
         privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: 'Execom Formed' })
             .then(res => {
-                console.log('Success :', res?.data?.message?.general[0])
-                setTimeout(() => {
-                }, 1000)
+                success();
             })
         console.log(res)
         cancel()
     }).catch((err) => {
-        console.error(err)
+        errorCheck(err.response)
+        errorMessage(err.response)
     })
 }
