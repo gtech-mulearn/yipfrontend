@@ -36,7 +36,7 @@ export const LeftDrawer = () => {
                         if (item.title === 'Users' || item.title === 'Legislative Assembly' || item.title === 'Block' || item.title === 'Institute Management') {
                             return (
                                 <>
-                                    {item.title === 'Institute Management' && <div className="menu-item-container " key={index} onClick={() => { navigate('/user'); setOpen((prev: boolean) => !prev) }}>
+                                    {item.title === 'Institute Management' && <div className="menu-item-container " key={index} onClick={() => { navigate('/institute-management'); setOpen((prev: boolean) => !prev) }}>
                                         <div className="link-item" >
                                             <li className="menu-item">
                                                 <div className={`menu-icon ${window.location.pathname === '/user'
