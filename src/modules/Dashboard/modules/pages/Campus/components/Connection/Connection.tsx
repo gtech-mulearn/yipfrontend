@@ -13,6 +13,7 @@ export interface FacilitatorProps {
     email: string
     phone: string
     type: string
+    role: string
 }
 const Connection = ({ date, campusId, campus }: { date: string, campusId: string, campus: CampusPageProps }) => {
     const [facilitator, setFacilitator] = React.useState<FacilitatorProps[]>([])
