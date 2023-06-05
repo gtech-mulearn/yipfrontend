@@ -126,11 +126,15 @@ function CustomTable<TableProps>({
         return 'fa-arrow-up-a-z'
     }
 
-    function customCssByRequired(index: number): string {
+    function customCssByRequired(index: number, className: string): string {
         if (customCSS) {
             for (let item of customCSS) {
                 if (item.name === orderBy[index])
-                    return item.css
+                {
+                    console.log(item.css+"-"+className.toLowerCase().replace(/\s+/g, '-'))
+                    return `${item.css}-${className.toLowerCase().replace(/\s+/g, '-')}`
+                }
+                    
             }
         }
         return ''
@@ -190,7 +194,7 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <td className={`${customCssByRequired(index)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
+                                    <td className={`${customCssByRequired(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
                                 ))
                             }
                             {manage?.value &&

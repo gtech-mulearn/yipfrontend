@@ -67,7 +67,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                     </div>
                     <div className="table-fn-btn cursor" onClick={viewSetup}>
                         <i className="fa-solid fa-plus"></i>
-                        <p>Add YIP Club</p>
+                        <p>Add ICT ID</p>
                     </div>
                     <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                         <i className="fa-solid fa-filter"></i>

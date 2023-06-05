@@ -10,6 +10,7 @@ import InstituteTable, { InstituteTableProps } from './InstituteTable'
 import { privateGateway, publicGateway } from '../../../../../services/apiGateway'
 import { campusRoutes, tableRoutes } from '../../../../../services/urls'
 import Select from 'react-select'
+import { error, errorCheck, success } from '../../../components/Toastify/ToastifyConsts'
 
 const InstituteSetup = () => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
@@ -90,20 +91,18 @@ function connectInstitute(name: string, id: string, district: string, ict: strin
         ict_id: ict,
     }).then((res) => {
         console.log(res)
-        setSuccess(res?.data?.message?.general[0])
-        setTimeout(() => {
-            setSuccess("")
-            setUpdate((prev: boolean) => !prev)
-            setViewSetup((prev: boolean) => !prev)
-        }, 3000)
+        // setSuccess(res?.data?.message?.general[0])
+        success();
     })
         .catch((err) => {
-            console.log(err)
-            setError(err?.response?.data?.message?.general[0])
+            if(err.response.data.response.ict_id){
+				error(err.response.data.response.ict_id[0]);
+			}
+			else {
+				error("Something went wrong")
+			}
+            // setError(err?.response?.data?.message?.general[0])
 
-            setTimeout(() => {
-                setError("")
-            }, 3000)
         })
 }
 export default InstituteSetup
