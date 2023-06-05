@@ -21,13 +21,18 @@ const InternBanner = () => {
             fetchDistricts(zone.name, setDistrictList)
             fetchBannerData(setBanner as any, 'zone', zone.name)
         }
-    }, [zone])
+    }, [zone, district])
     useEffect(() => {
         if (district.id) {
             fetchCollege(district.name, setCollegeList)
             fetchBannerData(setBanner as any, 'district', district.name)
         }
-    }, [district])
+    }, [district, college])
+    useEffect(() => {
+        if (college.id) {
+            fetchBannerData(setBanner as any, 'institute', college.id)
+        }
+    }, [college])
     return (
         <div className='white-container'>
             <div className="filter-container">
@@ -48,18 +53,18 @@ const InternBanner = () => {
 
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{showDecimal((banner.vos / banner.preRegistration) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.vos}</p>
+                    <h3>{(Number(banner.vos) / (Number(banner.preRegistration) === 0 ? 1 : Number(banner.preRegistration)) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.vos)} Stakeholders</p>
                     <p>{'Voice Of Stakeholder '}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{showDecimal((banner.groupFormation / banner.vos) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.groupFormation}</p>
+                    <h3>{showDecimal((Number(banner.groupFormation) / (Number(banner.vos) === 0 ? 1 : Number(banner.vos))) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.groupFormation)} Groups Formed</p>
                     <p>{'Group Formation'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{showDecimal((banner.ideaSubmission / banner.groupFormation) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.ideaSubmission}</p>
+                    <h3>{showDecimal((Number(banner.ideaSubmission) / (Number(banner.groupFormation) === 0 ? 1 : Number(banner.groupFormation))) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p className='count-of'>{Number(banner.ideaSubmission)} Submissions</p>
                     <p>{'Idea Submission'}</p>
                 </div>
             </div>
@@ -68,6 +73,7 @@ const InternBanner = () => {
 }
 
 export default InternBanner
+
 function showDecimal(num: number) {
     var decimalPart = parseFloat(num.toFixed(2));
     return decimalPart;
@@ -78,7 +84,6 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
         url = `?${type}=${value}`
     privateGateway.get(`${yip5Routes.bannerData}${url}`)
         .then((res: any) => {
-            console.log(res)
             setBanner(res.data.response)
         })
         .catch((err: any) => {
@@ -92,11 +97,16 @@ function fetchZone(setData: Dispatch<SetStateAction<selectProps[]>>) {
 }
 function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listDistrict}${zone}/`)
-        .then(res => setData(res.data.response))
+        .then(res => {
+            setData(res.data.response.districts)
+        })
         .catch(err => console.log(err))
 }
 function fetchCollege(district: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listInstitutes}${district}/`)
-        .then(res => setData(res.data.response))
+        .then(res => setData(res.data.response.institutes.map((item: any) => ({
+            id: item.id,
+            name: item.title
+        }))))
         .catch(err => console.log(err))
 }

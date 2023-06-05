@@ -71,8 +71,8 @@ const InstituteSetup = () => {
     )
 }
 function fetchInstitutes(district: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
-    publicGateway.get(`${campusRoutes.listInstitutesByDistrict}${district}/`)
-        .then(res => (res.data.response))
+    privateGateway.get(`${campusRoutes.listInstitutesByDistrict}${district}/`)
+        .then(res => (res.data.response.institutes))
         .then(data =>
             setData(data.map((institute: { id: string, title: string, district: string }) => ({
                 id: institute.id,
@@ -96,12 +96,12 @@ function connectInstitute(name: string, id: string, district: string, ict: strin
         success();
     })
         .catch((err) => {
-            if(err.response.data.response.ict_id){
-				error(err.response.data.response.ict_id[0]);
-			}
-			else {
-				error("Something went wrong")
-			}
+            if (err.response.data.response.ict_id) {
+                error(err.response.data.response.ict_id[0]);
+            }
+            else {
+                error("Something went wrong")
+            }
             // setError(err?.response?.data?.message?.general[0])
 
         })
