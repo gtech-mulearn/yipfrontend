@@ -49,17 +49,17 @@ const InternBanner = () => {
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{showDecimal((banner.vos / banner.preRegistration) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.vos}</p>
+                    <p className='count-of'>{banner.vos} Stakeholders</p>
                     <p>{'Voice Of Stakeholder '}</p>
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{showDecimal((banner.groupFormation / banner.vos) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.groupFormation}</p>
+                    <p className='count-of'>{banner.groupFormation} Groups Formed</p>
                     <p>{'Group Formation'}</p>
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{showDecimal((banner.ideaSubmission / banner.groupFormation) * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{banner.ideaSubmission}</p>
+                    <p className='count-of'>{banner.ideaSubmission} Submissions</p>
                     <p>{'Idea Submission'}</p>
                 </div>
             </div>

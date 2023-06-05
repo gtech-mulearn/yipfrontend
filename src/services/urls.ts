@@ -91,7 +91,7 @@ export const campusRoutes = {
     connectIctToInstitute: "api/v1/yip/institute-management/create-institute/",
     listInstitutes: '/api/v1/yip/institute-management/list-institutes/',
     editIctId: 'api/v1/yip/institute-management/edit-institute/',
-    listDistrict: ''
+    listDistrict: 'api/v1/yip/district/'
 
 }
 export const yip5Routes = {
