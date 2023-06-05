@@ -194,7 +194,10 @@ function CustomTable<TableProps>({
                             <td >{(page - 1) * 10 + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
+                                    <>
+                                    {console.log(item[item2])}
                                     <td className={`${customCssByRequired(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
+                                    </>
                                 ))
                             }
                             {manage?.value &&

@@ -12,6 +12,7 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
     const [groupFormed, setGroupFormed] = useState<selectProps>({} as selectProps)
     const [nop, setNop] = useState('')
     const [remarks, setRemark] = useState('')
+    const [date, setDate] = useState('')
 
     useEffect(() => {
     }, [])
@@ -38,13 +39,20 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
             </div>
             <div className="data-box">
                 <div className="content">
+                    <CustomInput value={'Date'} type={'datetime-local'} data={date} setData={setDate} customCSS={'setup-item'} />
+                </div>
+            </div>
+            <div className="data-box">
+                <div className="content">
                     <CustomInput value={'Remarks'} data={remarks} setData={setRemark} customCSS={'setup-item'} />
                 </div>
             </div>
 
+
+
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks, cancel)}>Add Orientation Details</button>
+                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, date, remarks, cancel)}>Add Orientation Details</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -52,15 +60,17 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
 
     )
 }
-function updateEvent(eventId: string, nop: string, remarks: string, cancel: () => void) {
+function updateEvent(eventId: string, nop: string,date: string, remarks: string, cancel: () => void) {
     privateGateway
         .put(`${campusRoutes.updateEvent}${eventId}/`, {
             no_of_participants: nop,
             remarks: remarks,
+            completed_date: date,
             status: "Completed",
         })
         .then((res) => {
             success();
+            cancel();
         })
         .catch((err) => {
             errorCheck(err.response);
