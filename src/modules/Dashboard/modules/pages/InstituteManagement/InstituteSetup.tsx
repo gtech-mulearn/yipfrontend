@@ -22,6 +22,7 @@ const InstituteSetup = () => {
     const [ICT, setICT] = useState("")
     const [update, setUpdate] = useState(false)
     const [viewSetup, setViewSetup] = useState(false)
+    const [close, setClose] = useState(true)
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
@@ -30,15 +31,20 @@ const InstituteSetup = () => {
             fetchInstitutes(district.name, setInstituteList)
         }
     }, [district?.id])
+
     function handleConnect() {
-        connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess, setUpdate, setViewSetup)
+        connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess, setUpdate, setViewSetup, reset)
     }
     function reset() {
         setDistrict({} as selectProps)
         setInstitute({} as selectProps)
-        setDistrictList([])
         setInstituteList([])
-        setViewSetup(false)
+        setICT("")
+        setClose(false)
+        setTimeout(() => {
+            setClose(true)
+        }, 1)
+
     }
     return (
         <div className='dash-container'>
@@ -47,8 +53,8 @@ const InstituteSetup = () => {
                 <div className="setup-club">
                     <div className="setup-filter">
                         <div className="select-container club">
-                            <CustomSelect option={districtList} header="District" setData={setDistrict} />
-                            <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />
+                            {close && <CustomSelect option={districtList} header="District" setData={setDistrict} />}
+                            {district.id && <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />}
                             <CustomInput requiredHeader={true} value="ICT Id" setData={setICT} data={ICT} />
                             <div className="create-btn-container">
                                 <button className="black-btn"
@@ -63,8 +69,7 @@ const InstituteSetup = () => {
                         <img src={setupImg} alt="HI" />
                     </div>
                 </div>
-                {error && <Error error={error} />}
-                {success && <Success success={success} />}
+
             </div>}
             <InstituteTable update={update} viewSetup={() => setViewSetup((prev: boolean) => !prev)} />
         </div>
@@ -82,7 +87,8 @@ function fetchInstitutes(district: string, setData: Dispatch<SetStateAction<sele
 }
 function connectInstitute(name: string, id: string, district: string, ict: string, setError: Dispatch<SetStateAction<string>>,
     setSuccess: Dispatch<SetStateAction<string>>, setUpdate: Dispatch<SetStateAction<boolean>>,
-    setViewSetup: Dispatch<SetStateAction<boolean>>
+    setViewSetup: Dispatch<SetStateAction<boolean>>,
+    reset: () => void
 ) {
     // name,id,distict,ict_id
     privateGateway.post(campusRoutes.connectIctToInstitute, {
@@ -92,6 +98,8 @@ function connectInstitute(name: string, id: string, district: string, ict: strin
         ict_id: ict,
     }).then((res) => {
         console.log(res)
+        setUpdate((prev: boolean) => !prev)
+        reset()
         // setSuccess(res?.data?.message?.general[0])
         success();
     })
