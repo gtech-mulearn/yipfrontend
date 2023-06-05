@@ -96,6 +96,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                 tableHeadList={TableTitleList}
                 tableData={listForTable}
                 orderBy={list}
+                capitalize={false}
             />
             {/* {open && <Modal instituteID />} */}
         </div>
@@ -115,7 +116,10 @@ function filterClub(clubList: InstituteTableProps[], search: string, district: s
 function searchClub(clubList: InstituteTableProps[], search: string) {
     return clubList.filter((club: InstituteTableProps) =>
         rawString(club.name).includes(rawString(search)) ||
-        rawString(club.district).includes(rawString(search)))
+        rawString(club.district).includes(rawString(search)) ||
+        rawString(String(club.ict_id)).includes(rawString(search))
+    )
+
 }
 function rawString(str: string) {
     str = str.toLowerCase()

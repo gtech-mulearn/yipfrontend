@@ -44,7 +44,7 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
 
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks)}>Add Orientation Details</button>
+                    <button className='btn-update ' onClick={() => updateEvent(eventId, nop, remarks, cancel)}>Add Orientation Details</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
