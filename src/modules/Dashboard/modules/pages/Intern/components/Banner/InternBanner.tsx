@@ -22,24 +22,39 @@ const InternBanner = () => {
             fetchBannerData(setBanner as any, 'zone', zone.name)
         }
     }, [zone, district])
+
     useEffect(() => {
         if (district.id) {
             fetchCollege(district.name, setCollegeList)
             fetchBannerData(setBanner as any, 'district', district.name)
         }
     }, [district, college])
+
     useEffect(() => {
         if (college.id) {
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
     }, [college])
+
+
+    useEffect(() => {
+         setCollege({} as selectProps)
+        setDistrict({} as selectProps)
+       
+    }, [zone])
+
+    useEffect(() => {
+        setCollege({} as selectProps)
+    }, [district])
+
     return (
         <div className='white-container'>
             <div className="filter-container">
                 <div className="filter-box">
-                    <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} />
-                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} />}
-                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} />}
+                    {/* TODO: Clear Concurrent Values, if parent is altered */}
+                    <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} data={zone}/>
+                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} data={district}/>}
+                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} data={college}/>}
                 </div >
             </div>
             <div className="statistics">

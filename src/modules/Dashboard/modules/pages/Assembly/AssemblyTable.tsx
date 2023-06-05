@@ -79,7 +79,7 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                             setViewSetup((prev: boolean) => !prev)
                         }}>
                             <i className="fa-solid fa-plus"></i>
-                            <p>Add Block</p>
+                            <p>Add Assembly</p>
                         </div>
                         <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
                             <i className="fa-solid fa-filter"></i>
