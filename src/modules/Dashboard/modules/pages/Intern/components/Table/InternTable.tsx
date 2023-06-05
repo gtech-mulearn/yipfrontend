@@ -39,7 +39,7 @@ interface CampusViewProps extends commonViewProps {
     zone: string,
 }
 const views = [
-    // { id: "0", name: "Intern" },
+    { id: "0", name: "Intern" },
     { id: "1", name: "Campus" },
     // { id: "2", name: "Designation" },
     // { id: "3", name: "District" },
@@ -70,11 +70,13 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         fetchDistrictFilter(setDistrictFilterList)
     }, [])
     useEffect(() => {
-
-    }, [search, districtFilter, zoneFilter])
+        setCampusTableList(filterCampus(campusList, search, districtFilter.name, zoneFilter.name));
+    }, [search, districtFilter, zoneFilter, filterBtn])
     useEffect(() => {
         if (view === 'Campus')
             fetchCampus(setCampusList, setCampusTableList);
+        if (view === 'Intern')
+            fetchIntern(setZoneList, setZonetable);
     }, [view]);
 
 
@@ -266,7 +268,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     </div>
                 )}
                 {/* Table */}
-                {(view === "Intern" ||
+                {(
                     view === "Campus" ||
                     view === "Designation") && (
                         <CustomTable<CampusViewProps>
@@ -314,7 +316,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         ]}
                     />
                 )}
-                {view === "Zone" && (
+                {view === "Intern" && (
                     <CustomTable<zoneViewProps>
                         tableHeadList={[
                             "Name",
@@ -350,6 +352,26 @@ function fetchCampus(setData: Dispatch<SetStateAction<CampusViewProps[]>>
         .catch(err => {
             console.log(err);
         })
+}
+function fetchIntern(setData: Dispatch<SetStateAction<zoneViewProps[]>>, setData2: Dispatch<SetStateAction<zoneViewProps[]>>) {
+    privateGateway.get(yip5Routes.internList)
+        .then(res => {
+            setData(res.data.response)
+            setData2(res.data.response)
+        })
+        .catch(err => console.log(err))
+}
+const filterIntern = (internList: zoneViewProps[], search: string) => {
+    let list = internList
+    if (search) {
+        list = searchIntern(list, search)
+    }
+    return list
+}
+function searchIntern(internList: zoneViewProps[], search: string) {
+    return internList.filter((intern: zoneViewProps) =>
+        rawString(intern.name).includes(rawString(search))
+    )
 }
 function filterCampus(clubList: CampusViewProps[], search: string, district: string, zone: string) {
     let list = clubList
