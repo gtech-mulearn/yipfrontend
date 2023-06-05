@@ -21,16 +21,7 @@ export const buttons: urlProps[] = [
             roles.INTERN,
         ],
     },
-    {
-        icon: "fa-building",
-        url: "/institute-management",
-        title: "Institute Management",
-        roles: [
-            roles.SUPER_ADMIN,
-            roles.ADMIN,
-            roles.HQ_STAFF
-        ],
-    },
+
     {
         icon: "fa-school",
         url: "/school-dashboard",
@@ -55,6 +46,16 @@ export const buttons: urlProps[] = [
             roles.ZONAL_COORDINATOR,
             roles.DISTRICT_COORDINATOR,
             roles.PROGRAMME_EXECUTIVE,
+        ],
+    },
+    {
+        icon: "fa-building",
+        url: "/institute-management",
+        title: "Institute Management",
+        roles: [
+            roles.SUPER_ADMIN,
+            roles.ADMIN,
+            roles.HQ_STAFF
         ],
     },
     {
