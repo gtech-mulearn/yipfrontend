@@ -19,6 +19,8 @@ const InstituteSetup = () => {
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
     const [ICT, setICT] = useState("")
+    const [update, setUpdate] = useState(false)
+    const [viewSetup, setViewSetup] = useState(false)
     useEffect(() => {
         fetchDistricts(setDistrictList)
     }, [])
@@ -28,7 +30,7 @@ const InstituteSetup = () => {
         }
     }, [district?.id])
     function handleConnect() {
-        connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess)
+        connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess, setUpdate, setViewSetup)
     }
     function reset() {
         setDistrict({} as selectProps)
@@ -38,7 +40,7 @@ const InstituteSetup = () => {
     }
     return (
         <div className='dash-container'>
-            <div className="white-container">
+            {viewSetup && <div className="white-container">
                 <h3>Connect </h3>
                 <div className="setup-club">
                     <div className="setup-filter">
@@ -61,8 +63,8 @@ const InstituteSetup = () => {
                 </div>
                 {error && <Error error={error} />}
                 {success && <Success success={success} />}
-            </div>
-            <InstituteTable />
+            </div>}
+            <InstituteTable update={update} viewSetup={() => setViewSetup((prev: boolean) => !prev)} />
         </div>
     )
 }
@@ -76,18 +78,23 @@ function fetchInstitutes(district: string, setData: Dispatch<SetStateAction<sele
             }))))
         .catch(err => console.log(err))
 }
-function connectInstitute(name: string, id: string, district: string, ict: string, setError: Dispatch<SetStateAction<string>>, setSuccess: Dispatch<SetStateAction<string>>) {
+function connectInstitute(name: string, id: string, district: string, ict: string, setError: Dispatch<SetStateAction<string>>,
+    setSuccess: Dispatch<SetStateAction<string>>, setUpdate: Dispatch<SetStateAction<boolean>>,
+    setViewSetup: Dispatch<SetStateAction<boolean>>
+) {
     // name,id,distict,ict_id
     privateGateway.post(campusRoutes.connectIctToInstitute, {
         name: name,
         instituteId: id,
         district: district,
-        ict_id: ict
+        ict_id: ict,
     }).then((res) => {
         console.log(res)
         setSuccess(res?.data?.message?.general[0])
         setTimeout(() => {
             setSuccess("")
+            setUpdate((prev: boolean) => !prev)
+            setViewSetup((prev: boolean) => !prev)
         }, 3000)
     })
         .catch((err) => {

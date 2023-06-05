@@ -40,7 +40,8 @@ export function createUser(
     setViewSetup: Dispatch<SetStateAction<boolean>>,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
     setErrorMessage: Dispatch<SetStateAction<string>>,
-    coordinatorId?: string
+    coordinatorId?: string,
+    institutes?: selectProps[]
 ) {
     const postData = {
         name: name,
@@ -50,11 +51,13 @@ export function createUser(
         password: password,
         district: district,
         zone: zone,
-        coordinatorId: coordinatorId
+        coordinatorId: coordinatorId,
+        institutes: institutes
     }
 
-
+    // console.log(selectPostData(postData))
     privateGateway.post(setupRoutes.user.create, selectPostData(postData))
+
         .then(res => {
             updateUserData()
             showAlert(res?.data?.message?.general[0], setSuccessMessage)
@@ -99,7 +102,7 @@ function selectPostData(postData: any) {
         return { ...commonPostData, zone: postData.zone }
     }
     if (postData.role === 'IN') {
-        return { ...commonPostData, coordinatorId: postData.coordinatorId }
+        return { ...commonPostData, districtCoordinatorId: postData.coordinatorId, instituteId: postData.institutes.map((institute: any) => (institute.id)) }
     }
     return commonPostData
 }
