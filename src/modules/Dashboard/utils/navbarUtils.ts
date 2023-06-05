@@ -73,7 +73,7 @@ export const buttons: urlProps[] = [
         ],
     },
     {
-        icon: "fa-flat",
+        icon: "fa-solid fa-building-columns",
         url: "/institute-management",
         title: "Institute Management",
         roles: [
