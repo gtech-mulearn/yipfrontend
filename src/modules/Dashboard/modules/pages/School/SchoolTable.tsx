@@ -19,7 +19,7 @@ export interface localBodyProps extends selectProps {
 }
 const TableTitleList = ["Name", "District", " Assembly", "Block", "Status"]
 
-const list: (keyof SchoolTableProps)[] = ['name', 'district', 'block', 'legislative_assembly', 'club_status']
+const list: (keyof SchoolTableProps)[] = ['name', 'district', 'legislative_assembly', 'block', 'club_status']
 interface SchoolSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateSchoolData: Function
