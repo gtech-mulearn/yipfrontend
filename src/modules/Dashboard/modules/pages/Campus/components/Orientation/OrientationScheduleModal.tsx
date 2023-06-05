@@ -7,6 +7,7 @@ import '../CampusModal/CampusModal.scss'
 import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
 import { updateClubStatus } from '../../../Club/clubAPI'
 import { OrientationCompleteProps } from './Orientation'
+import { error, errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () => void, district: string, campusId: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
@@ -79,12 +80,18 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
         .then(res => {
             privateGateway.put(tableRoutes.status.update, { clubId: campusId, clubStatus: 'Orientation Scheduled' })
                 .then(res => {
-                    console.log('Success :', res?.data?.message?.general[0])
+					success();
                     cancel()
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+					errorCheck(err.response);
+					errorMessage(err.response);
+				})
         }
-        ).catch(err => console.error(err))
+        ).catch(err => {
+			errorCheck(err.response);
+			errorMessage(err.response);
+		})
 }
 export function listEvent(campusId: string, setData: Dispatch<SetStateAction<OrientationCompleteProps[]>>) {
     privateGateway.get(`${campusRoutes.listEvent}${campusId}/`)

@@ -5,6 +5,7 @@ import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import '../CampusModal/CampusModal.scss'
 import { campusRoutes } from '../../../../../../../services/urls'
+import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 
 
 const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, eventId: string }) => {
@@ -52,13 +53,18 @@ const OrientationCompletedModal = ({ cancel, eventId }: { cancel: () => void, ev
     )
 }
 function updateEvent(eventId: string, nop: string, remarks: string) {
-    privateGateway.put(`${campusRoutes.updateEvent}${eventId}/`, {
-        no_of_participants: nop,
-        remarks: remarks,
-        status: 'Completed',
-    })
-        .then((res) => {
-            console.log(res)
+    privateGateway
+        .put(`${campusRoutes.updateEvent}${eventId}/`, {
+            no_of_participants: nop,
+            remarks: remarks,
+            status: "Completed",
         })
+        .then((res) => {
+            success();
+        })
+        .catch((err) => {
+            errorCheck(err.response);
+            errorMessage(err.response);
+        });
 }
 export default OrientationCompletedModal
