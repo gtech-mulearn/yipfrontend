@@ -53,33 +53,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
             fetchUserByRoles(coordinatorInternRole.id, setCoordinatorRoleBasedList)
         getSelectedInstitutes(setInstituteList)
     }, [coordinatorInternRole])
-    function validate() {
-        const validationSchema = yup.object().shape({
-            name: yup.string().required('Name is required')
-                .min(3, 'Name must be at least 3 characters'),
-            email: yup.string().email('Invalid email').required('Email is required'),
-            phone: yup
-                .string()
-                .matches(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/, 'Invalid phone number')
-                .required('Phone number is required'),
-            role: yup.string().required('Role is required'),
-            password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-        })
-        return validationSchema.validate(
-            { name: name, email: email, phone: phone, role: role.id, password: password },
-            { abortEarly: true })
-    }
+
 
     function handleCreate() {
 
-        validate()
-            .then(() => {
-                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
-            })
-            .catch((err) => {
-                console.error(err)
-                showAlert(err.message, setErrorMessage)
-            })
+
+        createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+
     }
     return (
         <div className="white-container">
