@@ -87,7 +87,7 @@ export const campusRoutes = {
     createEvent: '/api/v1/yip/create-event/',
     listEvent: '/api/v1/yip/list-events/',
     updateEvent: '/api/v1/yip/edit-event/',
-    listInstitutesByDistrict: '/api/v1/protected/organisation/get-institutes/',
+    listInstitutesByDistrict: '/api/v1/yip/institute-management/list-new-institutes/',
     connectIctToInstitute: "api/v1/yip/institute-management/create-institute/",
     listInstitutes: '/api/v1/yip/institute-management/list-institutes/',
     editIctId: 'api/v1/yip/institute-management/edit-institute/',
