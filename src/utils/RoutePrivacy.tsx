@@ -19,7 +19,7 @@ export const PublicRoutes: React.FC = () => {
             console.log(error)
         }
     }
-    return accessToken ? <Navigate to="/school-dashboard" /> : <Outlet />;
+    return accessToken ? <Navigate to="/intern-dashboard" /> : <Outlet />;
 }
 
 function convertExpiryStringToDate(expiryString: string): Date {
