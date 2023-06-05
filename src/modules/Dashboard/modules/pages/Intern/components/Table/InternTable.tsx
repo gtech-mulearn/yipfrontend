@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect";
 import CustomTable from "../../../../components/CustomTable/CustomTable";
 import "./InternTable.scss";
@@ -7,6 +7,8 @@ import axios, { AxiosRequestConfig } from "axios";
 import { tableRoutes } from "../../../../../../../services/urls";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchUserInfo } from "../../../../../components/api";
+import roles from "../../../../../../../utils/roles";
 interface commonViewProps {
     preRegister: string;
     voiceOfStakeholder: string;
@@ -101,10 +103,26 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                 })
                 .catch((error) => {
                     console.log(error);
-					toast.error(error.response.data.message.general[0]);
+                    toast.error(error.response.data.message.general[0]);
                 });
         }
     };
+
+    const [userInfo, setUserInfo] = React.useState({ role: "", name: "" });
+    const [viewUpload, setViewUpload] = useState(false);
+    useEffect(() => {
+        if (userInfo.role === "") {
+            fetchUserInfo(setUserInfo);
+        }
+
+        if (
+            [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF].includes(
+                userInfo.role
+            )
+        ) {
+            setViewUpload(true);
+        }
+    }, [userInfo]);
 
     return (
         <>
@@ -118,25 +136,33 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     placeholder={"Intern"}
                     requiredData={false}
                 />
-                <div
-                    className="table-fn-btn cursor"
-                    onClick={handleButtonClick}
-                >
-                    <i className="fa-solid fa-plus"></i>
-                    <input
-                        type="file"
-                        accept=".csv"
-                        onChange={handleFileChange}
-                        ref={fileInputRef}
-                        style={{ display: "none" }}
-                    />
-                    <p>Upload File</p>
-                </div>
-                {selectedFile && (
-                    <div className="table-fn-btn cursor" onClick={handleUpload}>
-                        Selected File: {selectedFile.name}
-                        <p>Upload</p>
-                    </div>
+
+                {viewUpload && (
+                    <>
+                        <div
+                            className="table-fn-btn cursor"
+                            onClick={handleButtonClick}
+                        >
+                            <i className="fa-solid fa-plus"></i>
+                            <input
+                                type="file"
+                                accept=".csv"
+                                onChange={handleFileChange}
+                                ref={fileInputRef}
+                                style={{ display: "none" }}
+                            />
+                            <p>Upload File</p>
+                        </div>
+                        {selectedFile && (
+                            <div
+                                className="table-fn-btn cursor"
+                                onClick={handleUpload}
+                            >
+                                Selected File: {selectedFile.name}
+                                <p>Upload</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
             <div className="white-container">
