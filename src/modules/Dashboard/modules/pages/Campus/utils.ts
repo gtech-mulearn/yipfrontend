@@ -73,3 +73,38 @@ export function getPocRoles(setDesignationList: Dispatch<SetStateAction<selectPr
                 data.map((item: { value: string, label: string }, index: string) => ({ id: item.value, name: item.label }))
             ))
 }
+
+export function convertToNormalDate(dateString: any): any {
+    const numberRegex = /^[0-9]+$/;
+    if (String(dateString) == "true") {
+        return "true";
+    }
+    if (String(dateString) == "false") {
+        return "false";
+    }
+
+    if (String(dateString).match(numberRegex)) {
+        return dateString;
+    }
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+
+    if (!String(dateString).match(dateRegex)) {
+        if (dateString == null) {
+            return "-";
+        }
+        return dateString;
+    }
+    try {
+        const dateObj = new Date(dateString);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        } as Intl.DateTimeFormatOptions;
+        const normalDate = dateObj.toLocaleDateString("en-US", options);
+        return normalDate;
+    } catch (error) {
+        return dateString;
+    }
+}
