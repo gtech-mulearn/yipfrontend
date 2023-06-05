@@ -35,34 +35,35 @@ export const setupRoutes = {
 }
 export const tableRoutes = {
     institutes: {
-        list: '/api/v1/yip/list-institutes/',
+        list: "/api/v1/yip/list-institutes/",
     },
     school: {
-        list: '/api/v1/yip/get-model-schools/',
-        delete: '/api/v1/yip/delete-model-schools/'
+        list: "/api/v1/yip/get-model-schools/",
+        delete: "/api/v1/yip/delete-model-schools/",
     },
     club: {
-        list: '/api/v1/yip/get-colleges/',
-        delete: '/api/v1/yip/delete-model-schools/'
+        list: "/api/v1/yip/get-colleges/",
+        delete: "/api/v1/yip/delete-model-schools/",
     },
     assembly: {
-        list: '/api/v1/yip/list-legislative-assembly/',
-        delete: '/api/v1/yip/delete-legislative-assembly/'
+        list: "/api/v1/yip/list-legislative-assembly/",
+        delete: "/api/v1/yip/delete-legislative-assembly/",
     },
     block: {
-        list: '/api/v1/yip/list-blocks/',
-        delete: '/api/v1/yip/delete-block/'
+        list: "/api/v1/yip/list-blocks/",
+        delete: "/api/v1/yip/delete-block/",
     },
     status: {
-        list: '/api/v1/yip/list-clubs-status/',
-        update: '/api/v1/yip/update-club/'
+        list: "/api/v1/yip/list-clubs-status/",
+        update: "/api/v1/yip/update-club/",
     },
     user: {
-        list: '/api/v1/yip/user-management/list-users/',
-        delete: '/api/v1/yip/user-management/delete-user/',
-        listByRoles: 'api/v1/yip/user-management/list-users-by-roles/',
-    }
-}
+        list: "/api/v1/yip/user-management/list-users/",
+        delete: "/api/v1/yip/user-management/delete-user/",
+        listByRoles: "api/v1/yip/user-management/list-users-by-roles/",
+        uploadSubmissions: "api/v1/yip/user-management/upload-submissions/",
+    },
+};
 export const campusRoutes = {
     designation: {
         list: {
