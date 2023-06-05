@@ -12,6 +12,7 @@ import Select from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
+import './userSetup.css'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -35,6 +36,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
     const [instituteList, setInstituteList] = useState<selectProps[]>([])
     const [selectedInstitute, setSelectedInstitute] = useState<selectProps[]>([])
+    const [showPassword, setShowPassword] = useState<boolean>(false)
     const reset = () => {
         setName("")
         setEmail("")
@@ -119,7 +121,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
                             </>
                         }
-                        <CustomInput value="Password" type="password" setData={setPassword} data={password} />
+                        <div className='password'>
+                            <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className="input" />
+                            <i className='fas fa-eye' onMouseDown={() => setShowPassword(true)} onMouseOut={() => setShowPassword(false)}></i>
+                        </div>
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>

@@ -11,6 +11,8 @@ import BlockLayout from './modules/Dashboard/modules/pages/Block/BlockLayout';
 import InternLayout from './modules/Dashboard/modules/pages/Intern/layout/InternLayout';
 import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/CampusLayout';
 import InstituteSetup from './modules/Dashboard/modules/pages/InstituteManagement/InstituteSetup';
+import Reset from './modules/Login/pages/Reset'
+import ResetReq from './modules/Login/pages/ResetReq';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <Login />
+      },
+      {
+        path: 'reset-req-password',
+        element: <ResetReq />
+      },
+      {
+        path: 'reset-password',
+        element: <Reset />
       }
     ]
   },
