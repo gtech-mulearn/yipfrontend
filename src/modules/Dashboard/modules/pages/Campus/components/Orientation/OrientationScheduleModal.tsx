@@ -10,7 +10,15 @@ import { OrientationCompleteProps } from './Orientation'
 const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () => void, district: string, campusId: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
-    const [mod, setMod] = useState('')
+    const [modList, setModList] = useState<selectProps[]>([{
+        id: 'Online',
+        name: 'Online'
+    },
+    {
+        id: 'Offline',
+        name: 'Offline'
+    }])
+    const [mod, setMod] = useState<selectProps>({} as selectProps)
     const [date, setDate] = useState('')
     const [place, setPlace] = useState('')
     console.log(district)
@@ -35,7 +43,16 @@ const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () =
             </div>
             <div className="data-box">
                 <div className="content">
-                    <CustomInput value={'Mode of Delivery'} data={mod} setData={setMod} customCSS={'setup-item'} />
+                    <CustomSelect
+                        option={modList}
+                        header={'Mode of Delivery'}
+                        placeholder={'Online/Offline'}
+                        customCSS={{
+                            className: "react-select-container",
+                            classNamePrefix: "react-select"
+                        }}
+                        setData={setMod}
+                    />
                 </div>
             </div>
             <div className="data-box">
@@ -50,7 +67,7 @@ const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () =
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => createEvent(date, place, mod, coordinator.id, campusId, cancel)}>Add Orientation</button>
+                    <button className='btn-update ' onClick={() => createEvent(date, place, mod.id, coordinator.id, campusId, cancel)}>Add Orientation</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -80,7 +97,8 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
             privateGateway.put(tableRoutes.status.update, { clubId: campusId, clubStatus: 'Orientation Scheduled' })
                 .then(res => {
                     console.log('Success :', res?.data?.message?.general[0])
-                    cancel()
+                    cancel();
+                    
                 })
                 .catch(err => console.error(err))
         }

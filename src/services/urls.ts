@@ -42,7 +42,7 @@ export const tableRoutes = {
         delete: "/api/v1/yip/delete-model-schools/",
     },
     club: {
-        list: "/api/v1/yip/get-colleges/",
+        list: "/api/v1/yip/list-yip-clubs/",
         delete: "/api/v1/yip/delete-model-schools/",
     },
     assembly: {

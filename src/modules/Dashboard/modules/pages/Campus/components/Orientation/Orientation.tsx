@@ -26,7 +26,7 @@ const Orientation = ({ date = '', campusId, district }: { date: string, campusId
     const [eventId, setEventId] = React.useState<string>('')
     useEffect(() => {
         listEvent(campusId, setOrientationList)
-    }, [])
+    }, [open, campusId])
     return (
         <div>
             {open && <CampusModal campuStatus={'Orientation Scheduled'} campusId={campusId} cancel={() => setOpen(false)} district={district} eventId={eventId as string} />}
