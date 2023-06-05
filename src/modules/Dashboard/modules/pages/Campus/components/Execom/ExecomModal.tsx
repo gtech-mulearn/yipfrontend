@@ -43,7 +43,7 @@ const ExecomModal = ({ cancel, campusId }: { cancel: () => void, campusId: strin
             </div>
             <div className="data-box">
                 <div className="content">
-                    <CustomInput value={'Mobile Number'} data={mobile} setData={setMobile} customCSS={'setup-item'} />
+                    <CustomInput type = "number" value={'Mobile Number'} data={mobile} setData={setMobile} customCSS={'setup-item'} />
                 </div>
             </div>
             <div className='last-container'>
