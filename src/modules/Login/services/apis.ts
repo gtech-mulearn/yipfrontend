@@ -19,7 +19,7 @@ export const login = (
         .then((data) => {
             setErrorStatus(false)
             localStorage.setItem("accessToken", data.response.accessToken)
-            window.location.replace("/school-dashboard")
+            window.location.replace("/intern-dashboard")
         })
         .catch((err) => {
             setErrorStatus(true)
