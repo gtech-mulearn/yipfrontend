@@ -160,7 +160,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
   useEffect(() => {
     handleDownloadCSV();
-  }, [campusTableList, internTableList, assigneeList, districttable]);
+  }, [campusTableList, internTableList, assigneetable, districttable]);
 
   const handleDownloadCSV = () => {
     //check the view value and dowload the data in the corresponding state variable as a csv
@@ -171,13 +171,19 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       csvData1 = internTableList;
     } else if (view === "District Coordinator") {
       csvData1 = assigneeList;
-    } else if (view === "Program Executive") {
+    } else if (view === "Programme Executive") {
       csvData1 = assigneetable;
+      console.log(csvData1)
     } else if (view === "District") {
       csvData1 = districttable;
     }
 
-    setCsvData(csvData1);
+    const updatedData = csvData1.map((item: any) => {
+      const { id, ...rest } = item;
+      return rest;
+    });
+
+    setCsvData(updatedData);
   };
 
   const handleUpload = () => {
