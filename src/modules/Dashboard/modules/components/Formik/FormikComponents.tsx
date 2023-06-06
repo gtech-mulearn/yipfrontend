@@ -48,9 +48,9 @@ const FormikReactSelect = (props: Props) => {
 
     if (isArrayValue) {
       const values = field.value as Array<any>;
-      return values.includes(o.value);
+      return values.includes(o?.value);
     } else {
-      return field.value === o.value;
+      return field.value === o?.value;
     }
   });
 

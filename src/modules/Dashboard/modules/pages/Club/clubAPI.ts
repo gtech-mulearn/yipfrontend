@@ -24,7 +24,8 @@ export function fetchDistricts(
         .then((data) => {
             console.log(data);
             if (setData1) setData1(data)
-            setData((data));
+            
+            setData(updateResponse(data));
         })
         .catch((err) => console.error(err));
 }
@@ -58,6 +59,7 @@ export function fetchcolleges(
                     data.map((item: any) => ({ id: item.id, name: item.title }))
                 )
             );
+            
         })
         .catch((err) => console.error(err));
 }
