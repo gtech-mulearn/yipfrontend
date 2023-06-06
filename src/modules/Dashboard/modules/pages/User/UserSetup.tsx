@@ -48,13 +48,9 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     useEffect(() => {
         fetchUserRoles(setRoleList)
         fetchDistricts(setDistrictList)
-
-    }, [])
-    useEffect(() => {
-        if (coordinatorInternRole)
-            fetchUserByRoles(coordinatorInternRole.id, setCoordinatorRoleBasedList)
+        fetchUserByRoles(setCoordinatorRoleBasedList)
         getSelectedInstitutes(setInstituteList)
-    }, [coordinatorInternRole])
+    }, [])
 
 
     function handleCreate() {
@@ -87,18 +83,11 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                         {(role.name === 'Intern') &&
                             <>
                                 <CustomSelect
-                                    option={[{ id: 'PE', name: 'Programme Executive' }, { id: 'DC', name: 'District Coordinator' }]}
-                                    header='Assign to'
-                                    placeholder={'Assign to '}
-                                    setData={setCoordinatorInternRole}
-                                    isSearchable={true}
-                                />
-                                {coordinatorInternRole && <CustomSelect
                                     option={role.name === 'Intern' ? coordinatorRoleBasedList : []}
                                     header={'Coordinator'}
                                     setData={setCoordinator}
                                     isSearchable={true}
-                                />}
+                                />
                                 <div className={"setup-item"}>
                                     <p>Select Institutes</p>
                                     <Select

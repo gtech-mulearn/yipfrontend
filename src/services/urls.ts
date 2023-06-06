@@ -90,6 +90,7 @@ export const campusRoutes = {
     listInstitutesByDistrict: '/api/v1/yip/institute-management/list-new-institutes/',
     connectIctToInstitute: "api/v1/yip/institute-management/create-institute/",
     listInstitutes: '/api/v1/yip/institute-management/list-institutes/',
+    listInstituteByUser: '/api/v1/yip/institute-management/list-institutes-by-user/',
     editIctId: 'api/v1/yip/institute-management/edit-institute/',
     listDistrict: 'api/v1/yip/district/'
 
@@ -99,6 +100,7 @@ export const yip5Routes = {
     zoneList: '/api/v1/yip/zone-management/list-zones/',
     campusList: '/api/v1/yip/user-management/list-campus-details/',
     internList: '/api/v1/yip/user-management/list-intern-details/',
+    listCoordinator: '/api/v1/yip/user-management/list-pe-or-dc-details/',
     listPE: '/api/v1/yip/user-management/list-pe-or-dc-details/PE/',
     listDC: '/api/v1/yip/user-management/list-pe-or-dc-details/DC/',
     listDistrict: '/api/v1/yip/user-management/list-district-details/',

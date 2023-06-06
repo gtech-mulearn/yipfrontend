@@ -181,9 +181,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     setValue={setView}
                     defaultValue={views[0]}
                     requiredLabel={true}
-                    header={view}
+                    header={'Views'}
                     placeholder={view}
                     requiredData={false}
+                    isClearable={false}
                 />
 
                 {viewUpload && (
