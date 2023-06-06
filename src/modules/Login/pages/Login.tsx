@@ -3,6 +3,10 @@ import YIPlogo from '../../../assets/logo.webp'
 import ErrorBox from "../components/ErrorBox/ErrorBox"
 import { login } from "../services/apis"
 import './Login.scss'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.min.css";
+import { error, errorCheck, success, errorMessage } from "../../Dashboard/components/Toastify/ToastifyConsts"
 
 function Login() {
     const [errorStatus, setErrorStatus] = useState<boolean>(false)
@@ -40,7 +44,7 @@ function Login() {
                             />
                             <label>Show Password</label>
                         </div>
-                        {/* <label><a href="/reset-req-password">Reset Password?</a></label> */}
+                        <label><a href="/reset-req-password">Forgot Password?</a></label>
                     </div>
                     <button type="button" id="submitBtn" onClick={
                         () => login(email, password, setErrorStatus)}
@@ -50,6 +54,18 @@ function Login() {
                     {errorStatus ? <ErrorBox /> : <></>}
                 </form>
             </div>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div >
     )
 }
