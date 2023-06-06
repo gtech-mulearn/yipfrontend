@@ -42,53 +42,77 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
         setListForTable(filterClub(clubList, search, district))
     }
     return (
-        <div className='white-container'>
+        <div className="white-container">
             <div className="table-top">
-                <div className='table-header'>
+                <div className="table-header">
                     <h3>ICT Connected Institutes List</h3>
-                    <div className='table-header-btn'>
-                        <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
-                    </div>
-                </div>
-                {menu && <div className='table-fn'>
-                    <div className='search-bar'>
-                        <input className='search-bar-item'
-                            id='search'
-                            name='search'
-                            type="text"
-                            value={search}
-                            placeholder={`Search`}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                    <div className="table-header-btn">
                         <li
-                            className='fas fa-close cursor'
-                            onClick={() => setSearch('')}
+                            className="fas fa-bars "
+                            onClick={() => setMenu(!menu)}
                         ></li>
                     </div>
-                    <div className="table-fn-btn cursor" onClick={viewSetup}>
-                        <i className="fa-solid fa-plus"></i>
-                        <p>Add ICT ID</p>
+                </div>
+                {menu && (
+                    <div className="table-fn">
+                        <div className="search-bar">
+                            <input
+                                className="search-bar-item"
+                                id="search"
+                                name="search"
+                                type="text"
+                                value={search}
+                                placeholder={`Search`}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                            <li
+                                className="fas fa-close cursor"
+                                onClick={() => setSearch("")}
+                            ></li>
+                        </div>
+                        <div
+                            className="table-fn-btn cursor"
+                            onClick={viewSetup}
+                        >
+                            <i className="fa-solid fa-plus"></i>
+                            <p>Add ICT ID</p>
+                        </div>
+                        <div
+                            className="table-fn-btn cursor"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setFilterBtn(!filterBtn)}
+                        >
+                            <i className="fa-solid fa-filter"></i>
+                            <p>Filter</p>
+                        </div>
+                        {filterBtn && (
+                            <div
+                                className="table-fn-btn  cursor"
+                                onClick={resetFilter}
+                            >
+                                <p></p>
+                                <i className="fa-solid fa-close  "></i>
+                                <p></p>
+                            </div>
+                        )}
                     </div>
-                    <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
-                        <i className="fa-solid fa-filter"></i>
-                        <p>Filter</p>
-                    </div>
-                    {filterBtn && <div className="table-fn-btn  cursor" onClick={resetFilter}>
-                        <p></p>
-                        <i className="fa-solid fa-close  "></i>
-                        <p></p>
-                    </div>}
-                </div>}
+                )}
             </div>
 
             {/* Filters */}
 
-            {filterBtn && <div className="filter-container">
-                <div className="filter-box">
-                    <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
-                </div >
-            </div>
-            }
+            {filterBtn && (
+                <div className="filter-container">
+                    <div className="filter-box">
+                        <CustomSelect
+                            option={districtList}
+                            header="District"
+                            setData={setDistrict}
+                            requiredHeader={false}
+                        />
+                    </div>
+                </div>
+            )}
 
             {/*  Table  */}
 
@@ -100,7 +124,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
             />
             {/* {open && <Modal instituteID />} */}
         </div>
-    )
+    );
 }
 
 function filterClub(clubList: InstituteTableProps[], search: string, district: selectProps) {

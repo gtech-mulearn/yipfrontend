@@ -80,72 +80,126 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
     }
     return (
         <>
-            {school?.id && <Modal school={school} setSchool={setSchool} optionStatusList={optionStatusList} updateSchoolData={updateSchoolData} />}
-            <div className='white-container'>
-
+            {school?.id && (
+                <Modal
+                    school={school}
+                    setSchool={setSchool}
+                    optionStatusList={optionStatusList}
+                    updateSchoolData={updateSchoolData}
+                />
+            )}
+            <div className="white-container">
                 {/* Table top */}
 
                 <div className="table-top">
-                    <div className='table-header'>
+                    <div className="table-header">
                         <h3>Model School List</h3>
-                        <div className='table-header-btn'>
-                            <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
-                        </div>
-                    </div>
-                    {menu && <div className='table-fn'>
-                        <div className='search-bar'>
-                            <input className='search-bar-item'
-                                id='search'
-                                name='search'
-                                type="text"
-                                value={search}
-                                placeholder={`Search `}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
+                        <div className="table-header-btn">
                             <li
-                                className='fas fa-close cursor'
-                                onClick={() => setSearch('')}
+                                className="fas fa-bars "
+                                onClick={() => setMenu(!menu)}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
-                            <i className="fa-solid fa-plus"></i>
-                            <p>Add Model School</p>
+                    </div>
+                    {menu && (
+                        <div className="table-fn">
+                            <div className="search-bar">
+                                <input
+                                    className="search-bar-item"
+                                    id="search"
+                                    name="search"
+                                    type="text"
+                                    value={search}
+                                    placeholder={`Search `}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <li
+                                    className="fas fa-close cursor"
+                                    onClick={() => setSearch("")}
+                                ></li>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                onClick={() =>
+                                    setViewSetup((prev: boolean) => !prev)
+                                }
+                            >
+                                <i className="fa-solid fa-plus"></i>
+                                <p>Add Model School</p>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setFilterBtn(!filterBtn)}
+                            >
+                                <i className="fa-solid fa-filter"></i>
+                                <p>Filter</p>
+                            </div>
+                            {filterBtn && (
+                                <div
+                                    className="table-fn-btn  cursor"
+                                    onClick={resetFilter}
+                                >
+                                    <p></p>
+                                    <i className="fa-solid fa-close  "></i>
+                                    <p></p>
+                                </div>
+                            )}
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
-                            <i className="fa-solid fa-filter"></i>
-                            <p>Filter</p>
-                        </div>
-                        {filterBtn && <div className="table-fn-btn  cursor" onClick={resetFilter}>
-                            <p></p>
-                            <i className="fa-solid fa-close  "></i>
-                            <p></p>
-                        </div>}
-                    </div>}
+                    )}
                 </div>
 
                 {/* Filters */}
 
-                {filterBtn && <div className="filter-container">
-                    <div className="filter-box">
-                        <div className="table-white-btn" onClick={() => setFilterByAssembly((prev: boolean) => !prev)}>
-                            <i className="fa-solid fa-repeat"></i>
-                            <p>{`Filter By ${filterByAssembly ? 'Block' : 'Assembly'}`}</p>
+                {filterBtn && (
+                    <div className="filter-container">
+                        <div className="filter-box">
+                            <div
+                                className="table-white-btn"
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                    setFilterByAssembly(
+                                        (prev: boolean) => !prev
+                                    )
+                                }
+                            >
+                                <i className="fa-solid fa-repeat"></i>
+                                <p>{`Filter By ${
+                                    filterByAssembly ? "Block" : "Assembly"
+                                }`}</p>
+                            </div>
+                            <CustomSelect
+                                option={districtList}
+                                header="District"
+                                setData={setDistrict}
+                                requiredHeader={false}
+                            />
+                            <CustomSelect
+                                option={
+                                    filterByAssembly
+                                        ? filterBy(assemblyList)
+                                        : filterBy(blockList)
+                                }
+                                header={filterByAssembly ? "Assembly" : "Block"}
+                                setValue={
+                                    filterByAssembly ? setAssembly : setBlock
+                                }
+                                requiredHeader={false}
+                                requiredData={false}
+                                requiredLabel={true}
+                                sentenceCase={!filterByAssembly}
+                            />
+                            <CustomSelect
+                                option={optionStatusList}
+                                header="Status"
+                                setValue={setStatus}
+                                requiredHeader={false}
+                                requiredData={false}
+                                requiredLabel={true}
+                            />
                         </div>
-                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
-                        <CustomSelect
-                            option={filterByAssembly ? filterBy(assemblyList) : filterBy(blockList)}
-                            header={filterByAssembly ? 'Assembly' : 'Block'}
-                            setValue={filterByAssembly ? setAssembly : setBlock}
-                            requiredHeader={false}
-                            requiredData={false}
-                            requiredLabel={true}
-                            sentenceCase={!filterByAssembly}
-
-                        />
-                        <CustomSelect option={optionStatusList} header='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
-                    </div >
-                </div>
-                }
+                    </div>
+                )}
 
                 {/*  Table  */}
 
@@ -154,26 +208,30 @@ const SchoolTable: FC<SchoolSetupProps> = ({ setViewSetup, updateSchoolData, upd
                     tableData={listForTable}
                     orderBy={list}
                     sortOrder={{
-                        sortBy: 'club_status' as keyof SchoolTableProps,
+                        sortBy: "club_status" as keyof SchoolTableProps,
                         orderList: statusList,
                         orderSymbol: {
-                            asc: 'fa-arrow-up-short-wide',
-                            desc: 'fa-arrow-down-wide-short'
-                        }
+                            asc: "fa-arrow-up-short-wide",
+                            desc: "fa-arrow-down-wide-short",
+                        },
                     }}
-                    customCSS={[{
-                        name: 'club_status',
-                        css: 'status'
-                    }]}
+                    customCSS={[
+                        {
+                            name: "club_status",
+                            css: "status",
+                        },
+                    ]}
                     manage={{
-                        value: 'View',
-                        manageFunction: (item: SchoolTableProps) => { navigate(`/campus-dashboard/school/${item.id}`) },
-                        icon: 'fa-eye'
+                        value: "View",
+                        manageFunction: (item: SchoolTableProps) => {
+                            navigate(`/campus-dashboard/school/${item.id}`);
+                        },
+                        icon: "fa-eye",
                     }}
                 />
-            </div >
+            </div>
         </>
-    )
+    );
 }
 function filterSchool(schoolList: SchoolTableProps[], search: string, district: selectProps, assembly: string, block: string, status: string) {
     let list = schoolList
