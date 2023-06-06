@@ -33,12 +33,25 @@
             padding: 12px;
             border: 1px solid #333;
             margin-bottom: 12px;
-
         }
     }
 }
 
+.password {
+    display: flex;
+    justify-content: space-between;
+
+    label {
+        font-size: 12px;
+        margin-left: 6px;
+    }
+
+    margin-bottom: 10px;
+}
+
 .show-password {
+    display: flex;
+
     margin-bottom: 12px;
     margin-left: 8px;
 

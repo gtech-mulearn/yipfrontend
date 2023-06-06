@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { selectProps } from '../../utils/setupUtils'
 import { Error, Success } from '../../../components/Error/Alerts'
-import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
+import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { fetchDistricts } from '../School/SchoolAPI'
 import { fetchcolleges } from '../Club/clubAPI'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
@@ -55,7 +55,7 @@ const InstituteSetup = () => {
                         <div className="select-container club">
                             {close && <CustomSelect option={districtList} header="District" setData={setDistrict} />}
                             {close && <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />}
-                            <CustomInput requiredHeader={true} value="ICT Id" setData={setICT} data={ICT} />
+                            <CustomInput requiredHeader={true} value="ICT ID" setData={setICT} data={ICT} />
                             <div className="create-btn-container">
                                 <button className="black-btn"
                                     onClick={handleConnect}>Create</button>

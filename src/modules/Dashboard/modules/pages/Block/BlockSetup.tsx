@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
+import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import { initialState, selectProps } from '../../utils/setupUtils'

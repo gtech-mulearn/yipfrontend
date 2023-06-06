@@ -57,6 +57,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setCollegeList,
             String(selectedOption)
         );
+        console.log(collegeListEdited)
     }, [selectedOption]);
 
     function handleCreate(college: string, district: string) {

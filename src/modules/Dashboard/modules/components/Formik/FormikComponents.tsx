@@ -32,6 +32,8 @@ const FormikReactSelect = (props: Props) => {
   const [field] = useField(name);
   const { setFieldValue } = useFormikContext();
 
+  console.log(props)
+
   //flatten the options so that it will be easier to find the value
   const flattenedOptions = props.options?.flatMap((o) => {
     const isNotGrouped = "value" in o;
@@ -48,9 +50,9 @@ const FormikReactSelect = (props: Props) => {
 
     if (isArrayValue) {
       const values = field.value as Array<any>;
-      return values.includes(o.value);
+      return values.includes(o?.value);
     } else {
-      return field.value === o.value;
+      return field.value === o?.value;
     }
   });
 

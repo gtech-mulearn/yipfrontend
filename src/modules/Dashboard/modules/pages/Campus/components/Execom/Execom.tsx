@@ -21,8 +21,8 @@ const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
             {open && <CampusModal campuStatus={'Execom Formed'} campusId={campusId} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
-                name='Connection Established'
-                title2='Date of Connection Established'
+                name='Execom Formed'
+                title2='Date of Execom Formation'
                 date={date}
                 setAdd={setOpen}
                 AddOption={'Add Member'}

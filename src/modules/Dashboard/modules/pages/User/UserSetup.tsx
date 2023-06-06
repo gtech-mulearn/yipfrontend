@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
+import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import '../../components/Setup.scss'
@@ -12,6 +12,7 @@ import Select from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
+import styles from './UserSetup.module.css'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -35,6 +36,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
     const [instituteList, setInstituteList] = useState<selectProps[]>([])
     const [selectedInstitute, setSelectedInstitute] = useState<selectProps[]>([])
+    const [showPassword, setShowPassword] = useState<boolean>(false)
     const reset = () => {
         setName("")
         setEmail("")
@@ -53,33 +55,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
             fetchUserByRoles(coordinatorInternRole.id, setCoordinatorRoleBasedList)
         getSelectedInstitutes(setInstituteList)
     }, [coordinatorInternRole])
-    function validate() {
-        const validationSchema = yup.object().shape({
-            name: yup.string().required('Name is required')
-                .min(3, 'Name must be at least 3 characters'),
-            email: yup.string().email('Invalid email').required('Email is required'),
-            phone: yup
-                .string()
-                .matches(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/, 'Invalid phone number')
-                .required('Phone number is required'),
-            role: yup.string().required('Role is required'),
-            password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-        })
-        return validationSchema.validate(
-            { name: name, email: email, phone: phone, role: role.id, password: password },
-            { abortEarly: true })
-    }
+
 
     function handleCreate() {
 
-        validate()
-            .then(() => {
-                createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
-            })
-            .catch((err) => {
-                console.error(err)
-                showAlert(err.message, setErrorMessage)
-            })
+
+        createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+
     }
     return (
         <div className="white-container">
@@ -94,13 +76,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             option={roleList}
                             header='Role'
                             setData={setRole}
-                            isSearchable={false}
+                            isSearchable={true}
                         />
                         {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator' || role.name === 'Programme Executive') && <CustomSelect
                             option={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
                             header={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
                             setData={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? setDistrict : setZone}
-                            isSearchable={false}
+                            isSearchable={true}
                         />}
                         {(role.name === 'Intern') &&
                             <>
@@ -109,13 +91,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                     header='Assign to'
                                     placeholder={'Assign to '}
                                     setData={setCoordinatorInternRole}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                 />
                                 {coordinatorInternRole && <CustomSelect
                                     option={role.name === 'Intern' ? coordinatorRoleBasedList : []}
                                     header={'Coordinator'}
                                     setData={setCoordinator}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                 />}
                                 <div className={"setup-item"}>
                                     <p>Select Institutes</p>
@@ -139,7 +121,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
                             </>
                         }
-                        <CustomInput value="Password" type="password" setData={setPassword} data={password} />
+                        <div className={styles.password}>
+                            <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className={styles.input} />
+                            <i className='fas fa-eye' onMouseDown={() => setShowPassword(true)} onMouseOut={() => setShowPassword(false)}></i>
+                        </div>
                         <div className="create-btn-container">
                             <button className="black-btn"
                                 onClick={handleCreate}>Create</button>
