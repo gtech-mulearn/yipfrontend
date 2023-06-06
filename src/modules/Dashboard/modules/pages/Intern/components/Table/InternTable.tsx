@@ -60,13 +60,18 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [filterBtn, setFilterBtn] = useState<boolean>(false);
     const [view, setView] = useState<string>("Campus");
     const [assigneeList, setAssigneeList] = useState<AssignViewProps[]>([]);
-    const [assigneetable, setAssigneetable] = useState<AssignViewProps[]>([]);
-    const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
-    const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
+   
     const [campusTableList, setCampusTableList] = useState<CampusViewProps[]>([])
+    const [internTableList, setInternTableList] = useState<InternViewProps[]>([]);
     const [districttable, setDistricttable] = useState<districtViewProps[]>([]);
+    const [assigneetable, setAssigneetable] = useState<AssignViewProps[]>([]);
+
     const [zoneList, setZoneList] = useState<zoneViewProps[]>([]);
     const [zonetable, setZonetable] = useState<zoneViewProps[]>([]);
+    
+    const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
+    const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
+    
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768);
     const [districtFilterList, setDistrictFilterList] = useState<selectProps[]>([]);
     const [districtFilter, setDistrictFilter] = useState<selectProps>({} as selectProps);
@@ -74,7 +79,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [internList, setInternList] = useState<InternViewProps[]>([]);
-    const [internTableList, setInternTableList] = useState<InternViewProps[]>([]);
+    
     const fileInputRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
         fetchCampus(setCampusList, setCampusTableList);
@@ -122,6 +127,30 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
             fileInputRef.current.click();
         }
     };
+
+
+    const handleDownloadCSV = () =>{
+        //check the view value and dowload the data in the corresponding state variable as a csv
+        if(view === 'Campus')
+        {
+            console.log(campusTableList);
+        }
+        else if(view === 'Intern')
+        {
+            console.log(internTableList)
+        }
+        else if(view === 'District Coordinator')
+        {
+            console.log(assigneeList)
+        }
+        else if(view === "Program Executive")
+        {
+            console.log(assigneetable)
+        }else if(view === "District")
+        {
+            console.log(districttable)
+        }
+    }
 
     const handleUpload = () => {
         if (selectedFile) {
@@ -215,6 +244,19 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         )}
                     </>
                 )}
+
+                {
+                    <div
+                            className="table-fn-btn cursor"
+                            onClick={()=>{
+                                handleDownloadCSV()
+                            }}
+                        >
+                            <i className="fa-solid fa-download"></i>
+                            <p>Download CSV</p>
+                        </div>
+
+                }
             </div>
             <div className="white-container">
                 <div className="table-top">
