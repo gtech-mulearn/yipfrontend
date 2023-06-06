@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
+import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import '../../components/Setup.scss'
@@ -76,13 +76,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             option={roleList}
                             header='Role'
                             setData={setRole}
-                            isSearchable={false}
+                            isSearchable={true}
                         />
                         {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator' || role.name === 'Programme Executive') && <CustomSelect
                             option={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
                             header={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
                             setData={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? setDistrict : setZone}
-                            isSearchable={false}
+                            isSearchable={true}
                         />}
                         {(role.name === 'Intern') &&
                             <>
@@ -91,13 +91,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                     header='Assign to'
                                     placeholder={'Assign to '}
                                     setData={setCoordinatorInternRole}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                 />
                                 {coordinatorInternRole && <CustomSelect
                                     option={role.name === 'Intern' ? coordinatorRoleBasedList : []}
                                     header={'Coordinator'}
                                     setData={setCoordinator}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                 />}
                                 <div className={"setup-item"}>
                                     <p>Select Institutes</p>
