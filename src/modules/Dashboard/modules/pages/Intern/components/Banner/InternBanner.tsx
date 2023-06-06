@@ -46,16 +46,6 @@ const InternBanner = () => {
         }
     }, [college])
 
-    useEffect(() => {
-      setDistrict({} as selectProps)
-      setCollege({} as selectProps)
-    }, [zone])
-
-    useEffect(()=>{
-        setCollege({} as selectProps)
-    }, [district])
-    
-
     return (
         <div className='white-container'>
             <div className="filter-container">
