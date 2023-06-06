@@ -51,57 +51,91 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
 
     return (
         <>
-            <div className='white-container'>
+            <div className="white-container">
                 {/* Modal */}
-                {user?.id && <Modal user={user} setUser={setUser} updateUserData={updateUserData} />}
+                {user?.id && (
+                    <Modal
+                        user={user}
+                        setUser={setUser}
+                        updateUserData={updateUserData}
+                    />
+                )}
 
                 {/* Search ,Filters View */}
 
                 <div className="table-top">
-                    <div className='table-header'>
+                    <div className="table-header">
                         <h3>User List</h3>
-                        <div className='table-header-btn'>
-                            <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
-                        </div>
-                    </div>
-                    {menu && <div className='table-fn'>
-                        <div className='search-bar'>
-                            <input className='search-bar-item'
-                                id='search'
-                                name='search'
-                                type="text"
-                                value={searchName}
-                                placeholder={`Search`}
-                                onChange={(e) => setSearchName(e.target.value)}
-                            />
+                        <div className="table-header-btn">
                             <li
-                                className='fas fa-close cursor'
-                                onClick={() => setSearchName('')}
+                                className="fas fa-bars "
+                                onClick={() => setMenu(!menu)}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
-                            <i className="fa-solid fa-plus"></i>
-                            <p>Add User</p>
+                    </div>
+                    {menu && (
+                        <div className="table-fn">
+                            <div className="search-bar">
+                                <input
+                                    className="search-bar-item"
+                                    id="search"
+                                    name="search"
+                                    type="text"
+                                    value={searchName}
+                                    placeholder={`Search`}
+                                    onChange={(e) =>
+                                        setSearchName(e.target.value)
+                                    }
+                                />
+                                <li
+                                    className="fas fa-close cursor"
+                                    onClick={() => setSearchName("")}
+                                ></li>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                onClick={() =>
+                                    setViewSetup((prev: boolean) => !prev)
+                                }
+                            >
+                                <i className="fa-solid fa-plus"></i>
+                                <p>Add User</p>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setFilterBtn(!filterBtn)}
+                            >
+                                <i className="fa-solid fa-filter"></i>
+                                <p>Filter</p>
+                            </div>
+                            {filterBtn && (
+                                <div
+                                    className="table-fn-btn  cursor"
+                                    onClick={resetFilter}
+                                >
+                                    <p></p>
+                                    <i className="fa-solid fa-close  "></i>
+                                    <p></p>
+                                </div>
+                            )}
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
-                            <i className="fa-solid fa-filter"></i>
-                            <p>Filter</p>
-                        </div>
-                        {filterBtn && <div className="table-fn-btn  cursor" onClick={resetFilter}>
-                            <p></p>
-                            <i className="fa-solid fa-close  "></i>
-                            <p></p>
-                        </div>}
-
-                    </div>}
+                    )}
                 </div>
 
                 {/* Filters */}
-                {filterBtn && <div className="filter-container">
-                    <div className="filter-box">
-                        <CustomSelect option={roleList} header='Role' setData={setRole} requiredHeader={false} />
+                {filterBtn && (
+                    <div className="filter-container">
+                        <div className="filter-box">
+                            <CustomSelect
+                                option={roleList}
+                                header="Role"
+                                setData={setRole}
+                                requiredHeader={false}
+                            />
+                        </div>
                     </div>
-                </div>}
+                )}
 
                 {/*  Table  */}
 
@@ -110,23 +144,24 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                     tableData={listForTable}
                     orderBy={list}
                     capitalize={false}
-                    sortOrder={
-                        {
-                            sortBy: 'role',
-                            orderList: roleList.map(role => role.name),
-                            orderSymbol: {
-                                asc: 'fa-arrow-up-short-wide',
-                                desc: 'fa-arrow-down-wide-short'
-                            }
-                        }}
+                    sortOrder={{
+                        sortBy: "role",
+                        orderList: roleList.map((role) => role.name),
+                        orderSymbol: {
+                            asc: "fa-arrow-up-short-wide",
+                            desc: "fa-arrow-down-wide-short",
+                        },
+                    }}
                     manage={{
-                        value: 'View',
-                        manageFunction: (item: UserTableProps) => { setUser(item) }
+                        value: "View",
+                        manageFunction: (item: UserTableProps) => {
+                            setUser(item);
+                        },
                     }}
                 />
             </div>
         </>
-    )
+    );
 }
 function filterUser(userList: UserTableProps[], search: string, role: selectProps) {
     let list = userList

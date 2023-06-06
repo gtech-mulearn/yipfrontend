@@ -240,7 +240,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 />
                                 <li
                                     className="fas fa-close cursor"
-                                    onClick={() => { }}
+                                    onClick={() => {}}
                                 ></li>
                             </div>
                             {/* <div
@@ -250,14 +250,17 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 <i className="fa-solid fa-plus"></i>
                                 <p>Assign Campus </p>
                             </div> */}
-                            {view !== 'Intern' && <div
-                                className="table-fn-btn cursor"
-                                onClick={() => setFilterBtn(!filterBtn)}
-                            >
-                                <i className="fa-solid fa-filter"></i>
-                                <p>Filter</p>
-                            </div>}
-                            {filterBtn && view !== 'Intern' && (
+                            {view !== "Intern" && (
+                                <button
+                                    className="table-fn-btn cursor"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => setFilterBtn(!filterBtn)}
+                                >
+                                    <i className="fa-solid fa-filter"></i>
+                                    <p>Filter</p>
+                                </button>
+                            )}
+                            {filterBtn && view !== "Intern" && (
                                 <div
                                     className="table-fn-btn  cursor"
                                     onClick={() => setFilterBtn(!filterBtn)}
@@ -272,7 +275,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                 </div>
                 {/* Filters */}
 
-                {filterBtn && view !== 'Intern' && (
+                {filterBtn && view !== "Intern" && (
                     <div className="filter-container">
                         <div className="filter-box">
                             <CustomSelect
@@ -282,92 +285,91 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 requiredHeader={false}
                                 setData={setZoneFilter}
                             />
-                            {<CustomSelect
-                                option={districtFilterList}
-                                header=""
-                                placeholder={"Filter By District"}
-                                requiredHeader={false}
-                                setData={setDistrictFilter}
-                            />}
+                            {
+                                <CustomSelect
+                                    option={districtFilterList}
+                                    header=""
+                                    placeholder={"Filter By District"}
+                                    requiredHeader={false}
+                                    setData={setDistrictFilter}
+                                />
+                            }
                         </div>
                     </div>
                 )}
                 {/* Table */}
-                {(
-                    view === "Campus") && (
-                        <CustomTable<CampusViewProps>
-                            tableHeadList={[
-                                "Name",
-                                "District",
-                                "Zone",
-                                "Pre-registration",
-                                "Voice of Stakeholder",
-                                "Group Formation",
-                                "Idea Submission",
-                            ]}
-                            tableData={campusTableList}
-                            orderBy={[
-                                "institute",
-                                "district",
-                                "zone",
-                                "pre_registrations",
-                                "vos",
-                                "group_formation",
-                                "idea_submission",
-                            ]}
-                            capitalize={false}
-                        />
-                    )}
-                {(
-                    view === "District Coordinator") && (
-                        <CustomTable<AssignViewProps>
-                            tableHeadList={[
-                                "Name",
-                                "District",
-                                "Zone",
-                                "Pre-registration",
-                                "Voice of Stakeholder",
-                                "Group Formation",
-                                "Idea Submission",
-                            ]}
-                            tableData={assigneetable}
-                            orderBy={[
-                                "name",
-                                "district",
-                                "zone",
-                                "pre_registrations",
-                                "vos",
-                                "group_formation",
-                                "idea_submission",
-                            ]}
-                            capitalize={false}
-                        />
-                    )}
-                {(
-                    view === "Programme Executive") && (
-                        <CustomTable<AssignViewProps>
-                            tableHeadList={[
-                                "Name",
-                                "District",
-                                "Zone",
-                                "Pre-registration",
-                                "Voice of Stakeholder",
-                                "Group Formation",
-                                "Idea Submission",
-                            ]}
-                            tableData={assigneetable}
-                            orderBy={[
-                                "name",
-                                "district",
-                                "zone",
-                                "pre_registrations",
-                                "vos",
-                                "group_formation",
-                                "idea_submission",
-                            ]}
-                            capitalize={false}
-                        />
-                    )}
+                {view === "Campus" && (
+                    <CustomTable<CampusViewProps>
+                        tableHeadList={[
+                            "Name",
+                            "District",
+                            "Zone",
+                            "Pre-registration",
+                            "Voice of Stakeholder",
+                            "Group Formation",
+                            "Idea Submission",
+                        ]}
+                        tableData={campusTableList}
+                        orderBy={[
+                            "institute",
+                            "district",
+                            "zone",
+                            "pre_registrations",
+                            "vos",
+                            "group_formation",
+                            "idea_submission",
+                        ]}
+                        capitalize={false}
+                    />
+                )}
+                {view === "District Coordinator" && (
+                    <CustomTable<AssignViewProps>
+                        tableHeadList={[
+                            "Name",
+                            "District",
+                            "Zone",
+                            "Pre-registration",
+                            "Voice of Stakeholder",
+                            "Group Formation",
+                            "Idea Submission",
+                        ]}
+                        tableData={assigneetable}
+                        orderBy={[
+                            "name",
+                            "district",
+                            "zone",
+                            "pre_registrations",
+                            "vos",
+                            "group_formation",
+                            "idea_submission",
+                        ]}
+                        capitalize={false}
+                    />
+                )}
+                {view === "Programme Executive" && (
+                    <CustomTable<AssignViewProps>
+                        tableHeadList={[
+                            "Name",
+                            "District",
+                            "Zone",
+                            "Pre-registration",
+                            "Voice of Stakeholder",
+                            "Group Formation",
+                            "Idea Submission",
+                        ]}
+                        tableData={assigneetable}
+                        orderBy={[
+                            "name",
+                            "district",
+                            "zone",
+                            "pre_registrations",
+                            "vos",
+                            "group_formation",
+                            "idea_submission",
+                        ]}
+                        capitalize={false}
+                    />
+                )}
                 {view === "District" && (
                     <CustomTable<districtViewProps>
                         tableHeadList={[
@@ -378,7 +380,6 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                             "Group Formation",
                             "Idea Submission",
                         ]}
-
                         tableData={districttable}
                         orderBy={[
                             "district",
@@ -395,7 +396,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     <CustomTable<InternViewProps>
                         tableHeadList={[
                             "Name",
-                            'District',
+                            "District",
                             "Pre-registration",
                             "Voice of Stakeholder",
                             "Group Formation",
@@ -404,7 +405,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         tableData={internTableList}
                         orderBy={[
                             "name",
-                            'districtName',
+                            "districtName",
                             "pre_registrations",
                             "vos",
                             "group_formation",
@@ -413,7 +414,6 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         capitalize={false}
                     />
                 )}
-
             </div>
         </>
     );

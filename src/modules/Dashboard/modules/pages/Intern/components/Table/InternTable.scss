@@ -17,6 +17,9 @@
     }
 
     .cursor {
-        cursor: pointer;
+        cursor: pointer!important;
+    }
+    .filter {
+        cursor: pointer!important;
     }
 }

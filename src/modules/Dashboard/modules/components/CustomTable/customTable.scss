@@ -18,13 +18,16 @@ table {
             text-align: left;
 
             .cursor {
-                cursor: pointer;
+                cursor: pointer!important;
 
                 &:hover {
                     i {
                         color: #59b3fa;
                     }
                 }
+            }
+            .filter {
+                cursor: pointer!important;
             }
 
             .selected {
