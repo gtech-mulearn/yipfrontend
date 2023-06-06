@@ -67,12 +67,12 @@ export function createUser(
         })
         .catch(err => {
             // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-			errorMessage(err.response)
-			errorCheck(err.response)
+            errorMessage(err.response)
+            errorCheck(err.response)
         })
 }
-export function fetchUserByRoles(role: string, setUserList: Dispatch<SetStateAction<UserTableProps[]>>) {
-    privateGateway.get(`${tableRoutes.user.listByRoles}${role}/`)
+export function fetchUserByRoles(setUserList: Dispatch<SetStateAction<UserTableProps[]>>) {
+    privateGateway.get(tableRoutes.user.listByRoles)
         .then(
             res => { setUserList(res.data.response) })
         .catch(err => console.log(err))

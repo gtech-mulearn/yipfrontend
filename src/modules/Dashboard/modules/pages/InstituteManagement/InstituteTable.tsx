@@ -5,7 +5,6 @@ import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchDistricts } from '../School/SchoolAPI'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
-import Modal from '../Club/ClubModal'
 export interface InstituteTableProps {
     name: string
     district: string
