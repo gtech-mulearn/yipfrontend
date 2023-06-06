@@ -12,7 +12,7 @@ import Select from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
-import './userSetup.css'
+import styles from './UserSetup.module.css'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -121,8 +121,8 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
 
                             </>
                         }
-                        <div className='password'>
-                            <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className="input" />
+                        <div className={styles.password}>
+                            <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className={styles.input} />
                             <i className='fas fa-eye' onMouseDown={() => setShowPassword(true)} onMouseOut={() => setShowPassword(false)}></i>
                         </div>
                         <div className="create-btn-container">

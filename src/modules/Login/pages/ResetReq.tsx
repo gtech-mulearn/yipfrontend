@@ -11,10 +11,9 @@ function ResetReq() {
         <div className="login-background">
             <div className="login-container">
                 <img src={YIPlogo} alt="YIP-Logo" />
-                <h2>Reset</h2>
-                <h5>{'User email Id here'}</h5>
+                <h2>Reset Password </h2>
                 <form>
-                    <p>New Password</p>
+                    <p>Email Id</p>
                     <input
                         id="email"
                         name="email"
