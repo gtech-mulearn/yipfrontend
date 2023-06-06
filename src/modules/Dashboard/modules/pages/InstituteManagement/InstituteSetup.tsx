@@ -55,7 +55,7 @@ const InstituteSetup = () => {
                         <div className="select-container club">
                             {close && <CustomSelect option={districtList} header="District" setData={setDistrict} />}
                             {close && <CustomSelect option={instituteList} header="Institute" setData={setInstitute} />}
-                            <CustomInput requiredHeader={true} value="ICT Id" setData={setICT} data={ICT} />
+                            <CustomInput requiredHeader={true} value="ICT ID" setData={setICT} data={ICT} />
                             <div className="create-btn-container">
                                 <button className="black-btn"
                                     onClick={handleConnect}>Create</button>

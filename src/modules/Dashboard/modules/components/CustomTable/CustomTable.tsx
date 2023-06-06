@@ -213,7 +213,7 @@ function CustomTable<TableProps>({
                     )}
                 </tbody>
             </table >
-            {!sortedTable.length && <div className="no-data">No Data to show </div>}
+            {!sortedTable.length && <div className="no-data">No Data to Show </div>}
             {/* Pagination */}
 
             {pagination && <div className='paginator' >
