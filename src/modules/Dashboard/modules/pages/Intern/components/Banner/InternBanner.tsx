@@ -23,6 +23,8 @@ const InternBanner = () => {
         }
         else {
             fetchBannerData(setBanner as any, 'state', 'state')
+            setDistrict({} as selectProps)
+            setCollege({} as selectProps)
         }
     }, [zone])
 
@@ -31,9 +33,12 @@ const InternBanner = () => {
             fetchCollege(district.name, setCollegeList)
             fetchBannerData(setBanner as any, 'district', district.name)
         }
-        else
-            fetchBannerData(setBanner as any, 'zone', zone.name)
-
+        else {
+            if (zone.id) {
+                fetchBannerData(setBanner as any, 'zone', zone.name)
+            }
+            setCollege({} as selectProps)
+        }
     }, [district])
 
     useEffect(() => {
@@ -41,8 +46,9 @@ const InternBanner = () => {
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
         else {
-            fetchBannerData(setBanner as any, 'district', district.name)
-
+            if (district.id) {
+                fetchBannerData(setBanner as any, 'district', district.name)
+            }
         }
     }, [college])
 
