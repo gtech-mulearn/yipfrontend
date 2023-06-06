@@ -1,10 +1,23 @@
-import React, { ChangeEvent, useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
+import React, {
+    ChangeEvent,
+    useEffect,
+    useRef,
+    useState,
+    Dispatch,
+    SetStateAction,
+} from "react";
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect";
 import CustomTable from "../../../../components/CustomTable/CustomTable";
+import CsvDownloadButton from "react-json-to-csv";
 import "./InternTable.scss";
 import { uploadSubmissions } from "../../InternApi";
+import { CSVLink, CSVDownload } from "react-csv";
 import axios, { AxiosRequestConfig } from "axios";
-import { setupRoutes, tableRoutes, yip5Routes } from "../../../../../../../services/urls";
+import {
+    setupRoutes,
+    tableRoutes,
+    yip5Routes,
+} from "../../../../../../../services/urls";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchUserInfo } from "../../../../../components/api";
@@ -12,11 +25,12 @@ import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
 import { fetchDistrictSchools } from "../../../School/SchoolAPI";
+
 interface commonViewProps {
-    pre_registrations: string,
-    vos: string,
-    group_formation: string,
-    idea_submission: string
+    pre_registrations: string;
+    vos: string;
+    group_formation: string;
+    idea_submission: string;
 }
 interface viewsSingleProps {
     title: string;
@@ -50,9 +64,9 @@ interface InternViewProps extends zoneViewProps {
 const views = [
     { id: "0", name: "Intern" },
     { id: "1", name: "Campus" },
-    { id: '2', name: 'District Coordinator' },
-    { id: '3', name: 'Programme Executive' },
-    { id: '4', name: 'District' },
+    { id: "2", name: "District Coordinator" },
+    { id: "3", name: "Programme Executive" },
+    { id: "4", name: "District" },
     // { id: "2", name: "Designation" },
     // { id: "3", name: "District" },
     // { id: "4", name: "Zone" },
@@ -111,7 +125,6 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
             fetchDistrict(setDistrictList, setDistricttable);
     }, [view]);
 
-
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         const allowedTypes: string[] = ["text/csv"]; // Specify the allowed file types here
@@ -130,6 +143,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         }
     };
 
+    useEffect(() => {
+        handleDownloadCSV();
+        console.log(csvData);
+    }, [campusTableList, internTableList, assigneeList, districttable]);
 
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
@@ -148,452 +165,491 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
             console.log(districttable)
         }
     }
+};
 
-    const handleUpload = () => {
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append("file", selectedFile);
+const handleUpload = () => {
+    if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
 
-            const config: AxiosRequestConfig = {
-                data: formData,
-                headers: { "Content-Type": "multipart/form-data" },
-            };
+        const config: AxiosRequestConfig = {
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        };
 
-            axios
-                .post(
-                    `${import.meta.env.VITE_BACKEND_URL}\\${tableRoutes.user.uploadSubmissions
-                    }`,
-                    formData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                                "accessToken"
-                            )}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
-                )
-                .then((response) => {
-                    // console.log(response);
-                    toast.success("File Uploaded Successfully")
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast.error(error.response.data.message.general[0]);
-                });
-        }
-    };
-
-    const [userInfo, setUserInfo] = React.useState({ role: "", name: "" });
-    const [viewUpload, setViewUpload] = useState(false);
-    useEffect(() => {
-        if (userInfo.role === "") {
-            fetchUserInfo(setUserInfo);
-        }
-
-        if (
-            [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF].includes(
-                userInfo.role
-            )
-        ) {
-            setViewUpload(true);
-        }
-    }, [userInfo]);
-
-    return (
-        <>
-            <div className="white-container-header">
-                <CustomSelect
-                    option={views}
-                    setValue={setView}
-                    defaultValue={views[0]}
-                    requiredLabel={true}
-                    header={'Views'}
-                    placeholder={view}
-                    requiredData={false}
-                    isClearable={false}
-                />
-
-                {viewUpload && (
-                    <>
-                        <div
-                            className="table-fn-btn cursor"
-                            onClick={handleButtonClick}
-                        >
-                            <i className="fa-solid fa-plus"></i>
-                            <input
-                                type="file"
-                                accept=".csv"
-                                onChange={handleFileChange}
-                                ref={fileInputRef}
-                                style={{ display: "none" }}
-                            />
-                            <p>Upload File</p>
-                        </div>
-                        {selectedFile && (
-                            <div
-                                className="table-fn-btn cursor"
-                                onClick={handleUpload}
-                            >
-                                Selected File: {selectedFile.name}
-                                <p>Upload</p>
-                            </div>
-                        )}
-                    </>
-                )}
-
+        axios
+            .post(
+                `${import.meta.env.VITE_BACKEND_URL}\\${tableRoutes.user.uploadSubmissions
+                }`,
+                formData,
                 {
-                    <div
-                        className="table-fn-btn cursor"
-                        onClick={() => {
-                            handleDownloadCSV()
-                        }}
-                    >
-                        <i className="fa-solid fa-download"></i>
-                        <p>Download CSV</p>
-                    </div>
-
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                        "Content-Type": "multipart/form-data",
+                    },
                 }
-            </div>
-            <div className="white-container">
-                <div className="table-top">
-                    <div className="table-header">
-                        <h3>{view} View</h3>
-                        <div className="table-header-btn">
+            )
+            .then((response) => {
+                // console.log(response);
+                toast.success("File Uploaded Successfully");
+            })
+            .catch((error) => {
+                console.log(error);
+                toast.error(error.response.data.message.general[0]);
+            });
+    }
+};
+
+const [userInfo, setUserInfo] = React.useState({ role: "", name: "" });
+const [viewUpload, setViewUpload] = useState(false);
+useEffect(() => {
+    if (userInfo.role === "") {
+        fetchUserInfo(setUserInfo);
+    }
+
+    if (
+        [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF].includes(userInfo.role)
+    ) {
+        setViewUpload(true);
+    }
+}, [userInfo]);
+
+return (
+    <>
+        <div className="white-container-header">
+            <CustomSelect
+                option={views}
+                setValue={setView}
+                defaultValue={views[0]}
+                requiredLabel={true}
+                header={"Views"}
+                placeholder={view}
+                requiredData={false}
+                isClearable={false}
+            />
+
+            {viewUpload && (
+                <>
+                    <div className="table-fn-btn cursor" onClick={handleButtonClick}>
+                        <i className="fa-solid fa-plus"></i>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileChange}
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                        />
+                        <p>Upload File</p>
+                    </div>
+                    {selectedFile && (
+                        <div className="table-fn-btn cursor" onClick={handleUpload}>
+                            Selected File: {selectedFile.name}
+                            <p>Upload</p>
+                        </div>
+                    )}
+                </>
+            )}
+
+            {
+                <div
+                    className="table-fn-btn cursor"
+                    onClick={() => {
+                        handleDownloadCSV()
+                    }}
+                >
+                    <i className="fa-solid fa-download"></i>
+                    <p>Download CSV</p>
+                </div>
+
+            }
+        </div>
+        <div className="white-container">
+            <div className="table-top">
+                <div className="table-header">
+                    <h3>{view} View</h3>
+                    <div className="table-header-btn">
+                        <li
+                            className="fas fa-bars "
+                            onClick={() => setMenu(!menu)}
+                        ></li>
+                    </div>
+                </div>
+                {/* Filter Opener */}
+                {menu && (
+                    <div className="table-fn">
+                        <div className="search-bar">
+                            <input
+                                className="search-bar-item"
+                                id="search"
+                                name="search"
+                                type="text"
+                                value={search}
+                                placeholder={`Search`}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                             <li
-                                className="fas fa-bars "
-                                onClick={() => setMenu(!menu)}
+                                className="fas fa-close cursor"
+                                onClick={() => { }}
                             ></li>
                         </div>
-                    </div>
-                    {/* Filter Opener */}
-                    {menu && (
-                        <div className="table-fn">
-                            <div className="search-bar">
-                                <input
-                                    className="search-bar-item"
-                                    id="search"
-                                    name="search"
-                                    type="text"
-                                    value={search}
-                                    placeholder={`Search`}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                />
-                                <li
-                                    className="fas fa-close cursor"
-                                    onClick={() => { }}
-                                ></li>
-                            </div>
-                            {/* <div
+                        {/* <div
                                 className="table-fn-btn cursor"
                                 onClick={openSetup}
                             >
                                 <i className="fa-solid fa-plus"></i>
                                 <p>Assign Campus </p>
                             </div> */}
-                            {view !== "Intern" && (
-                                <button
-                                    className="table-fn-btn cursor"
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => setFilterBtn(!filterBtn)}
-                                >
-                                    <i className="fa-solid fa-filter"></i>
-                                    <p>Filter</p>
-                                </button>
-                            )}
-                            {filterBtn && view !== "Intern" && (
-                                <div
-                                    className="table-fn-btn  cursor"
-                                    onClick={() => setFilterBtn(!filterBtn)}
-                                >
-                                    <p></p>
-                                    <i className="fa-solid fa-close  "></i>
-                                    <p></p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-                {/* Filters */}
-
-                {filterBtn && view !== "Intern" && (
-                    <div className="filter-container">
-                        <div className="filter-box">
-                            <CustomSelect
-                                option={zoneFilterList}
-                                header=""
-                                placeholder={"Filter By Zone"}
-                                requiredHeader={false}
-                                requiredData={true}
-                                setData={setZoneFilter}
-                            />
-                            {
-                                <CustomSelect
-                                    option={districtFilterList}
-                                    header=""
-                                    placeholder={"Filter By District"}
-                                    requiredHeader={false}
-                                    setData={setDistrictFilter}
-                                />
-                            }
-                        </div>
+                        {view !== "Intern" && (
+                            <button
+                                className="table-fn-btn cursor"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setFilterBtn(!filterBtn)}
+                            >
+                                <i className="fa-solid fa-filter"></i>
+                                <p>Filter</p>
+                            </button>
+                        )}
+                        {filterBtn && view !== "Intern" && (
+                            <div
+                                className="table-fn-btn  cursor"
+                                onClick={() => setFilterBtn(!filterBtn)}
+                            >
+                                <p></p>
+                                <i className="fa-solid fa-close  "></i>
+                                <p></p>
+                            </div>
+                        )}
                     </div>
                 )}
-                {/* Table */}
-                {view === "Campus" && (
-                    <CustomTable<CampusViewProps>
-                        tableHeadList={[
-                            "Name",
-                            "District",
-                            "Intern",
-                            "Zone",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={campusTableList}
-                        orderBy={[
-                            "institute",
-                            "district",
-                            'intern',
-                            "zone",
-                            "pre_registrations",
-                            "vos",
-                            "group_formation",
-                            "idea_submission",
-                        ]}
-                        capitalize={false}
-                    />
-                )}
-                {view === "District Coordinator" && (
-                    <CustomTable<AssignViewProps>
-                        tableHeadList={[
-                            "Name",
-                            "District",
-                            "Zone",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={assigneetable}
-                        orderBy={[
-                            "name",
-                            "district",
-                            "zone",
-                            "pre_registrations",
-                            "vos",
-                            "group_formation",
-                            "idea_submission",
-                        ]}
-                        capitalize={false}
-                    />
-                )}
-                {view === "Programme Executive" && (
-                    <CustomTable<AssignViewProps>
-                        tableHeadList={[
-                            "Name",
-                            "District",
-                            "Zone",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={assigneetable}
-                        orderBy={[
-                            "name",
-                            "district",
-                            "zone",
-                            "pre_registrations",
-                            "vos",
-                            "group_formation",
-                            "idea_submission",
-                        ]}
-                        capitalize={false}
-                    />
-                )}
-                {view === "District" && (
-                    <CustomTable<districtViewProps>
-                        tableHeadList={[
-                            "Name",
-                            "Zone",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={districttable}
-                        orderBy={[
-                            "district",
-                            "zone",
-                            "pre_registration",
-                            "vos",
-                            "group_formation",
-                            "idea_submission",
-                        ]}
-                        capitalize={false}
-                    />
-                )}
-                {view === "Intern" && (
-                    <CustomTable<InternViewProps>
-                        tableHeadList={[
-                            "Name",
-
-                            "District",
-                            "Pre-registration",
-                            "Voice of Stakeholder",
-                            "Group Formation",
-                            "Idea Submission",
-                        ]}
-                        tableData={internTableList}
-                        orderBy={[
-                            "name",
-
-                            "districtName",
-                            "pre_registrations",
-                            "vos",
-                            "group_formation",
-                            "idea_submission",
-                        ]}
-                        capitalize={false}
-                    />
-                )}
             </div>
-        </>
-    );
+            {/* Filters */}
+
+            {filterBtn && view !== "Intern" && (
+                <div className="filter-container">
+                    <div className="filter-box">
+                        <CustomSelect
+                            option={zoneFilterList}
+                            header=""
+                            placeholder={"Filter By Zone"}
+                            requiredHeader={false}
+                            setData={setZoneFilter}
+                        />
+                        {
+                            <CustomSelect
+                                option={districtFilterList}
+                                header=""
+                                placeholder={"Filter By District"}
+                                requiredHeader={false}
+                                setData={setDistrictFilter}
+                            />
+                        }
+                    </div>
+                </div>
+            )}
+            {/* Table */}
+            {view === "Campus" && (
+                <CustomTable<CampusViewProps>
+                    tableHeadList={[
+                        "Name",
+                        "District",
+                        "Zone",
+                        "Pre-registration",
+                        "Voice of Stakeholder",
+                        "Group Formation",
+                        "Idea Submission",
+                    ]}
+                    tableData={campusTableList}
+                    orderBy={[
+                        "institute",
+                        "district",
+                        "zone",
+                        "pre_registrations",
+                        "vos",
+                        "group_formation",
+                        "idea_submission",
+                    ]}
+                    capitalize={false}
+                />
+            )}
+            {view === "District Coordinator" && (
+                <CustomTable<AssignViewProps>
+                    tableHeadList={[
+                        "Name",
+                        "District",
+                        "Zone",
+                        "Pre-registration",
+                        "Voice of Stakeholder",
+                        "Group Formation",
+                        "Idea Submission",
+                    ]}
+                    tableData={assigneetable}
+                    orderBy={[
+                        "name",
+                        "district",
+                        "zone",
+                        "pre_registrations",
+                        "vos",
+                        "group_formation",
+                        "idea_submission",
+                    ]}
+                    capitalize={false}
+                />
+            )}
+            {view === "Programme Executive" && (
+                <CustomTable<AssignViewProps>
+                    tableHeadList={[
+                        "Name",
+                        "District",
+                        "Zone",
+                        "Pre-registration",
+                        "Voice of Stakeholder",
+                        "Group Formation",
+                        "Idea Submission",
+                    ]}
+                    tableData={assigneetable}
+                    orderBy={[
+                        "name",
+                        "district",
+                        "zone",
+                        "pre_registrations",
+                        "vos",
+                        "group_formation",
+                        "idea_submission",
+                    ]}
+                    capitalize={false}
+                />
+            )}
+            {view === "District" && (
+                <CustomTable<districtViewProps>
+                    tableHeadList={[
+                        "Name",
+                        "Zone",
+                        "Pre-registration",
+                        "Voice of Stakeholder",
+                        "Group Formation",
+                        "Idea Submission",
+                    ]}
+                    tableData={districttable}
+                    orderBy={[
+                        "district",
+                        "zone",
+                        "pre_registration",
+                        "vos",
+                        "group_formation",
+                        "idea_submission",
+                    ]}
+                    capitalize={false}
+                />
+            )}
+            {view === "Intern" && (
+                <CustomTable<InternViewProps>
+                    tableHeadList={[
+                        "Name",
+                        "District",
+                        "Pre-registration",
+                        "Voice of Stakeholder",
+                        "Group Formation",
+                        "Idea Submission",
+                    ]}
+                    tableData={internTableList}
+                    orderBy={[
+                        "name",
+                        "districtName",
+                        "pre_registrations",
+                        "vos",
+                        "group_formation",
+                        "idea_submission",
+                    ]}
+                    capitalize={false}
+                />
+            )}
+        </div>
+    </>
+);
 };
 
-function fetchCampus(setData: Dispatch<SetStateAction<CampusViewProps[]>>
-    ,
+function fetchCampus(
+    setData: Dispatch<SetStateAction<CampusViewProps[]>>,
     setData2: Dispatch<SetStateAction<CampusViewProps[]>>
 ) {
-    privateGateway.get(yip5Routes.campusList)
-        .then(res => {
-            setData(res.data.response)
-            setData2(res.data.response)
+    privateGateway
+        .get(yip5Routes.campusList)
+        .then((res) => {
+            setData(res.data.response);
+            setData2(res.data.response);
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
-        })
+        });
 }
-function fetchDistrictCoordinator(setData: Dispatch<SetStateAction<AssignViewProps[]>>, setData2: Dispatch<SetStateAction<AssignViewProps[]>>) {
-    privateGateway.get(yip5Routes.listDC)
-        .then(res => {
+function fetchDistrictCoordinator(
+    setData: Dispatch<SetStateAction<AssignViewProps[]>>,
+    setData2: Dispatch<SetStateAction<AssignViewProps[]>>
+) {
+    privateGateway
+        .get(yip5Routes.listDC)
+        .then((res) => {
             // console.log(res)
-            setData(res.data.response)
-            setData2(res.data.response)
+            setData(res.data.response);
+            setData2(res.data.response);
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
-        })
+        });
 }
-function fetchDistrict(setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>, setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>) {
-    privateGateway.get(yip5Routes.listDistrict)
-        .then(res => {
-            setDistrictFilter(res.data.response)
-            setDistricttable(res.data.response)
+function fetchDistrict(
+    setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>,
+    setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>
+) {
+    privateGateway
+        .get(yip5Routes.listDistrict)
+        .then((res) => {
+            setDistrictFilter(res.data.response);
+            setDistricttable(res.data.response);
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
-        })
+        });
 }
-function fetchProgrammeExecutive(setData: Dispatch<SetStateAction<AssignViewProps[]>>, setData2: Dispatch<SetStateAction<AssignViewProps[]>>) {
-    privateGateway.get(yip5Routes.listPE)
-        .then(res => {
-            setData(res.data.response)
-            setData2(res.data.response)
+function fetchProgrammeExecutive(
+    setData: Dispatch<SetStateAction<AssignViewProps[]>>,
+    setData2: Dispatch<SetStateAction<AssignViewProps[]>>
+) {
+    privateGateway
+        .get(yip5Routes.listPE)
+        .then((res) => {
+            setData(res.data.response);
+            setData2(res.data.response);
         })
-        .catch(err =>
-            console.log(err)
-        )
+        .catch((err) => {
+            console.log(err);
+        });
+}
+function fetchIntern(
+    setData: Dispatch<SetStateAction<InternViewProps[]>>,
+    setData2: Dispatch<SetStateAction<InternViewProps[]>>
+) {
+    privateGateway
+        .get(yip5Routes.internList)
+        .then((res) => {
+            setData(
+                res.data.response.map((intern: InternViewProps) => {
+                    return { ...intern, districtName: intern.district.join(",") };
+                })
+                    .catch(err => {
+                        console.log(err);
+                    }
+                    )
 }
 function fetchIntern(setData: Dispatch<SetStateAction<InternViewProps[]>>, setData2: Dispatch<SetStateAction<InternViewProps[]>>) {
-    privateGateway.get(yip5Routes.internList)
-        .then(res => {
-            setData(res.data.response.map((intern: InternViewProps) => {
-                return { ...intern, districtName: intern.district.join(',') }
-            }))
-            setData2(res.data.response.map((intern: InternViewProps) => {
-                return { ...intern, districtName: intern.district.join(',') }
-            }))
-        })
-        .catch(err => console.log(err))
+                privateGateway.get(yip5Routes.internList)
+                    .then(res => {
+                        setData(res.data.response.map((intern: InternViewProps) => {
+                            return { ...intern, districtName: intern.district.join(',') }
+                        }))
+                        setData2(res.data.response.map((intern: InternViewProps) => {
+                            return { ...intern, districtName: intern.district.join(',') }
+                        }))
+                    })
+      );
+})
+    .catch ((err) => console.log(err));
 }
 const filterIntern = (internList: InternViewProps[], search: string) => {
-    let list = internList
+    let list = internList;
     if (search) {
-        list = searchIntern(list, search)
+        list = searchIntern(list, search);
     }
-    return list
-}
-const filterCoordinator = (coordinatorList: AssignViewProps[], search: string, district: string, zone: string) => {
-    let list = coordinatorList
+    return list;
+};
+const filterCoordinator = (
+    coordinatorList: AssignViewProps[],
+    search: string,
+    district: string,
+    zone: string
+) => {
+    let list = coordinatorList;
     if (search) {
-        list = searchCoordinator(list, search)
-    } if (zone) {
-        list = list.filter(club => club.zone === zone)
-    }
-    if (district) {
-        list = list.filter(club => club.district === district)
-    }
-    return list
-}
-const filterDistrict = (districtList: districtViewProps[], search: string, district: string, zone: string) => {
-    let list = districtList
-    if (search) {
-        list = searchDistrict(list, search)
+        list = searchCoordinator(list, search);
     }
     if (zone) {
-        list = list.filter(club => club.zone === zone)
+        list = list.filter((club) => club.zone === zone);
     }
     if (district) {
-        list = list.filter(club => club.district === district)
+        list = list.filter((club) => club.district === district);
     }
-    return list
-}
+    return list;
+};
+const filterDistrict = (
+    districtList: districtViewProps[],
+    search: string,
+    district: string,
+    zone: string
+) => {
+    let list = districtList;
+    if (search) {
+        list = searchDistrict(list, search);
+    }
+    if (zone) {
+        list = list.filter((club) => club.zone === zone);
+    }
+    if (district) {
+        list = list.filter((club) => club.district === district);
+    }
+    return list;
+};
 function searchDistrict(districtList: districtViewProps[], search: string) {
-    return districtList.filter((district: districtViewProps) =>
-        rawString(district.name).includes(rawString(search)) ||
-        rawString(district.zone).includes(rawString(search))
-    )
+    return districtList.filter(
+        (district: districtViewProps) =>
+            rawString(district.name).includes(rawString(search)) ||
+            rawString(district.zone).includes(rawString(search))
+    );
 }
 
 function searchIntern(internList: InternViewProps[], search: string) {
-    return internList.filter((intern: InternViewProps) =>
-    (rawString(intern.name).includes(rawString(search)) ||
-        rawString(intern.districtName).includes(rawString(search))))
+    return internList.filter(
+        (intern: InternViewProps) =>
+            rawString(intern.name).includes(rawString(search)) ||
+            rawString(intern.districtName).includes(rawString(search))
+    );
 }
 function searchCoordinator(coordinatorList: AssignViewProps[], search: string) {
-    return coordinatorList.filter((coordinator: AssignViewProps) =>
-        rawString(coordinator.name).includes(rawString(search)) ||
-        rawString(coordinator.district).includes(rawString(search)) ||
-        rawString(coordinator.zone).includes(rawString(search))
-    )
+    return coordinatorList.filter(
+        (coordinator: AssignViewProps) =>
+            rawString(coordinator.name).includes(rawString(search)) ||
+            rawString(coordinator.district).includes(rawString(search)) ||
+            rawString(coordinator.zone).includes(rawString(search))
+    );
 }
-function filterCampus(clubList: CampusViewProps[], search: string, district: string, zone: string) {
-    let list = clubList
+function filterCampus(
+    clubList: CampusViewProps[],
+    search: string,
+    district: string,
+    zone: string
+) {
+    let list = clubList;
     if (search) {
-        list = searchCampus(list, search)
+        list = searchCampus(list, search);
     }
-    if (zone)
-        list = list.filter(club => club.zone === zone)
+    if (zone) list = list.filter((club) => club.zone === zone);
     if (district) {
-        list = list.filter(club => club.district === district)
+        list = list.filter((club) => club.district === district);
     }
-    return list
+    return list;
 }
 function fetchZoneFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(yip5Routes.zoneList)
-        .then(res => setData(res.data.response))
-        .catch(err => console.log(err))
+    privateGateway
+        .get(yip5Routes.zoneList)
+        .then((res) => setData(res.data.response))
+        .catch((err) => console.log(err));
 }
 function searchCampus(clubList: CampusViewProps[], search: string) {
-    return clubList.filter((club: CampusViewProps) =>
-        rawString(club.institute).includes(rawString(search)) ||
-        rawString(club.district).includes(rawString(search)) ||
-        rawString(club.zone).includes(rawString(search)))
+    return clubList.filter(
+        (club: CampusViewProps) =>
+            rawString(club.institute).includes(rawString(search)) ||
+            rawString(club.district).includes(rawString(search)) ||
+            rawString(club.zone).includes(rawString(search))
+    );
 }
 function rawString(str: string) {
     str = str.toLowerCase();
@@ -601,10 +657,13 @@ function rawString(str: string) {
     str = str.replaceAll(" ", "");
     return str;
 }
-export function fetchDistrictFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.error(err))
+export function fetchDistrictFilter(
+    setData: Dispatch<SetStateAction<selectProps[]>>
+) {
+    privateGateway
+        .get(setupRoutes.district.list)
+        .then((res) => res.data.response.districts)
+        .then((data) => setData(data))
+        .catch((err) => console.error(err));
 }
 export default InternTable;
