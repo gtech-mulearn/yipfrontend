@@ -53,14 +53,14 @@ const InternBanner = () => {
     }, [college])
 
     useEffect(() => {
-        setDistrict({} as selectProps);
-        setCollege({} as selectProps)
+      setDistrict({} as selectProps);
+      setCollege({} as selectProps)
     }, [zone])
 
-    useEffect(() => {
+    useEffect(()=>{
         setCollege({} as selectProps)
     }, [district])
-
+    
 
     return (
         <div className='white-container'>
@@ -68,24 +68,8 @@ const InternBanner = () => {
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
                     <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} data={zone} />
-                    {zone.id && <CustomSelect
-                        option={districtList}
-                        header={'District'}
-                        requiredHeader={false}
-                        setData={setDistrict}
-                        data={district}
-                        value={districtList.filter(districtList => districtList?.name !== "" && districtList?.id === district?.id)}
-
-                    />}
-                    {district.id && <CustomSelect
-                        option={collegeList}
-                        header={'College'}
-                        requiredHeader={false}
-                        setData={setCollege}
-                        data={college}
-                        value={collegeList.filter(collegeList => collegeList?.name !== "" && collegeList?.id === college?.id)}
-
-                    />}
+                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} data={district} />}
+                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} data={college} />}
                 </div >
             </div>
             <div className="statistics">
