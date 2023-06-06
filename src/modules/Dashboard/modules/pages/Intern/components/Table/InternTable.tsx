@@ -294,8 +294,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                 )}
                 {/* Table */}
                 {(
-                    view === "Campus" ||
-                    view === "Designation") && (
+                    view === "Campus") && (
                         <CustomTable<CampusViewProps>
                             tableHeadList={[
                                 "Name",
@@ -533,12 +532,8 @@ function filterCampus(clubList: CampusViewProps[], search: string, district: str
     if (search) {
         list = searchCampus(list, search)
     }
-    list = list.filter(club => {
-        console.log(club.zone === zone)
-
-        return club.zone === zone
-    })
-
+    if (zone)
+        list = list.filter(club => club.zone === zone)
     if (district) {
         list = list.filter(club => club.district === district)
     }
