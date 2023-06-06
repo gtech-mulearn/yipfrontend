@@ -58,58 +58,97 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     }
     return (
         <>
-            {club?.id && <Modal club={club} setClub={setClub} optionStatusList={optionStatusList} update={updateClubData} />}
-            <div className='white-container'>
-
+            {club?.id && (
+                <Modal
+                    club={club}
+                    setClub={setClub}
+                    optionStatusList={optionStatusList}
+                    update={updateClubData}
+                />
+            )}
+            <div className="white-container">
                 {/* Table top */}
 
                 <div className="table-top">
-                    <div className='table-header'>
+                    <div className="table-header">
                         <h3>YIP Club List</h3>
-                        <div className='table-header-btn'>
-                            <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
-                        </div>
-                    </div>
-                    {menu && <div className='table-fn'>
-                        <div className='search-bar'>
-                            <input className='search-bar-item'
-                                id='search'
-                                name='search'
-                                type="text"
-                                value={search}
-                                placeholder={`Search`}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
+                        <div className="table-header-btn">
                             <li
-                                className='fas fa-close cursor'
-                                onClick={() => setSearch('')}
+                                className="fas fa-bars "
+                                onClick={() => setMenu(!menu)}
                             ></li>
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setViewSetup((prev: boolean) => !prev)}>
-                            <i className="fa-solid fa-plus"></i>
-                            <p>Add YIP Club</p>
+                    </div>
+                    {menu && (
+                        <div className="table-fn">
+                            <div className="search-bar">
+                                <input
+                                    className="search-bar-item"
+                                    id="search"
+                                    name="search"
+                                    type="text"
+                                    value={search}
+                                    placeholder={`Search`}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <li
+                                    className="fas fa-close cursor"
+                                    onClick={() => setSearch("")}
+                                ></li>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                onClick={() =>
+                                    setViewSetup((prev: boolean) => !prev)
+                                }
+                            >
+                                <i className="fa-solid fa-plus"></i>
+                                <p>Add YIP Club</p>
+                            </div>
+                            <div
+                                className="table-fn-btn cursor"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setFilterBtn(!filterBtn)}
+                            >
+                                <i className="fa-solid fa-filter"></i>
+                                <p>Filter</p>
+                            </div>
+                            {filterBtn && (
+                                <div
+                                    className="table-fn-btn  cursor"
+                                    onClick={resetFilter}
+                                >
+                                    <p></p>
+                                    <i className="fa-solid fa-close  "></i>
+                                    <p></p>
+                                </div>
+                            )}
                         </div>
-                        <div className="table-fn-btn cursor" onClick={() => setFilterBtn(!filterBtn)}>
-                            <i className="fa-solid fa-filter"></i>
-                            <p>Filter</p>
-                        </div>
-                        {filterBtn && <div className="table-fn-btn  cursor" onClick={resetFilter}>
-                            <p></p>
-                            <i className="fa-solid fa-close  "></i>
-                            <p></p>
-                        </div>}
-                    </div>}
+                    )}
                 </div>
 
                 {/* Filters */}
 
-                {filterBtn && <div className="filter-container">
-                    <div className="filter-box">
-                        <CustomSelect option={districtList} header='District' setData={setDistrict} requiredHeader={false} />
-                        <CustomSelect option={optionStatusList} header='Status' setValue={setStatus} requiredHeader={false} requiredData={false} requiredLabel={true} />
-                    </div >
-                </div>
-                }
+                {filterBtn && (
+                    <div className="filter-container">
+                        <div className="filter-box">
+                            <CustomSelect
+                                option={districtList}
+                                header="District"
+                                setData={setDistrict}
+                                requiredHeader={false}
+                            />
+                            <CustomSelect
+                                option={optionStatusList}
+                                header="Status"
+                                setValue={setStatus}
+                                requiredHeader={false}
+                                requiredData={false}
+                                requiredLabel={true}
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {/*  Table  */}
 
@@ -118,26 +157,30 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                     tableData={listForTable}
                     orderBy={list}
                     sortOrder={{
-                        sortBy: 'club_status' as keyof ClubTableProps,
+                        sortBy: "club_status" as keyof ClubTableProps,
                         orderList: statusList,
                         orderSymbol: {
-                            asc: 'fa-arrow-up-short-wide',
-                            desc: 'fa-arrow-down-wide-short'
-                        }
+                            asc: "fa-arrow-up-short-wide",
+                            desc: "fa-arrow-down-wide-short",
+                        },
                     }}
-                    customCSS={[{
-                        name: 'club_status',
-                        css: 'status'
-                    }]}
+                    customCSS={[
+                        {
+                            name: "club_status",
+                            css: "status",
+                        },
+                    ]}
                     manage={{
-                        value: 'View',
-                        manageFunction: (item: ClubTableProps) => { navigate(`/campus-dashboard/club/${item.id}`) },
-                        icon: 'fa-solid fa-eye'
+                        value: "View",
+                        manageFunction: (item: ClubTableProps) => {
+                            navigate(`/campus-dashboard/club/${item.id}`);
+                        },
+                        icon: "fa-solid fa-eye",
                     }}
                 />
-            </div >
+            </div>
         </>
-    )
+    );
 }
 function filterClub(clubList: ClubTableProps[], search: string, district: selectProps, status: string) {
     let list = clubList
