@@ -149,6 +149,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                 )
                 .then((response) => {
                     // console.log(response);
+                    toast.success("File Uploaded Successfully")
                 })
                 .catch((error) => {
                     console.log(error);
