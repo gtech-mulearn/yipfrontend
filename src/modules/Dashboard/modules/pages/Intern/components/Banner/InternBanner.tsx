@@ -38,9 +38,9 @@ const InternBanner = () => {
 
 
     useEffect(() => {
-         setCollege({} as selectProps)
+        setCollege({} as selectProps)
         setDistrict({} as selectProps)
-       
+
     }, [zone])
 
     useEffect(() => {
@@ -52,9 +52,9 @@ const InternBanner = () => {
             <div className="filter-container">
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
-                    <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} data={zone}/>
-                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} data={district}/>}
-                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} data={college}/>}
+                    <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} data={zone} />
+                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} data={district} />}
+                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} data={college} />}
                 </div >
             </div>
             <div className="statistics">
@@ -64,23 +64,28 @@ const InternBanner = () => {
                 </div> */}
                 <div className={`box blue-box`} >
                     <h3>{banner.preRegistration}<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{'Pre-registration'}</p>
+                    <p>{'Pre-registrations'}</p>
 
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner && Number.isNaN(Math.round(banner.vos/banner.preRegistration * 100))?0:Math.round(banner.vos/banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.vos)}</p>
-                    <p>{'VOS Completed '}</p>
+                    <h3>{banner.vos}<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p>{'VOS Completed'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner && Number.isNaN(Math.round(banner.groupFormation/banner.vos * 100))?0:Math.round(banner.groupFormation/banner.vos * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.groupFormation)}</p>
-                    <p>{'Group Formation'}</p>
+                    <h3>{banner.groupFormation} <div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p>{'Group Formations'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner && Number.isNaN(Math.round(banner.ideaSubmission/banner.groupFormation * 100))?0:Math.round(banner.ideaSubmission/banner.groupFormation* 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p className='count-of'>{Number(banner.ideaSubmission)}</p>
-                    <p>{'Idea Submission Completed'}</p>
+                    <h3>{banner.ideaSubmission}<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p>{'Idea Submissions'}</p>
+                </div>
+                <div className={`box blue-box`} >
+                    <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.preRegistration * 100)) ? 0 : Math.round(banner.vos / banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p>{'Pre-registrartion to VOS '}</p>
+                </div>
+                <div className={`box blue-box`} >
+                    <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <p>{'VOS to Idea Submission '}</p>
                 </div>
             </div>
         </div>

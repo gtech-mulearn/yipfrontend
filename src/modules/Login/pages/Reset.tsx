@@ -14,7 +14,7 @@ function Reset() {
         <div className="login-background">
             <div className="login-container">
                 <img src={YIPlogo} alt="YIP-Logo" />
-                <h2>Reset Password</h2>
+                <h2>Set  new Password</h2>
                 <p>{user} reset your password</p>
                 <form>
 
