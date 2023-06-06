@@ -3,6 +3,7 @@ import "../../components/Formik/reactSelectStyles.css";
 import "../../components/Setup.scss";
 import {
     initialState,
+    selectCollegeProps,
     selectEditedProps,
     selectProps,
 } from "../../utils/setupUtils";
@@ -29,7 +30,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         selectEditedProps[]
     >([]);
     const [district, setDistrict] = useState<selectProps>(initialState);
-    const [collegeList, setCollegeList] = useState<selectProps[]>([]);
+    const [collegeList, setCollegeList] = useState<selectCollegeProps[]>([]);
     const [collegeListEdited, setCollegeListEdited] = useState<
         selectEditedProps[]
     >([]);
@@ -60,13 +61,13 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
 
     function handleCreate(college: string, district: string) {
         const collegeId = collegeList.filter(
-            (mapCollege) => mapCollege.name === college
+            (mapCollege) => mapCollege.id === college
         );
-
+		console.log(collegeId)
+		
         const districtId = districtList.filter(
-            (mapDistrict) => mapDistrict.name === district
-        );
-
+			(mapDistrict) => mapDistrict.name === district
+		);
         console.log(collegeId[0]);
 
         type postDataProps = {
@@ -81,6 +82,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             instituteId: collegeId[0].id,
             districtId: districtId[0].id,
         };
+		console.log(postData.instituteId)
         createClub<postDataProps>(
             postData,
             updateClubData,

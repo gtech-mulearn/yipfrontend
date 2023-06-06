@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react"
 import { CountResponse } from "./ClubBanner"
 import { bannerRoutes, setupRoutes, tableRoutes } from "../../../../../services/urls"
 import { privateGateway } from "../../../../../services/apiGateway"
-import { selectEditedProps, selectProps } from "../../utils/setupUtils"
+import { selectCollegeProps, selectEditedProps, selectProps } from "../../utils/setupUtils"
 import { Success, showAlert } from "../../../components/Error/Alerts"
 import { ClubTableProps } from "./ClubTable"
 import { toast } from "react-toastify"
@@ -22,25 +22,27 @@ export function fetchDistricts(
         .get(setupRoutes.district.list)
         .then((res) => res.data.response.districts)
         .then((data) => {
-            console.log(data);
             if (setData1) setData1(data)
-            setData((data));
+            setData(
+                data.map((item: { id: any; name: any }) => ({
+                    value: item.name,
+                    label: item.name,
+                }))
+            );
         })
         .catch((err) => console.error(err));
 }
 
 export function updateResponse(data: any) {
-    return data.map((item: { id: any; name: any }) => ({
+    return data.map((item: { id: any; title: any }) => ({
         value: item.id,
-        label: item.name,
+        label: item.title,
     }));
 }
 
-
-
 export function fetchcolleges(
     setData: Dispatch<SetStateAction<selectEditedProps[]>>,
-    setData1: Dispatch<SetStateAction<selectProps[]>>,
+    setData1: Dispatch<SetStateAction<selectCollegeProps[]>>,
     districtName: string
 ) {
     const reqData: any = {
@@ -50,14 +52,8 @@ export function fetchcolleges(
         .post(setupRoutes.district.college, reqData)
         .then((res) => res.data.response.institutions)
         .then((data) => {
-            setData1(
-                data.map((item: any) => ({ id: item.id, name: item.title }))
-            );
-            setData(
-                updateResponse(
-                    data.map((item: any) => ({ id: item.id, name: item.title }))
-                )
-            );
+            setData1(data);
+            setData(updateResponse(data));
         })
         .catch((err) => console.error(err));
 }
