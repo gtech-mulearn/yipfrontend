@@ -51,7 +51,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                 options={option}
                 isClearable={true}
                 isMulti={false}
-
+                
                 value = {option.filter(option => option?.name !== "" && option?.id === data?.id)}
 
                 isSearchable={true}

@@ -52,6 +52,7 @@ interface CampusViewProps extends commonViewProps {
   institute: string;
   district: string;
   id: string;
+  intern: string;
   zone: string;
 }
 interface InternViewProps extends zoneViewProps {
@@ -173,7 +174,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       csvData1 = assigneeList;
     } else if (view === "Programme Executive") {
       csvData1 = assigneetable;
-      console.log(csvData1)
+      console.log(csvData1);
     } else if (view === "District") {
       csvData1 = districttable;
     }
@@ -356,6 +357,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
           <CustomTable<CampusViewProps>
             tableHeadList={[
               "Name",
+              "Intern",
               "District",
               "Zone",
               "Pre-registration",
@@ -366,6 +368,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
             tableData={campusTableList}
             orderBy={[
               "institute",
+              "intern",
               "district",
               "zone",
               "pre_registrations",
