@@ -14,7 +14,7 @@ const ClubBanner: FC<{ updated: boolean }> = ({ updated }) => {
             <div className="welcome-banner">
                 <div className="statistics">
                     {
-                        Object.entries(count).slice(0, 6).map(([key, value], index: number) => (
+                        Object.entries(count).slice(0, 5).map(([key, value], index: number) => (
                             <div className={`box ${index < 3 ? '' : 'light-'}blue-box`} key={index}>
                                 <h3>{value}<div className="count"><div className="count-in">{count.total}</div></div></h3>
                                 <p>{key}</p>
@@ -34,7 +34,6 @@ const initialState: CountResponse = {
     "Connection established": 0,
     "Orientation Scheduled": 0,
     "Orientation Completed": 0,
-    "Execom Formed": 0,
     total: 0,
 };
 export interface CountResponse {
@@ -43,7 +42,6 @@ export interface CountResponse {
     "Connection established": number;
     "Orientation Scheduled": number;
     "Orientation Completed": number;
-    "Execom Formed": number;
     total: number;
 }
 

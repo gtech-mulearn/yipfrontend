@@ -71,7 +71,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
 
                 <div className="table-top">
                     <div className="table-header">
-                        <h3>YIP Club List</h3>
+                        <h3>YIP Campus List</h3>
                         <div className="table-header-btn">
                             <li
                                 className="fas fa-bars "
