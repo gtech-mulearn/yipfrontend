@@ -120,6 +120,12 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                 tableData={listForTable}
                 orderBy={list}
                 capitalize={false}
+            // manage={{
+            //     value: 'ICT Id',
+            //     manageFunction: (item: any) => console.log(item),
+            //     icon: 'fa-edit'
+            // }
+            // }
             />
             {/* {open && <Modal instituteID />} */}
         </div>
