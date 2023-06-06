@@ -1,5 +1,5 @@
 import { useState, useEffect, FC } from 'react'
-import BannerImg from "../../../../../assets/Study abroad-pana.png"
+import BannerImg from "../../../../../assets/Study abroad-pana.webp"
 import './Banner.scss'
 import { fetchInstitutionStatusCount } from './SchoolAPI'
 const SchoolBanner: FC<{ updated: boolean }> = ({ updated }) => {

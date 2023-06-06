@@ -1,4 +1,4 @@
-import YIPlogo from '../../../../assets/logo.png'
+import YIPlogo from '../../../../assets/logo.webp'
 import { useNavigate } from "react-router-dom"
 import { buttons, urlProps } from '../../utils/navbarUtils'
 import './LeftDrawer.scss'
