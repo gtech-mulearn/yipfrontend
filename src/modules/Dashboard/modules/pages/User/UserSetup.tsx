@@ -49,9 +49,11 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         fetchUserRoles(setRoleList)
         fetchDistricts(setDistrictList)
         fetchUserByRoles(setCoordinatorRoleBasedList)
-        getSelectedInstitutes(setInstituteList)
     }, [])
-
+    useEffect(() => {
+        if (coordinator.id)
+            getSelectedInstitutes(coordinator.id, setInstituteList)
+    }, [coordinator])
 
     function handleCreate() {
 
@@ -132,8 +134,8 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         </div>
     )
 }
-function getSelectedInstitutes(setInstituteList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(campusRoutes.listInstitutes)
+function getSelectedInstitutes(userId: string, setInstituteList: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(`${campusRoutes.listInstituteByUser}${userId}/`)
         .then((res) => {
             setInstituteList(res.data.response)
         })
