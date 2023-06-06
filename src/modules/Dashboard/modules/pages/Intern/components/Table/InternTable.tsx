@@ -39,8 +39,10 @@ interface CampusViewProps extends commonViewProps {
     district: string,
     id: string,
     zone: string,
+    intern: string,
 }
 interface InternViewProps extends zoneViewProps {
+
     district: string[];
     districtName: string;
 }
@@ -60,7 +62,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [filterBtn, setFilterBtn] = useState<boolean>(false);
     const [view, setView] = useState<string>("Campus");
     const [assigneeList, setAssigneeList] = useState<AssignViewProps[]>([]);
-   
+
     const [campusTableList, setCampusTableList] = useState<CampusViewProps[]>([])
     const [internTableList, setInternTableList] = useState<InternViewProps[]>([]);
     const [districttable, setDistricttable] = useState<districtViewProps[]>([]);
@@ -68,10 +70,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
     const [zoneList, setZoneList] = useState<zoneViewProps[]>([]);
     const [zonetable, setZonetable] = useState<zoneViewProps[]>([]);
-    
+
     const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
     const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
-    
+
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768);
     const [districtFilterList, setDistrictFilterList] = useState<selectProps[]>([]);
     const [districtFilter, setDistrictFilter] = useState<selectProps>({} as selectProps);
@@ -79,7 +81,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [internList, setInternList] = useState<InternViewProps[]>([]);
-    
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
         fetchCampus(setCampusList, setCampusTableList);
@@ -129,25 +131,20 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     };
 
 
-    const handleDownloadCSV = () =>{
+    const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
-        if(view === 'Campus')
-        {
+        if (view === 'Campus') {
             console.log(campusTableList);
         }
-        else if(view === 'Intern')
-        {
+        else if (view === 'Intern') {
             console.log(internTableList)
         }
-        else if(view === 'District Coordinator')
-        {
+        else if (view === 'District Coordinator') {
             console.log(assigneeList)
         }
-        else if(view === "Program Executive")
-        {
+        else if (view === "Program Executive") {
             console.log(assigneetable)
-        }else if(view === "District")
-        {
+        } else if (view === "District") {
             console.log(districttable)
         }
     }
@@ -247,14 +244,14 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
                 {
                     <div
-                            className="table-fn-btn cursor"
-                            onClick={()=>{
-                                handleDownloadCSV()
-                            }}
-                        >
-                            <i className="fa-solid fa-download"></i>
-                            <p>Download CSV</p>
-                        </div>
+                        className="table-fn-btn cursor"
+                        onClick={() => {
+                            handleDownloadCSV()
+                        }}
+                    >
+                        <i className="fa-solid fa-download"></i>
+                        <p>Download CSV</p>
+                    </div>
 
                 }
             </div>
@@ -284,7 +281,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 />
                                 <li
                                     className="fas fa-close cursor"
-                                    onClick={() => {}}
+                                    onClick={() => { }}
                                 ></li>
                             </div>
                             {/* <div
@@ -347,6 +344,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         tableHeadList={[
                             "Name",
                             "District",
+                            "Intern",
                             "Zone",
                             "Pre-registration",
                             "Voice of Stakeholder",
@@ -357,6 +355,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         orderBy={[
                             "institute",
                             "district",
+                            'intern',
                             "zone",
                             "pre_registrations",
                             "vos",
@@ -440,6 +439,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                     <CustomTable<InternViewProps>
                         tableHeadList={[
                             "Name",
+
                             "District",
                             "Pre-registration",
                             "Voice of Stakeholder",
@@ -449,6 +449,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                         tableData={internTableList}
                         orderBy={[
                             "name",
+
                             "districtName",
                             "pre_registrations",
                             "vos",
@@ -503,9 +504,8 @@ function fetchProgrammeExecutive(setData: Dispatch<SetStateAction<AssignViewProp
             setData(res.data.response)
             setData2(res.data.response)
         })
-        .catch(err => {
-            console.log(err);
-        }
+        .catch(err =>
+            console.log(err)
         )
 }
 function fetchIntern(setData: Dispatch<SetStateAction<InternViewProps[]>>, setData2: Dispatch<SetStateAction<InternViewProps[]>>) {
