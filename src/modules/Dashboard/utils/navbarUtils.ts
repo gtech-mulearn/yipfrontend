@@ -22,23 +22,23 @@ export const buttons: urlProps[] = [
         ],
     },
 
-    {
-        icon: "fa-school",
-        url: "/school-dashboard",
-        title: "Model School",
-        roles: [
-            roles.SUPER_ADMIN,
-            roles.ADMIN,
-            roles.HQ_STAFF,
-            roles.ZONAL_COORDINATOR,
-            roles.DISTRICT_COORDINATOR,
-            roles.PROGRAMME_EXECUTIVE,
-        ],
-    },
+    // {
+    //     icon: "fa-school",
+    //     url: "/school-dashboard",
+    //     title: "Model School",
+    //     roles: [
+    //         roles.SUPER_ADMIN,
+    //         roles.ADMIN,
+    //         roles.HQ_STAFF,
+    //         roles.ZONAL_COORDINATOR,
+    //         roles.DISTRICT_COORDINATOR,
+    //         roles.PROGRAMME_EXECUTIVE,
+    //     ],
+    // },
     {
         icon: "fa-people-group",
         url: "/club-dashboard",
-        title: "YIP Club",
+        title: "YIP Interns Tracking",
         roles: [
             roles.SUPER_ADMIN,
             roles.ADMIN,

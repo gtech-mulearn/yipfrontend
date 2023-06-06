@@ -103,7 +103,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                                 }
                             >
                                 <i className="fa-solid fa-plus"></i>
-                                <p>Add YIP Club</p>
+                                <p>Add Campus</p>
                             </div>
                             <div
                                 className="table-fn-btn cursor"
