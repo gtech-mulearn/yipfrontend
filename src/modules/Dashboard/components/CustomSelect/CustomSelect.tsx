@@ -52,13 +52,8 @@ export const CustomSelect: FC<CustomSelectProps> = ({
                 isClearable={true}
                 isMulti={false}
 
-                value={option.find(
-                    option =>
-                        option?.name !==
-                            "" &&
-                        option?.id ===
-                            data?.id
-                )}
+                value = {option.filter(option => option?.name !== "" && option?.id === data?.id)}
+
                 isSearchable={true}
                 placeholder={`Select a ${header}`}
                 noOptionsMessage={() => 'No options'}
