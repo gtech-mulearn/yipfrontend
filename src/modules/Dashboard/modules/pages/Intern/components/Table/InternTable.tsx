@@ -160,23 +160,24 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
   useEffect(() => {
     handleDownloadCSV();
-    console.log(csvData);
   }, [campusTableList, internTableList, assigneeList, districttable]);
 
   const handleDownloadCSV = () => {
     //check the view value and dowload the data in the corresponding state variable as a csv
+    let csvData1: any = [];
     if (view === "Campus") {
-      setCsvData(campusTableList);
-      console.log(campusTableList);
+      csvData1 = campusTableList;
     } else if (view === "Intern") {
-      setCsvData(internTableList);
+      csvData1 = internTableList;
     } else if (view === "District Coordinator") {
-      setCsvData(assigneeList);
+      csvData1 = assigneeList;
     } else if (view === "Program Executive") {
-      setCsvData(assigneetable);
+      csvData1 = assigneetable;
     } else if (view === "District") {
-      setCsvData(districttable);
+      csvData1 = districttable;
     }
+
+    setCsvData(csvData1);
   };
 
   const handleUpload = () => {
@@ -263,7 +264,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
           </>
         )}
 
-        {csvData && (
+        {csvData && csvData.length > 0 && (
           <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
         )}
       </div>
