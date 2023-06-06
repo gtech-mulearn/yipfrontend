@@ -324,6 +324,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 header=""
                                 placeholder={"Filter By Zone"}
                                 requiredHeader={false}
+                                requiredData={true}
                                 setData={setZoneFilter}
                             />
                             {
