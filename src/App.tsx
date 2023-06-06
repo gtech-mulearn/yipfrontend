@@ -22,15 +22,15 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <Login />
-      },
-      {
-        path: 'reset-req-password',
-        element: <ResetReq />
-      },
-      {
-        path: 'reset-password',
-        element: <Reset />
       }
+      // {
+      //   path: 'reset-req-password',
+      //   element: <ResetReq />
+      // },
+      // {
+      //   path: 'reset-password',
+      //   element: <Reset />
+      // }
     ]
   },
   {

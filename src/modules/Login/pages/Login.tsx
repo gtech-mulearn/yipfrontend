@@ -40,7 +40,7 @@ function Login() {
                             />
                             <label>Show Password</label>
                         </div>
-                        <label><a href="/reset-req-password">Reset Password?</a></label>
+                        {/* <label><a href="/reset-req-password">Reset Password?</a></label> */}
                     </div>
                     <button type="button" id="submitBtn" onClick={
                         () => login(email, password, setErrorStatus)}
