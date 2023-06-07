@@ -37,12 +37,12 @@ export const BottomTab = () => {
                 {/* Renders the title of the current page */}
 
                 <div className="tab-nav-container">
-                    <div className="tab-adjust-container">
+                    <>
                         {/* Renders navigation links */}
                         {newButton.map((button: urlProps, index: number) => {
                             if (button.title === 'Users' || button.title === 'Legislative Assembly' || button.title === 'Block') {
                                 return (
-                                    <>
+                                    <div className="tab-adjust-container" key={index}>
                                         {button.title === 'Users' && <div key={index} onClick={() => setOpen((prev: boolean) => !prev)} >
                                             <div
                                                 className={`tab ${window.location.pathname === '/user'
@@ -69,7 +69,7 @@ export const BottomTab = () => {
                                                 </h3>
                                             </div>
                                         </div>}
-                                    </>
+                                    </div>
                                 )
                             }
                             else {
@@ -112,7 +112,7 @@ export const BottomTab = () => {
                                 }}
                             ></a>
                         </div>
-                    </div>
+                    </>
                 </div>
             </div>
         </div >
