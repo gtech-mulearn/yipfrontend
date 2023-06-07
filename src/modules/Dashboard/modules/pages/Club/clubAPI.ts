@@ -30,7 +30,7 @@ export function fetchDistricts(
 
 export function updateResponse(data: any) {
     return data.map((item: { id: any; title: any }) => ({
-        value: item.id,
+        value: item.title,
         label: item.title,
     }));
 }
