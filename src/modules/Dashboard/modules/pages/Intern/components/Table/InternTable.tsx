@@ -14,6 +14,7 @@ import { uploadSubmissions } from "../../InternApi";
 import { CSVLink, CSVDownload } from "react-csv";
 import axios, { AxiosRequestConfig } from "axios";
 import {
+  campusRoutes,
   setupRoutes,
   tableRoutes,
   yip5Routes,
@@ -104,8 +105,13 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
   useEffect(() => {
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
-    fetchDistrictFilter(setDistrictFilterList);
+    fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
   }, []);
+  useEffect(() => {
+    setDistrictFilter({} as selectProps)
+    fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
+
+  }, [zoneFilter])
   useEffect(() => {
     if (view === "Campus")
       setCampusTableList(
@@ -199,8 +205,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
       axios
         .post(
-          `${import.meta.env.VITE_BACKEND_URL}\\${
-            tableRoutes.user.uploadSubmissions
+          `${import.meta.env.VITE_BACKEND_URL}\\${tableRoutes.user.uploadSubmissions
           }`,
           formData,
           {
@@ -296,7 +301,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                   placeholder={`Search`}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <li className="fas fa-close cursor" onClick={() => {}}></li>
+                <li className="fas fa-close cursor" onClick={() => { }}></li>
               </div>
               {/* <div
                                 className="table-fn-btn cursor"
@@ -347,6 +352,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                   placeholder={"Filter By District"}
                   requiredHeader={false}
                   setData={setDistrictFilter}
+                  value={districtFilterList.filter((item) => item.name !== '' && item.id === districtFilter.id)}
                 />
               }
             </div>
@@ -656,10 +662,11 @@ function rawString(str: string) {
   return str;
 }
 export function fetchDistrictFilter(
+  zone: string,
   setData: Dispatch<SetStateAction<selectProps[]>>
 ) {
-  privateGateway
-    .get(setupRoutes.district.list)
+  const getDistrictByZone = zone ? `${campusRoutes.listDistrict}${zone}/` : setupRoutes.district.list
+  privateGateway.get(getDistrictByZone)
     .then((res) => res.data.response.districts)
     .then((data) => setData(data))
     .catch((err) => console.error(err));
