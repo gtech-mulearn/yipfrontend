@@ -102,8 +102,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
   const [internList, setInternList] = useState<InternViewProps[]>([]);
   const styleHead = {
     unOrder: 'fa-sort',
-    asc: ' fa-sort-amount-asc',
-    desc: 'fa-sort-amount-desc',
+    asc: ' fa-sort-amount-desc',
+    desc: 'fa-sort-amount-asc',
   }
   const customStyles = {
     headerStyle: [
