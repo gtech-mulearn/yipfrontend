@@ -112,7 +112,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         ...styleHead
       },
       {
-        title: 'pre-registration',
+        title: 'pre_registration',
         ...styleHead
       },
       {
@@ -133,7 +133,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       css: 'center-align'
     },
     {
-      name: "pre-registration",
+      name: "pre_registration",
       css: 'center-align'
     },
     {
