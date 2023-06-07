@@ -23,9 +23,9 @@ const InternBanner = () => {
         }
         else {
             fetchBannerData(setBanner as any, 'state', 'state')
-            setDistrict({} as selectProps)
-            setCollege({} as selectProps)
         }
+        setDistrict({} as selectProps)
+        setCollege({} as selectProps)
     }, [zone])
 
     useEffect(() => {
@@ -37,8 +37,8 @@ const InternBanner = () => {
             if (zone.id) {
                 fetchBannerData(setBanner as any, 'zone', zone.name)
             }
-            setCollege({} as selectProps)
         }
+        setCollege({} as selectProps)
     }, [district])
 
     useEffect(() => {
@@ -52,24 +52,35 @@ const InternBanner = () => {
         }
     }, [college])
 
-    useEffect(() => {
-      setDistrict({} as selectProps);
-      setCollege({} as selectProps)
-    }, [zone])
-
-    useEffect(()=>{
-        setCollege({} as selectProps)
-    }, [district])
-    
-
     return (
         <div className='white-container'>
             <div className="filter-container">
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
-                    <CustomSelect option={zoneList} header={'Zone'} requiredHeader={false} setData={setZone} data={zone} />
-                    {zone.id && <CustomSelect option={districtList} header={'District'} requiredHeader={false} setData={setDistrict} data={district} />}
-                    {district.id && <CustomSelect option={collegeList} header={'College'} requiredHeader={false} setData={setCollege} data={college} />}
+                    <CustomSelect
+                        option={zoneList}
+                        header={'Zone'}
+                        requiredHeader={false}
+                        setData={setZone}
+                        data={zone}
+                        value={zoneList.filter(zoneList => zoneList?.name !== "" && zoneList?.id === zone?.id)}
+                    />
+                    {zone.id && <CustomSelect
+                        option={districtList}
+                        header={'District'}
+                        requiredHeader={false}
+                        setData={setDistrict}
+                        data={district}
+                        value={districtList.filter(districtList => districtList?.name !== "" && districtList?.id === district?.id)}
+                    />}
+                    {district.id && <CustomSelect
+                        option={collegeList}
+                        header={'College'}
+                        requiredHeader={false}
+                        setData={setCollege}
+                        data={college}
+                        value={collegeList.filter(collegeList => collegeList?.name !== "" && collegeList?.id === college?.id)}
+                    />}
                 </div >
             </div>
             <div className="statistics">
