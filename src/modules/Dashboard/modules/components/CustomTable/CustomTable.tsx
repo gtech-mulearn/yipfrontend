@@ -17,13 +17,19 @@ export interface CustomTableProps<TableProps> {
     tableData: TableProps[]
     orderBy: (keyof TableProps)[]
     sortOrder?: {
-        sortBy: keyof TableProps
+        sortBy?: keyof TableProps
         orderList: string[]
         orderSymbol: {
             asc: string
             desc: string
         }
     },
+    customHeaderCssSort?: {
+        title: keyof TableProps,
+        unOrder?: string,
+        asc: string,
+        desc: string,
+    }[],
     customCSS?: {
         name: string
         css: string
@@ -43,6 +49,7 @@ function CustomTable<TableProps>({
     orderBy,
     sortOrder,
     customCSS,
+    customHeaderCssSort,
     manage,
     capitalize = true,
     pagination = true,
@@ -108,17 +115,35 @@ function CustomTable<TableProps>({
 
     function getIconStyleForSortedHeading(index: number): string {
         if (selectedHeading === index) {
-            if (sortOrder?.sortBy === orderBy[index]) {
-                switch (sort.status) {
-                    case 'Sorted:ASC': return sortOrder?.orderSymbol.asc as string + ' selected';
-                    case 'Sorted:DESC': return sortOrder?.orderSymbol.desc as string + ' selected'
+            {
+                if (sortOrder?.sortBy === orderBy[index]) {
+                    switch (sort.status) {
+                        case 'Sorted:ASC': return sortOrder?.orderSymbol.asc as string + ' selected';
+                        case 'Sorted:DESC': return sortOrder?.orderSymbol.desc as string + ' selected'
+                    }
                 }
+                else if (customHeaderCssSort) {
+                    for (let item of customHeaderCssSort) {
+                        if (item.title === orderBy[index]) {
+                            switch (sort.status) {
+                                case 'Sorted:ASC': return item.asc as string + ' selected';
+                                case 'Sorted:DESC': return item.desc as string + ' selected'
+                            }
+                        }
+                        else {
+                            switch (sort.status) {
+                                case 'Sorted:ASC': return 'fa-arrow-up-a-z selected'
+                                case 'Sorted:DESC': return 'fa-arrow-up-z-a selected'
+                            }
+                        }
+                    }
+                }
+
             }
-            else {
-                switch (sort.status) {
-                    case 'Sorted:ASC': return 'fa-arrow-up-a-z  selected'
-                    case 'Sorted:DESC': return 'fa-arrow-up-z-a selected'
-                }
+        }
+        if (customHeaderCssSort) {
+            for (let item of customHeaderCssSort) {
+                if (item.title === orderBy[index]) { return item.unOrder ? item.unOrder : item.asc }
             }
         }
         if (orderBy[index] === sortOrder?.sortBy) {
@@ -127,13 +152,12 @@ function CustomTable<TableProps>({
         return 'fa-arrow-up-a-z'
     }
 
-    function customCssByRequired(index: number, className: string): string {
+    function customCssByRequiredByValue(index: number, className: string): string {
         if (customCSS) {
             for (let item of customCSS) {
                 if (item.name === orderBy[index]) {
-                    return `${item.css}-${className.toLowerCase().replace(/\s+/g, '-')}`
+                    return `${item.css}-${(String(className)).toLowerCase().replace(/\s+/g, '-')} ${item.css}`
                 }
-
             }
         }
         return ''
@@ -194,7 +218,7 @@ function CustomTable<TableProps>({
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
                                     <>
-                                        <td className={`${customCssByRequired(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
+                                        <td className={`${customCssByRequiredByValue(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
                                     </>
                                 ))
                             }

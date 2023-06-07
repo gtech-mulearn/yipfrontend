@@ -18,7 +18,7 @@ table {
             text-align: left;
 
             .cursor {
-                cursor: pointer!important;
+                cursor: pointer !important;
 
                 &:hover {
                     i {
@@ -26,8 +26,9 @@ table {
                     }
                 }
             }
+
             .filter {
-                cursor: pointer!important;
+                cursor: pointer !important;
             }
 
             .selected {
@@ -69,6 +70,7 @@ table {
         tr {
             td {
                 vertical-align: top;
+                font-size: small;
 
                 .edit-btn {
                     display: flex;
@@ -99,7 +101,6 @@ table {
         }
     }
 
-    @media screen and (max-width:610px) {}
 
 }
 

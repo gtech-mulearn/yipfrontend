@@ -100,7 +100,55 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
   const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [internList, setInternList] = useState<InternViewProps[]>([]);
-
+  const styleHead = {
+    unOrder: 'fa-sort',
+    asc: ' fa-sort-amount-asc',
+    desc: 'fa-sort-amount-desc',
+  }
+  const customStyles = {
+    headerStyle: [
+      {
+        title: 'pre_registrations',
+        ...styleHead
+      },
+      {
+        title: 'pre-registration',
+        ...styleHead
+      },
+      {
+        title: 'vos',
+        ...styleHead
+      },
+      {
+        title: 'group_formation',
+        ...styleHead
+      },
+      {
+        title: 'idea_submission',
+        ...styleHead
+      }
+    ],
+    alignNumbersCenter: [{
+      name: "pre_registrations",
+      css: 'center-align'
+    },
+    {
+      name: "pre-registration",
+      css: 'center-align'
+    },
+    {
+      name: "vos",
+      css: 'center-align'
+    },
+    {
+      name: "group_formation",
+      css: 'center-align'
+    },
+    {
+      name: "idea_submission",
+      css: 'center-align'
+    }]
+  }
   const fileInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     fetchCampus(setCampusList, setCampusTableList);
@@ -383,6 +431,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
               "idea_submission",
             ]}
             capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
           />
         )}
         {view === "District Coordinator" && (
