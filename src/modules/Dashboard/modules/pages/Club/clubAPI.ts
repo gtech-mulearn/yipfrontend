@@ -25,8 +25,8 @@ export function fetchDistricts(
             if (setData1) setData1(data)
             setData(
                 data.map((item: { id: any; name: any }) => ({
-                    value: item.name,
-                    label: item.name,
+                    id: item.name,
+                    name: item.name,
                 }))
             );
         })
