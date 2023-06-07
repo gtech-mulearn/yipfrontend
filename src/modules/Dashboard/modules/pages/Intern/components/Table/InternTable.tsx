@@ -457,6 +457,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
               "idea_submission",
             ]}
             capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
           />
         )}
         {view === "Programme Executive" && (
@@ -481,6 +483,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
               "idea_submission",
             ]}
             capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
           />
         )}
         {view === "District" && (
@@ -503,6 +507,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
               "idea_submission",
             ]}
             capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
           />
         )}
         {view === "Intern" && (
@@ -525,6 +531,8 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
               "idea_submission",
             ]}
             capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
           />
         )}
       </div>
