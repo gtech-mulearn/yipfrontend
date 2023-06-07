@@ -105,8 +105,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                 <h3>Setup a YIP Club</h3>
                 <Formik
                     onSubmit={(values) => {
-                        console.log(values)
-                        // handleCreate(values.college, values.district);
+                        handleCreate(values.college, values.district);
                     }}
                     validationSchema={validateSchema}
                     initialValues={{
