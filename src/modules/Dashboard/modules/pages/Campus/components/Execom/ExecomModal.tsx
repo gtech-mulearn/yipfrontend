@@ -5,6 +5,7 @@ import { selectProps } from '../../../../utils/setupUtils'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
 import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
+import { updateCampusStatus } from '../Connection/ConnectionModal'
 
 const ExecomModal = ({ cancel, campusId }: { cancel: () => void, campusId: string }) => {
     const [roleList, setRoleList] = useState<selectProps[]>([])
@@ -43,12 +44,12 @@ const ExecomModal = ({ cancel, campusId }: { cancel: () => void, campusId: strin
             </div>
             <div className="data-box">
                 <div className="content">
-                    <CustomInput type = "number" value={'Mobile Number'} data={mobile} setData={setMobile} customCSS={'setup-item'} />
+                    <CustomInput type="number" value={'Mobile Number'} data={mobile} setData={setMobile} customCSS={'setup-item'} />
                 </div>
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => assignExecom(campusId, role.id, name, email, mobile, cancel)}>Add Member</button>
+                    <button className='btn-update ' onClick={() => assignExecom(campusId, role.id, name, email, mobile, cancel, campusId)}>Add Member</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -59,7 +60,6 @@ function getExecomRoles(setData: React.Dispatch<React.SetStateAction<selectProps
     privateGateway.get(campusRoutes.designation.list.execom)
         .then((res) => {
             setData(res.data.response.sub_user_roles.map((item: any) => {
-                console.log(item)
                 return {
                     name: item.label,
                     id: item.value
@@ -71,7 +71,7 @@ function getExecomRoles(setData: React.Dispatch<React.SetStateAction<selectProps
         })
 }
 export default ExecomModal
-function assignExecom(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void) {
+function assignExecom(id: string, designation: string, name: string, email: string, mobile: string, cancel: () => void, campusId: string) {
     const postData = {
         clubId: id,
         type: 'Execom',
@@ -84,6 +84,8 @@ function assignExecom(id: string, designation: string, name: string, email: stri
     privateGateway.post(campusRoutes.subUser.create, postData).then((res) => {
         privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: 'Execom Formed' })
             .then(res => {
+                updateCampusStatus(campusId, "Execom Formed", cancel);
+
                 success();
             })
         console.log(res)

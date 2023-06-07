@@ -16,13 +16,26 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
     const [status, setStatus] = useState<string>(getNextStatus(campuStatus ? campuStatus : campus?.status as string))
-    const viewConnection = (status === 'Connection Established') || (campus?.status === 'Confirmed' && status === '')
-    const viewScheduled = (status === 'Orientation Scheduled') || (campus?.status === 'Connection Established' && status === '')
-    const viewCompleted = (status === 'Orientation Completed') || (campus?.status === 'Orientation Scheduled' && status === '')
-    const viewExecom = (status === 'Execom Formed') || (campus?.status === 'Orientation Completed' && status === '') || (campus?.status === 'Execom Formed' && status === '')
-    const viewUpdateButton = (status === 'Confirmed') || (campus?.status === 'Identified' && status === '') || (status === 'Identified')
+    const viewConnection = (status === 'Connection Established') || (status === 'Add Facilitator')
+    const viewScheduled = (status === 'Orientation Scheduled')
+    const viewCompleted = (status === 'Orientation Update')
+    const viewExecom = ((status === 'Execom Formed') || (status === 'Add Member'))
+    const viewUpdateButton = (status === 'Confirmed') || (status === 'Identified')
+    let [view, setView] = useState('')
     useEffect(() => {
         fetchStatus(setStatusList, setOptionStatusList)
+        if (viewScheduled) {
+            setView('Orientation Scheduled')
+        }
+        if (campus?.status === 'Confirmed') {
+            setView('Confirmed')
+        }
+        if (campus?.status === 'Identified') {
+            setView('Identified')
+        }
+        if (viewExecom) {
+            setView('Execom Formed')
+        }
     }, [])
     return (
         <div className="modal-overlay">
@@ -43,6 +56,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                                 requiredData={false}
                                 isClearable={false}
                                 requiredLabel={true}
+                                defaultInputValue={view}
                                 placeholder={getNextStatus(campuStatus ? campuStatus : campus?.status as string)}
                                 requirePlaceHolder={true}
                                 customCSS={{
@@ -53,9 +67,9 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                             />
                         </div>
                     </div>}
-                    {viewConnection && <ConnectionModal cancel={cancel} isNotConnected={campus?.connection === ''} campusId={campusId as string} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
-                    {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} />}
+                    {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} />}
                     {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}
                 </div>
 
@@ -83,10 +97,13 @@ function getNextStatus(status: string) {
     switch (status) {
         case 'Identified': return 'Confirmed'
         case 'Confirmed': return 'Connection Established'
+        case 'Add Facilitator': return 'Add Facilitator'
+        case 'Orientation Update': return 'Orientation Update'
         case 'Connection Established': return 'Orientation Scheduled'
-        case 'Orientation Scheduled': return 'Orientation Completed'
-        case 'Orientation Completed': return 'Execom Formed'
+        case 'Orientation Scheduled': return 'Execom Formed'
         case 'Execom Formed': return 'Execom Formed'
+        case 'Orientation Completed': return 'Execom Formed'
+        case 'Add Member': return 'Add Member'
         default: return ''
     }
 }

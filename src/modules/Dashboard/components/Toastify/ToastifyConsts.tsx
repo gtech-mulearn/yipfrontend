@@ -34,6 +34,7 @@ export const errorCheck = (err: any) => {
 };
 
 export const errorMessage = (err: any) => {
+    console.log(err);
     const data = err.data.message;
     for (const key in data) {
         if (data[key].length > 0) {

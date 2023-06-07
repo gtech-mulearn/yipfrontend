@@ -118,12 +118,16 @@ export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOpti
         .then(res => res.data.response.clubStatus)
         .then(data => {
             setData(data)
-            setOptionStatusList(data.map((item: selectProps, index: string) => {
-                return {
-                    id: index,
-                    name: item
-                }
-            }))
+            setOptionStatusList(
+                (data.filter((item: string) => item !== 'Orientation Completed'))
+                    .map((item: string, index: string) => {
+                        return {
+                            id: index,
+                            name: item
+                        }
+                    })
+            )
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
+

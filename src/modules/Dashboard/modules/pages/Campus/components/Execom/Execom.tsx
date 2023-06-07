@@ -10,15 +10,15 @@ export interface ExecomProps {
     email: string
     phone: string
 }
-const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
+const Execom = ({ date, campusId, update }: { date: string, campusId: string, update: boolean }) => {
     const [open, setOpen] = React.useState(false)
     const [list, setList] = React.useState<ExecomProps[]>([])
     useEffect(() => {
         listSubUser(setList, campusId)
-    }, [])
+    }, [update, open])
     return (
         <div>
-            {open && <CampusModal campuStatus={'Execom Formed'} campusId={campusId} cancel={() => setOpen(false)} />}
+            {open && <CampusModal campuStatus={'Add Member'} campusId={campusId} cancel={() => setOpen(false)} />}
             <StatusTable
                 title1='Status'
                 name='Execom Formed'
@@ -38,7 +38,6 @@ const Execom = ({ date, campusId }: { date: string, campusId: string }) => {
 function listSubUser(setData: Dispatch<SetStateAction<ExecomProps[]>>, id: string = '') {
     privateGateway.get(`${campusRoutes.subUser.listExecom}${id}/Execom/`)
         .then((res) => {
-            console.log(res)
             setData(res.data.response)
         }).catch((err) => {
             console.log(err)
