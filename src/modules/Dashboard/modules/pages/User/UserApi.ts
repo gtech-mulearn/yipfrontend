@@ -82,13 +82,25 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
         .then(res => res.data.response)
         .then(data => {
             const newData = data.map((item: any) => (
-                { ...item, role: (item?.role?.name || item?.role) }
+                {
+                    ...item,
+                    role: (item?.role?.name || item?.role),
+                    location: getLocation(item),
+                    institutes: item?.role?.institutes ? item?.role?.institutes : []
+                }
             ))
+            console.log(newData)
             setUserList(newData)
             setListForTable(newData)
             if (updateTable) updateTable(newData)
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
+}
+function getLocation(item: any) {
+    if (item?.role?.zone) return item?.role?.zone + ' Zone';
+    else if (item?.role.district) return item?.role?.district;
+    else if (item?.role?.name === 'Intern') return Array.isArray(item?.role?.district) ? item?.role?.district?.map((district: any) => district?.name).join(',') : item?.role?.district ? item?.role?.district : '';
+    else return 'Kerala ';
 }
 function selectPostData(postData: any) {
     const commonPostData = {
@@ -105,7 +117,7 @@ function selectPostData(postData: any) {
         return { ...commonPostData, zone: postData.zone }
     }
     if (postData.role === 'IN') {
-        return { ...commonPostData, districtCoordinatorId: postData.coordinatorId, instituteId: postData.institutes.map((institute: any) => (institute.id)) }
+        return { ...commonPostData, districtCoordinatorId: postData.coordinatorId, instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : null }
     }
     return commonPostData
 }

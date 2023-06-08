@@ -4,7 +4,7 @@ import './InternBanner.scss'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes, yip5Routes } from '../../../../../../../services/urls'
 import { selectProps } from '../../../../utils/setupUtils'
-const InternBanner = () => {
+const InternBanner = ({ update }: { update: boolean }) => {
     const [banner, setBanner] = useState<any>({})
     const [district, setDistrict] = useState<selectProps>({} as selectProps)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
@@ -26,7 +26,7 @@ const InternBanner = () => {
         }
         setDistrict({} as selectProps)
         setCollege({} as selectProps)
-    }, [zone])
+    }, [zone, update])
 
     useEffect(() => {
         if (district.id) {
@@ -39,7 +39,7 @@ const InternBanner = () => {
             }
         }
         setCollege({} as selectProps)
-    }, [district])
+    }, [district, update])
 
     useEffect(() => {
         if (college.id) {
@@ -50,7 +50,7 @@ const InternBanner = () => {
                 fetchBannerData(setBanner as any, 'district', district.name)
             }
         }
-    }, [college])
+    }, [college, update])
 
     return (
         <div className='white-container'>
@@ -111,7 +111,7 @@ const InternBanner = () => {
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{'VOS to Idea Submission '}</p>
+                    <p>{'Group Formation to Idea Submission '}</p>
                 </div>
             </div>
         </div>

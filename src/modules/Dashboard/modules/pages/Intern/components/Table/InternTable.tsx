@@ -28,6 +28,7 @@ import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
 import { fetchDistrictSchools } from "../../../School/SchoolAPI";
+import { CentralZone, Districts, NorthZone, SouthZone } from "../../../../../../../utils/Locations";
 
 interface commonViewProps {
   pre_registrations: string;
@@ -73,7 +74,7 @@ const views = [
   // { id: "3", name: "District" },
   // { id: "4", name: "Zone" },
 ];
-const InternTable = ({ openSetup }: { openSetup: () => void }) => {
+const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () => void }) => {
   const [search, setSearch] = useState<string>("");
   const [filterBtn, setFilterBtn] = useState<boolean>(false);
   const [view, setView] = useState<string>("Campus");
@@ -102,6 +103,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
   const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [internList, setInternList] = useState<InternViewProps[]>([]);
+  const [dataUploaded, setDataUploaded] = useState<boolean>(false);
   const styleHead = {
     unOrder: 'fa-sort',
     asc: ' fa-sort-amount-desc',
@@ -167,7 +169,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       setCampusTableList(
         filterCampus(campusList, search, districtFilter.name, zoneFilter.name)
       );
-    if (view === "Intern") setInternTableList(filterIntern(internList, search));
+    if (view === "Intern") setInternTableList(filterIntern(internList, search, districtFilter.name, zoneFilter.name));
     if (view === "District Coordinator" || view === "Programme Executive")
       setAssigneetable(
         filterCoordinator(
@@ -195,7 +197,9 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
     if (view === "Programme Executive")
       fetchProgrammeExecutive(setAssigneeList, setAssigneetable);
     if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
-  }, [view]);
+    setSearch("");
+    setFilterBtn(false);
+  }, [view, dataUploaded]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -241,7 +245,6 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       return rest;
     });
     setCsvData(updatedData);
-
   };
   const downloadCSV = () => {
     const fileName = 'data';
@@ -279,6 +282,9 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         .then((response) => {
           // console.log(response);
           toast.success("File Uploaded Successfully");
+          setDataUploaded(!dataUploaded);
+          setSelectedFile(null);
+          update()
         })
         .catch((error) => {
           console.log(error);
@@ -330,8 +336,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
             </div>
             {selectedFile && (
               <div className="table-fn-btn cursor" onClick={handleUpload}>
-                Selected File: {selectedFile.name}
-                <p>Upload</p>
+                {selectedFile.name.split(".")[0]} :
+                <p>
+                  <i className="fa-solid fa-upload"></i>
+                  {' Upload'}</p>
               </div>
             )}
           </>
@@ -364,7 +372,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                   placeholder={`Search`}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <li className="fas fa-close cursor" onClick={() => { }}></li>
+                <li className="fas fa-close cursor" onClick={() => setSearch("")}></li>
               </div>
               {/* <div
                                 className="table-fn-btn cursor"
@@ -373,54 +381,60 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
                                 <i className="fa-solid fa-plus"></i>
                                 <p>Assign Campus </p>
                             </div> */}
-              {view !== "Intern" && (
-                <button
-                  className="table-fn-btn cursor"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setFilterBtn(!filterBtn)}
-                >
-                  <i className="fa-solid fa-filter"></i>
-                  <p>Filter</p>
-                </button>
-              )}
-              {filterBtn && view !== "Intern" && (
-                <div
-                  className="table-fn-btn  cursor"
-                  onClick={() => setFilterBtn(!filterBtn)}
-                >
-                  <p></p>
-                  <i className="fa-solid fa-close  "></i>
-                  <p></p>
-                </div>
-              )}
+              {
+                // view !== "Intern" &&
+                (
+                  <button
+                    className="table-fn-btn cursor"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setFilterBtn(!filterBtn)}
+                  >
+                    <i className="fa-solid fa-filter"></i>
+                    <p>Filter</p>
+                  </button>
+                )}
+              {filterBtn
+                //  && view !== "Intern" 
+                && (
+                  <div
+                    className="table-fn-btn  cursor"
+                    onClick={() => setFilterBtn(!filterBtn)}
+                  >
+                    <p></p>
+                    <i className="fa-solid fa-close  "></i>
+                    <p></p>
+                  </div>
+                )}
             </div>
           )}
         </div>
         {/* Filters */}
 
-        {filterBtn && view !== "Intern" && (
-          <div className="filter-container">
-            <div className="filter-box">
-              <CustomSelect
-                option={zoneFilterList}
-                header=""
-                placeholder={"Filter By Zone"}
-                requiredHeader={false}
-                setData={setZoneFilter}
-              />
-              {
+        {filterBtn
+          // && view !== "Intern" 
+          && (
+            <div className="filter-container">
+              <div className="filter-box">
                 <CustomSelect
-                  option={districtFilterList}
+                  option={zoneFilterList}
                   header=""
-                  placeholder={"Filter By District"}
+                  placeholder={"Filter By Zone"}
                   requiredHeader={false}
-                  setData={setDistrictFilter}
-                  value={districtFilterList.filter((item) => item.name !== '' && item.id === districtFilter.id)}
+                  setData={setZoneFilter}
                 />
-              }
+                {
+                  <CustomSelect
+                    option={districtFilterList}
+                    header=""
+                    placeholder={"Filter By District"}
+                    requiredHeader={false}
+                    setData={setDistrictFilter}
+                    value={districtFilterList.filter((item) => item.name !== '' && item.id === districtFilter.id)}
+                  />
+                }
+              </div>
             </div>
-          </div>
-        )}
+          )}
         {/* Table */}
         {view === "Campus" && (
           <CustomTable<CampusViewProps>
@@ -621,7 +635,10 @@ function fetchIntern(
     .then((res) => {
       setData(
         res.data.response.map((intern: InternViewProps) => {
-          return { ...intern, districtName: intern.district.join(",") };
+          return {
+            ...intern,
+            districtName: intern?.district?.join(",") || intern?.district || '',
+          };
         })
       );
       setData2(
@@ -632,10 +649,39 @@ function fetchIntern(
     })
     .catch((err) => console.log(err));
 }
-const filterIntern = (internList: InternViewProps[], search: string) => {
+const filterIntern = (internList: InternViewProps[], search: string, district: string, zone: string) => {
   let list = internList;
   if (search) {
     list = searchIntern(list, search);
+  }
+  if (district) {
+    list = list.filter((club) => {
+      for (let value of club.district) {
+        if (value === district) {
+          return true;
+        }
+      }
+    });
+  }
+  if (zone) {
+    let districts: string[] = []
+    switch (zone) {
+      case "North": districts = NorthZone
+        break
+      case "South": districts = SouthZone
+        break
+      case "Central": districts = CentralZone
+        break
+      default:
+        districts = Districts
+    }
+    list = list.filter((club) => {
+      for (let value of club.district) {
+        if (districts.includes(value)) {
+          return true;
+        }
+      }
+    });
   }
   return list;
 };
@@ -725,7 +771,8 @@ function searchCampus(clubList: CampusViewProps[], search: string) {
     (club: CampusViewProps) =>
       rawString(club.institute).includes(rawString(search)) ||
       rawString(club.district).includes(rawString(search)) ||
-      rawString(club.zone).includes(rawString(search))
+      rawString(club.zone).includes(rawString(search)) ||
+      rawString(club.intern).includes(rawString(search))
   );
 }
 function rawString(str: string) {

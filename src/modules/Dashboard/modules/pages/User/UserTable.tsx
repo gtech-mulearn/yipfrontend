@@ -12,10 +12,11 @@ export interface UserTableProps {
     email: string
     phone: string
     role: string
-
+    location: string
+    institutes: string[]
 }
-const TableTitleList = ["Name", "Email", "Phone", " Role"]
-const list: (keyof UserTableProps)[] = ['name', 'email', 'phone', 'role']
+const TableTitleList = ["Name", "Email", "Phone", " Role", 'Location']
+const list: (keyof UserTableProps)[] = ['name', 'email', 'phone', 'role', 'location']
 
 interface UserSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -175,7 +176,8 @@ function searchUser(schoolList: UserTableProps[], search: string) {
         rawString(school.name).includes(rawString(search)) ||
         rawString(school.email).includes(rawString(search)) ||
         rawString(school.phone).includes(rawString(search)) ||
-        rawString(school.role).includes(rawString(search))
+        rawString(school.role).includes(rawString(search)) ||
+        rawString(school.location).includes(rawString(search))
     )
 }
 
