@@ -42,7 +42,7 @@ export const BottomTab = () => {
                         {newButton.map((button: urlProps, index: number) => {
                             if (button.title === 'Users' || button.title === 'Legislative Assembly' || button.title === 'Block') {
                                 return (
-                                    <>
+                                    <div >
                                         {button.title === 'Users' && <div key={index} onClick={() => setOpen((prev: boolean) => !prev)} >
                                             <div
                                                 className={`tab ${window.location.pathname === '/user'
@@ -69,7 +69,7 @@ export const BottomTab = () => {
                                                 </h3>
                                             </div>
                                         </div>}
-                                    </>
+                                    </div>
                                 )
                             }
                             else {

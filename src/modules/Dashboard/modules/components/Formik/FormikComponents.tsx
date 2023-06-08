@@ -19,12 +19,12 @@ type GroupedOption = {
 };
 // component props
 type Props = {
-    name: string;
-    setSelectedOption: Dispatch<SetStateAction<undefined>>;
-	label: string;
+  name: string;
+  setSelectedOption: Dispatch<SetStateAction<undefined>>;
+  label: string;
 } & Omit<
-    StateManagerProps<MyOption, false | true, GroupedOption>,
-    "value" | "onChange"
+  StateManagerProps<MyOption, false | true, GroupedOption>,
+  "value" | "onChange"
 >;
 
 const FormikReactSelect = (props: Props) => {
@@ -32,7 +32,6 @@ const FormikReactSelect = (props: Props) => {
   const [field] = useField(name);
   const { setFieldValue } = useFormikContext();
 
-  console.log(props)
 
   //flatten the options so that it will be easier to find the value
   const flattenedOptions = props.options?.flatMap((o) => {
@@ -57,27 +56,27 @@ const FormikReactSelect = (props: Props) => {
   });
 
   return (
-      <div className='inputBox'>
-          <span>{props.label}</span>
-          <Select
-				className="reactSelect"
-              {...restProps}
-              value={value}
-              // onChange implementation
-              onChange={(val) => {
-                  //here I used explicit typing but there maybe a better way to type the value.
-                  const _val = val as MyOption[] | MyOption;
-                  const isArray = Array.isArray(_val);
-                  if (isArray) {
-                      const values = _val.map((o) => o.value);
-                      setFieldValue(name, values);
-                  } else {
-                      setFieldValue(name, _val.value);
-                      props.setSelectedOption(_val.value);
-                  }
-              }}
-          />
-      </div>
+    <div className='inputBox'>
+      <span>{props.label}</span>
+      <Select
+        className="reactSelect"
+        {...restProps}
+        value={value}
+        // onChange implementation
+        onChange={(val) => {
+          //here I used explicit typing but there maybe a better way to type the value.
+          const _val = val as MyOption[] | MyOption;
+          const isArray = Array.isArray(_val);
+          if (isArray) {
+            const values = _val.map((o) => o.value);
+            setFieldValue(name, values);
+          } else {
+            setFieldValue(name, _val.value);
+            props.setSelectedOption(_val.value);
+          }
+        }}
+      />
+    </div>
   );
 };
 

@@ -24,10 +24,10 @@ interface ClubSetupProps {
     updateClubData: Function;
 }
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
-	const notify = () => toast("Wow so easy !");
+    const notify = () => toast("Wow so easy !");
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
     const [districtListEdited, setDistrictListEdited] = useState<
-        selectEditedProps[]
+        selectProps[]
     >([]);
     const [district, setDistrict] = useState<selectProps>(initialState);
     const [collegeList, setCollegeList] = useState<selectCollegeProps[]>([]);
@@ -40,7 +40,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const [selectedOption, setSelectedOption] = useState();
     const [none, setNone] = useState();
     const reset = () => {
-		notify();
+        notify();
         setDistrict(initialState);
         setCollege(initialState);
         setDistrictList([]);
@@ -64,11 +64,11 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         const collegeId = collegeList.filter(
             (mapCollege) => mapCollege.id === college
         );
-		console.log(collegeId)
-		
+        console.log(collegeId)
+
         const districtId = districtList.filter(
-			(mapDistrict) => mapDistrict.name === district
-		);
+            (mapDistrict) => mapDistrict.name === district
+        );
         console.log(collegeId[0]);
 
         type postDataProps = {
@@ -83,7 +83,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             instituteId: collegeId[0].id,
             districtId: districtId[0].id,
         };
-		console.log(postData.instituteId)
+        console.log(postData.instituteId)
         createClub<postDataProps>(
             postData,
             updateClubData,
@@ -93,7 +93,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         );
 
     }
-	const validateSchema = Yup.object().shape({
+    const validateSchema = Yup.object().shape({
         district: Yup.string()
             .required("Required"),
         college: Yup.string().required("Required")
@@ -121,7 +121,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                                     name="district"
                                     isMulti={false}
                                     isSearchable
-                                    options={districtListEdited}
+                                    options={districtListEdited.map((mapDistrict: selectProps) => ({ label: mapDistrict.name, value: mapDistrict.name }))}
                                     setSelectedOption={setSelectedOption}
                                     label={"District"}
                                 />
