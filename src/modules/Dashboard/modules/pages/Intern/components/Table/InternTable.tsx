@@ -8,12 +8,9 @@ import React, {
 } from "react";
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect";
 import CustomTable from "../../../../components/CustomTable/CustomTable";
-import CsvDownloadButton from "react-json-to-csv";
 import "./InternTable.scss";
-import { uploadSubmissions } from "../../InternApi";
 import exportFromJSON from 'export-from-json';
 
-import { CSVLink, CSVDownload } from "react-csv";
 import axios, { AxiosRequestConfig } from "axios";
 import {
   campusRoutes,
@@ -27,22 +24,19 @@ import { fetchUserInfo } from "../../../../../components/api";
 import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
-import { fetchDistrictSchools } from "../../../School/SchoolAPI";
 import { CentralZone, Districts, NorthZone, SouthZone } from "../../../../../../../utils/Locations";
 
 interface commonViewProps {
   pre_registrations: string;
+  pre_registration: string;
   vos: string;
   group_formation: string;
   idea_submission: string;
 }
-interface viewsSingleProps {
-  title: string;
-  columns: string[];
-  order: string[];
-}
+
 interface zoneViewProps extends commonViewProps {
-  name: string;
+  name: string
+  zone: string;
 }
 interface districtViewProps extends zoneViewProps {
   district: string;
@@ -69,10 +63,11 @@ const views = [
   { id: "1", name: "Campus" },
   // { id: "2", name: "District Coordinator" },
   // { id: "3", name: "Programme Executive" },
-  { id: "4", name: "District" },
+  { id: "2", name: "District" },
   // { id: "2", name: "Designation" },
   // { id: "3", name: "District" },
-  // { id: "4", name: "Zone" },
+  { id: "3", name: "Zone" },
+  { id: "4", name: "State" },
 ];
 const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () => void }) => {
   const [search, setSearch] = useState<string>("");
@@ -88,6 +83,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
 
   const [zoneList, setZoneList] = useState<zoneViewProps[]>([]);
   const [zonetable, setZonetable] = useState<zoneViewProps[]>([]);
+  const [stateTable, setStateTable] = useState<commonViewProps[]>([]);
 
   const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
   const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
@@ -188,6 +184,13 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
           zoneFilter.name
         )
       );
+    if (view === "Zone")
+      setZonetable(
+        filterZone(
+          zoneList,
+          search
+        )
+      );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
@@ -197,6 +200,8 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     if (view === "Programme Executive")
       fetchProgrammeExecutive(setAssigneeList, setAssigneetable);
     if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
+    if (view === "Zone") fetchZone(setZoneList, setZonetable);
+    if (view === 'State') fetchState(setStateTable);
     setSearch("");
     setFilterBtn(false);
   }, [view, dataUploaded]);
@@ -323,8 +328,8 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
 
         {viewUpload && (
           <>
-            <div className="table-fn-btn cursor" onClick={handleButtonClick}>
-              <i className="fa-solid fa-plus"></i>
+            {!selectedFile && <div className="table-fn-btn cursor" onClick={handleButtonClick}>
+              <i className="fa-solid fa-upload"></i>
               <input
                 type="file"
                 accept=".csv"
@@ -333,14 +338,21 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                 style={{ display: "none" }}
               />
               <p>Upload File</p>
-            </div>
-            {selectedFile && (
+            </div>}
+            {selectedFile && (<>
               <div className="table-fn-btn cursor" onClick={handleUpload}>
                 {selectedFile.name.split(".")[0]} :
                 <p>
                   <i className="fa-solid fa-upload"></i>
                   {' Upload'}</p>
               </div>
+              <div className="table-fn-btn cursor" onClick={() => setSelectedFile(null)}>
+                <p>
+                  Cancel Upload
+                </p>
+                <i className="fa-solid fa-close"></i>
+              </div>
+            </>
             )}
           </>
         )}
@@ -348,7 +360,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
         {/* {csvData && csvData.length > 0 && (
           <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
         )} */}
-        <button className="table-fn-btn cursor" onClick={downloadCSV}>Download CSV</button>
+        <button className="table-fn-btn cursor" onClick={downloadCSV}>
+          <i className="fa-solid fa-download"></i>
+          Download CSV
+        </button>
 
       </div>
       <div className="white-container">
@@ -362,7 +377,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
           {/* Filter Opener */}
           {menu && (
             <div className="table-fn">
-              <div className="search-bar">
+              {view !== 'State' && <div className="search-bar">
                 <input
                   className="search-bar-item"
                   id="search"
@@ -373,7 +388,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <li className="fas fa-close cursor" onClick={() => setSearch("")}></li>
-              </div>
+              </div>}
               {/* <div
                                 className="table-fn-btn cursor"
                                 onClick={openSetup}
@@ -382,7 +397,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                                 <p>Assign Campus </p>
                             </div> */}
               {
-                // view !== "Intern" &&
+                (view !== "Zone" && view !== "State") &&
                 (
                   <button
                     className="table-fn-btn cursor"
@@ -562,6 +577,52 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
             capitalize={false}
             customCSS={customStyles.alignNumbersCenter}
             customHeaderCssSort={customStyles.headerStyle as any}
+          />
+        )}
+        {view === "Zone" && (
+          <CustomTable
+            tableHeadList={[
+              "Name",
+              "Pre-registration",
+              "Voice of Stakeholder",
+              "Group Formation",
+              "Idea Submission",
+            ]}
+            tableData={zonetable}
+            orderBy={[
+              "zone",
+              "pre_registration",
+              "vos",
+              "group_formation",
+              "idea_submission",
+            ]}
+            capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
+            pagination={false}
+
+          />
+        )}
+        {view === "State" && (
+          <CustomTable
+            tableHeadList={[
+              "Pre-registration",
+              "Voice of Stakeholder",
+              "Group Formation",
+              "Idea Submission",
+            ]}
+            tableData={stateTable}
+            orderBy={[
+              "pre_registration",
+              "vos",
+              "group_formation",
+              "idea_submission",
+            ]}
+            capitalize={false}
+            customCSS={customStyles.alignNumbersCenter}
+            customHeaderCssSort={customStyles.headerStyle as any}
+            pagination={false}
+            filter={false}
           />
         )}
       </div>
@@ -793,3 +854,33 @@ export function fetchDistrictFilter(
     .catch((err) => console.error(err));
 }
 export default InternTable;
+function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[]>>, setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[]>>) {
+  privateGateway.get(yip5Routes.zoneBasedData)
+    .then((res) => {
+      setZoneList(res.data.response);
+      setZonetable(res.data.response);
+    })
+    .catch((err) => console.log(err));
+}
+
+function filterZone(zoneList: zoneViewProps[], search: string) {
+  let list = zoneList;
+  if (search) {
+    list = searchZone(list, search);
+  }
+  return list
+}
+
+function searchZone(list: zoneViewProps[], search: string): zoneViewProps[] {
+  return list.filter(
+    (zone: zoneViewProps) =>
+      rawString(zone.zone).includes(rawString(search))
+  );
+}
+
+function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
+  privateGateway.get(yip5Routes.stateBasedData)
+    .then((res) => setStateTable([res.data.response]))
+    .catch((err) => console.log(err));
+}
+

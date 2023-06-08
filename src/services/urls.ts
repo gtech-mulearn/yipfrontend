@@ -104,6 +104,8 @@ export const yip5Routes = {
     listPE: '/api/v1/yip/user-management/list-pe-or-dc-details/PE/',
     listDC: '/api/v1/yip/user-management/list-pe-or-dc-details/DC/',
     listDistrict: '/api/v1/yip/user-management/list-district-details/',
+    zoneBasedData: '/api/v1/yip/user-management/list-zone-details/',
+    stateBasedData: '/api/v1/yip/user-management/list-state-details/',
 }
 export const password = {
     forgotPassword: '/api/v1/yip/user-management/forgot-password/',

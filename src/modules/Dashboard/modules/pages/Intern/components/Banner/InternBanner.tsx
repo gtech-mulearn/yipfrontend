@@ -52,6 +52,8 @@ const InternBanner = ({ update }: { update: boolean }) => {
         }
     }, [college, update])
 
+
+
     return (
         <div className='white-container'>
             <div className="filter-container">
@@ -82,6 +84,9 @@ const InternBanner = ({ update }: { update: boolean }) => {
                         value={collegeList.filter(collegeList => collegeList?.name !== "" && collegeList?.id === college?.id)}
                     />}
                 </div >
+            </div>
+            <div className='banner-header'>
+                <p>{showCurrentSelected(zone, district, college)}</p>
             </div>
             <div className="statistics">
                 {/* <div className={`box blue-box`} >
@@ -155,4 +160,18 @@ function fetchCollege(district: string, setData: Dispatch<SetStateAction<selectP
             name: item.name
         }))))
         .catch(err => console.log(err))
+}
+function showCurrentSelected(zone: selectProps, district: selectProps, college: selectProps): React.ReactNode {
+    if (college.id) {
+        return `${college.name}`
+    }
+    else if (district.id) {
+        return `${district.name} District`
+    }
+    else if (zone.id) {
+        return `${zone.name} Zone`
+    }
+    else {
+        return 'Kerala'
+    }
 }
