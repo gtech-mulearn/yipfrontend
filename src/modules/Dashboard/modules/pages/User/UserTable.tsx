@@ -12,6 +12,7 @@ export interface UserTableProps {
     email: string
     phone: string
     role: string
+
 }
 const TableTitleList = ["Name", "Email", "Phone", " Role"]
 const list: (keyof UserTableProps)[] = ['name', 'email', 'phone', 'role']
