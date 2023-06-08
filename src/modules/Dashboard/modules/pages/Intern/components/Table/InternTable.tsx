@@ -292,7 +292,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
           update()
         })
         .catch((error) => {
-          console.log(error);
+          toast.error(error.response.status === 500 ? 'Wrong format' : error.response.data.message.general[0]);
           toast.error(error.response.data.message.general[0]);
         });
     }
@@ -325,46 +325,46 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
           requiredData={false}
           isClearable={false}
         />
-
-        {viewUpload && (
-          <>
-            {!selectedFile && <div className="table-fn-btn cursor" onClick={handleButtonClick}>
-              <i className="fa-solid fa-upload"></i>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleFileChange}
-                ref={fileInputRef}
-                style={{ display: "none" }}
-              />
-              <p>Upload File</p>
-            </div>}
-            {selectedFile && (<>
-              <div className="table-fn-btn cursor" onClick={handleUpload}>
-                {selectedFile.name.split(".")[0]} :
-                <p>
-                  <i className="fa-solid fa-upload"></i>
-                  {' Upload'}</p>
-              </div>
-              <div className="table-fn-btn cursor" onClick={() => setSelectedFile(null)}>
-                <p>
-                  Cancel Upload
-                </p>
-                <i className="fa-solid fa-close"></i>
-              </div>
+        <div className="btns-upper">
+          {viewUpload && (
+            <>
+              {!selectedFile && <div className="table-fn-btn cursor" onClick={handleButtonClick}>
+                <i className="fa-solid fa-upload"></i>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                />
+                <p>Upload File</p>
+              </div>}
+              {selectedFile && (<>
+                <div className="table-fn-btn cursor" onClick={handleUpload}>
+                  File: {selectedFile.name.split(".")[0]} :
+                  <p>
+                    <i className="fa-solid fa-upload"></i>
+                    {' Upload'}</p>
+                </div>
+                <div className="table-fn-btn cursor" onClick={() => setSelectedFile(null)}>
+                  <p>
+                    Cancel Upload
+                  </p>
+                  <i className="fa-solid fa-close"></i>
+                </div>
+              </>
+              )}
             </>
-            )}
-          </>
-        )}
+          )}
 
-        {/* {csvData && csvData.length > 0 && (
+          {/* {csvData && csvData.length > 0 && (
           <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
         )} */}
-        <button className="table-fn-btn cursor" onClick={downloadCSV}>
-          <i className="fa-solid fa-download"></i>
-          Download CSV
-        </button>
-
+          <button className="table-fn-btn cursor" onClick={downloadCSV}>
+            <i className="fa-solid fa-download"></i>
+            Download CSV
+          </button>
+        </div>
       </div>
       <div className="white-container">
         <div className="table-top">
