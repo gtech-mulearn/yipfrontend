@@ -23,7 +23,9 @@ function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHead
             <div>
                 <div className='top-bar'>
                     <p>{TableHeading}</p>
-                    {AddOption && headingSwitch && <div className='add-button' onClick={() => setAdd((prev: boolean) => !prev)}>
+                    {AddOption && headingSwitch && <div className='add-button' onClick={() => {
+                        setAdd((prev: boolean) => !prev)
+                    }}>
                         <i className='fas fa-add'></i>
                         <p >{AddOption}</p>
                     </div>}

@@ -15,11 +15,9 @@ import {
 const ConnectionModal = ({
     cancel,
     campusId,
-    isNotConnected,
 }: {
     cancel: () => void;
     campusId: string;
-    isNotConnected: boolean;
 }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([]);
     const [designation, setDesignation] = useState<selectProps>(
@@ -135,7 +133,7 @@ function assignFacilitator(
             errorCheck(err.response);
         });
 }
-function updateCampusStatus(id: string, status: string, cancel: () => void) {
+export function updateCampusStatus(id: string, status: string, cancel: () => void) {
     privateGateway
         .put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then((res) => {

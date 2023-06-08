@@ -8,6 +8,7 @@ import { campusRoutes, tableRoutes } from '../../../../../../../services/urls'
 import { updateClubStatus } from '../../../Club/clubAPI'
 import { OrientationCompleteProps } from './Orientation'
 import { error, errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
+import { updateCampusStatus } from '../Connection/ConnectionModal'
 const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () => void, district: string, campusId: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
@@ -84,9 +85,10 @@ function getListOfCoordinatorByDistrict(district: string, setCoordinatorList: Di
         .catch(err => console.error(err))
 }
 function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void) {
-
+    const now = new Date();
     privateGateway.post(campusRoutes.createEvent, {
-        scheduled_date: date,
+        planned_date: date,
+        scheduled_date: now,
         mode_of_delivery: mod,
         place: place,
         description: 'Orientation Scheduling',
@@ -97,22 +99,37 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
         .then(res => {
             privateGateway.put(tableRoutes.status.update, { clubId: campusId, clubStatus: 'Orientation Scheduled' })
                 .then(res => {
-					success();
-                    cancel()
+                    updateCampusStatus(campusId, "Orientation Scheduled", cancel);
+                    success()
                 })
                 .catch(err => {
-					errorCheck(err.response);
-					errorMessage(err.response);
-				})
+                    errorCheck(err.response);
+                    errorMessage(err.response);
+                })
         }
         ).catch(err => {
-			errorCheck(err.response);
-			errorMessage(err.response);
-		})
+            errorCheck(err.response);
+            errorMessage(err.response);
+        })
 }
 export function listEvent(campusId: string, setData: Dispatch<SetStateAction<OrientationCompleteProps[]>>) {
     privateGateway.get(`${campusRoutes.listEvent}${campusId}/`)
         .then(res => res.data.response)
-        .then(data => setData(data))
+        .then(data =>
+
+            setData(data.map((item: any) => ({ ...item, scheduled_date: formatDate(item.scheduled_date), planned_date: formatDate(item.planned_date), completed_date: formatDate(item.completed_date) }))))
         .catch(err => console.error(err))
+}
+function formatDate(dateTimeString: string): string {
+    if (dateTimeString === null) return ''
+    const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    };
+    const date = new Date(dateTimeString);
+    return date.toLocaleString('en-US', options);
 }
