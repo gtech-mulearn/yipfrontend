@@ -13,19 +13,15 @@ const theme = {
         brandingPrimary: '#59b3fa',
     },
 }
-const NameCard = () => {
-    const [open, setOpen] = React.useState(false)
+const NameCard = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [data, setData] = React.useState<userInfoProps>({} as userInfoProps)
     useEffect(() => {
         fetchUserInfo(setData)
-
     }, [])
     return (
         <>
-
             <div className={`name-card`} >
                 {/* {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />} */}
-
                 <div className={'open-color'} onClick={() => { setOpen(!open) }}>
                     <i className={`fas fa-user`} ></i>
                 </div>

@@ -8,7 +8,6 @@ import {
     selectProps,
 } from "../../utils/setupUtils";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
     createClub,
@@ -24,7 +23,7 @@ interface ClubSetupProps {
     updateClubData: Function;
 }
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
-    const notify = () => toast("Wow so easy !");
+    const notify = () => { };
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
     const [districtListEdited, setDistrictListEdited] = useState<
         selectProps[]

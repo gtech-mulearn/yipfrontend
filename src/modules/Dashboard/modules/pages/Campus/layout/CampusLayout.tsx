@@ -75,7 +75,7 @@ const CampusLayout = () => {
                                 <div className="modal-buttons">
                                     <button className="confirm-delete"
                                         onClick={() =>
-                                            deleteModelSchool(campusId as string, () => navigate('/school-dashboard'))
+                                            deleteModelSchool(campusId as string, () => navigate('/club-dashboard'))
                                         }>Confirm Delete</button>
                                     <button className="cancel-delete" onClick={() => setDeleteCampus(false)} >Cancel</button>
                                 </div>
