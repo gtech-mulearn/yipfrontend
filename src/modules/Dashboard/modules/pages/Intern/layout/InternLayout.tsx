@@ -6,11 +6,12 @@ import InternTable from '../components/Table/InternTable'
 
 const InternLayout = () => {
     const [openSetup, setOpenSetup] = useState(false)
+    const [update, setUpdate] = useState(false)
     return (
         <div className='dash-container'>
-            <InternBanner />
+            <InternBanner update={update} />
             {/* {openSetup && <InternSetup close={() => setOpenSetup(false)} />} */}
-            <InternTable openSetup={() => setOpenSetup(!openSetup)} />
+            <InternTable openSetup={() => setOpenSetup(!openSetup)} update={() => setUpdate(!update)} />
         </div>
     )
 }
