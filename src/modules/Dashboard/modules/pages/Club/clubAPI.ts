@@ -23,7 +23,12 @@ export function fetchDistricts(
         .then((res) => res.data.response.districts)
         .then((data) => {
             if (setData1) setData1(data)
-            setData(data)
+            setData(
+                data.map((item: { id: any; name: any }) => ({
+                    id: item.name,
+                    name: item.name,
+                }))
+            );
         })
         .catch((err) => console.error(err));
 }
