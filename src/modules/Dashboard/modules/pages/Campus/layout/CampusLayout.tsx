@@ -61,7 +61,7 @@ const CampusLayout = () => {
                 {/* ORIENTATION */}
                 {viewOrientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} update={updateCampus} />}
                 {/* EXECOM */}
-                {viewExecom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} update={updateCampus} />}
+                {/* {viewExecom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} update={updateCampus} />} */}
                 {/* ERROR */}
                 {errorMessage && <Error error={errorMessage} />}
                 {/* SUCCESS */}
