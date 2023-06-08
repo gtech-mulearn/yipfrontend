@@ -5,26 +5,32 @@ import NameCard from "../components/NameCard/NameCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.min.css";
+import React from "react";
 const DashboardLayout = () => {
+    const [open, setOpen] = React.useState(false)
 
     return (
         <>
-            <NameCard />
-            <LeftDrawer />
-            <Outlet />
-            <ToastContainer
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-            />
-            <BottomTab />
+            <NameCard open={open} setOpen={setOpen} />
+            {
+                <div onClick={() => setOpen(false)}>
+                    <LeftDrawer />
+                    <Outlet />
+                    <ToastContainer
+                        position="bottom-center"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                    />
+                    <BottomTab />
+                </div>
+            }
         </>
     );
 }
