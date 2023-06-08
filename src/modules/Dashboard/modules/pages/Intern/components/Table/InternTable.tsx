@@ -678,7 +678,7 @@ const filterDistrict = (
 function searchDistrict(districtList: districtViewProps[], search: string) {
   return districtList.filter(
     (district: districtViewProps) =>
-      rawString(district.name).includes(rawString(search)) ||
+      rawString(district.district).includes(rawString(search)) ||
       rawString(district.zone).includes(rawString(search))
   );
 }
@@ -729,7 +729,8 @@ function searchCampus(clubList: CampusViewProps[], search: string) {
   );
 }
 function rawString(str: string) {
-  str = str.toLowerCase();
+  if (str === null || str === undefined || str === '') return "";
+  str = str?.toLowerCase();
   str = str.replace(/[^a-zA-Z0-9 ]/g, "");
   str = str.replaceAll(" ", "");
   return str;
