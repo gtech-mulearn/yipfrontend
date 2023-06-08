@@ -4,12 +4,25 @@
 
 .statistics {
     gap: 5px;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .blue-box {
     p {
         color: black;
         font-size: 13px;
+    }
+}
+
+.banner-header {
+    all: unset;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+
+    p {
+        font-weight: 600;
+        padding-left: 10px;
     }
 }
