@@ -100,9 +100,9 @@ function getNextStatus(status: string) {
         case 'Add Facilitator': return 'Add Facilitator'
         case 'Orientation Update': return 'Orientation Update'
         case 'Connection Established': return 'Orientation Scheduled'
-        case 'Orientation Scheduled': return 'Execom Formed'
-        case 'Execom Formed': return 'Execom Formed'
-        case 'Orientation Completed': return 'Execom Formed'
+        case 'Orientation Scheduled': return ''
+        case 'Execom Formed': return ''
+        case 'Orientation Completed': return ''
         case 'Add Member': return 'Add Member'
         default: return ''
     }
