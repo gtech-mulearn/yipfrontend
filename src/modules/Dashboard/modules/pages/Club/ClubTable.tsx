@@ -139,7 +139,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                                 requiredHeader={false}
                             />
                             <CustomSelect
-                                option={optionStatusList}
+                                option={optionStatusList.slice(0, 5)}
                                 header="Status"
                                 setValue={setStatus}
                                 requiredHeader={false}

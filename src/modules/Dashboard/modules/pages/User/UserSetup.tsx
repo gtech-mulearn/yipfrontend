@@ -74,12 +74,18 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             option={roleList}
                             header='Role'
                             setData={setRole}
-                            isSearchable={true}
+                            isSearchable={false}
                         />
-                        {(role.name === 'District Coordinator' || role.name === 'Zonal Coordinator' || role.name === 'Programme Executive') && <CustomSelect
-                            option={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? districtList : role.name === 'Zonal Coordinator' ? zoneList : []}
-                            header={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? 'Coordinator District' : role.name === 'Zonal Coordinator' ? 'Coordinator Zone' : ''}
-                            setData={(role.name === 'District Coordinator' || role.name === 'Programme Executive') ? setDistrict : setZone}
+                        {(role.name === 'District Coordinator' || role.name === 'Programme Executive') && <CustomSelect
+                            option={districtList}
+                            header={'Coordinator District'}
+                            setData={setDistrict}
+                            isSearchable={true}
+                        />}
+                        {(role.name === 'Zonal Coordinator') && <CustomSelect
+                            option={zoneList}
+                            header={'Coordinator Zone'}
+                            setData={setZone}
                             isSearchable={true}
                         />}
                         {(role.name === 'Intern') &&
@@ -109,7 +115,6 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                         }}
                                     />
                                 </div>
-
                             </>
                         }
                         <div className={styles.password}>
