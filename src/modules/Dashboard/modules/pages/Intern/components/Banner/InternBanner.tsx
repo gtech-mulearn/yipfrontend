@@ -111,7 +111,7 @@ const InternBanner = () => {
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{'VOS to Idea Submission '}</p>
+                    <p>{'Group Formation to Idea Submission '}</p>
                 </div>
             </div>
         </div>
