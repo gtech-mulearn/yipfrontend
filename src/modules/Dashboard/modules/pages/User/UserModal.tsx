@@ -39,6 +39,18 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
                         <div className="title">Role</div>
                         <div className="content">{user.role}</div>
                     </div>
+                    {user?.location && <div className="data-box">
+                        <div className="title">Location</div>
+                        <div className="content">{user?.location}</div>
+                    </div>}
+                    {user?.institutes.length > 0 && <div className="data-box">
+                        <div className="title">Assigned Institutes</div>
+                        {
+                            user?.institutes.map((item, index) => {
+                                return <p key={index}>{index + 1 + '.'} {item}</p>
+                            })
+                        }
+                    </div>}
                     <div className='last-container'>
                         {deleteUser && <p>Are you sure you want to delete this item?</p>}
                         <div className="modal-buttons">

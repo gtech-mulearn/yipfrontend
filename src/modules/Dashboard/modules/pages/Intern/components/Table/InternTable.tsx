@@ -635,7 +635,10 @@ function fetchIntern(
     .then((res) => {
       setData(
         res.data.response.map((intern: InternViewProps) => {
-          return { ...intern, districtName: intern.district.join(",") };
+          return {
+            ...intern,
+            districtName: intern?.district?.join(",") || intern?.district || '',
+          };
         })
       );
       setData2(
