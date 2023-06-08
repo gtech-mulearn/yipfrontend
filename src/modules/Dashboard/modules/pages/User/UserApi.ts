@@ -81,9 +81,12 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
     await privateGateway.get(tableRoutes.user.list)
         .then(res => res.data.response)
         .then(data => {
-            setUserList(data)
-            setListForTable(data)
-            if (updateTable) updateTable(data)
+            const newData = data.map((item: any) => (
+                { ...item, role: (item?.role?.name || item?.role) }
+            ))
+            setUserList(newData)
+            setListForTable(newData)
+            if (updateTable) updateTable(newData)
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
