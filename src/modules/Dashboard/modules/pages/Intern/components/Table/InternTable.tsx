@@ -64,8 +64,8 @@ interface InternViewProps extends zoneViewProps {
 const views = [
   { id: "0", name: "Intern" },
   { id: "1", name: "Campus" },
-  { id: "2", name: "District Coordinator" },
-  { id: "3", name: "Programme Executive" },
+  // { id: "2", name: "District Coordinator" },
+  // { id: "3", name: "Programme Executive" },
   { id: "4", name: "District" },
   // { id: "2", name: "Designation" },
   // { id: "3", name: "District" },
@@ -324,9 +324,9 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
           </>
         )}
 
-        {csvData && csvData.length > 0 && (
-          <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
-        )}
+        {/* {csvData && csvData.length > 0 && (
+            <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
+          )} */}
       </div>
       <div className="white-container">
         <div className="table-top">

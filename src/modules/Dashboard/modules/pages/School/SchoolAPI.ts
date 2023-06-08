@@ -119,7 +119,7 @@ export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOpti
         .then(data => {
             setData(data)
             setOptionStatusList(
-                (data.filter((item: string) => item !== 'Orientation Completed'))
+                (data.filter((item: string) => item !== 'Orientation Completed' && item !== 'Execom Formed'))
                     .map((item: string, index: string) => {
                         return {
                             id: index,
