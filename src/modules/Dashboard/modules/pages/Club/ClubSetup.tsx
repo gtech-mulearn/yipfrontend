@@ -98,7 +98,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     return (
         <div className="white-container">
             <div className="formikContainer">
-                <h3>Setup a YIP Club</h3>
+                <h3>Create Campus Tracking</h3>
                 <Formik
                     onSubmit={(values) => {
                         handleCreate(values.college, values.district);
