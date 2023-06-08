@@ -59,9 +59,9 @@ const CampusLayout = () => {
                 {/* CONNECTED */}
                 {viewConnected && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} campus={campus} />}
                 {/* ORIENTATION */}
-                {viewOrientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} />}
+                {viewOrientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} update={updateCampus} />}
                 {/* EXECOM */}
-                {viewExecom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} />}
+                {viewExecom && <Execom date={formatDateStyle(campus?.execom)} campusId={campusId as string} update={updateCampus} />}
                 {/* ERROR */}
                 {errorMessage && <Error error={errorMessage} />}
                 {/* SUCCESS */}
@@ -84,7 +84,7 @@ const CampusLayout = () => {
                     </div>
                 </div >}
                 {/* CAMPUS UPDATE MODAL */}
-                {updateCampus && <CampusModal campusId={campusId as string} campus={campus} cancel={() => setUpdateCampus(false)} district={campus?.district} />}
+                {updateCampus && <CampusModal campusId={campusId as string} campus={campus} cancel={() => setUpdateCampus(!updateCampus)} district={campus?.district} />}
             </div >
         </div >
     )

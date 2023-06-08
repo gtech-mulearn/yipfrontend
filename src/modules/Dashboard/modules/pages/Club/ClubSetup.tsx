@@ -57,19 +57,15 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             setCollegeList,
             String(selectedOption)
         );
-        console.log(collegeListEdited)
-    }, [selectedOption]);
+    }, [selectedOption, updateClubData]);
 
     function handleCreate(college: string, district: string) {
-        const collegeId = collegeList.filter(
-            (mapCollege) => mapCollege.id === college
-        );
-        console.log(collegeId)
+
 
         const districtId = districtList.filter(
             (mapDistrict) => mapDistrict.name === district
         );
-        console.log(collegeId[0]);
+
 
         type postDataProps = {
             clubName: string;
@@ -80,7 +76,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         const postData: postDataProps = {
             clubName: college,
             instituteType: "College",
-            instituteId: collegeId[0].id,
+            instituteId: college,
             districtId: districtId[0].id,
         };
         console.log(postData.instituteId)
@@ -139,6 +135,7 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                                     options={collegeListEdited}
                                     setSelectedOption={setNone}
                                     label={"College"}
+                                // value={() => collegeListEdited.filter((item: selectEditedProps) => item.label !== '' && item.label !== college.name)}
                                 />
                                 <ErrorMessage
                                     name="college"

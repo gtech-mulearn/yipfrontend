@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { inputProps } from "../../utils/CustomInputUtils"
 
-export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, data, requiredHeader = true, customCSS = "setup-item" }) => (
+export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, data, requiredHeader = true, customCSS = "setup-item", ...props }) => (
     <div className={customCSS}>
         {requiredHeader && <p>{value}</p>}
         <input
@@ -10,6 +10,8 @@ export const CustomInput: FC<inputProps> = ({ value, type = "text", setData, dat
             placeholder={`Enter ${value}`}
             value={data}
             id={`id-${value}`}
-            onChange={(e) => { setData(e.target.value) }} />
+            onChange={(e) => { setData(e.target.value) }}
+            {...props}
+        />
     </div>
 )

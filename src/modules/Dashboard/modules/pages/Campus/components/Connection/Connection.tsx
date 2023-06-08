@@ -38,14 +38,16 @@ const Connection = ({ date, campusId, campus }: { date: string, campusId: string
                 orderBy={['name', 'email', 'phone', 'role']}
                 manage={{
                     value: 'Delete',
-                    manageFunction: (user: any) => { setSubUserId(user.id) },
+                    manageFunction: (user: any) => {
+                        setSubUserId(user.id)
+                    },
                     icon: 'fa-trash'
                 }}
                 capitalize={false}
             />
 
             {subUserId && <DeleteModal id={subUserId} cancel={() => setSubUserId('')} customFunction={() => deleteASubUser(subUserId, () => setSubUserId(''))} />}
-            {open && <CampusModal campuStatus='Confirmed' campusId={campusId as string} campus={campus} cancel={() => setOpen(false)} district={campus?.district} />}
+            {open && <CampusModal campuStatus='Add Facilitator' campusId={campusId as string} campus={campus} cancel={() => setOpen(false)} district={campus?.district} />}
 
         </div>
     )
