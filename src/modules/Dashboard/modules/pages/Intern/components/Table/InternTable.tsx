@@ -11,6 +11,8 @@ import CustomTable from "../../../../components/CustomTable/CustomTable";
 import CsvDownloadButton from "react-json-to-csv";
 import "./InternTable.scss";
 import { uploadSubmissions } from "../../InternApi";
+import exportFromJSON from 'export-from-json';
+
 import { CSVLink, CSVDownload } from "react-csv";
 import axios, { AxiosRequestConfig } from "axios";
 import {
@@ -215,6 +217,7 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
 
   useEffect(() => {
     handleDownloadCSV();
+    // downloadCSV();
   }, [campusTableList, internTableList, assigneetable, districttable]);
 
   const handleDownloadCSV = () => {
@@ -237,10 +240,20 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
       const { id, ...rest } = item;
       return rest;
     });
-
     setCsvData(updatedData);
-  };
 
+  };
+  const downloadCSV = () => {
+    const fileName = 'data';
+    const fields = Object.keys(csvData[0]);
+
+    exportFromJSON({
+      data: csvData,
+      fileName,
+      fields,
+      exportType: 'csv',
+    });
+  };
   const handleUpload = () => {
     if (selectedFile) {
       const formData = new FormData();
@@ -325,8 +338,10 @@ const InternTable = ({ openSetup }: { openSetup: () => void }) => {
         )}
 
         {/* {csvData && csvData.length > 0 && (
-            <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
-          )} */}
+          <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
+        )} */}
+        <button className="table-fn-btn cursor" onClick={downloadCSV}>Download CSV</button>
+
       </div>
       <div className="white-container">
         <div className="table-top">
