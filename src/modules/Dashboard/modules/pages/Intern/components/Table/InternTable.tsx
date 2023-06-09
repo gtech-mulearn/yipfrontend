@@ -325,7 +325,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
         />
         <div className="btns-upper">
           {viewUpload && (
-            <>
+            <div className="upload-btns">
               {!selectedFile && <button className="table-fn-btn cursor" onClick={handleButtonClick}>
                 <i className="fa-solid fa-upload"></i>
                 <input
@@ -338,21 +338,21 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                 <p>Upload File</p>
               </button>}
               {selectedFile && (<>
-                <div className="table-fn-btn cursor" onClick={handleUpload}>
+                <button className="table-fn-btn cursor" onClick={handleUpload}>
                   File: {selectedFile.name.split(".")[0]} :
                   <p>
                     <i className="fa-solid fa-upload"></i>
                     {' Upload'}</p>
-                </div>
-                <div className="table-fn-btn cursor" onClick={() => setSelectedFile(null)}>
+                </button>
+                <button className="table-fn-btn cursor cancel-upload" onClick={() => setSelectedFile(null)}>
                   <p>
                     Cancel Upload
                   </p>
                   <i className="fa-solid fa-close"></i>
-                </div>
+                </button>
               </>
               )}
-            </>
+            </div>
           )}
 
           {/* {csvData && csvData.length > 0 && (
@@ -364,6 +364,8 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
           </button>
         </div>
       </div>
+      {/* //table box */}
+
       <div className="white-container">
         <div className="table-top">
           <div className="table-header">
@@ -409,14 +411,14 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
               {filterBtn
                 //  && view !== "Intern" 
                 && (
-                  <div
+                  <button
                     className="table-fn-btn  cursor"
                     onClick={() => setFilterBtn(!filterBtn)}
                   >
                     <p></p>
                     <i className="fa-solid fa-close  "></i>
                     <p></p>
-                  </div>
+                  </button>
                 )}
             </div>
           )}

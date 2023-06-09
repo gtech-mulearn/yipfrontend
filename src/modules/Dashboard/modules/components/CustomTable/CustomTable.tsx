@@ -251,11 +251,11 @@ function CustomTable<TableProps>({
                         <i >{"|<"}</i>
                     </div>
                     <div className="input">
-                        {`${page} / ${Math.trunc(sortedTable.length / 10) + 1}`}
+                        {`${page * 10 < sortedTable.length ? page * 10 : sortedTable.length} / ${sortedTable.length}`}
                     </div>
-                    <div onClick={() => { if (page < Math.trunc(sortedTable.length / 10) + 1) setPage(page + 1) }}>
+                    <div onClick={() => { setPage(page * 10 < sortedTable.length ? page + 1 : page) }}>
                         <i >{">|"}</i></div>
-                    <div onClick={() => { setPage(Math.trunc(sortedTable.length / 10) + 1) }}>
+                    <div onClick={() => { setPage(page) }}>
                         <i >{">>|"}</i>
                     </div>
                 </div>

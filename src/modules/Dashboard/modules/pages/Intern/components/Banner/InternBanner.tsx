@@ -56,7 +56,11 @@ const InternBanner = ({ update }: { update: boolean }) => {
 
     return (
         <div className='white-container'>
+            <div className='banner-header'>
+                <p>{showCurrentSelected(zone, district, college)}</p>
+            </div>
             <div className="filter-container">
+
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
                     <CustomSelect
@@ -85,9 +89,7 @@ const InternBanner = ({ update }: { update: boolean }) => {
                     />}
                 </div >
             </div>
-            <div className='banner-header'>
-                <p>{showCurrentSelected(zone, district, college)}</p>
-            </div>
+
             <div className="statistics">
                 {/* <div className={`box blue-box`} >
                     <h3>{100}<div className="count"><div className="count-in">{ }</div></div></h3>
