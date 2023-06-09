@@ -62,11 +62,11 @@ export function createUser(
 
         .then(res => {
             updateUserData()
-            toast.dismiss()
+
             success();
         })
         .catch(err => {
-            toast.dismiss()
+
             errorMessage(err.response)
             errorCheck(err.response)
         })
@@ -92,7 +92,7 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
             setUserList(newData)
             setListForTable(newData)
             if (updateTable) updateTable(newData)
-            toast.dismiss('100')
+
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

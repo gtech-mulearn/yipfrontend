@@ -61,7 +61,7 @@ export function fetchBlocks(
             setData(data)
             setData2(data)
             if (updateTable) updateTable(data)
-            toast.dismiss('219')
+
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

@@ -150,7 +150,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
   const [count, setCount] = useState(0)
   useEffect(() => {
 
-    loading('100')
+
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
@@ -193,7 +193,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
       );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
-    loading('100')
+
 
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
     if (view === "Intern") fetchIntern(setInternList, setInternTableList);
@@ -631,7 +631,7 @@ function fetchCampus(
     .then((res) => {
       setData(res.data.response);
       setData2(res.data.response);
-      toast.dismiss('100')
+
     })
     .catch((err) => {
       console.log(err);
@@ -661,7 +661,7 @@ function fetchDistrict(
     .then((res) => {
       setDistrictFilter(res.data.response);
       setDistricttable(res.data.response);
-      toast.dismiss('100')
+
     })
     .catch((err) => {
       errorCheck(err);
@@ -702,7 +702,7 @@ function fetchIntern(
           return { ...intern, districtName: intern.district.join(",") };
         })
       );
-      toast.dismiss('100')
+
     })
     .catch((err) => console.log(err));
 }
@@ -855,10 +855,10 @@ function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProp
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
-      toast.dismiss('100')
+
     })
     .catch((err) => {
-      toast.dismiss('100')
+
       toast.error(err.response.data.message || err.message)
       console.log(err)
     });
@@ -883,7 +883,7 @@ function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonVie
   privateGateway.get(yip5Routes.stateBasedData)
     .then((res) => {
       setStateTable([res.data.response])
-      toast.dismiss('100')
+
 
     })
     .catch((err) => console.log(err));

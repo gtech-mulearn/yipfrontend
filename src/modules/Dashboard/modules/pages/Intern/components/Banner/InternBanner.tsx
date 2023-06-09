@@ -112,11 +112,11 @@ const InternBanner = ({ update }: { update: boolean }) => {
                     <h3>{banner.ideaSubmission}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Idea Submissions'}</p>
                 </div>
-                <div className={`box blue-box`} >
+                <div className={`box blue-box color-change`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.preRegistration * 100)) ? 0 : Math.round(banner.vos / banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Pre-registration to VOS '}</p>
                 </div>
-                <div className={`box blue-box`} >
+                <div className={`box blue-box color-change`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Group Formation to Idea Submission '}</p>
                 </div>

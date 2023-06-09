@@ -4,7 +4,7 @@ import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
 import React, { Dispatch, SetStateAction } from "react";
 import exportFromJSON from 'export-from-json';
-
+import { ThreeDots, RotatingSquare } from "react-loader-spinner";
 interface sortProps {
     status: string;
     updater: boolean;
@@ -46,8 +46,8 @@ export interface CustomTableProps<TableProps> {
     pagination?: boolean,
     filter?: boolean,
     loading?: boolean,
-    setupLoading?: Dispatch<SetStateAction<boolean>>
-
+    setupLoading?: (item: boolean) => void
+    countPerPage?: number
 }
 function CustomTable<TableProps>({
     tableHeadList,
@@ -60,8 +60,11 @@ function CustomTable<TableProps>({
     capitalize = true,
     pagination = true,
     filter = true,
-    loading,
-    setupLoading
+    loading = true,
+    setupLoading = (item: boolean) => {
+        return item
+    },
+    countPerPage = 10
 }
     :
     CustomTableProps<TableProps>) {
@@ -71,17 +74,25 @@ function CustomTable<TableProps>({
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
     const [csvData, setCsvData] = useState<any>();
-    const [countInPage, setCountInPage] = useState(10)
+    const [countInPage, setCountInPage] = useState(countPerPage)
+    const [notLoading, setNotLoading] = useState('')
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     useEffect(() => {
         handleDownloadCSV()
     }, [tableData, sortedTable, sort, selectedHeading])
+    useEffect(() => {
+        if (tableData.length === 0)
+            setTimeout(() => {
+                setupLoading(false)
+                setNotLoading('No Data to Display')
+            }, 30000)
+    }, [])
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
         const updatedData = sortedTable.map((item: any) => {
             let rest = {}
             for (let key of orderBy) {
-                rest = { ...rest, [key]: item[key] ? item[key] : "" }
+                rest = { ...rest, [key]: item[key] || item[key] === 0 ? item[key] : "" }
             }
             return rest;
         });
@@ -242,7 +253,7 @@ function CustomTable<TableProps>({
                                         setSelectedHeading(index)
                                     }
                                 }}>
-                                    <div className={`th-wrap ${filter ? 'cursor' : ''} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`}>
+                                    <div className={`th-wrap ${filter ? 'cursor' : ''} `}>
                                         <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
                                         <div>{item}</div>
 
@@ -269,7 +280,12 @@ function CustomTable<TableProps>({
                                 {
                                     orderBy.map((item2: keyof TableProps, index: number) => (
                                         <>
-                                            <td className={`${customCssByRequiredByValue(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
+                                            <td
+                                                className={`
+                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
+                                                key={index}>
+                                                {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                            </td>
                                         </>
                                     ))
                                 }
@@ -289,7 +305,17 @@ function CustomTable<TableProps>({
                     </tbody>
                 </table >
             </div>
-            {!sortedTable.length && <div className="no-data">Loading... </div>}
+            {!sortedTable.length && <div className="no-data">
+                <ThreeDots
+                    height="150"
+                    width="80"
+                    color="#59b3fa"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="no-data"
+                    visible={!notLoading}
+                />
+                {notLoading ? notLoading : ''}</div>}
             {/* Pagination */}
 
             {pagination &&

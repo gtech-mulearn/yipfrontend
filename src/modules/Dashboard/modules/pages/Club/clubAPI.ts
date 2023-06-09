@@ -115,11 +115,11 @@ export async function fetchClubs(
         .then(data => {
             setData(data)
             setData2(data)
-            toast.dismiss('345')
+
             if (updateTable) updateTable(data)
         })
         .catch(err => {
-            toast.dismiss('345')
+
             console.log('Error :', err?.response?.data?.message?.general[0])
         })
 }

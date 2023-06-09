@@ -30,7 +30,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
         setDistrict({} as selectProps)
     }
     useEffect(() => {
-        loading('100')
+
         fetchDistricts(setDistrictList)
         fetchInstitutes(setClubList, setListForTable)
     }, [])
@@ -124,6 +124,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                 tableData={listForTable}
                 orderBy={list}
                 capitalize={false}
+                countPerPage={15}
             // manage={{
             //     value: 'ICT Id',
             //     manageFunction: (item: any) => console.log(item),
@@ -171,10 +172,10 @@ function fetchInstitutes(setClubList: React.Dispatch<React.SetStateAction<Instit
             if (updateTable) {
                 updateTable(res.data.response)
             }
-            toast.dismiss()
+
         })
         .catch(err => {
-            toast.dismiss()
+
             console.log(err)
         })
 }

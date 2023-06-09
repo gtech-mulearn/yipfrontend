@@ -36,7 +36,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     const [userList, setUserList] = useState<UserTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
-        loading('100')
+
         fetchUsers(setUserList, setListForTable)
         fetchUserRoles(setRoleList)
     }, [])
@@ -137,6 +137,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                                 header="Role"
                                 setData={setRole}
                                 requiredHeader={false}
+
                             />
                         </div>
                     </div>
@@ -163,6 +164,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                             setUser(item);
                         },
                     }}
+                    countPerPage={11}
                 />
             </div>
         </>

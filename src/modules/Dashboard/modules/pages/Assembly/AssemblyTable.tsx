@@ -29,7 +29,7 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [listForTable, setListForTable] = useState<AssemblyTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
-        loading('546')
+
         fetchDistricts(setDistrictList)
         fetchAssemblys(setAssemblyList, setListForTable)
     }, [])
@@ -146,6 +146,7 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                         },
                         icon: "fa-trash",
                     }}
+                    countPerPage={11}
                 />
             </div>
         </>

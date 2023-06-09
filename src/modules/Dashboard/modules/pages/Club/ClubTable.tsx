@@ -37,14 +37,14 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
-        loading('345')
+
         fetchDistricts(setDistrictList)
         fetchClubs(setClubList, setListForTable)
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
 
     useEffect(() => {
-        loading('345')
+
         fetchClubs(setClubList, setListForTable, updateTable)
     }, [updated])
 

@@ -24,7 +24,7 @@ export function fetchAssemblys(
             setData(data)
             setData2(data)
             if (updateTable) updateTable(data)
-            toast.dismiss('546')
+
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

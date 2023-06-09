@@ -9,13 +9,14 @@
             justify-content: flex-end;
             align-items: center;
             gap: 10px;
-            background-color: rgb(0, 0, 0);
+            background-color: black;
             width: fit-content;
-            color: rgb(255, 255, 255);
-            padding: 8px 10px;
-            font-size: 12px;
+            color: white;
+            padding: 10px;
+            font-size: 12.5px;
             border-radius: 10px;
             cursor: pointer;
+            margin: 5px 0;
         }
     }
 
@@ -175,6 +176,7 @@ table {
         }
 
         .input {
+            all: unset;
             display: flex;
             user-select: none;
             align-items: center;
@@ -183,8 +185,8 @@ table {
             font-size: small;
             margin: 0;
             text-align: center;
-            width: 50px;
             border: 1px solid rgba(0, 0, 0, 0.2);
+            max-width: fit-content;
 
             &:hover {
                 cursor: default;
