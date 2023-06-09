@@ -2,14 +2,15 @@
 import { useEffect, useState } from "react"
 import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
+import React, { Dispatch, SetStateAction } from "react";
 interface sortProps {
     status: string;
     updater: boolean;
 
 }
-function paginateArray<T>(array: T[], page: number): T[] {
-    const startIndex = (page - 1) * 10;
-    const endIndex = startIndex + 10;
+function paginateArray<T>(array: T[], page: number, countInPage: number): T[] {
+    const startIndex = (page - 1) * countInPage;
+    const endIndex = startIndex + countInPage;
     return array.slice(startIndex, endIndex);
 }
 export interface CustomTableProps<TableProps> {
@@ -41,7 +42,10 @@ export interface CustomTableProps<TableProps> {
     },
     capitalize?: boolean,
     pagination?: boolean,
-    filter?: boolean
+    filter?: boolean,
+    loading?: boolean,
+    setupLoading?: Dispatch<SetStateAction<boolean>>
+
 }
 function CustomTable<TableProps>({
     tableHeadList,
@@ -53,9 +57,13 @@ function CustomTable<TableProps>({
     manage,
     capitalize = true,
     pagination = true,
-    filter = true
-}:
+    filter = true,
+    loading,
+    setupLoading
+}
+    :
     CustomTableProps<TableProps>) {
+
     const [page, setPage] = useState(1)
     const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
@@ -172,7 +180,8 @@ function CustomTable<TableProps>({
         }
         return ''
     }
-
+    const [countInPage, setCountInPage] = useState(10)
+    const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     return (
         <div className="table-wrap">
 
@@ -213,10 +222,10 @@ function CustomTable<TableProps>({
                 {/* Table Body */}
 
                 <tbody>
-                    {paginateArray(sortedTable, page).map((item: TableProps, key: number) =>
+                    {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) =>
                     (
                         <tr key={key} >
-                            <td >{(page - 1) * 10 + key + 1}</td>
+                            <td >{(page - 1) * countInPage + key + 1}</td>
                             {
                                 orderBy.map((item2: keyof TableProps, index: number) => (
                                     <>
@@ -239,27 +248,35 @@ function CustomTable<TableProps>({
                     )}
                 </tbody>
             </table >
-            {!sortedTable.length && <div className="no-data">No Data to Show </div>}
+            {!sortedTable.length && <div className="no-data">Loading... </div>}
             {/* Pagination */}
 
-            {pagination && <div className='paginator' >
-                <div>
-                    <div onClick={() => { setPage(1) }}>
-                        <i   >{"|<<"}</i>
+            {pagination &&
+                <div className='paginator' >
+                    <div className="count-in-page">
+
+                        <input className="input" type="number" value={countInPage} onChange={(e) => {
+                            setCountInPage(Number(e.target.value))
+                        }} />
+                        <p> Per Page </p>
                     </div>
-                    <div onClick={() => { setPage(page > 1 ? page - 1 : 1) }}>
-                        <i >{"|<"}</i>
+                    <div>
+                        <div onClick={() => { setPage(1) }}>
+                            <i   >{"|<<"}</i>
+                        </div>
+                        <div onClick={() => { setPage(page > 1 ? page - 1 : 1) }}>
+                            <i >{"|<"}</i>
+                        </div>
+                        <div className="input">
+                            {`${page * countInPage < sortedTable.length ? page * countInPage : sortedTable.length} / ${sortedTable.length}`}
+                        </div>
+                        <div onClick={() => { setPage(page * countInPage < sortedTable.length ? page + 1 : page) }}>
+                            <i >{">|"}</i></div>
+                        <div onClick={() => { setPage(lastPage) }}>
+                            <i >{">>|"}</i>
+                        </div>
                     </div>
-                    <div className="input">
-                        {`${page * 10 < sortedTable.length ? page * 10 : sortedTable.length} / ${sortedTable.length}`}
-                    </div>
-                    <div onClick={() => { setPage(page * 10 < sortedTable.length ? page + 1 : page) }}>
-                        <i >{">|"}</i></div>
-                    <div onClick={() => { setPage(page) }}>
-                        <i >{">>|"}</i>
-                    </div>
-                </div>
-            </div >}
+                </div >}
         </div>
     )
 }

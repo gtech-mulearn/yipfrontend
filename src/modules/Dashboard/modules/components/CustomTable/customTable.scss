@@ -117,8 +117,17 @@ table {
 
 .paginator {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+
+    .count-in-page {
+        p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+    }
 
     div {
         display: flex;
