@@ -25,6 +25,7 @@ import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
 import { CentralZone, Districts, NorthZone, SouthZone } from "../../../../../../../utils/Locations";
+import { errorCheck, loading } from "../../../../../components/Toastify/ToastifyConsts";
 
 interface commonViewProps {
   pre_registrations: string;
@@ -146,7 +147,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     }]
   }
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [count, setCount] = useState(0)
   useEffect(() => {
+
+    loading(0)
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
@@ -189,12 +193,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
       );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
+    loading(0)
+
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
     if (view === "Intern") fetchIntern(setInternList, setInternTableList);
-    if (view === "District Coordinator")
-      fetchDistrictCoordinator(setAssigneeList, setAssigneetable);
-    if (view === "Programme Executive")
-      fetchProgrammeExecutive(setAssigneeList, setAssigneetable);
     if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
     if (view === "Zone") fetchZone(setZoneList, setZonetable);
     if (view === 'State') fetchState(setStateTable);
@@ -630,8 +632,6 @@ function fetchCampus(
   setData: Dispatch<SetStateAction<CampusViewProps[]>>,
   setData2: Dispatch<SetStateAction<CampusViewProps[]>>
 ) {
-
-  toast.loading("Loading...");
   privateGateway
     .get(yip5Routes.campusList)
     .then((res) => {
@@ -667,8 +667,10 @@ function fetchDistrict(
     .then((res) => {
       setDistrictFilter(res.data.response);
       setDistricttable(res.data.response);
+      toast.dismiss()
     })
     .catch((err) => {
+      errorCheck(err);
       console.log(err);
     });
 }
@@ -706,6 +708,7 @@ function fetchIntern(
           return { ...intern, districtName: intern.district.join(",") };
         })
       );
+      toast.dismiss()
     })
     .catch((err) => console.log(err));
 }
@@ -858,8 +861,13 @@ function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProp
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
+      toast.dismiss()
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast.dismiss()
+      toast.error(err.response.data.message || err.message)
+      console.log(err)
+    });
 }
 
 function filterZone(zoneList: zoneViewProps[], search: string) {
@@ -879,7 +887,11 @@ function searchZone(list: zoneViewProps[], search: string): zoneViewProps[] {
 
 function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
   privateGateway.get(yip5Routes.stateBasedData)
-    .then((res) => setStateTable([res.data.response]))
+    .then((res) => {
+      setStateTable([res.data.response])
+      toast.dismiss()
+
+    })
     .catch((err) => console.log(err));
 }
 

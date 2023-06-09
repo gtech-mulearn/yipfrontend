@@ -22,7 +22,19 @@ export const error = (msg: string) =>
         progress: undefined,
         theme: "colored",
     });
-
+export const loading = (id?: number) => {
+    toast.loading("Loading...", {
+        toastId: String(id),
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    });
+}
 export const errorCheck = (err: any) => {
     if (err?.status === 400) {
         err.data.message.general.map((msg: string) => error(msg));
