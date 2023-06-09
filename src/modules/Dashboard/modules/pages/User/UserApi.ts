@@ -5,6 +5,7 @@ import { privateGateway } from "../../../../../services/apiGateway"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
 import { errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
+import { toast } from "react-toastify"
 
 export function deleteThisUser(id: string, update: Function,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
@@ -13,7 +14,7 @@ export function deleteThisUser(id: string, update: Function,
 ) {
     privateGateway.delete(`${tableRoutes.user.delete}${id}/`)
         .then(res => {
-            setSuccessMessage(res?.data?.message?.general[0])
+            toast.info(res?.data?.message?.general[0])
             setTimeout(() => {
                 update()
                 setUser({} as UserTableProps)

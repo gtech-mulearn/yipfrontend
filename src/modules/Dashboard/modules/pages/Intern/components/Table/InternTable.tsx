@@ -306,7 +306,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     }
 
     if (
-      [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF].includes(userInfo.role)
+      [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF, roles.ZONAL_COORDINATOR].includes(userInfo.role)
     ) {
       setViewUpload(true);
     }
