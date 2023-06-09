@@ -150,7 +150,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
   const [count, setCount] = useState(0)
   useEffect(() => {
 
-    loading(0)
+    loading('100')
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
@@ -193,7 +193,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
       );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
-    loading(0)
+    loading('100')
 
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
     if (view === "Intern") fetchIntern(setInternList, setInternTableList);
@@ -326,7 +326,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
         <div className="btns-upper">
           {viewUpload && (
             <>
-              {!selectedFile && <div className="table-fn-btn cursor" onClick={handleButtonClick}>
+              {!selectedFile && <button className="table-fn-btn cursor" onClick={handleButtonClick}>
                 <i className="fa-solid fa-upload"></i>
                 <input
                   type="file"
@@ -336,7 +336,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                   style={{ display: "none" }}
                 />
                 <p>Upload File</p>
-              </div>}
+              </button>}
               {selectedFile && (<>
                 <div className="table-fn-btn cursor" onClick={handleUpload}>
                   File: {selectedFile.name.split(".")[0]} :
@@ -637,7 +637,7 @@ function fetchCampus(
     .then((res) => {
       setData(res.data.response);
       setData2(res.data.response);
-      toast.dismiss()
+      toast.dismiss('100')
     })
     .catch((err) => {
       console.log(err);
@@ -667,7 +667,7 @@ function fetchDistrict(
     .then((res) => {
       setDistrictFilter(res.data.response);
       setDistricttable(res.data.response);
-      toast.dismiss()
+      toast.dismiss('100')
     })
     .catch((err) => {
       errorCheck(err);
@@ -708,7 +708,7 @@ function fetchIntern(
           return { ...intern, districtName: intern.district.join(",") };
         })
       );
-      toast.dismiss()
+      toast.dismiss('100')
     })
     .catch((err) => console.log(err));
 }
@@ -861,10 +861,10 @@ function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProp
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
-      toast.dismiss()
+      toast.dismiss('100')
     })
     .catch((err) => {
-      toast.dismiss()
+      toast.dismiss('100')
       toast.error(err.response.data.message || err.message)
       console.log(err)
     });
@@ -889,7 +889,7 @@ function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonVie
   privateGateway.get(yip5Routes.stateBasedData)
     .then((res) => {
       setStateTable([res.data.response])
-      toast.dismiss()
+      toast.dismiss('100')
 
     })
     .catch((err) => console.log(err));

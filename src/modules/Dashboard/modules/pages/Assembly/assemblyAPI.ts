@@ -4,6 +4,8 @@ import { selectProps } from "../../utils/setupUtils";
 import { setupRoutes, tableRoutes } from "../../../../../services/urls";
 import { AssemblyTableProps } from "./AssemblyTable";
 import { showAlert } from "../../../components/Error/Alerts";
+import { toast } from "react-toastify";
+import { errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts";
 
 export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(setupRoutes.district.list)
@@ -22,6 +24,7 @@ export function fetchAssemblys(
             setData(data)
             setData2(data)
             if (updateTable) updateTable(data)
+            toast.dismiss('546')
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
@@ -46,8 +49,6 @@ export function createAssembly(
     districtId: string,
     update: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
 ) {
     const postData = {
         name: assembly,
@@ -56,14 +57,13 @@ export function createAssembly(
     privateGateway.post(setupRoutes.assembly.create, postData)
         .then(res => {
             update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
-            console.log('Success :', res.data.message.general[0])
+            success()
+            setViewSetup(false)
         })
         .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            errorMessage(err.response)
+            errorCheck(err.response)
+            // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
             console.log('Error :', err?.response.data.message.general[0])
         })
 }

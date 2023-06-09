@@ -112,7 +112,7 @@ const InternBanner = ({ update }: { update: boolean }) => {
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.preRegistration * 100)) ? 0 : Math.round(banner.vos / banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{'Pre-registrartion to VOS '}</p>
+                    <p>{'Pre-registration to VOS '}</p>
                 </div>
                 <div className={`box blue-box`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>

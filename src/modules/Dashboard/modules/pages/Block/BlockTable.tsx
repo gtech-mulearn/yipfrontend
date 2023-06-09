@@ -4,6 +4,7 @@ import Modal from './BlockModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchBlocks, fetchDistricts } from './blockAPI'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
 
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -29,10 +30,12 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
     const [listForTable, setListForTable] = useState<BlockTableProps[]>([])
 
     useEffect(() => {
+        loading('219')
         fetchDistricts(setDistrictList)
         fetchBlocks(setBlockList, setListForTable)
     }, [])
     useEffect(() => {
+        loading('219')
         fetchBlocks(setBlockList, setListForTable, updateTable)
     }, [updated])
     useEffect(() => {

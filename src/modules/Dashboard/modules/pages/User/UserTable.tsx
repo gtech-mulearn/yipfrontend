@@ -5,6 +5,8 @@ import CustomTable from '../../components/CustomTable/CustomTable'
 
 import Modal from './UserModal'
 import { fetchUserRoles, fetchUsers } from './UserApi'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
+import { toast } from 'react-toastify'
 
 export interface UserTableProps {
     id: string
@@ -34,6 +36,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     const [userList, setUserList] = useState<UserTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
+        loading('100')
         fetchUsers(setUserList, setListForTable)
         fetchUserRoles(setRoleList)
     }, [])

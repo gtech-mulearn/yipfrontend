@@ -1,5 +1,5 @@
-import { toast } from "react-toastify";
-
+import { Slide, Zoom, toast } from "react-toastify";
+import './Toast.css'
 export const success = () =>
     toast.success("Success", {
         position: "bottom-center",
@@ -22,19 +22,17 @@ export const error = (msg: string) =>
         progress: undefined,
         theme: "colored",
     });
-export const loading = (id?: number) => {
+export const loading = (id: string) => {
     toast.loading("Loading...", {
         toastId: String(id),
         position: "bottom-center",
         autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        closeOnClick: false,
+        theme: "colored",
+        className: 'blue-shadow',
     });
 }
+
 export const errorCheck = (err: any) => {
     if (err?.status === 400) {
         err.data.message.general.map((msg: string) => error(msg));

@@ -7,6 +7,7 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { setupRoutes, tableRoutes } from '../../../../../services/urls'
 import { fetchClubs, fetchDistricts, fetchStatus } from './clubAPI'
 import { useNavigate } from 'react-router-dom'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateClubData: Function
@@ -36,12 +37,14 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
+        loading('345')
         fetchDistricts(setDistrictList)
         fetchClubs(setClubList, setListForTable)
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
 
     useEffect(() => {
+        loading('345')
         fetchClubs(setClubList, setListForTable, updateTable)
     }, [updated])
 
@@ -208,7 +211,4 @@ function rawString(str: string) {
     str = str.replaceAll(' ', '')
     return str
 }
-
-
-
 export default ClubTable

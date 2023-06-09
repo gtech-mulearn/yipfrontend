@@ -4,6 +4,7 @@ import Modal from './AssemblyModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchAssemblys, fetchDistricts } from './assemblyAPI'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
 
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -28,6 +29,7 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [listForTable, setListForTable] = useState<AssemblyTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     useEffect(() => {
+        loading('546')
         fetchDistricts(setDistrictList)
         fetchAssemblys(setAssemblyList, setListForTable)
     }, [])

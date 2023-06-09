@@ -62,12 +62,11 @@ export function createUser(
 
         .then(res => {
             updateUserData()
-            // showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            // console.log('Success :', res?.data?.message?.general[0])
+            toast.dismiss()
             success();
         })
         .catch(err => {
-            // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
+            toast.dismiss()
             errorMessage(err.response)
             errorCheck(err.response)
         })
@@ -90,10 +89,10 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
                     institutes: item?.role?.institutes ? item?.role?.institutes : []
                 }
             ))
-            console.log(newData)
             setUserList(newData)
             setListForTable(newData)
             if (updateTable) updateTable(newData)
+            toast.dismiss('100')
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

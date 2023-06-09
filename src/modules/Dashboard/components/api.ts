@@ -11,14 +11,11 @@ export interface userInfoProps {
 }
 
 export async function fetchUserInfo(setData: Dispatch<SetStateAction<userInfoProps>>) {
-    loading(0)
     await privateGateway.get(setupRoutes.user.info)
         .then((res) => {
             setData(res.data.response)
-            toast.dismiss()
         })
         .catch((err: any) => {
-            toast.dismiss('0')
             toast.error('Error :', err?.response.data.message.general[0] || err.message)
         })
 }
