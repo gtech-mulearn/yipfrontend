@@ -35,6 +35,11 @@
     display: flex;
     gap: 15px;
 
+    .upload-btns {
+        display: flex;
+        gap: 5px
+    }
+
 }
 
 @media screen and (max-width: 560px) {

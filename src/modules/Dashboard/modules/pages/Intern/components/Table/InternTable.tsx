@@ -354,14 +354,6 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
               )}
             </div>
           )}
-
-          {/* {csvData && csvData.length > 0 && (
-          <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
-        )} */}
-          <button className="table-fn-btn cursor" onClick={downloadCSV}>
-            <i className="fa-solid fa-download"></i>
-            Download CSV
-          </button>
         </div>
       </div>
       {/* //table box */}
