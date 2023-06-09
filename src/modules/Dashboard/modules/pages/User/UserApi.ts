@@ -85,7 +85,7 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
             const newData = data.map((item: any) => (
                 {
                     ...item,
-                    role: (item?.role?.name || item?.role),
+                    role: (item?.role?.name || item?.role || ''),
                     location: getLocation(item),
                     institutes: item?.role?.institutes ? item?.role?.institutes : []
                 }
@@ -99,7 +99,7 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
 }
 function getLocation(item: any) {
     if (item?.role?.zone) return item?.role?.zone + ' Zone';
-    else if (item?.role.district) return item?.role?.district;
+    else if (item?.role?.district) return item?.role?.district;
     else if (item?.role?.name === 'Intern') return Array.isArray(item?.role?.district) ? item?.role?.district?.map((district: any) => district?.name).join(',') : item?.role?.district ? item?.role?.district : '';
     else return 'Kerala ';
 }
