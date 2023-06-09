@@ -65,8 +65,6 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
                 </div>
 
             </div>
-            {errorMessage && <Error error={errorMessage} />}
-            {successMessage && <Success success={successMessage} />}
         </div>
     )
 }
