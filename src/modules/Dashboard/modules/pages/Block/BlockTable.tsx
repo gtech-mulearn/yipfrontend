@@ -4,6 +4,7 @@ import Modal from './BlockModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchBlocks, fetchDistricts } from './blockAPI'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
 
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -29,10 +30,12 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
     const [listForTable, setListForTable] = useState<BlockTableProps[]>([])
 
     useEffect(() => {
+
         fetchDistricts(setDistrictList)
         fetchBlocks(setBlockList, setListForTable)
     }, [])
     useEffect(() => {
+
         fetchBlocks(setBlockList, setListForTable, updateTable)
     }, [updated])
     useEffect(() => {
@@ -137,9 +140,11 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                 {/* Table */}
 
                 <CustomTable<BlockTableProps>
+
                     tableHeadList={TableTitleList}
                     tableData={listForTable}
                     orderBy={list}
+
                     manage={{
                         value: "Delete",
                         manageFunction: (item: BlockTableProps) => {
@@ -147,6 +152,7 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                         },
                         icon: "fa-trash",
                     }}
+                    countPerPage={11}
                 />
             </div>
         </>

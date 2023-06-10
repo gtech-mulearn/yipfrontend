@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 
+import YIPlogo from '../../../../assets/logo.webp'
 
 import './NameCard.scss'
 import { fetchUserInfo, userInfoProps } from '../api'
+import { useNavigate } from 'react-router-dom'
 // import { Engagespot } from "@engagespot/react-component";
 const theme = {
     notificationButton: {
@@ -15,12 +17,15 @@ const theme = {
 }
 const NameCard = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [data, setData] = React.useState<userInfoProps>({} as userInfoProps)
+    const navigate = useNavigate()
     useEffect(() => {
         fetchUserInfo(setData)
     }, [])
     return (
         <>
             <div className={`name-card`} >
+                <div className="logo-img" onClick={() => { navigate('/intern-dashboard') }}><img src={YIPlogo} alt="logo" />
+                </div>
                 {/* {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />} */}
                 <div className={'open-color'} onClick={() => { setOpen(!open) }}>
                     <i className={`fas fa-user`} ></i>

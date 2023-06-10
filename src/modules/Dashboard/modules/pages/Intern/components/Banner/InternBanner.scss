@@ -1,10 +1,14 @@
 .filter-container {
     background-color: rgb(219, 219, 219);
+
 }
 
+
+
+
 .statistics {
-    gap: 5px;
-    padding: 10px 0;
+    row-gap: 15px;
+    column-gap: 10px;
 }
 
 .blue-box {
@@ -12,6 +16,11 @@
         color: black;
         font-size: 13px;
     }
+}
+
+.color-change {
+    background-color: #94d1ff;
+    color: rgb(64, 53, 53);
 }
 
 .banner-header {
@@ -24,5 +33,33 @@
     p {
         font-weight: 600;
         padding-left: 10px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .filter-container {
+        .filter-box {
+            .setup-item {
+                width: 100%;
+
+                .react-select-container {
+                    text-align: left;
+                }
+            }
+        }
+    }
+
+    .statistics {
+        padding-top: 10px;
+
+        .box {
+            width: 40%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            p {
+                font-size: 14px;
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
 import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 import { createAssembly, fetchDistricts } from './assemblyAPI'
+import { toast } from 'react-toastify'
+import { errorCheck, errorMessage } from '../../../components/Toastify/ToastifyConsts'
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateAssemblyData: Function
@@ -14,8 +16,6 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [assembly, setAssembly] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
-    const [errorMessage, setErrorMessage] = useState("")
-    const [successMessage, setSuccessMessage] = useState("")
 
     const reset = () => {
         setAssembly("")
@@ -32,14 +32,14 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
         })
         return validationSchema.validate(
             { name: assembly, district: district.name },
-            { abortEarly: true })
+            { abortEarly: false })
     }
     function handleCreate() {
         validateSchema()
             .then(() => {
-                createAssembly(assembly, district.id, updateAssemblyData, setViewSetup, setSuccessMessage, setErrorMessage)
+                createAssembly(assembly, district.id, updateAssemblyData, setViewSetup)
             })
-            .catch(err => showAlert(err.message, setErrorMessage))
+            .catch(err => err.errors.map((error: string) => toast.error(error)))
     }
     return (
         <div className="white-container">
@@ -62,8 +62,6 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
-            {errorMessage && <Error error={errorMessage} />}
-            {successMessage && <Success success={successMessage} />}
         </div>)
 }
 

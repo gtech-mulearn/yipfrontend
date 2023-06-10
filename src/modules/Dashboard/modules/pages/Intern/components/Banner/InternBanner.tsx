@@ -56,7 +56,11 @@ const InternBanner = ({ update }: { update: boolean }) => {
 
     return (
         <div className='white-container'>
+            <div className='banner-header'>
+                <p>{showCurrentSelected(zone, district, college)}</p>
+            </div>
             <div className="filter-container">
+
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
                     <CustomSelect
@@ -85,9 +89,7 @@ const InternBanner = ({ update }: { update: boolean }) => {
                     />}
                 </div >
             </div>
-            <div className='banner-header'>
-                <p>{showCurrentSelected(zone, district, college)}</p>
-            </div>
+
             <div className="statistics">
                 {/* <div className={`box blue-box`} >
                     <h3>{100}<div className="count"><div className="count-in">{ }</div></div></h3>
@@ -110,11 +112,11 @@ const InternBanner = ({ update }: { update: boolean }) => {
                     <h3>{banner.ideaSubmission}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Idea Submissions'}</p>
                 </div>
-                <div className={`box blue-box`} >
+                <div className={`box blue-box color-change`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.preRegistration * 100)) ? 0 : Math.round(banner.vos / banner.preRegistration * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
-                    <p>{'Pre-registrartion to VOS '}</p>
+                    <p>{'Pre-registration to VOS '}</p>
                 </div>
-                <div className={`box blue-box`} >
+                <div className={`box blue-box color-change`} >
                     <h3>{banner && Number.isNaN(Math.round(banner.vos / banner.groupFormation * 100)) ? 0 : Math.round(banner.ideaSubmission / banner.groupFormation * 100)}%<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Group Formation to Idea Submission '}</p>
                 </div>

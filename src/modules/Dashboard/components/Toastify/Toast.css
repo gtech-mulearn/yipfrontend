@@ -1,0 +1,8 @@
+.blue-shadow {
+    background-color:#3498db !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    color: rgb(255, 255, 255);
+    --toastify-text-color-light: #ffffff;
+    --toastify-spinner-color: #3498db;
+  }
+  
