@@ -29,7 +29,10 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     }, [])
     function validateSchema() {
         const validationSchema = yup.object().shape({
-            name: yup.string().required('Block Name is required'),
+            name: yup.string().required('Block Name is required').test('only-spaces', 'Only spaces are not allowed for Block name', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
             district: yup.string().required('District is required'),
         })
         return validationSchema.validate(

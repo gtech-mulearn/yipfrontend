@@ -67,7 +67,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                             />
                         </div>
                     </div>}
-                    {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} />}
+                    {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} />}
                     {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}

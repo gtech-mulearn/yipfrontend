@@ -11,6 +11,8 @@ import { privateGateway, publicGateway } from '../../../../../services/apiGatewa
 import { campusRoutes, tableRoutes } from '../../../../../services/urls'
 import Select from 'react-select'
 import { error, errorCheck, success } from '../../../components/Toastify/ToastifyConsts'
+import * as yup from 'yup'
+import { toast } from 'react-toastify'
 
 const InstituteSetup = () => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
@@ -31,9 +33,26 @@ const InstituteSetup = () => {
             fetchInstitutes(district.name, setInstituteList)
         }
     }, [district?.id])
-
+    function validateSchema() {
+        const validationSchema = yup.object().shape({
+            district: yup.string().required('District is required'),
+            institute: yup.string().required('Institute is required'),
+            ICT: yup.string().required('ICT Id is required').test('only-spaces', 'Only spaces are not allowed for ICT Id', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
+        })
+        return validationSchema.validate(
+            { district: district.name, institute: institute.name, ICT: ICT },
+            { abortEarly: false }
+        )
+    }
     function handleConnect() {
-        connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess, setUpdate, setViewSetup, reset)
+        validateSchema().then(() => {
+            connectInstitute(institute.name, institute.id, district.name, ICT, setError, setSuccess, setUpdate, setViewSetup, reset)
+        })
+            .catch(err => err.errors.map((error: string) => toast.error(error)))
+
     }
     function reset() {
         setDistrict({} as selectProps)

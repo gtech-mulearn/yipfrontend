@@ -27,7 +27,10 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     }, [])
     function validateSchema() {
         const validationSchema = yup.object().shape({
-            name: yup.string().required('Assembly Name is required'),
+            name: yup.string().required('Assembly Name is required').test('only-spaces', 'Only spaces are not allowed for Assembly name', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
             district: yup.string().required('District is required'),
         })
         return validationSchema.validate(
