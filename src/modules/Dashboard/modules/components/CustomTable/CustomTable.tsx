@@ -307,8 +307,8 @@ function CustomTable<TableProps>({
             </div>
             {!sortedTable.length && <div className="no-data">
                 <ThreeDots
-                    height="150"
-                    width="80"
+                    height="60"
+                    width="60"
                     color="#59b3fa"
                     ariaLabel="three-dots-loading"
                     wrapperStyle={{}}

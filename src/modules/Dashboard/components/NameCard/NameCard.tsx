@@ -23,8 +23,8 @@ const NameCard = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<Re
     }, [])
     return (
         <>
-            <div className={`name-card`} onClick={() => { navigate('/institute-management') }}>
-                <div className="logo-img" ><img src={YIPlogo} alt="logo" />
+            <div className={`name-card`} >
+                <div className="logo-img" onClick={() => { navigate('/intern-dashboard') }}><img src={YIPlogo} alt="logo" />
                 </div>
                 {/* {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />} */}
                 <div className={'open-color'} onClick={() => { setOpen(!open) }}>
