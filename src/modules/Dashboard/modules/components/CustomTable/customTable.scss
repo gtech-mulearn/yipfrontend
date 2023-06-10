@@ -3,6 +3,7 @@
     .btn-wrap {
         display: flex;
         justify-content: flex-end;
+        gap: 10px;
 
         .table-btn {
             display: flex;
@@ -18,6 +19,12 @@
             cursor: pointer;
             margin: 5px 0;
         }
+
+        .grid {
+            i {
+                font-size: 16px;
+            }
+        }
     }
 
     .wrapper-table {
@@ -26,6 +33,121 @@
         padding-bottom: 15px;
     }
 
+}
+
+.table-wrap {
+    .wrapper-table {
+        .sortList {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            gap: 10px;
+            justify-content: flex-end;
+
+            .sort-btns {
+                cursor: pointer;
+                display: inline-block;
+                background-color: white;
+                color: black;
+                padding: 5px 10px;
+                box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.245);
+                border-radius: 6px;
+                font-size: 12px;
+
+                i {
+                    font-size: 10px;
+                    padding-right: 8px;
+                }
+            }
+
+            .selected {
+                background-color: #59b3fa;
+            }
+
+        }
+
+        .box-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+
+            .boxed {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 10px;
+                font-size: 10px;
+                border-radius: 10px;
+                gap: 10px;
+
+                box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+
+                .boxed-data {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+
+                    .data {
+                        padding: 10px 15px 10px 15px;
+                        border-radius: 9px;
+                        box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.082);
+                        min-height: 50px;
+                    }
+                }
+
+
+
+                .heading {
+                    font-size: 11px;
+                    font-weight: 600;
+                }
+
+                .boxed-heading {
+                    p {
+                        text-align: center;
+                        font-weight: 600;
+                    }
+                }
+
+                p {
+                    text-emphasis: bold;
+                    padding-top: 5px;
+                    font-weight: 500;
+                    font-size: 13px;
+                }
+
+                .manage {
+                    display: flex;
+                    width: fit-content;
+                    align-self: flex-end;
+
+                    .edit-btn {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 5px;
+                        background-color: #100f0f;
+                        color: #fff;
+                        gap: 5px;
+                        padding: 5px;
+                    }
+                }
+            }
+
+            @media screen and (max-width: 560px) {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+
+                p {
+                    font-weight: 200;
+                }
+            }
+
+        }
+    }
 }
 
 table {
@@ -180,13 +302,14 @@ table {
             display: flex;
             user-select: none;
             align-items: center;
+            justify-content: center;
             border-radius: 10px;
             padding: 5px;
             font-size: small;
             margin: 0;
             text-align: center;
             border: 1px solid rgba(0, 0, 0, 0.2);
-            max-width: fit-content;
+            width: 50px;
 
             &:hover {
                 cursor: default;

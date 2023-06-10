@@ -13,6 +13,7 @@ import { UserTableProps as UserProps } from './UserTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
 import styles from './UserSetup.module.css'
+import { toast } from 'react-toastify'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -54,11 +55,56 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         if (coordinator.id)
             getSelectedInstitutes(coordinator.id, setInstituteList)
     }, [coordinator])
+    function validateSchema() {
+        const validate = yup.object({
+            name: yup.string().required('Name is required').test('only-spaces', 'Only spaces are not allowed for user name', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
+            email: yup.string().email('Invalid email').required('Email is required'),
+            phone: yup.string()
+                .required('Phone is required')
+                .test('valid-phone', 'Invalid phone number', value => {
+                    // Check for valid phone number format
+                    if (!value) return false;
+
+                    const hasPlusSign = value.includes('+');
+                    const numericPart = hasPlusSign ? value.replace('+', '') : value;
+
+                    if (hasPlusSign && numericPart.length > 13) {
+                        return false;
+                    }
+
+                    if (!hasPlusSign && numericPart.length > 12) {
+                        return false;
+                    }
+
+                    return /^\d{10,12}$/.test(numericPart);
+                }),
+            password: yup.string().required('Password is required').test('only-spaces', 'Only spaces are not allowed for password', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
+            role: yup.string().required('Role is required'),
+        })
+        return validate.validate(
+            {
+                name: name,
+                email: email,
+                phone: phone,
+                password: password,
+                role: role.name,
+            },
+            { abortEarly: false }
+        )
+    }
 
     function handleCreate() {
 
-
-        createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+        validateSchema().then(() =>
+            createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+        )
+            .catch(err => err.errors.map((error: string) => toast.error(error)))
 
     }
     return (

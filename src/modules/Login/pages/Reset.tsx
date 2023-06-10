@@ -16,6 +16,7 @@ function Reset() {
     const [errorStatus, setErrorStatus] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [password, setPassword] = useState<string>("")
+    const [confirmPassword, setConfirmPassword] = useState<string>("")
     const [email, setEmail] = useState("")
     const [user, setUser] = useState('')
     const [token, setToken] = useState('')
@@ -37,6 +38,15 @@ function Reset() {
                         placeholder="Password"
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    {password !== confirmPassword && confirmPassword !== "" &&
+                        <p className="error">Passwords do not match</p>}
                     <div className="password">
                         <div className="show-password">
                             <input
@@ -49,12 +59,17 @@ function Reset() {
                             <label>Show Password</label>
                         </div>
                     </div>
+
                     <button type="button" id="submitBtn" onClick={
-                        () => resetPassword(token, password, navigate)}
+                        () => {
+                            if (password === confirmPassword)
+                                resetPassword(token, password, navigate)
+
+                        }}
                     >
                         Reset Password
                     </button>
-                    {errorStatus ? <ErrorBox /> : <></>}
+
                 </form>
             </div>
             <ToastContainer

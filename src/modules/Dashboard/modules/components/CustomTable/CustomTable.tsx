@@ -47,7 +47,8 @@ export interface CustomTableProps<TableProps> {
     filter?: boolean,
     loading?: boolean,
     setupLoading?: (item: boolean) => void
-    countPerPage?: number
+    countPerPage?: number,
+    gridView?: boolean
 }
 function CustomTable<TableProps>({
     tableHeadList,
@@ -64,7 +65,8 @@ function CustomTable<TableProps>({
     setupLoading = (item: boolean) => {
         return item
     },
-    countPerPage = 10
+    countPerPage = 10,
+    gridView = false
 }
     :
     CustomTableProps<TableProps>) {
@@ -76,6 +78,7 @@ function CustomTable<TableProps>({
     const [csvData, setCsvData] = useState<any>();
     const [countInPage, setCountInPage] = useState(countPerPage)
     const [notLoading, setNotLoading] = useState('')
+    const [boxView, setBoxView] = useState(false)
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     useEffect(() => {
         handleDownloadCSV()
@@ -87,6 +90,12 @@ function CustomTable<TableProps>({
                 setNotLoading('No Data to Display')
             }, 30000)
     }, [])
+    useEffect(() => {
+        if (countInPage < 1) {
+            setCountInPage(10)
+        }
+
+    }, [countInPage])
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
         const updatedData = sortedTable.map((item: any) => {
@@ -132,8 +141,11 @@ function CustomTable<TableProps>({
 
         let tempTable = sortedTable.sort((a: any, b: any) => {
             const isNotSorted = sort.status === "Unsorted" || sort.status === "Sorted:DESC"
-            if (a[orderBy[index]] < b[orderBy[index]]) return isNotSorted ? -1 : 1
-            if (a[orderBy[index]] > b[orderBy[index]]) return isNotSorted ? 1 : -1
+            if (
+                (a[orderBy[index]] || a[orderBy[index]] === 0 ?
+                    a[orderBy[index]] : '') < (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? -1 : 1
+            if ((a[orderBy[index]] || a[orderBy[index]] === 0 ?
+                a[orderBy[index]] : '') > (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? 1 : -1
             return 0
         })
         setSortedTable(tempTable)
@@ -234,95 +246,150 @@ function CustomTable<TableProps>({
                     <i className="fa-solid fa-download"></i>
                     Download CSV
                 </button>
+                {gridView && <button className='table-btn grid' onClick={() => setBoxView(!boxView)}>
+                    <i className={`fa-solid ${boxView ? 'fa-th-large' : 'fa-list'}`}></i>
+                    {boxView ? ' Grid View' : 'List View'}
+                </button>}
             </div>
             <div className="wrapper-table">
-                <table className='table '>
-                    {/* Table Header */}
-                    <thead>
-                        <tr>
-                            <th >
-                                <div className="th-wrap ">
-                                    <div>{'SL.No'}</div>
-                                </div>
-                            </th>
-                            {tableHeadList.map((item: string, index: number) => (
-                                <th key={index} onClick={() => {
-                                    if (filter) {
-                                        setPage(1)
-                                        sortOrderByRequired(index)
-                                        setSelectedHeading(index)
-                                    }
-                                }}>
-                                    <div className={`th-wrap ${filter ? 'cursor' : ''} `}>
+
+                {boxView ?
+                    <>
+                        <div className="sortList">
+                            {filter &&
+                                tableHeadList.map((item: string, index: number) => (
+                                    <p className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
+                                        if (filter) {
+                                            setPage(1)
+                                            sortOrderByRequired(index)
+                                            setSelectedHeading(index)
+                                        }
+                                    }}>
                                         <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
-                                        <div>{item}</div>
-
-                                    </div>
-                                </th>)
-                            )}
-                            {manage?.value &&
-                                <th>
-                                    <div className="th-wrap end ">
-                                        <div>{'Manage'}</div>
-                                    </div>
-                                </th>
+                                        {item}</p>
+                                ))
                             }
-                        </tr>
-                    </thead>
-
-                    {/* Table Body */}
-
-                    <tbody>
-                        {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) =>
-                        (
-                            <tr key={key} >
-                                <td >{(page - 1) * countInPage + key + 1}</td>
-                                {
-                                    orderBy.map((item2: keyof TableProps, index: number) => (
-                                        <>
-                                            <td
-                                                className={`
-                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
-                                                key={index}>
-                                                {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
-                                            </td>
-                                        </>
-                                    ))
-                                }
-                                {manage?.value &&
-                                    <td className="">
+                        </div>
+                        <div className="box-list">
+                            {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => (
+                                <div className="boxed" key={key}>
+                                    <div className="boxed-heading">
+                                        <div >
+                                            {/* <p className="heading">{tableHeadList[0]}</p> */}
+                                            <p> {item[orderBy[0]] ? item[orderBy[0]] as string : ' '}</p >
+                                        </div>
+                                    </div>
+                                    <div className="boxed-data">
+                                        {orderBy.slice(1,).map((item2: keyof TableProps, index: number) => (
+                                            <div key={index} className="data">
+                                                <p className="heading">{tableHeadList[index + 1]}</p>
+                                                <p> {item[item2] === 0 || item[item2] ? item[item2] as string : ' '}</p >
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {manage?.value &&
                                         <div className="manage">
                                             <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
                                                 <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
                                                 {manage.value}
                                             </div>
                                         </div>
-                                    </td>
+                                    }
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                    : <table className='table '>
+                        {/* Table Header */}
+                        <thead>
+                            <tr>
+                                <th >
+                                    <div className="th-wrap ">
+                                        <div>{'SL.No'}</div>
+                                    </div>
+                                </th>
+                                {tableHeadList.map((item: string, index: number) => (
+                                    <th key={index} onClick={() => {
+                                        if (filter) {
+                                            setPage(1)
+                                            sortOrderByRequired(index)
+                                            setSelectedHeading(index)
+                                        }
+                                    }}>
+                                        <div className={`th-wrap ${filter ? 'cursor' : ''} `}>
+                                            <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
+                                            <div>{item}</div>
+
+                                        </div>
+                                    </th>)
+                                )}
+                                {manage?.value &&
+                                    <th>
+                                        <div className="th-wrap end ">
+                                            <div>{'Manage'}</div>
+                                        </div>
+                                    </th>
                                 }
                             </tr>
-                        )
-                        )}
-                    </tbody>
-                </table >
+                        </thead>
+
+                        {/* Table Body */}
+
+                        <tbody>
+                            {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => {
+                                console.log(item)
+                                return (
+                                    <tr key={key} >
+                                        <td >{(page - 1) * countInPage + key + 1}</td>
+                                        {
+                                            orderBy.map((item2: keyof TableProps, index: number) => (
+                                                <>
+                                                    <td
+                                                        className={`
+                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
+                                                        key={index}>
+                                                        {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                                    </td>
+                                                </>
+                                            ))
+                                        }
+                                        {manage?.value &&
+                                            <td className="">
+                                                <div className="manage">
+                                                    <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
+                                                        <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
+                                                        {manage.value}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table >}
             </div>
-            {!sortedTable.length && <div className="no-data">
-                <ThreeDots
-                    height="60"
-                    width="60"
-                    color="#59b3fa"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="no-data"
-                    visible={!notLoading}
-                />
-                {notLoading ? notLoading : ''}</div>}
+            {
+                !sortedTable.length && <div className="no-data">
+                    <ThreeDots
+                        height="60"
+                        width="60"
+                        color="#59b3fa"
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="no-data"
+                        visible={!notLoading}
+                    />
+                    {notLoading ? notLoading : ''}</div>
+            }
             {/* Pagination */}
 
-            {pagination &&
+            {
+                pagination &&
                 <div className='paginator' >
                     <div className="count-in-page">
 
-                        <input className="input" type="number" value={countInPage} onChange={(e) => {
+                        <input className="input" type="number" value={countInPage} min={1} max={sortedTable.length} onChange={(e) => {
                             setCountInPage(Number(e.target.value))
                         }} />
                         <p> Per Page </p>
@@ -342,8 +409,9 @@ function CustomTable<TableProps>({
                         <div onClick={() => { setPage(lastPage) }}>
                             <i className="fas fa-forward-fast"></i>                        </div>
                     </div>
-                </div >}
-        </div>
+                </div >
+            }
+        </div >
     )
 }
 export default CustomTable
