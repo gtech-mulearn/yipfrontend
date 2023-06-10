@@ -5,6 +5,7 @@ import { privateGateway } from "../../../../../services/apiGateway"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
 import { errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
+import { toast } from "react-toastify"
 
 export function deleteThisUser(id: string, update: Function,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
@@ -13,7 +14,7 @@ export function deleteThisUser(id: string, update: Function,
 ) {
     privateGateway.delete(`${tableRoutes.user.delete}${id}/`)
         .then(res => {
-            setSuccessMessage(res?.data?.message?.general[0])
+            toast.info(res?.data?.message?.general[0])
             setTimeout(() => {
                 update()
                 setUser({} as UserTableProps)
@@ -84,7 +85,7 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
             const newData = data.map((item: any) => (
                 {
                     ...item,
-                    role: (item?.role?.name || item?.role),
+                    role: (item?.role?.name || item?.role || ''),
                     location: getLocation(item),
                     institutes: item?.role?.institutes ? item?.role?.institutes : []
                 }
@@ -98,7 +99,7 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
 }
 function getLocation(item: any) {
     if (item?.role?.zone) return item?.role?.zone + ' Zone';
-    else if (item?.role.district) return item?.role?.district;
+    else if (item?.role?.district) return item?.role?.district;
     else if (item?.role?.name === 'Intern') return Array.isArray(item?.role?.district) ? item?.role?.district?.map((district: any) => district?.name).join(',') : item?.role?.district ? item?.role?.district : '';
     else return 'Kerala ';
 }

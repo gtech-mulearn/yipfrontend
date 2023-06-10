@@ -1,8 +1,9 @@
-import { buttons, urlProps, getCurrentPageTitle } from "../../utils/navbarUtils"
+import { buttons, urlProps, getCurrentPageTitle, managementButtons } from "../../utils/navbarUtils"
 import { useNavigate } from "react-router-dom"
 import './BottomTab.scss'
 import React, { useEffect } from "react";
 import { fetchUserInfo } from "../api";
+import { checkIfSelected, filterBtns } from "./LeftDrawer";
 
 
 
@@ -13,22 +14,16 @@ export const BottomTab = () => {
      */
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
+    const [management, setManagement] = React.useState(managementButtons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     const [open, setOpen] = React.useState(false)
+    const [selection, setSelection] = React.useState('/institute-management')
     useEffect(() => {
         if (userInfo.role === '') {
             fetchUserInfo(setUserInfo)
         }
-
-        // console.log(userInfo)
-
-        const filteredButtons = buttons.filter((item: urlProps) => {
-            if (item && item.roles && item.roles.includes(userInfo.role)) {
-                return item
-            }
-        })
-
-        setNewButton(filteredButtons)
+        filterBtns(userInfo, setNewButton, buttons)
+        filterBtns(userInfo, setManagement, managementButtons)
     }, [userInfo])
 
     return (
@@ -40,26 +35,43 @@ export const BottomTab = () => {
                     <div className="tab-adjust-container">
                         {/* Renders navigation links */}
                         {newButton.map((button: urlProps, index: number) => {
-                            if (button.title === 'Users' || button.title === 'Legislative Assembly' || button.title === 'Block') {
-                                return (
-                                    <div >
-                                        {button.title === 'Users' && <div key={index} onClick={() => setOpen((prev: boolean) => !prev)} >
-                                            <div
-                                                className={`tab ${window.location.pathname === '/user'
 
-                                                    || window.location.pathname === '/legislative-assembly' || window.location.pathname === '/block'
-                                                    ? "active" : ""}`}
-                                            >
-                                                <i className={`fa-sharp fa-solid ${button.icon}`}></i>
-                                                <h3 className={`tab-text ${window.location.pathname === '/user'
 
-                                                    || window.location.pathname === '/legislative-assembly' || window.location.pathname === '/block'
-                                                    ? "visible" : ""}`} >
-                                                    Admin Management
-                                                </h3>
-                                            </div>
-                                        </div>}
-                                        {open && <div key={index} onClick={() => navigate(button.url)} >
+                            return (
+                                <div key={index} onClick={() => navigate(button.url)} >
+                                    <div
+                                        className={`tab ${window.location.pathname === button.url ? "active" : ""} `}
+                                    >
+                                        <i className={`fa-sharp fa-solid ${button.icon}`}></i>
+                                        <h3 className={`tab-text ${window.location.pathname === button.url ? "visible " : ""}`} >
+                                            {button.title}
+                                        </h3>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        )}
+                        {
+                            management.length > 0 &&
+                            <>
+                                {
+                                    <div onClick={() => {
+                                        setOpen(!open)
+                                        navigate(selection)
+                                    }} >
+                                        <div
+                                            className={`tab ${checkIfSelected(management) ? "active" : ""} `}
+                                        >
+                                            <i className={`fa-sharp fa-solid fa-cogs`}></i>
+                                        </div>
+                                    </div>
+                                }
+                                {open &&
+                                    management.map((button: urlProps, index: number) => (
+                                        <div key={index} onClick={() => {
+                                            setSelection(button.url)
+                                            navigate(button.url)
+                                        }} >
                                             <div
                                                 className={`tab ${window.location.pathname === button.url ? "active" : ""} `}
                                             >
@@ -68,39 +80,11 @@ export const BottomTab = () => {
                                                     {button.title}
                                                 </h3>
                                             </div>
-                                        </div>}
-                                    </div>
-                                )
-                            }
-                            else {
-                                return (
-                                    <div key={index} onClick={() => navigate(button.url)} >
-                                        <div
-                                            className={`tab ${window.location.pathname === button.url ? "active" : ""} `}
-                                        >
-                                            <i className={`fa-sharp fa-solid ${button.icon}`}></i>
-                                            <h3 className={`tab-text ${window.location.pathname === button.url ? "visible " : ""}`} >
-                                                {button.title}
-                                            </h3>
                                         </div>
-                                    </div>
-                                )
-                            }
+                                    ))
+                                }
+                            </>
                         }
-
-                            // (
-                            //     <div key={index} onClick={() => navigate(button.url)} >
-                            //         <div
-                            //             className={`tab ${window.location.pathname === button.url ? "active" : ""} `}
-                            //         >
-                            //             <i className={`fa-sharp fa-solid ${button.icon}`}></i>
-                            //             <h3 className={`tab-text ${window.location.pathname === button.url ? "visible " : ""}`} >
-                            //                 {button.title}
-                            //             </h3>
-                            //         </div>
-                            //     </div>
-                            // )
-                        )}
                         {/* Renders logout button */}
                         <div className="tab">
                             <a

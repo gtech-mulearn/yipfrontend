@@ -1,6 +1,6 @@
 import YIPlogo from '../../../../assets/logo.webp'
 import { useNavigate } from "react-router-dom"
-import { buttons, urlProps } from '../../utils/navbarUtils'
+import { buttons, managementButtons, urlProps } from '../../utils/navbarUtils'
 import './LeftDrawer.scss'
 import React, { useEffect } from 'react'
 import { fetchUserInfo } from '../api'
@@ -8,73 +8,74 @@ import { fetchUserInfo } from '../api'
 export const LeftDrawer = () => {
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
+    const [management, setManagement] = React.useState<urlProps[]>(managementButtons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     const [open, setOpen] = React.useState(false)
+    const [selection, setSelection] = React.useState('/institute-management')
     useEffect(() => {
         if (userInfo.role === '') {
             fetchUserInfo(setUserInfo)
         }
-
+        filterBtns(userInfo, setNewButton, buttons)
         // console.log(userInfo)
+        filterBtns(userInfo, setManagement, managementButtons)
 
-        const filteredButtons = buttons.filter((item: urlProps) => {
-            if (item && item.roles && item.roles.includes(userInfo.role)) {
-                return item
-            }
-        })
 
-        setNewButton(filteredButtons)
     }, [userInfo])
 
     return (
         <div className="left-menu">
             <img src={YIPlogo} alt="logo" />
             {
-                newButton.map((item: urlProps, index: number) => {
+                newButton.map((item: urlProps, index: number) =>
 
-                    if (item.title === 'Users' || item.title === 'Legislative Assembly' || item.title === 'Block' || item.title === 'Institute Management') {
-                        return (
-                            <div className="menu-items" key={index} >
-                                {item.title === 'Institute Management' && <div className="menu-item-container " key={index} onClick={() => { navigate('/institute-management'); setOpen((prev: boolean) => !prev) }}>
-                                    <div className="link-item" >
-                                        <li className="menu-item">
-                                            <div className={`menu-icon ${window.location.pathname === '/user'
-
-                                                || window.location.pathname === '/legislative-assembly' || window.location.pathname === '/block' ||
-                                                window.location.pathname === '/institute-management' ? "active" : ""}`}>
-                                                <i className={`fa-sharp fa-solid ${item.icon}`}></i>
-                                            </div>
-                                            <h5>{'Admin Management'}</h5>
-                                        </li>
-                                    </div>
-                                </div>}
-                                {open && <div className="menu-item-container " key={index} onClick={() => navigate(item.url)}>
-                                    <div className="link-item" >
-                                        <li className="menu-item side">
-                                            <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
-                                                <i className={`fa-sharp fa-solid ${item.icon}`}></i>
-                                            </div>
-                                            <h5>{item.title}</h5>
-                                        </li>
-                                    </div>
-                                </div>}
+                (<div className="menu-item-container " key={index} onClick={() => {
+                    navigate(item.url)
+                    setOpen(false)
+                }}>
+                    <div className="link-item" >
+                        <li className="menu-item">
+                            <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
+                                <i className={`fa-sharp fa-solid ${item.icon}`}></i>
                             </div>
-                        )
-                    }
-                    else {
-                        return (<div className="menu-item-container " key={index} onClick={() => navigate(item.url)}>
-                            <div className="link-item" >
-                                <li className="menu-item">
-                                    <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
-                                        <i className={`fa-sharp fa-solid ${item.icon}`}></i>
-                                    </div>
-                                    <h5>{item.title}</h5>
-                                </li>
-                            </div>
-                        </div>)
-                    }
-                }
+                            <h5>{item.title}</h5>
+                        </li>
+                    </div>
+                </div>)
                 )
+            }
+            {management.length > 0 &&
+                <div className="menu-items" >
+                    <div className="menu-item-container " onClick={() => {
+                        navigate(selection); setOpen((prev: boolean) => !prev)
+                    }}>
+                        <div className="link-item" >
+                            <li className="menu-item">
+                                <div className={`menu-icon ${checkIfSelected(management) ? "active" : ""}`}>
+                                    <i className={`fa-sharp fa-solid fa-cogs`}></i>
+                                </div>
+                                <h5>{' Management'}</h5>
+                            </li>
+                        </div>
+                    </div>
+                    {open &&
+                        management.map((item: urlProps, index: number) => (
+                            <div className="menu-item-container " key={index} onClick={() => {
+                                setSelection(item.url)
+                                navigate(item.url)
+                            }}>
+                                <div className="link-item" >
+                                    <li className="menu-item side">
+                                        <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
+                                            <i className={`fa-sharp fa-solid ${item.icon}`}></i>
+                                        </div>
+                                        <h5>{item.title}</h5>
+                                    </li>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
             }
             <button
                 className="logout"
@@ -89,3 +90,20 @@ export const LeftDrawer = () => {
     )
 }
 
+export function filterBtns(userInfo: { role: string }, setNewButton: React.Dispatch<React.SetStateAction<urlProps[]>>, buttons: urlProps[]) {
+
+    const filteredButtons = buttons.filter((item: urlProps) => {
+        if (item && item.roles && item.roles.includes(userInfo.role)) {
+            return item
+        }
+    })
+    setNewButton(filteredButtons)
+}
+export function checkIfSelected(buttons: urlProps[]) {
+    for (let i = 0; i < buttons.length; i++) {
+        if (window.location.pathname === buttons[i].url) {
+            return true
+        }
+    }
+    return false
+}

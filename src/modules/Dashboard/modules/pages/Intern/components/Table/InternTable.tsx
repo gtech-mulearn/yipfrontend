@@ -61,11 +61,7 @@ interface InternViewProps extends zoneViewProps {
 const views = [
   { id: "0", name: "Intern" },
   { id: "1", name: "Campus" },
-  // { id: "2", name: "District Coordinator" },
-  // { id: "3", name: "Programme Executive" },
   { id: "2", name: "District" },
-  // { id: "2", name: "Designation" },
-  // { id: "3", name: "District" },
   { id: "3", name: "Zone" },
   { id: "4", name: "State" },
 ];
@@ -306,7 +302,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     }
 
     if (
-      [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF].includes(userInfo.role)
+      [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF, roles.ZONAL_COORDINATOR].includes(userInfo.role)
     ) {
       setViewUpload(true);
     }
@@ -634,11 +630,14 @@ function fetchCampus(
   setData: Dispatch<SetStateAction<CampusViewProps[]>>,
   setData2: Dispatch<SetStateAction<CampusViewProps[]>>
 ) {
+
+  toast.loading("Loading...");
   privateGateway
     .get(yip5Routes.campusList)
     .then((res) => {
       setData(res.data.response);
       setData2(res.data.response);
+      toast.dismiss()
     })
     .catch((err) => {
       console.log(err);
