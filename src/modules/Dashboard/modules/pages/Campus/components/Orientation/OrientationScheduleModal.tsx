@@ -9,7 +9,10 @@ import { updateClubStatus } from '../../../Club/clubAPI'
 import { OrientationCompleteProps } from './Orientation'
 import { error, errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 import { updateCampusStatus } from '../Connection/ConnectionModal'
-const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () => void, district: string, campusId: string }) => {
+import * as yup from "yup";
+import { toast } from 'react-toastify'
+
+const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: { cancel: () => void, district: string, campusId: string, campusStatus: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
     const [modList, setModList] = useState<selectProps[]>([{
@@ -27,6 +30,34 @@ const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () =
     useEffect(() => {
         getListOfCoordinatorByDistrict(district, setCoordinatorList)
     }, [])
+    function validationSchema() {
+        const validationSchema = yup.object().shape({
+            coordinator: yup.string().required("Coordinator is required"),
+            mod: yup.string().required("Mode of Delivery is required"),
+            date: yup.string().required("Date is required"),
+            place: yup.string().required("Place is required").test('only-spaces', 'Only spaces are not allowed for user name', value => {
+                // Check if the value consists only of spaces
+                return !(/^\s+$/.test(value));
+            }),
+            status: yup.string().test('Valid Status', 'Update status to Connection Established first !!!', value => {
+                console.log(value)
+                if (value === 'Identified' || value === 'Confirmed') {
+                    return false
+                }
+                return true
+            })
+        })
+        return validationSchema.validate(
+            {
+                coordinator: coordinator.name,
+                mod: mod.name,
+                date: date,
+                place: place,
+                status: campusStatus
+            },
+            { abortEarly: false }
+        )
+    }
     return (
         <div className='secondary-box'>
             <div className="data-box">
@@ -69,7 +100,14 @@ const OrientationScheduleModal = ({ cancel, district, campusId }: { cancel: () =
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => createEvent(date, place, mod.id, coordinator.id, campusId, cancel)}>Add Orientation</button>
+                    <button className='btn-update ' onClick={() => {
+                        validationSchema()
+                            .then(() => {
+                                createEvent(date, place, mod.id, coordinator.id, campusId, cancel)
+                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
+
+
+                    }}>Add Orientation</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>

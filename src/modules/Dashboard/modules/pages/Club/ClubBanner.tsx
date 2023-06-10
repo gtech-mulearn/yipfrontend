@@ -21,9 +21,6 @@ const ClubBanner: FC<{ updated: boolean }> = ({ updated }) => {
                             </div>))
                     }
                 </div>
-                <div className="welcome-image-container">
-                    <img id="banner-img" src={BannerImg} alt="" />
-                </div>
             </div>
         </div>
     )

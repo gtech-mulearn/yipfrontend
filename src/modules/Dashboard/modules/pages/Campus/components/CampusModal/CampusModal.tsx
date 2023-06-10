@@ -68,9 +68,9 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                         </div>
                     </div>}
                     {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
-                    {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} />}
-                    {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} />}
-                    {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />}
+                    {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
+                    {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
+                    {/* {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />} */}
                 </div>
 
                 {viewUpdateButton &&
@@ -102,7 +102,7 @@ function getNextStatus(status: string) {
         case 'Connection Established': return 'Orientation Scheduled'
         case 'Orientation Scheduled': return ''
         case 'Execom Formed': return ''
-        case 'Orientation Completed': return ''
+        case 'Orientation Completed': return 'Successfully Completed'
         case 'Add Member': return 'Add Member'
         default: return ''
     }
