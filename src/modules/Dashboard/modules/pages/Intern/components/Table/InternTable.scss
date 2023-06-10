@@ -35,4 +35,60 @@
     display: flex;
     gap: 15px;
 
+    .upload-btns {
+        display: flex;
+        gap: 5px
+    }
+
+}
+
+@media screen and (max-width: 560px) {
+    .white-container-header {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+
+        .setup-item {
+            width: 100%;
+        }
+
+        .btns-upper {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+
+            .upload-btns {
+                display: flex;
+
+                .cancel-upload {
+                    p {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .white-container {
+        .table-top {
+            .table-fn {
+                .search-bar {
+                    margin-top: 10px;
+                    width: 100%;
+                }
+
+            }
+        }
+
+        .filter-container {
+            .filter-box {
+                .setup-item {
+                    width: 100%;
+                }
+            }
+        }
+    }
 }

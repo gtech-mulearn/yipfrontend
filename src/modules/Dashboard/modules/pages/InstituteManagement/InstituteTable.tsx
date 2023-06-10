@@ -5,6 +5,8 @@ import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchDistricts } from '../School/SchoolAPI'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
+import { loading } from '../../../components/Toastify/ToastifyConsts'
+import { toast } from 'react-toastify'
 export interface InstituteTableProps {
     name: string
     district: string
@@ -28,10 +30,12 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
         setDistrict({} as selectProps)
     }
     useEffect(() => {
+
         fetchDistricts(setDistrictList)
         fetchInstitutes(setClubList, setListForTable)
     }, [])
     useEffect(() => {
+
         fetchInstitutes(setClubList, setListForTable, updateTable)
     }, [update])
     useEffect(() => {
@@ -120,6 +124,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                 tableData={listForTable}
                 orderBy={list}
                 capitalize={false}
+                countPerPage={15}
             // manage={{
             //     value: 'ICT Id',
             //     manageFunction: (item: any) => console.log(item),
@@ -167,8 +172,10 @@ function fetchInstitutes(setClubList: React.Dispatch<React.SetStateAction<Instit
             if (updateTable) {
                 updateTable(res.data.response)
             }
+
         })
         .catch(err => {
+
             console.log(err)
         })
 }

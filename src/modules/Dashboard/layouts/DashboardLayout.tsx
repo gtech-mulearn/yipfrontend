@@ -27,6 +27,7 @@ const DashboardLayout = () => {
                         draggable
                         pauseOnHover
                         theme="colored"
+
                     />
                     <BottomTab />
                 </div>

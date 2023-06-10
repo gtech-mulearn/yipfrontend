@@ -11,6 +11,7 @@ interface BlockSetupProps {
 }
 import * as yup from 'yup'
 import { createBlock, fetchDistricts } from './blockAPI'
+import { toast } from 'react-toastify'
 
 const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
@@ -28,19 +29,19 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     }, [])
     function validateSchema() {
         const validationSchema = yup.object().shape({
-            name: yup.string().required('Assembly Name is required'),
+            name: yup.string().required('Block Name is required'),
             district: yup.string().required('District is required'),
         })
         return validationSchema.validate(
             { name: block, district: district.name },
-            { abortEarly: true })
+            { abortEarly: false })
     }
     function handleCreate() {
         validateSchema()
             .then(() => {
-                createBlock(block, district.id, updateBlockData, setViewSetup, setSuccessMessage, setErrorMessage)
+                createBlock(block, district.id, updateBlockData, setViewSetup)
             })
-            .catch(err => showAlert(err.message, setErrorMessage))
+            .catch(err => err.errors.map((error: string) => toast.error(error)))
     }
     return (
         <div className="white-container">

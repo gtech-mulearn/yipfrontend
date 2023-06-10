@@ -2,14 +2,17 @@
 import { useEffect, useState } from "react"
 import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
+import React, { Dispatch, SetStateAction } from "react";
+import exportFromJSON from 'export-from-json';
+import { ThreeDots, RotatingSquare } from "react-loader-spinner";
 interface sortProps {
     status: string;
     updater: boolean;
 
 }
-function paginateArray<T>(array: T[], page: number): T[] {
-    const startIndex = (page - 1) * 10;
-    const endIndex = startIndex + 10;
+function paginateArray<T>(array: T[], page: number, countInPage: number): T[] {
+    const startIndex = (page - 1) * countInPage;
+    const endIndex = startIndex + countInPage;
     return array.slice(startIndex, endIndex);
 }
 export interface CustomTableProps<TableProps> {
@@ -41,7 +44,10 @@ export interface CustomTableProps<TableProps> {
     },
     capitalize?: boolean,
     pagination?: boolean,
-    filter?: boolean
+    filter?: boolean,
+    loading?: boolean,
+    setupLoading?: (item: boolean) => void
+    countPerPage?: number
 }
 function CustomTable<TableProps>({
     tableHeadList,
@@ -53,14 +59,62 @@ function CustomTable<TableProps>({
     manage,
     capitalize = true,
     pagination = true,
-    filter = true
-}:
+    filter = true,
+    loading = true,
+    setupLoading = (item: boolean) => {
+        return item
+    },
+    countPerPage = 10
+}
+    :
     CustomTableProps<TableProps>) {
+
     const [page, setPage] = useState(1)
     const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
+    const [csvData, setCsvData] = useState<any>();
+    const [countInPage, setCountInPage] = useState(countPerPage)
+    const [notLoading, setNotLoading] = useState('')
+    const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     useEffect(() => {
+        handleDownloadCSV()
+    }, [tableData, sortedTable, sort, selectedHeading])
+    useEffect(() => {
+        if (tableData.length === 0)
+            setTimeout(() => {
+                setupLoading(false)
+                setNotLoading('No Data to Display')
+            }, 30000)
+    }, [])
+    const handleDownloadCSV = () => {
+        //check the view value and dowload the data in the corresponding state variable as a csv
+        const updatedData = sortedTable.map((item: any) => {
+            let rest = {}
+            for (let key of orderBy) {
+                rest = { ...rest, [key]: item[key] || item[key] === 0 ? item[key] : "" }
+            }
+            return rest;
+        });
+        setCsvData(updatedData);
+    };
+    const downloadCSV = () => {
+        const fileName = 'data';
+        const fields = Object.keys(csvData[0]);
+
+        exportFromJSON({
+            data: csvData,
+            fileName,
+            fields,
+            exportType: 'csv',
+        });
+    };
+    useEffect(() => {
+        setPage(1)
+    }, [countInPage])
+
+    useEffect(() => {
+
         setPage(1)
         setSortedTable(tableData)
         setSort({ updater: false, status: "Unsorted" })
@@ -76,13 +130,13 @@ function CustomTable<TableProps>({
     }
     function sortTable(index: number) {
 
-        sortedTable.sort((a: any, b: any) => {
+        let tempTable = sortedTable.sort((a: any, b: any) => {
             const isNotSorted = sort.status === "Unsorted" || sort.status === "Sorted:DESC"
             if (a[orderBy[index]] < b[orderBy[index]]) return isNotSorted ? -1 : 1
             if (a[orderBy[index]] > b[orderBy[index]]) return isNotSorted ? 1 : -1
             return 0
         })
-        setSortedTable(sortedTable)
+        setSortedTable(tempTable)
         setSort((prev: sortProps) => {
             return {
                 ...prev,
@@ -175,91 +229,120 @@ function CustomTable<TableProps>({
 
     return (
         <div className="table-wrap">
-
-            <table className='table '>
-                {/* Table Header */}
-                <thead>
-                    <tr>
-                        <th >
-                            <div className="th-wrap ">
-                                <div>{'SL.No'}</div>
-                            </div>
-                        </th>
-                        {tableHeadList.map((item: string, index: number) => (
-                            <th key={index} onClick={() => {
-                                if (filter) {
-                                    setPage(1)
-                                    sortOrderByRequired(index)
-                                    setSelectedHeading(index)
-                                }
-                            }}>
-                                <div className={`th-wrap ${filter ? 'cursor' : ''} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`}>
-                                    <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
-                                    <div>{item}</div>
-
-                                </div>
-                            </th>)
-                        )}
-                        {manage?.value &&
-                            <th>
-                                <div className="th-wrap end ">
-                                    <div>{'Manage'}</div>
+            <div className="btn-wrap">
+                <button className='table-btn' onClick={() => downloadCSV()}>
+                    <i className="fa-solid fa-download"></i>
+                    Download CSV
+                </button>
+            </div>
+            <div className="wrapper-table">
+                <table className='table '>
+                    {/* Table Header */}
+                    <thead>
+                        <tr>
+                            <th >
+                                <div className="th-wrap ">
+                                    <div>{'SL.No'}</div>
                                 </div>
                             </th>
-                        }
-                    </tr>
-                </thead>
+                            {tableHeadList.map((item: string, index: number) => (
+                                <th key={index} onClick={() => {
+                                    if (filter) {
+                                        setPage(1)
+                                        sortOrderByRequired(index)
+                                        setSelectedHeading(index)
+                                    }
+                                }}>
+                                    <div className={`th-wrap ${filter ? 'cursor' : ''} `}>
+                                        <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
+                                        <div>{item}</div>
 
-                {/* Table Body */}
-
-                <tbody>
-                    {paginateArray(sortedTable, page).map((item: TableProps, key: number) =>
-                    (
-                        <tr key={key} >
-                            <td >{(page - 1) * 10 + key + 1}</td>
-                            {
-                                orderBy.map((item2: keyof TableProps, index: number) => (
-                                    <>
-                                        <td className={`${customCssByRequiredByValue(index, item[item2] as string)} ${!manage?.value && index === tableHeadList.length - 1 ? 'end' : ''}`} key={index}>{capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}</td>
-                                    </>
-                                ))
-                            }
-                            {manage?.value &&
-                                <td className="">
-                                    <div className="manage">
-                                        <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
-                                            <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
-                                            {manage.value}
-                                        </div>
                                     </div>
-                                </td>
+                                </th>)
+                            )}
+                            {manage?.value &&
+                                <th>
+                                    <div className="th-wrap end ">
+                                        <div>{'Manage'}</div>
+                                    </div>
+                                </th>
                             }
                         </tr>
-                    )
-                    )}
-                </tbody>
-            </table >
-            {!sortedTable.length && <div className="no-data">No Data to Show </div>}
+                    </thead>
+
+                    {/* Table Body */}
+
+                    <tbody>
+                        {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) =>
+                        (
+                            <tr key={key} >
+                                <td >{(page - 1) * countInPage + key + 1}</td>
+                                {
+                                    orderBy.map((item2: keyof TableProps, index: number) => (
+                                        <>
+                                            <td
+                                                className={`
+                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
+                                                key={index}>
+                                                {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                            </td>
+                                        </>
+                                    ))
+                                }
+                                {manage?.value &&
+                                    <td className="">
+                                        <div className="manage">
+                                            <div className="edit-btn " onClick={() => { manage.manageFunction(item) }}>
+                                                <i className={`fa ${manage.icon ? manage.icon : 'fa-edit '}`}></i>
+                                                {manage.value}
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        )
+                        )}
+                    </tbody>
+                </table >
+            </div>
+            {!sortedTable.length && <div className="no-data">
+                <ThreeDots
+                    height="60"
+                    width="60"
+                    color="#59b3fa"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="no-data"
+                    visible={!notLoading}
+                />
+                {notLoading ? notLoading : ''}</div>}
             {/* Pagination */}
 
-            {pagination && <div className='paginator' >
-                <div>
-                    <div onClick={() => { setPage(1) }}>
-                        <i   >{"|<<"}</i>
+            {pagination &&
+                <div className='paginator' >
+                    <div className="count-in-page">
+
+                        <input className="input" type="number" value={countInPage} onChange={(e) => {
+                            setCountInPage(Number(e.target.value))
+                        }} />
+                        <p> Per Page </p>
                     </div>
-                    <div onClick={() => { setPage(page > 1 ? page - 1 : 1) }}>
-                        <i >{"|<"}</i>
+                    <div>
+                        <div onClick={() => { setPage(1) }}>
+                            <i className="fas fa-backward-fast" />
+                        </div>
+                        <div onClick={() => { setPage(page > 1 ? page - 1 : 1) }}>
+                            <i className="fas fa-backward-step" />
+                        </div>
+                        <div className="input">
+                            {`${page * countInPage < sortedTable.length ? page * countInPage : sortedTable.length} / ${sortedTable.length}`}
+                        </div>
+                        <div onClick={() => { setPage(page * countInPage < sortedTable.length ? page + 1 : page) }}>
+                            <i className="fas fa-forward-step" /></div>
+                        <div onClick={() => { setPage(lastPage) }}>
+                            <i className="fas fa-forward-fast"></i>                        </div>
                     </div>
-                    <div className="input">
-                        {`${page} / ${Math.trunc(sortedTable.length / 10) + 1}`}
-                    </div>
-                    <div onClick={() => { if (page < Math.trunc(sortedTable.length / 10) + 1) setPage(page + 1) }}>
-                        <i >{">|"}</i></div>
-                    <div onClick={() => { setPage(Math.trunc(sortedTable.length / 10) + 1) }}>
-                        <i >{">>|"}</i>
-                    </div>
-                </div>
-            </div >}
+                </div >}
         </div>
     )
 }

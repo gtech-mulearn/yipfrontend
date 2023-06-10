@@ -4,6 +4,8 @@ import { privateGateway } from "../../../../../services/apiGateway"
 import { setupRoutes, tableRoutes } from "../../../../../services/urls"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
+import { toast } from "react-toastify"
+import { errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
 
 export function deleteModelBlock(id: string, updateBlockStatus: Function,
     setSuccessMessage: Dispatch<SetStateAction<string>>,
@@ -31,8 +33,6 @@ export function createBlock(
     districtId: string,
     update: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>
 ) {
     const postData = {
         name: block,
@@ -41,15 +41,12 @@ export function createBlock(
     privateGateway.post(setupRoutes.block.create, postData)
         .then(res => {
             update()
-            showAlert(res?.data?.message?.general[0], setSuccessMessage)
-            console.log('Success :', res?.data?.message?.general[0])
-            setTimeout(() => {
-                setViewSetup(false)
-            }, 3000)
+            success()
+            setViewSetup(false)
         })
         .catch(err => {
-            showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
-            console.log('Error :', err?.response?.data?.message?.general[0])
+            errorMessage(err.response)
+            errorCheck(err.response)
         })
 }
 
@@ -64,6 +61,7 @@ export function fetchBlocks(
             setData(data)
             setData2(data)
             if (updateTable) updateTable(data)
+
         })
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }

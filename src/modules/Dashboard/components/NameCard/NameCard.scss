@@ -12,8 +12,13 @@ $theme-color-light-blue : #dceaf5;
     padding: variables.$dashboard-padding;
     right: 0;
     display: flex;
-    padding: 10px $top-bar-left-padding;
+    padding: 20px $top-bar-left-padding;
     justify-content: flex-end;
+
+    @media screen and (max-width:1024px) {
+        justify-content: space-between;
+    }
+
     align-items: center;
     max-height: $height-top-bar;
 
@@ -21,6 +26,25 @@ $theme-color-light-blue : #dceaf5;
         position: absolute;
         width: calc(100% - 30px - 30px);
     }
+
+    .logo-img {
+        display: none;
+
+        @media screen and (max-width:1024px) {
+            display: flex;
+            width: 50px;
+            height: 50px;
+
+            .img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+
+
+
 
     .open-color {
         padding: 10px 15px;
@@ -51,7 +75,7 @@ $theme-color-light-blue : #dceaf5;
     }
 }
 
-@media screen and (max-width:500px) {
+@media screen and (max-width:1024px) {
     .name-card {
         position: relative;
         left: 15px;

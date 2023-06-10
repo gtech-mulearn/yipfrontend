@@ -25,6 +25,7 @@ import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
 import { CentralZone, Districts, NorthZone, SouthZone } from "../../../../../../../utils/Locations";
+import { errorCheck, loading } from "../../../../../components/Toastify/ToastifyConsts";
 
 interface commonViewProps {
   pre_registrations: string;
@@ -146,7 +147,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     }]
   }
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [count, setCount] = useState(0)
   useEffect(() => {
+
+
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
@@ -189,12 +193,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
       );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
+
+
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
     if (view === "Intern") fetchIntern(setInternList, setInternTableList);
-    if (view === "District Coordinator")
-      fetchDistrictCoordinator(setAssigneeList, setAssigneetable);
-    if (view === "Programme Executive")
-      fetchProgrammeExecutive(setAssigneeList, setAssigneetable);
     if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
     if (view === "Zone") fetchZone(setZoneList, setZonetable);
     if (view === 'State') fetchState(setStateTable);
@@ -323,8 +325,8 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
         />
         <div className="btns-upper">
           {viewUpload && (
-            <>
-              {!selectedFile && <div className="table-fn-btn cursor" onClick={handleButtonClick}>
+            <div className="upload-btns">
+              {!selectedFile && <button className="table-fn-btn cursor" onClick={handleButtonClick}>
                 <i className="fa-solid fa-upload"></i>
                 <input
                   type="file"
@@ -334,34 +336,28 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
                   style={{ display: "none" }}
                 />
                 <p>Upload File</p>
-              </div>}
+              </button>}
               {selectedFile && (<>
-                <div className="table-fn-btn cursor" onClick={handleUpload}>
+                <button className="table-fn-btn cursor" onClick={handleUpload}>
                   File: {selectedFile.name.split(".")[0]} :
                   <p>
                     <i className="fa-solid fa-upload"></i>
                     {' Upload'}</p>
-                </div>
-                <div className="table-fn-btn cursor" onClick={() => setSelectedFile(null)}>
+                </button>
+                <button className="table-fn-btn cursor cancel-upload" onClick={() => setSelectedFile(null)}>
                   <p>
                     Cancel Upload
                   </p>
                   <i className="fa-solid fa-close"></i>
-                </div>
+                </button>
               </>
               )}
-            </>
+            </div>
           )}
-
-          {/* {csvData && csvData.length > 0 && (
-          <CsvDownloadButton className="table-fn-btn cursor" data={csvData} />
-        )} */}
-          <button className="table-fn-btn cursor" onClick={downloadCSV}>
-            <i className="fa-solid fa-download"></i>
-            Download CSV
-          </button>
         </div>
       </div>
+      {/* //table box */}
+
       <div className="white-container">
         <div className="table-top">
           <div className="table-header">
@@ -407,14 +403,14 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
               {filterBtn
                 //  && view !== "Intern" 
                 && (
-                  <div
+                  <button
                     className="table-fn-btn  cursor"
                     onClick={() => setFilterBtn(!filterBtn)}
                   >
                     <p></p>
                     <i className="fa-solid fa-close  "></i>
                     <p></p>
-                  </div>
+                  </button>
                 )}
             </div>
           )}
@@ -630,14 +626,12 @@ function fetchCampus(
   setData: Dispatch<SetStateAction<CampusViewProps[]>>,
   setData2: Dispatch<SetStateAction<CampusViewProps[]>>
 ) {
-
-  toast.loading("Loading...");
   privateGateway
     .get(yip5Routes.campusList)
     .then((res) => {
       setData(res.data.response);
       setData2(res.data.response);
-      toast.dismiss()
+
     })
     .catch((err) => {
       console.log(err);
@@ -667,8 +661,10 @@ function fetchDistrict(
     .then((res) => {
       setDistrictFilter(res.data.response);
       setDistricttable(res.data.response);
+
     })
     .catch((err) => {
+      errorCheck(err);
       console.log(err);
     });
 }
@@ -706,6 +702,7 @@ function fetchIntern(
           return { ...intern, districtName: intern.district.join(",") };
         })
       );
+
     })
     .catch((err) => console.log(err));
 }
@@ -858,8 +855,13 @@ function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProp
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
+
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+
+      toast.error(err.response.data.message || err.message)
+      console.log(err)
+    });
 }
 
 function filterZone(zoneList: zoneViewProps[], search: string) {
@@ -879,7 +881,11 @@ function searchZone(list: zoneViewProps[], search: string): zoneViewProps[] {
 
 function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
   privateGateway.get(yip5Routes.stateBasedData)
-    .then((res) => setStateTable([res.data.response]))
+    .then((res) => {
+      setStateTable([res.data.response])
+
+
+    })
     .catch((err) => console.log(err));
 }
 

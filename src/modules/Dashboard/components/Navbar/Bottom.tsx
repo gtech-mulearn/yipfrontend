@@ -4,6 +4,7 @@ import './BottomTab.scss'
 import React, { useEffect } from "react";
 import { fetchUserInfo } from "../api";
 import { checkIfSelected, filterBtns } from "./LeftDrawer";
+import { ThreeDots } from "react-loader-spinner";
 
 
 
@@ -34,6 +35,15 @@ export const BottomTab = () => {
                 <div className="tab-nav-container">
                     <div className="tab-adjust-container">
                         {/* Renders navigation links */}
+                        <ThreeDots
+                            height="50"
+                            width="50"
+                            radius="9"
+                            color="#59b3fa"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            visible={newButton.length === 0}
+                        />
                         {newButton.map((button: urlProps, index: number) => {
 
 

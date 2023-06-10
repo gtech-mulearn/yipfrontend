@@ -1,15 +1,37 @@
 .table-wrap {
-    overflow-x: auto;
-    // box-shadow: 0px 0px 2px 2px #100f0f42;
-    border-radius: 10px;
-    padding: 15px;
-    padding-top: 0;
+
+    .btn-wrap {
+        display: flex;
+        justify-content: flex-end;
+
+        .table-btn {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            background-color: black;
+            width: fit-content;
+            color: white;
+            padding: 10px;
+            font-size: 12.5px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+    }
+
+    .wrapper-table {
+        overflow-x: auto;
+        border-radius: 10px;
+        padding-bottom: 15px;
+    }
 
 }
 
 table {
     border-spacing: 10px;
     width: 100%;
+    padding-top: 15px;
     padding-bottom: 10px;
 
     thead {
@@ -117,12 +139,21 @@ table {
 
 .paginator {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+
+    .count-in-page {
+        p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+    }
 
     div {
         display: flex;
-        gap: 0 15px;
+        gap: 0 5px;
 
         div {
             cursor: pointer;
@@ -140,11 +171,12 @@ table {
             background-color: rgb(80, 75, 75);
             padding: 0 15px;
             border-radius: 10px;
-            font-size: 10px;
+            font-size: 13px;
 
         }
 
         .input {
+            all: unset;
             display: flex;
             user-select: none;
             align-items: center;
@@ -153,13 +185,18 @@ table {
             font-size: small;
             margin: 0;
             text-align: center;
-            width: 50px;
             border: 1px solid rgba(0, 0, 0, 0.2);
+            max-width: fit-content;
 
             &:hover {
                 cursor: default;
             }
         }
+    }
 
+    @media screen and (max-width: 560px) {
+        gap: 20px;
+        flex-direction: column-reverse;
+        align-items: flex-end;
     }
 }
