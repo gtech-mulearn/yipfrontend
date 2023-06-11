@@ -175,9 +175,9 @@ function searchBlock(blockList: BlockTableProps[], search: string) {
     )
 }
 function rawString(str: string) {
-    str = str.toLowerCase()
-    str = str.replace(/[^a-zA-Z0-9 ]/g, '')
-    str = str.replaceAll(' ', '')
+    str = str?.toLowerCase()
+    str = str?.replace(/[^a-zA-Z0-9 ]/g, '')
+    str = str?.replaceAll(' ', '')
     return str
 }
 

@@ -264,9 +264,9 @@ function searchSchool(schoolList: SchoolTableProps[], search: string) {
 
 function rawString(str: string) {
     if (str === '' || str === null || str === undefined) return ''
-    str = str.toLowerCase()
-    str = str.replace(/[^a-zA-Z0-9 ]/g, '')
-    str = str.replaceAll(' ', '')
+    str = str?.toLowerCase()
+    str = str?.replace(/[^a-zA-Z0-9 ]/g, '')
+    str = str?.replaceAll(' ', '')
     return str
 }
 
