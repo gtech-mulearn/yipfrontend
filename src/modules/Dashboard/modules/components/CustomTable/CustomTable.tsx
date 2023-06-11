@@ -130,7 +130,7 @@ function CustomTable<TableProps>({
     }, [tableData])
     function capitalizeString(sentence: string): string {
         if (sentence === undefined || sentence === null) return ""
-        let capitalizedSentence = sentence.toLowerCase();
+        let capitalizedSentence = sentence?.toLowerCase();
         capitalizedSentence = capitalizedSentence.charAt(0).toUpperCase() + capitalizedSentence.slice(1);
         for (let i = 2; i < capitalizedSentence.length - 1; i++)
             if (capitalizedSentence.charAt(i).match(/[^\w\']/))
