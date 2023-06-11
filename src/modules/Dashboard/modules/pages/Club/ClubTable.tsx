@@ -200,9 +200,9 @@ function filterClub(clubList: ClubTableProps[], search: string, district: select
 }
 function searchClub(clubList: ClubTableProps[], search: string) {
     return clubList.filter((club: ClubTableProps) =>
-        rawString(club.name).includes(rawString(search)) ||
-        rawString(club.district).includes(rawString(search)) ||
-        rawString(club.club_status).includes(rawString(search)))
+        rawString(club.name)?.includes(rawString(search)) ||
+        rawString(club.district)?.includes(rawString(search)) ||
+        rawString(club.club_status)?.includes(rawString(search)))
 }
 
 function rawString(str: string) {
