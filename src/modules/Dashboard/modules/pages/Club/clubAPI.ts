@@ -25,7 +25,7 @@ export function fetchDistricts(
             if (setData1) setData1(data)
             setData(
                 data.map((item: { id: any; name: any }) => ({
-                    id: item.name,
+                    id: item.id,
                     name: item.name,
                 }))
             );
@@ -35,14 +35,13 @@ export function fetchDistricts(
 
 export function updateResponse(data: any) {
     return data.map((item: { id: any; title: any }) => ({
-        value: item.title,
-        label: item.title,
+        id: item.id,
+        name: item.title,
     }));
 }
 
 export function fetchcolleges(
-    setData: Dispatch<SetStateAction<selectEditedProps[]>>,
-    setData1: Dispatch<SetStateAction<selectCollegeProps[]>>,
+    setData: Dispatch<SetStateAction<selectProps[]>>,
     districtName: string
 ) {
     const reqData: any = {
@@ -52,7 +51,6 @@ export function fetchcolleges(
         .post(setupRoutes.district.college, reqData)
         .then((res) => res.data.response.institutions)
         .then((data) => {
-            setData1(data);
             setData(updateResponse(data));
         })
         .catch((err) => console.error(err));
@@ -62,15 +60,11 @@ export function createClub<postDataProps>
     (
         postData: postDataProps,
         update: Function,
-        setViewSetup: Dispatch<SetStateAction<boolean>>,
-        setSuccessMessage: Dispatch<SetStateAction<string>>,
-        setErrorMessage: Dispatch<SetStateAction<string>>
     ) {
-    privateGateway.post(setupRoutes.club.create, postData)
-        .then(res => {
+    privateGateway.post(tableRoutes.institutes.create, postData)
+        .then(() => {
             success();
             update()
-            // showAlert(res?.data?.message?.general[0], setSuccessMessage)
         })
         .catch(err => {
             errorCheck(err.response);
