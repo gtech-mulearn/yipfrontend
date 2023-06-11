@@ -58,6 +58,7 @@ const InternBanner = ({ update }: { update: boolean }) => {
         <div className='white-container'>
             <div className='banner-header'>
                 <p>{showCurrentSelected(zone, district, college)}</p>
+                <p className='last-updated'>Last Updated : {formatDate(banner.last_update_date)}</p>
             </div>
             <div className="filter-container">
 
@@ -176,4 +177,17 @@ function showCurrentSelected(zone: selectProps, district: selectProps, college: 
     else {
         return 'Kerala'
     }
+}
+function formatDate(dateTimeString: string): string {
+    if (dateTimeString === null) return ''
+    const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    };
+    const date = new Date(dateTimeString);
+    return date.toLocaleString('en-US', options);
 }
