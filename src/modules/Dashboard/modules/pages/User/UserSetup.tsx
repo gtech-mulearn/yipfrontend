@@ -180,8 +180,6 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                     <img src={setupImg} alt="  " />
                 </div>
             </div>
-            {errorMessage && <Error error={errorMessage} />}
-            {successMessage && <Success success={successMessage} />}
         </div>
     )
 }

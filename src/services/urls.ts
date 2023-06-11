@@ -36,6 +36,7 @@ export const setupRoutes = {
 export const tableRoutes = {
     institutes: {
         list: "/api/v1/yip/list-institutes/",
+        create: 'api/v1/yip/institute-management/create-institute/'
     },
     school: {
         list: "/api/v1/yip/get-model-schools/",

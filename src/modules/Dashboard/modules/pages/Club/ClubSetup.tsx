@@ -16,12 +16,16 @@ import {
 } from "./clubAPI";
 import { Form, Formik, ErrorMessage } from "formik";
 import FormikReactSelect from "../../components/Formik/FormikComponents";
+import { CustomSelect } from "../../../components/CustomSelect/CustomSelect";
+import { CustomInput } from "../../../components/CustomInput/CustomInput";
+import { toast } from "react-toastify";
 
 
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>;
     updateClubData: Function;
 }
+const typesOfCampus = [{ id: "0", name: "College" }, { id: "1", name: "School" }]
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const notify = () => { };
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
@@ -29,15 +33,13 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         selectProps[]
     >([]);
     const [district, setDistrict] = useState<selectProps>(initialState);
-    const [collegeList, setCollegeList] = useState<selectCollegeProps[]>([]);
+    const [collegeList, setCollegeList] = useState<selectProps[]>([]);
     const [collegeListEdited, setCollegeListEdited] = useState<
-        selectEditedProps[]
+        selectProps[]
     >([]);
     const [college, setCollege] = useState<selectProps>(initialState);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
-    const [selectedOption, setSelectedOption] = useState();
-    const [none, setNone] = useState();
+    const [ictId, setIctId] = useState<string>("");
+    const [campusType, setCampusType] = useState<selectProps>(typesOfCampus[0]);
     const reset = () => {
         notify();
         setDistrict(initialState);
@@ -51,54 +53,98 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     }, []);
 
     useEffect(() => {
+        setCollege({} as selectProps);
+        setCollegeList([]);
         fetchcolleges(
-            setCollegeListEdited,
             setCollegeList,
-            String(selectedOption)
+            district.name
         );
-    }, [selectedOption, updateClubData]);
+    }, [district.id, updateClubData]);
 
-    function handleCreate(college: string, district: string) {
-
-
-        const districtId = districtList.filter(
-            (mapDistrict) => mapDistrict.name === district
-        );
-
-
+    function handleCreate() {
         type postDataProps = {
-            clubName: string;
-            instituteType: string;
+            name: string;
+            type: string;
+            district: string;
+            ict_id: string,
             instituteId: string;
-            districtId: string;
         };
         const postData: postDataProps = {
-            clubName: college,
-            instituteType: "College",
-            instituteId: college,
-            districtId: districtId[0].id,
+            name: college.name,
+            instituteId: college.id,
+            district: district.name,
+            ict_id: ictId,
+            type: campusType.name,
         };
-        console.log(postData.instituteId)
-        createClub<postDataProps>(
-            postData,
-            updateClubData,
-            setViewSetup,
-            setSuccessMessage,
-            setErrorMessage
-        );
+        validationSchema()
+            .then(() => {
+                createClub<postDataProps>(
+                    postData,
+                    updateClubData,
+                );
+            }).catch(err => err.errors.map((error: string) => toast.error(error)))
+
 
     }
-    const validateSchema = Yup.object().shape({
-        district: Yup.string()
-            .required("Required"),
-        college: Yup.string().required("Required")
-    });
+    function validationSchema() {
+        const validateSchema = Yup.object().shape({
+            district: Yup.string()
+                .required("Please select a district"),
+            college: Yup.string().required("Please select a college"),
+            ictId: Yup.string().required("Please enter ICT Id"),
+            campusType: Yup.string().required("Please select campus type"),
+        });
+        return validateSchema.validate(
+            {
+                district: district.name,
+                college: college.name,
+                ictId: ictId,
+                campusType: campusType.name
+            },
+            {
+                abortEarly: false,
+            }
+        )
+    }
 
     return (
         <div className="white-container">
             <div className="formikContainer">
                 <h3>Create Campus Tracking</h3>
-                <Formik
+                <div className="setup-club">
+                    <div className="setup-filter">
+                        <div className="select-container club">
+                            <CustomSelect
+                                option={typesOfCampus}
+                                value={campusType}
+                                header={"College/School"}
+                                setData={setCampusType}
+                                isClearable={false}
+                            />
+                            <CustomSelect option={districtList} setData={setDistrict} header={"District"} />
+                            <CustomSelect option={collegeList}
+                                setData={setCollege} header={"Campus"}
+                                value={collegeList.filter((item: selectProps) => item.id === college.id)}
+                            />
+                            <CustomInput value={'ICT Id'} data={ictId} setData={setIctId} />
+                            <div className="create-btn-container">
+                                <button className="black-btn"
+                                    onClick={handleCreate}>Create</button>
+                                <button className="black-btn"
+                                    onClick={reset}
+                                >Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ClubSetup;
+
+{/* <Formik
                     onSubmit={(values) => {
                         handleCreate(values.college, values.district);
                     }}
@@ -152,10 +198,4 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                             </button>
                         </div>
                     </Form>
-                </Formik>
-            </div>
-        </div>
-    );
-};
-
-export default ClubSetup;
+                </Formik> */}
