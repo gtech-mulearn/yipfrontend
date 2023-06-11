@@ -49,7 +49,9 @@ export const errorMessage = (err: any) => {
         data = err?.data?.message;
     }
     else {
-        data = (err.data.response);
+        data = err?.data?.response?.message ? err.data.response.message : err.data.message;
+
+        console.log(err.data.message)
     }
     for (const key in data) {
         if (data[key].length > 0) {

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
 import React, { Dispatch, SetStateAction } from "react";
@@ -80,15 +80,23 @@ function CustomTable<TableProps>({
     const [notLoading, setNotLoading] = useState('')
     const [boxView, setBoxView] = useState(false)
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
+    const fetched = useRef(false)
     useEffect(() => {
         handleDownloadCSV()
     }, [tableData, sortedTable, sort, selectedHeading])
     useEffect(() => {
-        if (tableData.length === 0)
-            setTimeout(() => {
+        if (fetched.current) return
+        fetched.current = true
+        console.log('hi')
+        if (tableData.length === 0) {
+            console.log('No Data to Display')
+            const interval = setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 30000)
+            }, 5000)
+            return () => clearTimeout(interval)
+        }
+
     }, [])
     useEffect(() => {
         if (countInPage < 1) {
