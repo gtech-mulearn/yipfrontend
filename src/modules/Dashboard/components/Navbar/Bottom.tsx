@@ -18,7 +18,7 @@ export const BottomTab = () => {
     const [management, setManagement] = React.useState(managementButtons)
     const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     const [open, setOpen] = React.useState(false)
-    const [selection, setSelection] = React.useState('/institute-management')
+    const [selection, setSelection] = React.useState((managementButtons[0].url))
     useEffect(() => {
         if (userInfo.role === '') {
             fetchUserInfo(setUserInfo)

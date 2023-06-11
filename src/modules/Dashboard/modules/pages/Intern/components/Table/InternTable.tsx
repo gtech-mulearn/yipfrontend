@@ -326,17 +326,26 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
         <div className="btns-upper">
           {viewUpload && (
             <div className="upload-btns">
-              {!selectedFile && <button className="table-fn-btn cursor" onClick={handleButtonClick}>
-                <i className="fa-solid fa-upload"></i>
-                <input
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                />
-                <p>Upload File</p>
-              </button>}
+              {!selectedFile &&
+                <>
+                  <button className="table-fn-btn cursor" onClick={handleButtonClick}>
+                    <i className="fa-solid fa-upload"></i>
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                    />
+                    <p>Upload File</p>
+                  </button>
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1VBshPUI1uLd5HQbjeSJOZ1dIHFTjBGaDpS_oCV0PH10/"
+                    className="table-fn-btn "
+                    target="_blank"
+                  >View Upload Sheet Template</a>
+                </>
+              }
               {selectedFile && (<>
                 <button className="table-fn-btn cursor" onClick={handleUpload}>
                   File: {selectedFile.name.split(".")[0]} :
@@ -355,6 +364,7 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
             </div>
           )}
         </div>
+
       </div>
       {/* //table box */}
 
