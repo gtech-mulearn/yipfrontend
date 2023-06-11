@@ -8,7 +8,7 @@ import { ThreeDots } from "react-loader-spinner";
 
 
 
-export const BottomTab = () => {
+export const BottomTab = ({ userInfo }: { userInfo: { role: string, name: string } }) => {
     /**
      * Renders a bottom tab component.
      * @return {JSX.Element} The bottom tab component.
@@ -16,13 +16,9 @@ export const BottomTab = () => {
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
     const [management, setManagement] = React.useState(managementButtons)
-    const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     const [open, setOpen] = React.useState(false)
     const [selection, setSelection] = React.useState((managementButtons[0].url))
     useEffect(() => {
-        if (userInfo.role === '') {
-            fetchUserInfo(setUserInfo)
-        }
         filterBtns(userInfo, setNewButton, buttons)
         filterBtns(userInfo, setManagement, managementButtons)
     }, [userInfo])
