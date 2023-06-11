@@ -44,15 +44,19 @@ export const errorCheck = (err: any) => {
 };
 
 export const errorMessage = (err: any) => {
-    console.log(err);
-    const data = err.data.message;
+    let data: any = {}
+    if (err?.data?.message.length > 0) {
+        data = err?.data?.message;
+    }
+    else {
+        data = (err.data.response);
+    }
     for (const key in data) {
         if (data[key].length > 0) {
             data[key].forEach((msg: any) => {
-                console.log(`${key}: ${msg}`);
-                // error(`${key}: ${error}`);
                 error(String(`${key}: ${msg}`));
             });
         }
     }
+
 };

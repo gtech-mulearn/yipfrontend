@@ -6,7 +6,7 @@ import { selectCollegeProps, selectEditedProps, selectProps } from "../../utils/
 import { Success, showAlert } from "../../../components/Error/Alerts"
 import { ClubTableProps } from "./ClubTable"
 import { toast } from "react-toastify"
-import { error, errorCheck, success } from "../../../components/Toastify/ToastifyConsts"
+import { error, errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
 
 export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
     privateGateway.get(`${bannerRoutes.clubBanner}`)
@@ -68,6 +68,7 @@ export function createClub<postDataProps>
         })
         .catch(err => {
             errorCheck(err.response);
+            errorMessage(err.response)
         })
 }
 export function updateClubStatus(id: string, status: string,
