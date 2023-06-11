@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
-import CampusModal from '../CampusModal/CampusModal'
+import CampusModal from '../Modals/CampusModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../../../services/urls'
 export interface ExecomProps {

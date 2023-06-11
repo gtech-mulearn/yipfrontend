@@ -38,7 +38,6 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
         selectProps[]
     >([]);
     const [college, setCollege] = useState<selectProps>(initialState);
-    const [ictId, setIctId] = useState<string>("");
     const [campusType, setCampusType] = useState<selectProps>(typesOfCampus[0]);
     const reset = () => {
         notify();
@@ -63,18 +62,16 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
 
     function handleCreate() {
         type postDataProps = {
-            name: string;
-            type: string;
-            district: string;
-            ict_id: string,
+            // name: string;
+            // type: string;
+            // district: string;
             instituteId: string;
         };
         const postData: postDataProps = {
-            name: college.name,
+            // name: college.name,
             instituteId: college.id,
-            district: district.name,
-            ict_id: ictId,
-            type: campusType.name,
+            // district: district.name,
+            // type: 'College',
         };
         validationSchema()
             .then(() => {
@@ -91,15 +88,11 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
             district: Yup.string()
                 .required("Please select a district"),
             college: Yup.string().required("Please select a college"),
-            ictId: Yup.string().required("Please enter ICT Id"),
-            campusType: Yup.string().required("Please select campus type"),
         });
         return validateSchema.validate(
             {
                 district: district.name,
                 college: college.name,
-                ictId: ictId,
-                campusType: campusType.name
             },
             {
                 abortEarly: false,
@@ -114,19 +107,19 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
                 <div className="setup-club">
                     <div className="setup-filter">
                         <div className="select-container club">
-                            <CustomSelect
+                            {/* <CustomSelect
                                 option={typesOfCampus}
                                 value={campusType}
                                 header={"College/School"}
                                 setData={setCampusType}
                                 isClearable={false}
-                            />
+                            /> */}
                             <CustomSelect option={districtList} setData={setDistrict} header={"District"} />
                             <CustomSelect option={collegeList}
                                 setData={setCollege} header={"Campus"}
                                 value={collegeList.filter((item: selectProps) => item.id === college.id)}
                             />
-                            <CustomInput value={'ICT Id'} data={ictId} setData={setIctId} />
+                            {/* <CustomInput value={'ICT Id'} data={ictId} setData={setIctId} /> */}
                             <div className="create-btn-container">
                                 <button className="black-btn"
                                     onClick={handleCreate}>Create</button>

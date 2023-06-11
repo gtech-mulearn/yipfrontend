@@ -12,23 +12,31 @@ import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import { CampusPageProps } from '../../utils'
+import ConfirmModal from '../Confirmed/ConfirmModal'
+
 const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
     const [statusList, setStatusList] = useState<string[]>([])
-    const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
+    const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([{ id: '0', name: "Identified" },
+    { id: "1", name: "Visited" },
+    { id: "2", name: "Connection Established" },
+    { id: "3", name: "Orientation Scheduled" },
+    ])
+    const [view, setView] = useState('')
     const [status, setStatus] = useState<string>(getNextStatus(campuStatus ? campuStatus : campus?.status as string))
     const viewConnection = (status === 'Connection Established') || (status === 'Add Facilitator')
     const viewScheduled = (status === 'Orientation Scheduled')
     const viewCompleted = (status === 'Orientation Update')
     const viewExecom = ((status === 'Execom Formed') || (status === 'Add Member'))
-    const viewUpdateButton = (status === 'Confirmed') || (status === 'Identified')
-    let [view, setView] = useState('')
+    const viewUpdateButton = (status === 'Identified')
+    const viewConfirm = (status === 'Visited')
     useEffect(() => {
-        fetchStatus(setStatusList, setOptionStatusList)
+        console.log(status)
+
         if (viewScheduled) {
             setView('Orientation Scheduled')
         }
-        if (campus?.status === 'Confirmed') {
-            setView('Confirmed')
+        if (campus?.status === 'Visited') {
+            setView('Visited')
         }
         if (campus?.status === 'Identified') {
             setView('Identified')
@@ -37,6 +45,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
             setView('Execom Formed')
         }
     }, [])
+
     return (
         <div className="modal-overlay">
             <div className='modal'>
@@ -67,6 +76,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
                             />
                         </div>
                     </div>}
+                    {viewConfirm && <ConfirmModal cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewConnection && <ConnectionModal cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
@@ -86,7 +96,8 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     )
 }
 function updateStatus(id: string, status: string, cancel: () => void) {
-    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
+
+    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: (status) })
         .then(res => {
             cancel()
             console.log('Success :', res?.data?.message?.general[0])
@@ -95,14 +106,14 @@ function updateStatus(id: string, status: string, cancel: () => void) {
 }
 function getNextStatus(status: string) {
     switch (status) {
-        case 'Identified': return 'Confirmed'
-        case 'Confirmed': return 'Connection Established'
+        case 'Identified': return 'Visited'
+        case 'Visited': return 'Connection Established'
         case 'Add Facilitator': return 'Add Facilitator'
         case 'Orientation Update': return 'Orientation Update'
         case 'Connection Established': return 'Orientation Scheduled'
         case 'Orientation Scheduled': return ''
         case 'Execom Formed': return ''
-        case 'Orientation Completed': return 'Successfully Completed'
+        case 'Orientation Completed': return 'Orientation Scheduled'
         case 'Add Member': return 'Add Member'
         default: return ''
     }

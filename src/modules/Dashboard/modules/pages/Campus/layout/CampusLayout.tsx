@@ -8,8 +8,8 @@ import Confirmed from '../components/Confirmed/Confirmed'
 import Connection from '../components/Connection/Connection'
 import Orientation from '../components/Orientation/Orientation'
 import Execom from '../components/Execom/Execom'
-import CampusModal from '../components/CampusModal/CampusModal'
-import DeleteModal from '../components/CampusModal/DeleteModal'
+import CampusModal from '../components/Modals/CampusModal'
+import DeleteModal from '../components/Modals/DeleteModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ClubTableProps } from '../../Club/ClubTable'
 import { Error, Success } from '../../../../components/Error/Alerts'
@@ -26,7 +26,7 @@ const CampusLayout = () => {
     const viewExecom = campus.status === 'Execom Formed'
     const viewOrientation = campus.status === 'Orientation Scheduled' || campus.status === 'Orientation Completed' || viewExecom
     const viewConnected = campus.status === 'Connection Established' || viewOrientation || viewExecom
-    const viewConfirmed = campus.status === 'Confirmed' || viewConnected || viewOrientation || viewExecom
+    const viewConfirmed = campus.status === 'Visited' || viewConnected || viewOrientation || viewExecom
     const navigate = useNavigate()
 
     useEffect(() => {
