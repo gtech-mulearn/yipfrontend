@@ -337,7 +337,8 @@ function CustomTable<TableProps>({
 
                         <tbody>
                             {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => {
-                                console.log(item)
+
+                                //console.log(item)
                                 return (
                                     <tr key={key} >
                                         <td >{(page - 1) * countInPage + key + 1}</td>
