@@ -6,22 +6,15 @@ import React, { useEffect } from 'react'
 import { fetchUserInfo } from '../api'
 import { Grid } from "react-loader-spinner";
 
-export const LeftDrawer = () => {
+export const LeftDrawer = ({ userInfo }: { userInfo: { role: string, name: string } }) => {
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
     const [management, setManagement] = React.useState<urlProps[]>(managementButtons)
-    const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
     const [open, setOpen] = React.useState(false)
     const [selection, setSelection] = React.useState(managementButtons[0].url)
     useEffect(() => {
-        if (userInfo.role === '') {
-            fetchUserInfo(setUserInfo)
-        }
         filterBtns(userInfo, setNewButton, buttons)
-        // console.log(userInfo)
         filterBtns(userInfo, setManagement, managementButtons)
-
-
     }, [userInfo])
 
     return (

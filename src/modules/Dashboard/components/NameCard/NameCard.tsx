@@ -15,26 +15,24 @@ const theme = {
         brandingPrimary: '#59b3fa',
     },
 }
-const NameCard = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
-    const [data, setData] = React.useState<userInfoProps>({} as userInfoProps)
+const NameCard = ({ open, setOpen, userInfo }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, userInfo: userInfoProps }) => {
+    // const [userInfo, setuserInfo] = React.useState<userInfoProps>({} as userInfoProps)
     const navigate = useNavigate()
-    useEffect(() => {
-        fetchUserInfo(setData)
-    }, [])
+
     return (
         <>
             <div className={`name-card`} >
                 <div className="logo-img" onClick={() => { navigate('/intern-dashboard') }}><img src={YIPlogo} alt="logo" />
                 </div>
-                {/* {data?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={data.email} theme={theme} />} */}
+                {/* {userInfo?.email && <Engagespot apiKey='wu018c6r6debp2oxphzpua' userId={userInfo.email} theme={theme} />} */}
                 <div className={'open-color'} onClick={() => { setOpen(!open) }}>
                     <i className={`fas fa-user`} ></i>
                 </div>
             </div>
             {open &&
                 <div className="open">
-                    <h2>Role : {data?.role}</h2>
-                    <h1>{data?.name}</h1>
+                    <h2>Role : {userInfo?.role}</h2>
+                    <h1>{userInfo?.name}</h1>
                 </div>
             }
         </>
