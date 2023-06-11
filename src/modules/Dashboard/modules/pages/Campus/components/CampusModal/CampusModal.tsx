@@ -12,23 +12,29 @@ import ExecomModal from '../Execom/ExecomModal'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import { CampusPageProps } from '../../utils'
+
 const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
     const [statusList, setStatusList] = useState<string[]>([])
-    const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
+    const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([{ id: '0', name: "Identified" },
+    { id: "1", name: "Visited" },
+    { id: "2", name: "Connection Established" },
+    { id: "3", name: "Orientation Scheduled" },
+    ])
     const [status, setStatus] = useState<string>(getNextStatus(campuStatus ? campuStatus : campus?.status as string))
     const viewConnection = (status === 'Connection Established') || (status === 'Add Facilitator')
     const viewScheduled = (status === 'Orientation Scheduled')
     const viewCompleted = (status === 'Orientation Update')
     const viewExecom = ((status === 'Execom Formed') || (status === 'Add Member'))
-    const viewUpdateButton = (status === 'Confirmed') || (status === 'Identified')
+    const viewUpdateButton = (status === 'Visited') || (status === 'Identified')
     let [view, setView] = useState('')
     useEffect(() => {
-        fetchStatus(setStatusList, setOptionStatusList)
+        // fetchStatus(setStatusList, setOptionStatusList)
+
         if (viewScheduled) {
             setView('Orientation Scheduled')
         }
-        if (campus?.status === 'Confirmed') {
-            setView('Confirmed')
+        if (campus?.status === 'Visited') {
+            setView('Visited')
         }
         if (campus?.status === 'Identified') {
             setView('Identified')
@@ -86,7 +92,13 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     )
 }
 function updateStatus(id: string, status: string, cancel: () => void) {
-    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
+    function checkStatus(value: string) {
+        if (status === 'Visited') {
+            return 'Confirmed'
+        }
+        return value
+    }
+    privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: checkStatus(status) })
         .then(res => {
             cancel()
             console.log('Success :', res?.data?.message?.general[0])
@@ -95,7 +107,7 @@ function updateStatus(id: string, status: string, cancel: () => void) {
 }
 function getNextStatus(status: string) {
     switch (status) {
-        case 'Identified': return 'Confirmed'
+        case 'Identified': return 'Visited'
         case 'Confirmed': return 'Connection Established'
         case 'Add Facilitator': return 'Add Facilitator'
         case 'Orientation Update': return 'Orientation Update'
