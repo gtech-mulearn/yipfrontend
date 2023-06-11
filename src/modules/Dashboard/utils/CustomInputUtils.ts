@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react"
+import { DetailedHTMLProps, Dispatch, InputHTMLAttributes, SetStateAction } from "react"
 
 export interface inputProps {
     value: string
@@ -6,5 +6,5 @@ export interface inputProps {
     data: string
     requiredHeader?: boolean
     setData: Dispatch<SetStateAction<string>>
-    customCSS?: string
+    customCSS?: string,
 }

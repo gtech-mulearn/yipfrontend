@@ -48,10 +48,11 @@ export function fetchcolleges(
         district: districtName,
     };
     privateGateway
-        .post(setupRoutes.district.college, reqData)
-        .then((res) => res.data.response.institutions)
+        .get(`${tableRoutes.institutes.list}${districtName}/`)
+        .then((res) => res.data.response)
         .then((data) => {
-            setData(updateResponse(data));
+            console.log(data)
+            setData(data);
         })
         .catch((err) => console.error(err));
 }
@@ -61,7 +62,7 @@ export function createClub<postDataProps>
         postData: postDataProps,
         update: Function,
     ) {
-    privateGateway.post(tableRoutes.institutes.create, postData)
+    privateGateway.post(tableRoutes.club.create, postData)
         .then(() => {
             success();
             update()

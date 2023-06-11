@@ -62,16 +62,16 @@ const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
 
     function handleCreate() {
         type postDataProps = {
-            name: string;
-            type: string;
-            district: string;
+            // name: string;
+            // type: string;
+            // district: string;
             instituteId: string;
         };
         const postData: postDataProps = {
-            name: college.name,
+            // name: college.name,
             instituteId: college.id,
-            district: district.name,
-            type: 'College',
+            // district: district.name,
+            // type: 'College',
         };
         validationSchema()
             .then(() => {

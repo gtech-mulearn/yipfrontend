@@ -21,21 +21,7 @@ export const LeftDrawer = ({ userInfo }: { userInfo: { role: string, name: strin
         <div className="left-menu">
             <img src={YIPlogo} alt="logo" />
 
-            <Grid
-                height="100"
-                width="100"
-                color="red"
-                ariaLabel="grid-loading"
-                radius="10.5"
-                wrapperStyle={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)'
-                }}
-                wrapperClass=""
-                visible={newButton.length === 0}
-            />
+
 
             {
                 newButton.map((item: urlProps, index: number) =>

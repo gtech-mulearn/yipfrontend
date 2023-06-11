@@ -3,7 +3,7 @@ import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelec
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
 import { CustomInput } from "../../../../../components/CustomInput/CustomInput";
-import "../CampusModal/CampusModal.scss";
+import "../Modals/CampusModal.scss";
 import { campusRoutes, tableRoutes } from "../../../../../../../services/urls";
 import { getPocRoles } from "../../utils";
 import {

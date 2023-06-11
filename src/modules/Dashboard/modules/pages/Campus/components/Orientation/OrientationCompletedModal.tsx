@@ -3,7 +3,7 @@ import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelec
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
-import '../CampusModal/CampusModal.scss'
+import '../Modals/CampusModal.scss'
 import { campusRoutes } from '../../../../../../../services/urls'
 import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 import { updateCampusStatus } from '../Connection/ConnectionModal'
@@ -116,10 +116,8 @@ function updateEvent(eventId: string, nop: string, date: string, remarks: string
                     completed_date: date,
                     status: "Completed",
                 })
-                .then((res) => {
+                .then(() => {
                     updateCampusStatus(campusId, "Orientation Completed", cancel);
-                    success();
-                    cancel();
                 })
                 .catch((err) => {
                     errorCheck(err.response);
