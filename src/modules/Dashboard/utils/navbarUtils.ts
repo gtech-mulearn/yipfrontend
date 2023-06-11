@@ -88,19 +88,19 @@ export const buttons: urlProps[] = [
     // },
 ];
 export const managementButtons: urlProps[] = [
-    {
-        icon: "fa-building",
-        url: "/institute-management",
-        title: "Institute Management",
-        roles: [
-            roles.SUPER_ADMIN,
-            roles.ADMIN,
-            roles.HQ_STAFF,
-            roles.ZONAL_COORDINATOR,
-            roles.DISTRICT_COORDINATOR,
-            roles.PROGRAMME_EXECUTIVE,
-        ],
-    },
+    // {
+    //     icon: "fa-building",
+    //     url: "/institute-management",
+    //     title: "Institute Management",
+    //     roles: [
+    //         roles.SUPER_ADMIN,
+    //         roles.ADMIN,
+    //         roles.HQ_STAFF,
+    //         roles.ZONAL_COORDINATOR,
+    //         roles.DISTRICT_COORDINATOR,
+    //         roles.PROGRAMME_EXECUTIVE,
+    //     ],
+    // },
     {
         icon: "fa-user",
         url: "/user",
