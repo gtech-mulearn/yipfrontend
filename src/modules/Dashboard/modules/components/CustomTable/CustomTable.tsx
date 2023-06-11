@@ -88,7 +88,7 @@ function CustomTable<TableProps>({
             setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 30000)
+            }, 5000)
     }, [])
     useEffect(() => {
         if (countInPage < 1) {

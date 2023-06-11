@@ -30,7 +30,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     const viewUpdateButton = (status === 'Identified')
     const viewConfirm = (status === 'Visited')
     useEffect(() => {
-        console.log(status)
+        // console.log(status)
 
         if (viewScheduled) {
             setView('Orientation Scheduled')
