@@ -5,16 +5,21 @@ import NameCard from "../components/NameCard/NameCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.min.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { fetchUserInfo } from "../components/api";
 const DashboardLayout = () => {
     const [open, setOpen] = React.useState(false)
+    const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
 
+    useEffect(() => {
+        fetchUserInfo(setUserInfo)
+    }, [])
     return (
         <>
-            <NameCard open={open} setOpen={setOpen} />
+            <NameCard open={open} setOpen={setOpen} userInfo={userInfo} />
             {
                 <div onClick={() => setOpen(false)}>
-                    <LeftDrawer />
+                    <LeftDrawer userInfo={userInfo} />
                     <Outlet />
                     <ToastContainer
                         position="bottom-center"
@@ -29,7 +34,7 @@ const DashboardLayout = () => {
                         theme="colored"
 
                     />
-                    <BottomTab />
+                    <BottomTab userInfo={userInfo} />
                 </div>
             }
         </>

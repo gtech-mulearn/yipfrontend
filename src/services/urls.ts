@@ -35,7 +35,7 @@ export const setupRoutes = {
 }
 export const tableRoutes = {
     institutes: {
-        list: "/api/v1/yip/list-institutes/",
+        list: "/api/v1/yip/institute-management/list-institutes/",
         create: 'api/v1/yip/institute-management/create-institute/'
     },
     school: {
@@ -43,6 +43,7 @@ export const tableRoutes = {
         delete: "/api/v1/yip/delete-model-schools/",
     },
     club: {
+        create: 'api/v1/yip/club-management/create-college-club/',
         list: "/api/v1/yip/list-yip-clubs/",
         delete: "/api/v1/yip/delete-model-schools/",
     },

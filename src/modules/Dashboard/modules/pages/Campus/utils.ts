@@ -33,7 +33,7 @@ export function getCampusInfo(
             legislativeAssembly: data.legislative_assembly,
             block: data.block,
             identified: data.date_of_identification,
-            confirmed: data.date_of_confirmation,
+            confirmed: data.date_of_visited,
             connection: data.date_of_connection,
             orientation: data.date_of_orientaion,
             execom: data.date_of_execom_formation,

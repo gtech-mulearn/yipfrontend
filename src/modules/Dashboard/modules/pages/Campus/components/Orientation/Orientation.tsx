@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
-import CampusModal from '../CampusModal/CampusModal'
+import CampusModal from '../Modals/CampusModal'
 import { listEvent } from './OrientationScheduleModal'
 import CustomTable from '../../../../components/CustomTable/CustomTable'
 export interface OrientationCompleteProps {
@@ -27,16 +27,24 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
     const [open, setOpen] = React.useState(false)
     const [orientationList, setOrientationList] = React.useState<OrientationCompleteProps[]>([])
     const [eventId, setEventId] = React.useState<string>('')
+    const [value, setValue] = React.useState('')
     useEffect(() => {
         listEvent(campusId, setOrientationList)
     }, [open, campusId, update])
     return (
         <div>
-            {open && <CampusModal campuStatus={'Orientation Update'} campusId={campusId} cancel={() => setOpen(!open)} district={district} eventId={eventId as string} />}
+            {open && <CampusModal campuStatus={value} campusId={campusId} cancel={() => setOpen(!open)} district={district} eventId={eventId as string} />}
             <div>
                 <div>
                     <div className='top-bar'>
                         <p>Orientation Scheduled</p>
+                        <div className='add-button' onClick={() => {
+                            setOpen(true)
+                            setValue('Connection Established')
+                        }}>
+                            <i className='fas fa-add'></i>
+                            <p >Add Orientation</p>
+                        </div>
                     </div>
                     <CustomTable
                         tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Scheduled On', 'Planned Date', 'Completed On', 'Status']}
@@ -46,7 +54,7 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
                         manage={
                             {
                                 value: 'Update',
-                                manageFunction: (item: any) => { setEventId(item.id); setOpen(true) },
+                                manageFunction: (item: any) => { setEventId(item.id); setOpen(true); setValue('Orientation Update') },
                             }
                         }
                         pagination={false}
