@@ -73,6 +73,7 @@ const InternTable = ({ update }: { update: () => void }) => {
   const [filterBtn, setFilterBtn] = useState<boolean>(false);
   const [view, setView] = useState<string>("Campus");
   const [assigneeList, setAssigneeList] = useState<AssignViewProps[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const [campusTableList, setCampusTableList] = useState<CampusViewProps[]>([]);
   const [internTableList, setInternTableList] = useState<InternViewProps[]>([]);
@@ -152,12 +153,92 @@ const InternTable = ({ update }: { update: () => void }) => {
     }]
   }
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [count, setCount] = useState(0)
+  const [timeStamp, setTimeStamp] = useState<number>(0)
+
   const fetchOnce = useRef(false)
+  function sessionHandling() {
+    let currentTime = Date.now()
+    if (view === "Campus") {
+      const Yip5CampusList = sessionStorage.getItem("Yip5CampusList")
+      if (Yip5CampusList) {
+        setCampusList(JSON.parse(Yip5CampusList).list)
+        setCampusTableList(JSON.parse(Yip5CampusList).list)
+      }
+      fetchCampus(setCampusList, setCampusTableList)
+        .then(() => {
+          if (campusList.length) {
+            setTimeStamp(currentTime)
+            const data = { list: campusList, timestamp: currentTime }
+            sessionStorage.setItem("Yip5CampusList", JSON.stringify(data))
+          }
+        })
+    }
+    else if (view === "Intern") {
+      const Yip5InternList = sessionStorage.getItem("Yip5InternList")
+      if (Yip5InternList) {
+        setInternList(JSON.parse(Yip5InternList).list)
+        setInternTableList(JSON.parse(Yip5InternList).list)
+      }
+      fetchIntern(setInternList, setInternTableList)
+        .then(() => {
+          if (internList.length) {
+            setTimeStamp(currentTime)
+            const data = { list: internList, timestamp: currentTime }
+            sessionStorage.setItem("Yip5InternList", JSON.stringify(data))
+          }
+        })
+    }
+    else if (view === "District") {
+      const Yip5DistrictList = sessionStorage.getItem("Yip5DistrictList")
+      if (Yip5DistrictList) {
+        setDistrictList(JSON.parse(Yip5DistrictList).list)
+        setDistricttable(JSON.parse(Yip5DistrictList).list)
+      }
+      fetchDistrict(setDistrictList, setDistricttable)
+        .then(() => {
+          if (districtList.length) {
+
+            setTimeStamp(currentTime)
+            const data = { list: districtList, timestamp: currentTime }
+            sessionStorage.setItem("Yip5DistrictList", JSON.stringify(data))
+          }
+        })
+    }
+    else if (view === 'Zone') {
+      const Yip5ZoneList = sessionStorage.getItem("Yip5ZoneList")
+      if (Yip5ZoneList) {
+        setZoneList(JSON.parse(Yip5ZoneList).list)
+        setZonetable(JSON.parse(Yip5ZoneList).list)
+      }
+      fetchZone(setZoneList, setZonetable)
+        .then(() => {
+          if (zoneList.length) {
+            setTimeStamp(currentTime)
+            const data = { list: zoneList, timestamp: currentTime }
+            sessionStorage.setItem("Yip5ZoneList", JSON.stringify(data))
+          }
+        })
+    }
+    else if (view === 'State') {
+      const Yip5StateList = sessionStorage.getItem("Yip5StateList")
+      if (Yip5StateList) {
+        setStateTable(JSON.parse(Yip5StateList).list)
+      }
+      fetchState(setStateTable)
+        .then(() => {
+          if (stateTable.length) {
+            setTimeStamp(currentTime)
+            const data = { list: stateTable, timestamp: currentTime }
+            sessionStorage.setItem("Yip5StateList", JSON.stringify(data))
+          }
+        })
+    }
+  }
   useEffect(() => {
     if (fetchOnce.current) return
     fetchOnce.current = true
-    fetchCampus(setCampusList, setCampusTableList);
+    sessionHandling()
+    // fetchCampus(setCampusList, setCampusTableList).then
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
   }, []);
@@ -202,14 +283,17 @@ const InternTable = ({ update }: { update: () => void }) => {
       fetchOnce.current = false
       return
     }
-    if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
-    if (view === "Intern") fetchIntern(setInternList, setInternTableList);
-    if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
+    sessionHandling()
+    // if (view === "Campus") {
+    //   sessionHandling()
+    // }
+    // if (view === "Intern") fetchIntern(setInternList, setInternTableList);
+    // if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
     if (view === "Zone") fetchZone(setZoneList, setZonetable);
     if (view === 'State') fetchState(setStateTable);
     setSearch("");
     setFilterBtn(false);
-  }, [view, dataUploaded]);
+  }, [view, dataUploaded, refresh]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -238,19 +322,25 @@ const InternTable = ({ update }: { update: () => void }) => {
     //check the view value and dowload the data in the corresponding state variable as a csv
     let csvData1: any = [];
     if (view === "Campus") {
-      csvData1 = campusTableList;
+      csvData1 = campusTableList ? campusTableList : [];
     } else if (view === "Intern") {
-      csvData1 = internTableList;
+      csvData1 = internTableList ? internTableList : [];
     } else if (view === "District Coordinator") {
-      csvData1 = assigneeList;
+      csvData1 = assigneeList ? assigneeList : [];
     } else if (view === "Programme Executive") {
-      csvData1 = assigneetable;
+      csvData1 = assigneetable ? assigneetable : [];
       console.log(csvData1);
     } else if (view === "District") {
-      csvData1 = districttable;
+      csvData1 = districttable ? districttable : [];
+    }
+    else if (view === "Zone") {
+      csvData1 = zonetable ? zonetable : [];
+    }
+    else if (view === "State") {
+      csvData1 = stateTable ? stateTable : [];
     }
 
-    const updatedData = csvData1.map((item: any) => {
+    const updatedData = csvData1?.map((item: any) => {
       const { id, ...rest } = item;
       return rest;
     });
@@ -374,9 +464,13 @@ const InternTable = ({ update }: { update: () => void }) => {
         <div className="table-top">
           <div className="table-header">
             <h3>{view} View</h3>
-            <div className="table-header-btn">
-              <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
+            <div className='table-sub-container'>
+              <li className='fas fa-rotate-right' onClick={() => setRefresh(!refresh)}></li>
+              <div className="table-header-btn">
+                <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
+              </div>
             </div>
+
           </div>
           {/* Filter Opener */}
           {menu && (
@@ -664,11 +758,11 @@ function fetchDistrictCoordinator(
       console.log(err);
     });
 }
-function fetchDistrict(
+async function fetchDistrict(
   setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>,
   setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>
 ) {
-  privateGateway
+  await privateGateway
     .get(yip5Routes.listDistrict)
     .then((res) => {
       setDistrictFilter(res.data.response);
@@ -694,11 +788,11 @@ function fetchProgrammeExecutive(
       console.log(err);
     });
 }
-function fetchIntern(
+async function fetchIntern(
   setData: Dispatch<SetStateAction<InternViewProps[]>>,
   setData2: Dispatch<SetStateAction<InternViewProps[]>>
 ) {
-  privateGateway
+  await privateGateway
     .get(yip5Routes.internList)
     .then((res) => {
       setData(
@@ -876,8 +970,8 @@ export function fetchDistrictFilter(
   //   .catch((err) => console.error(err));
 }
 export default InternTable;
-function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[]>>, setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[]>>) {
-  privateGateway.get(yip5Routes.zoneBasedData)
+async function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[]>>, setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[]>>) {
+  await privateGateway.get(yip5Routes.zoneBasedData)
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
@@ -903,8 +997,8 @@ function searchZone(list: zoneViewProps[], search: string): zoneViewProps[] {
   );
 }
 
-function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
-  privateGateway.get(yip5Routes.stateBasedData)
+async function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
+  await privateGateway.get(yip5Routes.stateBasedData)
     .then((res) => {
       setStateTable([res.data.response])
 

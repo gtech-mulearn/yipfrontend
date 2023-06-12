@@ -101,10 +101,10 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                         <h3>User List</h3>
                         <div className='table-sub-container'>
                             <li className='fas fa-rotate-right' onClick={() => setRefresh(!refresh)}></li>
-                            <p className='update-time'>
+                            {/* <p className='update-time'>
                                 <p>Last Updated at </p>
                                 <p>{new Date(timeStamp).toLocaleString()}</p>
-                            </p>
+                            </p> */}
                             <div className="table-header-btn">
                                 <li
                                     className="fas fa-bars "

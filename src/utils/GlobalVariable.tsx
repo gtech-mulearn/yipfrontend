@@ -38,20 +38,38 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
     );
 }
 function fetchUserInfo(setData: Dispatch<SetStateAction<userInfoProps>>) {
-    privateGateway.get(setupRoutes.user.info)
-        .then((res) => {
-            setData(res.data.response)
-        })
-        .catch((err: any) => {
-            toast.error('Error :', err?.response.data.message.general[0] || err.message)
-        })
+    const userRole = localStorage.getItem('userRole')
+    if (userRole) {
+        const user = JSON.parse(userRole)
+        setData(user)
+    }
+    else {
+        privateGateway.get(setupRoutes.user.info)
+            .then((res) => {
+                setData(res.data.response)
+                localStorage.setItem('userRole', JSON.stringify(res.data.response))
+            })
+            .catch((err: any) => {
+                toast.error('Error :', err?.response.data.message.general[0] || err.message)
+            })
+    }
 }
 function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.user.roles.list)
-        .then(res => res.data.response.roles)
-        .then(data =>
-            setData(data?.map((item: { value: string, label: string }) =>
-                ({ id: item.value, name: item.label }))))
-        .catch(err => console.error(err))
+    const roles = localStorage.getItem('roles')
+    if (roles) {
+        const userRoles = JSON.parse(roles)
+        setData(userRoles)
+    }
+    else {
+        privateGateway.get(setupRoutes.user.roles.list)
+            .then(res => res.data.response.roles)
+            .then(data => {
+                const optionizedRoles = data?.map((item: { value: string, label: string }) =>
+                    ({ id: item.value, name: item.label }))
+                setData(optionizedRoles)
+                localStorage.setItem('roles', JSON.stringify(optionizedRoles))
+            })
+            .catch(err => console.error(err))
+    }
 }
 export default GlobalVariableProvider
