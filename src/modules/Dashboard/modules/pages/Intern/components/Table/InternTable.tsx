@@ -157,7 +157,6 @@ const InternTable = ({ update }: { update: () => void }) => {
 
   const fetchOnce = useRef(false)
   function sessionHandling() {
-    let currentTime = Date.now()
     if (view === "Campus") {
       const Yip5CampusList = sessionStorage.getItem("Yip5CampusList")
       if (Yip5CampusList) {
@@ -165,13 +164,6 @@ const InternTable = ({ update }: { update: () => void }) => {
         setCampusTableList(JSON.parse(Yip5CampusList).list)
       }
       fetchCampus(setCampusList, setCampusTableList)
-        .then(() => {
-          if (campusList.length) {
-            setTimeStamp(currentTime)
-            const data = { list: campusList, timestamp: currentTime }
-            sessionStorage.setItem("Yip5CampusList", JSON.stringify(data))
-          }
-        })
     }
     else if (view === "Intern") {
       const Yip5InternList = sessionStorage.getItem("Yip5InternList")
@@ -180,13 +172,6 @@ const InternTable = ({ update }: { update: () => void }) => {
         setInternTableList(JSON.parse(Yip5InternList).list)
       }
       fetchIntern(setInternList, setInternTableList)
-        .then(() => {
-          if (internList.length) {
-            setTimeStamp(currentTime)
-            const data = { list: internList, timestamp: currentTime }
-            sessionStorage.setItem("Yip5InternList", JSON.stringify(data))
-          }
-        })
     }
     else if (view === "District") {
       const Yip5DistrictList = sessionStorage.getItem("Yip5DistrictList")
@@ -195,14 +180,6 @@ const InternTable = ({ update }: { update: () => void }) => {
         setDistricttable(JSON.parse(Yip5DistrictList).list)
       }
       fetchDistrict(setDistrictList, setDistricttable)
-        .then(() => {
-          if (districtList.length) {
-
-            setTimeStamp(currentTime)
-            const data = { list: districtList, timestamp: currentTime }
-            sessionStorage.setItem("Yip5DistrictList", JSON.stringify(data))
-          }
-        })
     }
     else if (view === 'Zone') {
       const Yip5ZoneList = sessionStorage.getItem("Yip5ZoneList")
@@ -211,13 +188,7 @@ const InternTable = ({ update }: { update: () => void }) => {
         setZonetable(JSON.parse(Yip5ZoneList).list)
       }
       fetchZone(setZoneList, setZonetable)
-        .then(() => {
-          if (zoneList.length) {
-            setTimeStamp(currentTime)
-            const data = { list: zoneList, timestamp: currentTime }
-            sessionStorage.setItem("Yip5ZoneList", JSON.stringify(data))
-          }
-        })
+
     }
     else if (view === 'State') {
       const Yip5StateList = sessionStorage.getItem("Yip5StateList")
@@ -225,15 +196,49 @@ const InternTable = ({ update }: { update: () => void }) => {
         setStateTable(JSON.parse(Yip5StateList).list)
       }
       fetchState(setStateTable)
-        .then(() => {
-          if (stateTable.length) {
-            setTimeStamp(currentTime)
-            const data = { list: stateTable, timestamp: currentTime }
-            sessionStorage.setItem("Yip5StateList", JSON.stringify(data))
-          }
-        })
     }
   }
+  useEffect(() => {
+    let currentTime = Date.now()
+
+    switch (view) {
+      case "Campus":
+        if (campusList.length) {
+          setTimeStamp(currentTime)
+          const data = { list: campusList, timestamp: currentTime }
+          sessionStorage.setItem("Yip5CampusList", JSON.stringify(data))
+        }
+        break
+      case "Intern":
+        if (internList.length) {
+          setTimeStamp(currentTime)
+          const data = { list: internList, timestamp: currentTime }
+          sessionStorage.setItem("Yip5InternList", JSON.stringify(data))
+        }
+        break
+      case "District":
+        if (districtList.length) {
+
+          setTimeStamp(currentTime)
+          const data = { list: districtList, timestamp: currentTime }
+          sessionStorage.setItem("Yip5DistrictList", JSON.stringify(data))
+        }
+        break
+      case "Zone":
+        if (zoneList.length) {
+          setTimeStamp(currentTime)
+          const data = { list: zoneList, timestamp: currentTime }
+          sessionStorage.setItem("Yip5ZoneList", JSON.stringify(data))
+        }
+        break
+      case "State":
+        if (stateTable.length) {
+          setTimeStamp(currentTime)
+          const data = { list: stateTable, timestamp: currentTime }
+          sessionStorage.setItem("Yip5StateList", JSON.stringify(data))
+        }
+    }
+  }, [internList, campusList, zoneList, stateTable, districtList])
   useEffect(() => {
     if (fetchOnce.current) return
     fetchOnce.current = true
