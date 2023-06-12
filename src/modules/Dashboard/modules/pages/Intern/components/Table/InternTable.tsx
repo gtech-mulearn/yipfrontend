@@ -5,6 +5,7 @@ import React, {
   useState,
   Dispatch,
   SetStateAction,
+  useContext,
 } from "react";
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect";
 import CustomTable from "../../../../components/CustomTable/CustomTable";
@@ -24,8 +25,9 @@ import { fetchUserInfo } from "../../../../../components/api";
 import roles from "../../../../../../../utils/roles";
 import { privateGateway } from "../../../../../../../services/apiGateway";
 import { selectProps } from "../../../../utils/setupUtils";
-import { CentralZone, Districts, NorthZone, SouthZone } from "../../../../../../../utils/Locations";
+import { CentralZone, CentralZoneOptions, Districts, NorthZone, NorthZoneOptions, OptionDistrict, OptionOutsideState, OptionZone, SouthZone, SouthZoneOptions, Zones } from "../../../../../../../utils/Locations";
 import { errorCheck, loading } from "../../../../../components/Toastify/ToastifyConsts";
+import { GlobalContext } from "../../../../../../../utils/GlobalVariable";
 
 interface commonViewProps {
   pre_registrations: string;
@@ -66,7 +68,7 @@ const views = [
   { id: "3", name: "Zone" },
   { id: "4", name: "State" },
 ];
-const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () => void }) => {
+const InternTable = ({ update }: { update: () => void }) => {
   const [search, setSearch] = useState<string>("");
   const [filterBtn, setFilterBtn] = useState<boolean>(false);
   const [view, setView] = useState<string>("Campus");
@@ -97,6 +99,9 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [internList, setInternList] = useState<InternViewProps[]>([]);
   const [dataUploaded, setDataUploaded] = useState<boolean>(false);
+
+  const { userInfo } = useContext(GlobalContext)
+
   const styleHead = {
     unOrder: 'fa-sort',
     asc: ' fa-sort-amount-desc',
@@ -148,9 +153,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
   }
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [count, setCount] = useState(0)
+  const fetchOnce = useRef(false)
   useEffect(() => {
-
-
+    if (fetchOnce.current) return
+    fetchOnce.current = true
     fetchCampus(setCampusList, setCampusTableList);
     fetchZoneFilter(setZoneFilterList);
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
@@ -158,7 +164,6 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
   useEffect(() => {
     setDistrictFilter({} as selectProps)
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
-
   }, [zoneFilter])
   useEffect(() => {
     if (view === "Campus")
@@ -193,8 +198,10 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
       );
   }, [search, districtFilter, zoneFilter]);
   useEffect(() => {
-
-
+    if (fetchOnce.current) {
+      fetchOnce.current = false
+      return
+    }
     if (view === "Campus") fetchCampus(setCampusList, setCampusTableList);
     if (view === "Intern") fetchIntern(setInternList, setInternTableList);
     if (view === "District") fetchDistrict(setDistrictList, setDistricttable);
@@ -296,13 +303,8 @@ const InternTable = ({ openSetup, update }: { openSetup: () => void, update: () 
     }
   };
 
-  const [userInfo, setUserInfo] = React.useState({ role: "", name: "" });
   const [viewUpload, setViewUpload] = useState(false);
   useEffect(() => {
-    if (userInfo.role === "") {
-      fetchUserInfo(setUserInfo);
-    }
-
     if (
       [roles.SUPER_ADMIN, roles.ADMIN, roles.HQ_STAFF, roles.ZONAL_COORDINATOR].includes(userInfo.role)
     ) {
@@ -827,11 +829,12 @@ function filterCampus(
   }
   return list;
 }
-function fetchZoneFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
-  privateGateway
-    .get(yip5Routes.zoneList)
-    .then((res) => setData(res.data.response))
-    .catch((err) => console.log(err));
+export function fetchZoneFilter(setData: Dispatch<SetStateAction<selectProps[]>>) {
+  setData(OptionZone)
+  // privateGateway
+  //   .get(yip5Routes.zoneList)
+  //   .then((res) => setData(res.data.response))
+  //   .catch((err) => console.log(err));
 }
 function searchCampus(clubList: CampusViewProps[], search: string) {
   return clubList.filter(
@@ -853,11 +856,24 @@ export function fetchDistrictFilter(
   zone: string,
   setData: Dispatch<SetStateAction<selectProps[]>>
 ) {
-  const getDistrictByZone = zone ? `${campusRoutes.listDistrict}${zone}/` : setupRoutes.district.list
-  privateGateway.get(getDistrictByZone)
-    .then((res) => res.data.response.districts)
-    .then((data) => setData(data))
-    .catch((err) => console.error(err));
+  switch (zone) {
+    case "North": setData(NorthZoneOptions)
+      break
+    case "South": setData(SouthZoneOptions)
+      break
+    case "Central": setData(CentralZoneOptions)
+      break
+    case 'Outside State': setData(OptionOutsideState)
+      break
+    default:
+      setData(OptionDistrict)
+      break
+  }
+  // const getDistrictByZone = zone ? `${campusRoutes.listDistrict}${zone}/` : setupRoutes.district.list
+  // privateGateway.get(getDistrictByZone)
+  //   .then((res) => res.data.response.districts)
+  //   .then((data) => setData(data))
+  //   .catch((err) => console.error(err));
 }
 export default InternTable;
 function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[]>>, setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[]>>) {
@@ -865,10 +881,8 @@ function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProp
     .then((res) => {
       setZoneList(res.data.response);
       setZonetable(res.data.response);
-
     })
     .catch((err) => {
-
       toast.error(err.response.data.message || err.message)
       console.log(err)
     });

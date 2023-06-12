@@ -1,9 +1,10 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect, Dispatch, SetStateAction, useRef } from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import './InternBanner.scss'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes, yip5Routes } from '../../../../../../../services/urls'
 import { selectProps } from '../../../../utils/setupUtils'
+import { fetchDistrictFilter, fetchZoneFilter } from '../Table/InternTable'
 const InternBanner = ({ update }: { update: boolean }) => {
     const [banner, setBanner] = useState<any>({})
     const [district, setDistrict] = useState<selectProps>({} as selectProps)
@@ -13,46 +14,27 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const [college, setCollege] = useState<selectProps>({} as selectProps)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
     useEffect(() => {
-        fetchZone(setZoneList)
-        fetchBannerData(setBanner as any, 'state', 'state')
-    }, [])
-    useEffect(() => {
-        if (zone.id) {
-            fetchDistricts(zone.name, setDistrictList)
-            fetchBannerData(setBanner as any, 'zone', zone.name)
-        }
-        else {
-            fetchBannerData(setBanner as any, 'state', 'state')
-        }
-        setDistrict({} as selectProps)
-        setCollege({} as selectProps)
-    }, [zone, update])
-
-    useEffect(() => {
-        if (district.id) {
-            fetchCollege(district.name, setCollegeList)
-            fetchBannerData(setBanner as any, 'district', district.name)
-        }
-        else {
-            if (zone.id) {
-                fetchBannerData(setBanner as any, 'zone', zone.name)
-            }
-        }
-        setCollege({} as selectProps)
-    }, [district, update])
-
-    useEffect(() => {
         if (college.id) {
+            console.log('I am calling college')
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
-        else {
-            if (district.id) {
-                fetchBannerData(setBanner as any, 'district', district.name)
-            }
+        else if (district.id) {
+            console.log('I am calling district')
+
+            fetchBannerData(setBanner as any, 'district', district.name)
+            fetchCollege(district.name, setCollegeList)
         }
-    }, [college, update])
-
-
+        else if (zone.id) {
+            console.log('I am calling zone')
+            fetchBannerData(setBanner as any, 'zone', zone.name)
+            fetchDistrictFilter(zone.name, setDistrictList)
+        }
+        else {
+            console.log('I am calling state')
+            fetchBannerData(setBanner as any, 'state', 'state')
+            fetchZoneFilter(setZoneList)
+        }
+    }, [zone, district, college, update])
 
     return (
         <div className='white-container'>
@@ -145,9 +127,9 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
         })
 }
 function fetchZone(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(yip5Routes.zoneList)
-        .then(res => setData(res.data.response))
-        .catch(err => console.log(err))
+    // privateGateway.get(yip5Routes.zoneList)
+    //     .then(res => setData(res.data.response))
+    //     .catch(err => console.log(err))
 }
 function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listDistrict}${zone}/`)
@@ -179,7 +161,7 @@ function showCurrentSelected(zone: selectProps, district: selectProps, college: 
     }
 }
 function formatDate(dateTimeString: string): string {
-    if (dateTimeString === null) return ''
+    if (dateTimeString === null || dateTimeString === undefined) return ''
     const options: Intl.DateTimeFormatOptions = {
         day: 'numeric',
         month: 'long',
