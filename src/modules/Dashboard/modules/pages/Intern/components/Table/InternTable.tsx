@@ -634,11 +634,11 @@ const InternTable = ({ update }: { update: () => void }) => {
   );
 };
 
-function fetchCampus(
+async function fetchCampus(
   setData: Dispatch<SetStateAction<CampusViewProps[]>>,
   setData2: Dispatch<SetStateAction<CampusViewProps[]>>
 ) {
-  privateGateway
+  await privateGateway
     .get(yip5Routes.campusList)
     .then((res) => {
       setData(res.data.response);

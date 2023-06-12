@@ -58,8 +58,8 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                 setUserList(JSON.parse(userListStorage).list)
                 setListForTable(JSON.parse(userListStorage).list)
                 setTimeStamp(JSON.parse(userListStorage).timeStamp)
-                setUpUserList()
             }
+            setUpUserList()
         }
         if (roles.length) {
             setRoleList(roles)
