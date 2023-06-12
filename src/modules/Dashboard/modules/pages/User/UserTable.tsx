@@ -40,17 +40,15 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     const [refresh, setRefresh] = useState<boolean>(false)
     const [timeStamp, setTimeStamp] = useState<number>(0)
     const firstCall = useRef(false)
-    function setUpUserList() {
-        fetchUsers(setUserList, setListForTable)
-            .then(() => {
-                if (userList.length) {
-                    let currentTime = Date.now()
-                    setTimeStamp(currentTime)
-                    const data = { list: userList, timeStamp: currentTime }
-                    sessionStorage.setItem("userList", JSON.stringify(data))
-                }
-            })
-    }
+
+    useEffect(() => {
+        if (userList.length) {
+            let currentTime = Date.now()
+            setTimeStamp(currentTime)
+            const data = { list: userList, timeStamp: currentTime }
+            sessionStorage.setItem("userList", JSON.stringify(data))
+        }
+    }, [userList])
     useEffect(() => {
         if (!firstCall.current) {
             const userListStorage = sessionStorage.getItem("userList")
@@ -59,7 +57,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                 setListForTable(JSON.parse(userListStorage).list)
                 setTimeStamp(JSON.parse(userListStorage).timeStamp)
             }
-            setUpUserList()
+            fetchUsers(setUserList, setListForTable)
         }
         if (roles.length) {
             setRoleList(roles)
@@ -70,7 +68,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     }, [searchName, role, roles])
     useEffect(() => {
         if (firstCall.current) {
-            setUpUserList()
+            fetchUsers(setUserList, setListForTable)
         }
         firstCall.current = true
     }, [updated, refresh])
@@ -209,7 +207,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
 function filterUser(userList: UserTableProps[], search: string, role: selectProps) {
     let list = userList
     if (search) list = searchUser(list, search)
-    if (role.name) list = list.filter(user => user.role === role.name)
+    if (role.name) list = list.filter(user => user.role === role.name || user.role === role.id)
     return list
 }
 function searchUser(schoolList: UserTableProps[], search: string) {

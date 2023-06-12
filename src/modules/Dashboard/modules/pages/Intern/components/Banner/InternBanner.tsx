@@ -15,26 +15,30 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
     useEffect(() => {
         if (college.id) {
-            console.log('I am calling college')
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
         else if (district.id) {
-            console.log('I am calling district')
-
             fetchBannerData(setBanner as any, 'district', district.name)
             fetchCollege(district.name, setCollegeList)
         }
         else if (zone.id) {
-            console.log('I am calling zone')
             fetchBannerData(setBanner as any, 'zone', zone.name)
             fetchDistrictFilter(zone.name, setDistrictList)
         }
         else {
-            console.log('I am calling state')
             fetchBannerData(setBanner as any, 'state', 'state')
             fetchZoneFilter(setZoneList)
         }
     }, [zone, district, college, update])
+    useEffect(() => {
+
+        setDistrict({} as selectProps)
+        setCollege({} as selectProps)
+
+    }, [zone])
+    useEffect(() => {
+        setCollege({} as selectProps)
+    }, [district])
 
     return (
         <div className='white-container'>
@@ -79,20 +83,20 @@ const InternBanner = ({ update }: { update: boolean }) => {
                     <p>Total Strength</p>
                 </div> */}
                 <div className={`box blue-box`} >
-                    <h3>{banner.preRegistration}<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <h3>{banner.preRegistration ? banner.preRegistration : 0}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Pre-registrations'}</p>
 
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner.vos}<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <h3>{banner.vos ? banner.vos : 0}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'VOS Completed'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner.groupFormation} <div className="count"><div className="count-in">{ }</div></div></h3>
+                    <h3>{banner.groupFormation ? banner.groupFormation : 0} <div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Group Formations'}</p>
                 </div>
                 <div className={`box blue-box`} >
-                    <h3>{banner.ideaSubmission}<div className="count"><div className="count-in">{ }</div></div></h3>
+                    <h3>{banner.ideaSubmission ? banner.ideaSubmission : 0}<div className="count"><div className="count-in">{ }</div></div></h3>
                     <p>{'Idea Submissions'}</p>
                 </div>
                 <div className={`box blue-box color-change`} >
