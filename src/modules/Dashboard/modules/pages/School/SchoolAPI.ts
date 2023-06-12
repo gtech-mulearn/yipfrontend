@@ -6,6 +6,7 @@ import { SchoolTableProps, localBodyProps } from "./SchoolTable"
 import { selectProps } from "../../utils/setupUtils"
 import { showAlert } from "../../../components/Error/Alerts"
 import { errorCheck, success } from "../../../components/Toastify/ToastifyConsts"
+import { OptionDistrict } from "../../../../../utils/Locations"
 
 export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
     privateGateway.get(`${bannerRoutes.schoolBanner}`)
@@ -44,10 +45,11 @@ export function deleteModelSchool(id: string, update: Function, setSuccess: Disp
 }
 
 export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(setupRoutes.district.list)
-        .then(res => res.data.response.districts)
-        .then(data => setData(data))
-        .catch(err => console.error(err))
+    setData(OptionDistrict)
+    // privateGateway.get(setupRoutes.district.list)
+    //     .then(res => res.data.response.districts)
+    //     .then(data => setData(data))
+    //     .catch(err => console.error(err))
 }
 export function fetchDistrictAssemblies(setData: Dispatch<SetStateAction<selectProps[]>>, districtId: string) {
     privateGateway.get(`${setupRoutes.district.assembly}${districtId}/`)

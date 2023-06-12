@@ -1,12 +1,12 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 
 import Modal from './UserModal'
 import { fetchUserRoles, fetchUsers } from './UserApi'
-import { loading } from '../../../components/Toastify/ToastifyConsts'
-import { toast } from 'react-toastify'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
+
 
 export interface UserTableProps {
     id: string
@@ -29,23 +29,38 @@ interface UserSetupProps {
 const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }) => {
     const [searchName, setSearchName] = useState("")
     const [filterBtn, setFilterBtn] = useState(false)
+    const { roles } = useContext(GlobalContext)
+
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [role, setRole] = useState<selectProps>(initialState)
     const [listForTable, setListForTable] = useState<UserTableProps[]>([])
     const [user, setUser] = useState<UserTableProps>({} as UserTableProps)
     const [userList, setUserList] = useState<UserTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
+    const firstCall = useRef(false)
     useEffect(() => {
+        if (updated || !firstCall.current) {
+            fetchUsers(setUserList, setListForTable)
+            firstCall.current = true
+        }
+        if (roles.length) {
+            setRoleList(roles)
+        }
+        if (userList.length) {
+            setListForTable(filterUser(userList, searchName, role))
+        }
+    }, [searchName, role, roles, updated])
+    // useEffect(() => {
 
-        fetchUsers(setUserList, setListForTable)
-        fetchUserRoles(setRoleList)
-    }, [])
-    useEffect(() => {
-        fetchUsers(setUserList, setListForTable, updateTable)
-    }, [updated])
-    useEffect(() => {
-        setListForTable(filterUser(userList, searchName, role))
-    }, [searchName, role])
+    //     fetchUsers(setUserList, setListForTable)
+    //     fetchUserRoles(setRoleList)
+    // }, [])
+    // useEffect(() => {
+    //     fetchUsers(setUserList, setListForTable, updateTable)
+    // }, [updated])
+    // useEffect(() => {
+    //     setListForTable(filterUser(userList, searchName, role))
+    // }, [searchName, role])
     function updateTable(userList: UserTableProps[]) {
         setListForTable(filterUser(userList, searchName, role))
     }
