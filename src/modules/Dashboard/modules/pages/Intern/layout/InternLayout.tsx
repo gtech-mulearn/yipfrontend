@@ -11,9 +11,8 @@ const InternLayout = () => {
         <div className='dash-container'>
             <InternBanner update={update} />
             {/* {openSetup && <InternSetup close={() => setOpenSetup(false)} />} */}
-            <InternTable openSetup={() => setOpenSetup(!openSetup)} update={() => setUpdate(!update)} />
+            <InternTable update={() => setUpdate(!update)} />
         </div>
     )
 }
-
 export default InternLayout

@@ -1,12 +1,12 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 
 import Modal from './UserModal'
 import { fetchUserRoles, fetchUsers } from './UserApi'
-import { loading } from '../../../components/Toastify/ToastifyConsts'
-import { toast } from 'react-toastify'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
+
 
 export interface UserTableProps {
     id: string
@@ -29,23 +29,51 @@ interface UserSetupProps {
 const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }) => {
     const [searchName, setSearchName] = useState("")
     const [filterBtn, setFilterBtn] = useState(false)
+    const { roles } = useContext(GlobalContext)
+
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [role, setRole] = useState<selectProps>(initialState)
     const [listForTable, setListForTable] = useState<UserTableProps[]>([])
     const [user, setUser] = useState<UserTableProps>({} as UserTableProps)
     const [userList, setUserList] = useState<UserTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
-    useEffect(() => {
-
+    const [refresh, setRefresh] = useState<boolean>(false)
+    const [timeStamp, setTimeStamp] = useState<number>(0)
+    const firstCall = useRef(false)
+    function setUpUserList() {
         fetchUsers(setUserList, setListForTable)
-        fetchUserRoles(setRoleList)
-    }, [])
+            .then(() => {
+                if (userList.length) {
+                    let currentTime = Date.now()
+                    setTimeStamp(currentTime)
+                    const data = { list: userList, timeStamp: currentTime }
+                    sessionStorage.setItem("userList", JSON.stringify(data))
+                }
+            })
+    }
     useEffect(() => {
-        fetchUsers(setUserList, setListForTable, updateTable)
-    }, [updated])
+        if (!firstCall.current) {
+            const userListStorage = sessionStorage.getItem("userList")
+            if (userListStorage) {
+                setUserList(JSON.parse(userListStorage).list)
+                setListForTable(JSON.parse(userListStorage).list)
+                setTimeStamp(JSON.parse(userListStorage).timeStamp)
+            }
+            setUpUserList()
+        }
+        if (roles.length) {
+            setRoleList(roles)
+        }
+        if (userList.length) {
+            setListForTable(filterUser(userList, searchName, role))
+        }
+    }, [searchName, role, roles])
     useEffect(() => {
-        setListForTable(filterUser(userList, searchName, role))
-    }, [searchName, role])
+        if (firstCall.current) {
+            setUpUserList()
+        }
+        firstCall.current = true
+    }, [updated, refresh])
     function updateTable(userList: UserTableProps[]) {
         setListForTable(filterUser(userList, searchName, role))
     }
@@ -71,12 +99,20 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                 <div className="table-top">
                     <div className="table-header">
                         <h3>User List</h3>
-                        <div className="table-header-btn">
-                            <li
-                                className="fas fa-bars "
-                                onClick={() => setMenu(!menu)}
-                            ></li>
+                        <div className='table-sub-container'>
+                            <li className='fas fa-rotate-right' onClick={() => setRefresh(!refresh)}></li>
+                            {/* <p className='update-time'>
+                                <p>Last Updated at </p>
+                                <p>{new Date(timeStamp).toLocaleString()}</p>
+                            </p> */}
+                            <div className="table-header-btn">
+                                <li
+                                    className="fas fa-bars "
+                                    onClick={() => setMenu(!menu)}
+                                ></li>
+                            </div>
                         </div>
+
                     </div>
                     {menu && (
                         <div className="table-fn">

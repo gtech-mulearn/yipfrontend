@@ -1,18 +1,21 @@
 import { buttons, urlProps, getCurrentPageTitle, managementButtons } from "../../utils/navbarUtils"
 import { useNavigate } from "react-router-dom"
 import './BottomTab.scss'
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { fetchUserInfo } from "../api";
 import { checkIfSelected, filterBtns } from "./LeftDrawer";
 import { ThreeDots } from "react-loader-spinner";
+import { GlobalContext } from "../../../../utils/GlobalVariable";
 
 
 
-export const BottomTab = ({ userInfo }: { userInfo: { role: string, name: string } }) => {
+export const BottomTab = () => {
     /**
      * Renders a bottom tab component.
      * @return {JSX.Element} The bottom tab component.
      */
+    const { userInfo } = useContext(GlobalContext)
+
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
     const [management, setManagement] = React.useState(managementButtons)
@@ -97,7 +100,8 @@ export const BottomTab = ({ userInfo }: { userInfo: { role: string, name: string
                                 href="/"
                                 className="fa-solid fa-right-from-bracket"
                                 onClick={() => {
-                                    localStorage.removeItem("accessToken")
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     window.location.href = "/"
                                 }}
                             ></a>

@@ -2,11 +2,14 @@ import YIPlogo from '../../../../assets/logo.webp'
 import { useNavigate } from "react-router-dom"
 import { buttons, managementButtons, urlProps } from '../../utils/navbarUtils'
 import './LeftDrawer.scss'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { fetchUserInfo } from '../api'
 import { Grid } from "react-loader-spinner";
+import { GlobalContext } from '../../../../utils/GlobalVariable'
 
-export const LeftDrawer = ({ userInfo }: { userInfo: { role: string, name: string } }) => {
+export const LeftDrawer = () => {
+    const { userInfo } = useContext(GlobalContext)
+
     const navigate = useNavigate();
     const [newButton, setNewButton] = React.useState(buttons)
     const [management, setManagement] = React.useState<urlProps[]>(managementButtons)
@@ -77,7 +80,8 @@ export const LeftDrawer = ({ userInfo }: { userInfo: { role: string, name: strin
             <button
                 className="logout"
                 onClick={() => {
-                    localStorage.removeItem('accessToken')
+                    localStorage.clear();
+                    sessionStorage.clear();
                     window.location.href = "/"
                 }}
             >

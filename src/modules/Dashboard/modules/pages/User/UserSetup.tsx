@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
 import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
@@ -14,6 +14,8 @@ import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
 import styles from './UserSetup.module.css'
 import { toast } from 'react-toastify'
+import { OptionDistrict, OptionZone } from '../../../../../utils/Locations'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
@@ -24,11 +26,12 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [phone, setPhone] = useState<string>('')
     const [password, setPassword] = useState("")
     const [role, setRole] = useState(initialState)
+    const { roles } = useContext(GlobalContext)
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>({} as selectProps)
-    const [districtList, setDistrictList] = useState<selectProps[]>([])
+    const [districtList, setDistrictList] = useState<selectProps[]>(OptionDistrict)
     const [zone, setZone] = useState<selectProps>({} as selectProps)
-    const [zoneList, setZoneList] = useState<selectProps[]>([{ id: '0', name: 'North' }, { id: '1', name: 'South' }, { id: '2', name: 'Central' }])
+    const [zoneList, setZoneList] = useState<selectProps[]>(OptionZone)
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
     const [errorMessage, setErrorMessage] = useState("")
@@ -46,15 +49,17 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         setRole(initialState)
         setViewSetup(false)
     }
+
     useEffect(() => {
-        fetchUserRoles(setRoleList)
-        fetchDistricts(setDistrictList)
-        fetchUserByRoles(setCoordinatorRoleBasedList)
-    }, [])
-    useEffect(() => {
+        if (roles.length) {
+            setRoleList(roles)
+        }
+        if (role.id === 'IN') {
+            fetchUserByRoles(setCoordinatorRoleBasedList)
+        }
         if (coordinator.id)
             getSelectedInstitutes(coordinator.id, setInstituteList)
-    }, [coordinator])
+    }, [coordinator, role, roles])
     function validateSchema() {
         const validate = yup.object({
             name: yup.string().required('Name is required').test('only-spaces', 'Only spaces are not allowed for user name', value => {

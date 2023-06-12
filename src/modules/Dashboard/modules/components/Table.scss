@@ -74,6 +74,36 @@
     .table-header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+
+        .table-sub-container {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+
+            .fa-rotate-right {
+                margin-left: 10px;
+                font-size: 10px;
+                cursor: pointer;
+                box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.3);
+                padding: 8px;
+                padding-bottom: 7px;
+                border-radius: 50%;
+                justify-content: center;
+                align-items: center;
+
+                &:active {
+                    background-color: #55ff00;
+                    box-shadow: inset 0 0 2px 0px rgba(0, 0, 0, 0.3);
+                }
+            }
+
+            .update-time {
+                text-align: right;
+                margin-left: 5px;
+                font-size: 10.5px;
+            }
+        }
 
         .table-header-btn {
             display: none;

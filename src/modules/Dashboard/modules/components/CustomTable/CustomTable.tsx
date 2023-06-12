@@ -89,17 +89,16 @@ function CustomTable<TableProps>({
         fetched.current = true
         console.log('hi')
         if (tableData.length === 0) {
-            console.log('No Data to Display')
             const interval = setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 5000)
+            }, 50000)
             return () => clearTimeout(interval)
         }
 
     }, [])
     useEffect(() => {
-        if (countInPage < 1) {
+        if (countInPage === -1) {
             setCountInPage(10)
         }
 

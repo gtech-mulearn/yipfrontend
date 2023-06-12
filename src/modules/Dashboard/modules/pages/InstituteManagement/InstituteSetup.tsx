@@ -115,6 +115,7 @@ function connectInstitute(name: string, id: string, district: string, ict: strin
         instituteId: id,
         district: district,
         ict_id: ict,
+        type: 'College'
     }).then((res) => {
         console.log(res)
         setUpdate((prev: boolean) => !prev)

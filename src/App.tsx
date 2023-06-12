@@ -13,6 +13,7 @@ import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/Campus
 import InstituteSetup from './modules/Dashboard/modules/pages/InstituteManagement/InstituteSetup';
 import Reset from './modules/Login/pages/Reset'
 import ResetReq from './modules/Login/pages/ResetReq';
+import GlobalVariableProvider from './utils/GlobalVariable';
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,11 @@ const router = createBrowserRouter([
   },
   {
     path: '',
-    element: <PrivateRoutes />,
+    element:
+      <GlobalVariableProvider>
+        <PrivateRoutes />
+      </GlobalVariableProvider>
+    ,
     children: [
       {
         path: '',

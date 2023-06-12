@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import YIPlogo from '../../../../assets/logo.webp'
 
 import './NameCard.scss'
 import { fetchUserInfo, userInfoProps } from '../api'
 import { useNavigate } from 'react-router-dom'
+import { GlobalContext } from '../../../../utils/GlobalVariable'
 // import { Engagespot } from "@engagespot/react-component";
 const theme = {
     notificationButton: {
@@ -15,10 +16,10 @@ const theme = {
         brandingPrimary: '#59b3fa',
     },
 }
-const NameCard = ({ open, setOpen, userInfo }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, userInfo: userInfoProps }) => {
+const NameCard = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     // const [userInfo, setuserInfo] = React.useState<userInfoProps>({} as userInfoProps)
     const navigate = useNavigate()
-
+    const { userInfo } = useContext(GlobalContext)
     return (
         <>
             <div className={`name-card`} >

@@ -6,20 +6,15 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import React, { useEffect } from "react";
-import { fetchUserInfo } from "../components/api";
 const DashboardLayout = () => {
     const [open, setOpen] = React.useState(false)
-    const [userInfo, setUserInfo] = React.useState({ role: '', name: '' })
 
-    useEffect(() => {
-        fetchUserInfo(setUserInfo)
-    }, [])
     return (
         <>
-            <NameCard open={open} setOpen={setOpen} userInfo={userInfo} />
+            <NameCard open={open} setOpen={setOpen} />
             {
                 <div onClick={() => setOpen(false)}>
-                    <LeftDrawer userInfo={userInfo} />
+                    <LeftDrawer />
                     <Outlet />
                     <ToastContainer
                         position="bottom-center"
@@ -34,7 +29,7 @@ const DashboardLayout = () => {
                         theme="colored"
 
                     />
-                    <BottomTab userInfo={userInfo} />
+                    <BottomTab />
                 </div>
             }
         </>
