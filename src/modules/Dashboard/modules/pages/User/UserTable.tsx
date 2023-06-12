@@ -37,11 +37,29 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
     const [user, setUser] = useState<UserTableProps>({} as UserTableProps)
     const [userList, setUserList] = useState<UserTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
+    const [refresh, setRefresh] = useState<boolean>(false)
+    const [timeStamp, setTimeStamp] = useState<number>(0)
     const firstCall = useRef(false)
+    function setUpUserList() {
+        fetchUsers(setUserList, setListForTable)
+            .then(() => {
+                if (userList.length) {
+                    let currentTime = Date.now()
+                    setTimeStamp(currentTime)
+                    const data = { list: userList, timeStamp: currentTime }
+                    sessionStorage.setItem("userList", JSON.stringify(data))
+                }
+            })
+    }
     useEffect(() => {
-        if (updated || !firstCall.current) {
-            fetchUsers(setUserList, setListForTable)
-            firstCall.current = true
+        if (!firstCall.current) {
+            const userListStorage = sessionStorage.getItem("userList")
+            if (userListStorage) {
+                setUserList(JSON.parse(userListStorage).list)
+                setListForTable(JSON.parse(userListStorage).list)
+                setTimeStamp(JSON.parse(userListStorage).timeStamp)
+                setUpUserList()
+            }
         }
         if (roles.length) {
             setRoleList(roles)
@@ -49,18 +67,13 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
         if (userList.length) {
             setListForTable(filterUser(userList, searchName, role))
         }
-    }, [searchName, role, roles, updated])
-    // useEffect(() => {
-
-    //     fetchUsers(setUserList, setListForTable)
-    //     fetchUserRoles(setRoleList)
-    // }, [])
-    // useEffect(() => {
-    //     fetchUsers(setUserList, setListForTable, updateTable)
-    // }, [updated])
-    // useEffect(() => {
-    //     setListForTable(filterUser(userList, searchName, role))
-    // }, [searchName, role])
+    }, [searchName, role, roles])
+    useEffect(() => {
+        if (firstCall.current) {
+            setUpUserList()
+        }
+        firstCall.current = true
+    }, [updated, refresh])
     function updateTable(userList: UserTableProps[]) {
         setListForTable(filterUser(userList, searchName, role))
     }
@@ -86,12 +99,20 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                 <div className="table-top">
                     <div className="table-header">
                         <h3>User List</h3>
-                        <div className="table-header-btn">
-                            <li
-                                className="fas fa-bars "
-                                onClick={() => setMenu(!menu)}
-                            ></li>
+                        <div className='table-sub-container'>
+                            <li className='fas fa-rotate-right' onClick={() => setRefresh(!refresh)}></li>
+                            <p className='update-time'>
+                                <p>Last Updated at </p>
+                                <p>{new Date(timeStamp).toLocaleString()}</p>
+                            </p>
+                            <div className="table-header-btn">
+                                <li
+                                    className="fas fa-bars "
+                                    onClick={() => setMenu(!menu)}
+                                ></li>
+                            </div>
                         </div>
+
                     </div>
                     {menu && (
                         <div className="table-fn">

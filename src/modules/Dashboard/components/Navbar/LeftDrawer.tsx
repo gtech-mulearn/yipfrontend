@@ -80,7 +80,8 @@ export const LeftDrawer = () => {
             <button
                 className="logout"
                 onClick={() => {
-                    localStorage.removeItem('accessToken')
+                    localStorage.clear();
+                    sessionStorage.clear();
                     window.location.href = "/"
                 }}
             >

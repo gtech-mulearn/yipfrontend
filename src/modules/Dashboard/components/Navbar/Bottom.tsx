@@ -100,7 +100,8 @@ export const BottomTab = () => {
                                 href="/"
                                 className="fa-solid fa-right-from-bracket"
                                 onClick={() => {
-                                    localStorage.removeItem("accessToken")
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     window.location.href = "/"
                                 }}
                             ></a>

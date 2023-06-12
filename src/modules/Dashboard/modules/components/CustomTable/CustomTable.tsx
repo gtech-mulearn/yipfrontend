@@ -98,7 +98,7 @@ function CustomTable<TableProps>({
 
     }, [])
     useEffect(() => {
-        if (countInPage < 1) {
+        if (countInPage === -1) {
             setCountInPage(10)
         }
 

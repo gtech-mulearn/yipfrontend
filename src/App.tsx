@@ -44,7 +44,11 @@ const router = createBrowserRouter([
   },
   {
     path: '',
-    element: <PrivateRoutes />,
+    element:
+      <GlobalVariableProvider>
+        <PrivateRoutes />
+      </GlobalVariableProvider>
+    ,
     children: [
       {
         path: '',
@@ -66,9 +70,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <GlobalVariableProvider>
-      <RouterProvider router={router} />
-    </GlobalVariableProvider>
+    <RouterProvider router={router} />
   );
 }
 
