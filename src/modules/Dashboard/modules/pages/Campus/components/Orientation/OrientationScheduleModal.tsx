@@ -41,7 +41,7 @@ const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: 
             }),
             status: yup.string().test('Valid Status', 'Update status to Connection Established first !!!', value => {
                 console.log(value)
-                if (value === 'Identified' || value === 'Confirmed') {
+                if (value === 'Identified' || value === 'Visited') {
                     return false
                 }
                 return true

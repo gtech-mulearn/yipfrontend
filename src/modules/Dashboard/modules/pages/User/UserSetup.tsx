@@ -60,6 +60,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         if (coordinator.id)
             getSelectedInstitutes(coordinator.id, setInstituteList)
     }, [coordinator, role, roles])
+    useEffect(() => {
+        setSelectedInstitute([] as selectProps[])
+        setInstituteList([] as selectProps[])
+    }, [coordinator])
     function validateSchema() {
         const validate = yup.object({
             name: yup.string().required('Name is required').test('only-spaces', 'Only spaces are not allowed for user name', value => {
@@ -107,7 +111,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     function handleCreate() {
 
         validateSchema().then(() =>
-            createUser(name, email, phone, role.id, password, district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+            createUser(name, email.trim(), phone, role.id, password.trim(), district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
         )
             .catch(err => err.errors.map((error: string) => toast.error(error)))
 
@@ -162,8 +166,9 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                                 console.log(data)
                                             }
                                             else
-                                                setSelectedInstitute([])
+                                                setSelectedInstitute([] as selectProps[])
                                         }}
+                                        value={instituteList.filter(item => item.id === coordinator.id)}
                                     />
                                 </div>
                             </>

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import * as yup from 'yup'
 import { privateGateway } from '../../../../../../../services/apiGateway';
 import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts';
-import { updateCampusStatus } from '../Connection/ConnectionModal';
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput';
 import { tableRoutes } from '../../../../../../../services/urls';
 const ConfirmModal = ({
@@ -42,49 +41,47 @@ const ConfirmModal = ({
     }, []);
     return (
         <div className="secondary-box">
-            <div className="last-container">
-                <div className="data-box">
-                    <div className="content">
-                        <CustomInput value={'Remarks'} data={remarks} setData={setRemarks} customCSS={'setup-item'} />
+            <div className="data-box">
+                <div className="content">
+                    <CustomInput value={'Remarks'} data={remarks} setData={setRemarks} customCSS={'setup-item'} />
+                </div>
+            </div>
+            <div className="data-box">
+                <div className="content">
+                    <div className={'setup-item'}>
+                        <p>Date</p>
+                        <input
+                            type='date'
+                            name={`name-Date`}
+                            id={`id-date`}
+                            onChange={(e) => {
+                                setDate(e.target.value)
+                                setCheckDate(e.target.valueAsDate)
+                            }}
+                            max={maxDate}
+                        />
                     </div>
                 </div>
-                <div className="data-box">
-                    <div className="content">
-                        <div className={'setup-item'}>
-                            <p>Date</p>
-                            <input
-                                type='date'
-                                name={`name-Date`}
-                                id={`id-date`}
-                                onChange={(e) => {
-                                    setDate(e.target.value)
-                                    setCheckDate(e.target.valueAsDate)
-                                }}
-                                max={maxDate}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="modal-buttons">
-                    <button
-                        className="btn-update "
-                        onClick={() =>
-                            validateSchema().then(() => {
-                                addVisited({
-                                    clubId: campusId,
-                                    clubStatus: 'Visited',
-                                    visited_date: date,
-                                    visited_remarks: remarks
-                                }, campusId, cancel)
-                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
-                        }
-                    >
-                        Update
-                    </button>
-                    <button className="cancel-btn " onClick={cancel}>
-                        Cancel
-                    </button>
-                </div>
+            </div>
+            <div className="modal-buttons">
+                <button
+                    className="btn-update "
+                    onClick={() =>
+                        validateSchema().then(() => {
+                            addVisited({
+                                clubId: campusId,
+                                clubStatus: 'Visited',
+                                visited_date: date,
+                                visited_remarks: remarks
+                            }, campusId, cancel)
+                        }).catch(err => err.errors.map((error: string) => toast.error(error)))
+                    }
+                >
+                    Update
+                </button>
+                <button className="cancel-btn " onClick={cancel}>
+                    Cancel
+                </button>
             </div>
         </div>
     )
