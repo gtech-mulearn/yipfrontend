@@ -15,7 +15,8 @@ export interface UserTableProps {
     phone: string
     role: string
     location: string
-    institutes: string[]
+    institutes: selectProps[]
+    coordinator: selectProps
 }
 const TableTitleList = ["Name", "Email", "Phone", " Role", 'Location']
 const list: (keyof UserTableProps)[] = ['name', 'email', 'phone', 'role', 'location']
@@ -198,6 +199,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, 
                         value: "View",
                         manageFunction: (item: UserTableProps) => {
                             setUser(item);
+                            console.log(item)
                         },
                     }}
                     countPerPage={11}

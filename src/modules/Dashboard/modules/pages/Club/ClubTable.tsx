@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import Modal from './ClubModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
@@ -8,6 +8,8 @@ import { setupRoutes, tableRoutes } from '../../../../../services/urls'
 import { fetchClubs, fetchDistricts, fetchStatus } from './clubAPI'
 import { useNavigate } from 'react-router-dom'
 import { loading } from '../../../components/Toastify/ToastifyConsts'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
+import roles from '../../../../../utils/roles'
 interface ClubSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateClubData: Function
@@ -24,6 +26,7 @@ export interface ClubTableProps {
 const TableTitleList = ["Name", "District", "Status"]
 const list: (keyof ClubTableProps)[] = ['name', 'district', 'club_status']
 const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }) => {
+    const { userInfo } = useContext(GlobalContext)
     const navigate = useNavigate()
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
@@ -99,7 +102,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                                     onClick={() => setSearch("")}
                                 ></li>
                             </div>
-                            <div
+                            {userInfo.role !== roles.INTERN && <div
                                 className="table-fn-btn cursor"
                                 onClick={() =>
                                     setViewSetup((prev: boolean) => !prev)
@@ -107,7 +110,7 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                             >
                                 <i className="fa-solid fa-plus"></i>
                                 <p>Add Campus</p>
-                            </div>
+                            </div>}
                             <div
                                 className="table-fn-btn cursor"
                                 style={{ cursor: "pointer" }}

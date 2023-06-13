@@ -35,21 +35,21 @@ export function fetchCampus(
             console.log(err);
         });
 }
-export function fetchDistrictCoordinator(
-    setData: Dispatch<SetStateAction<AssignViewProps[]>>,
-    setData2: Dispatch<SetStateAction<AssignViewProps[]>>
-) {
-    privateGateway
-        .get(yip5Routes.listDC)
-        .then((res) => {
-            // console.log(res)
-            setData(res.data.response);
-            setData2(res.data.response);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}
+// export function fetchDistrictCoordinator(
+//     setData: Dispatch<SetStateAction<AssignViewProps[]>>,
+//     setData2: Dispatch<SetStateAction<AssignViewProps[]>>
+// ) {
+//     privateGateway
+//         .get(yip5Routes.listDC)
+//         .then((res) => {
+//             // console.log(res)
+//             setData(res.data.response);
+//             setData2(res.data.response);
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// }
 export function fetchDistrict(
     setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>,
     setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>
@@ -64,20 +64,20 @@ export function fetchDistrict(
             console.log(err);
         });
 }
-export function fetchProgrammeExecutive(
-    setData: Dispatch<SetStateAction<AssignViewProps[]>>,
-    setData2: Dispatch<SetStateAction<AssignViewProps[]>>
-) {
-    privateGateway
-        .get(yip5Routes.listPE)
-        .then((res) => {
-            setData(res.data.response);
-            setData2(res.data.response);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}
+// export function fetchProgrammeExecutive(
+//     setData: Dispatch<SetStateAction<AssignViewProps[]>>,
+//     setData2: Dispatch<SetStateAction<AssignViewProps[]>>
+// ) {
+//     privateGateway
+//         .get(yip5Routes.listPE)
+//         .then((res) => {
+//             setData(res.data.response);
+//             setData2(res.data.response);
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// }
 export function fetchIntern(
     setData: Dispatch<SetStateAction<InternViewProps[]>>,
     setData2: Dispatch<SetStateAction<InternViewProps[]>>
