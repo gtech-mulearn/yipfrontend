@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import Modal from './ClubModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
@@ -39,20 +39,22 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
+    const fetchedOnce = useRef(false)
     useEffect(() => {
-
         fetchDistricts(setDistrictList)
         fetchClubs(setClubList, setListForTable)
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
 
     useEffect(() => {
-
-        fetchClubs(setClubList, setListForTable, updateTable)
+        if (fetchedOnce.current)
+            fetchClubs(setClubList, setListForTable, updateTable)
     }, [updated])
 
     useEffect(() => {
-        setListForTable(filterClub(clubList, search, district, status))
+        if (fetchedOnce.current)
+            setListForTable(filterClub(clubList, search, district, status))
+        fetchedOnce.current = true
     }, [district, status, search, filterBtn])
     function updateTable(clubList: ClubTableProps[]) {
         setListForTable(filterClub(clubList, search, district, status))

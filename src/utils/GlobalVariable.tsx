@@ -13,13 +13,13 @@ interface selectProps {
 interface GlobalState {
     userInfo: userInfoProps
     roles: selectProps[]
-
+    districts: selectProps[]
 }
 
 export const GlobalContext = createContext<GlobalState>({} as GlobalState);
 
 const GlobalVariableProvider: FC<any> = ({ children }) => {
-
+    const [districts, setDistricts] = React.useState<selectProps[]>([]);
     const [userInfo, setUserInfo] = React.useState<userInfoProps>({} as userInfoProps);
     const [roles, setRoles] = React.useState<selectProps[]>([]);
     const fetchedUserInfo = useRef(false)
@@ -28,11 +28,12 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
             console.log('fetchedUserInfo', fetchedUserInfo.current)
             fetchUserInfo(setUserInfo);
             fetchUserRoles(setRoles);
+            fetchDistricts(setDistricts);
             fetchedUserInfo.current = true;
         }
     }, [])
     return (
-        <GlobalContext.Provider value={{ userInfo, roles }}>
+        <GlobalContext.Provider value={{ userInfo, roles, districts }}>
             {children}
         </GlobalContext.Provider>
     );
@@ -68,6 +69,22 @@ function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {
                     ({ id: item.value, name: item.label }))
                 setData(optionizedRoles)
                 localStorage.setItem('roles', JSON.stringify(optionizedRoles))
+            })
+            .catch(err => console.error(err))
+    }
+}
+function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>) {
+    const districts = localStorage.getItem('districts')
+    if (districts) {
+        const districtsArray = JSON.parse(districts)
+        setData(districtsArray)
+    }
+    else {
+        privateGateway.get(setupRoutes.district.list)
+            .then(res => res.data.response.districts)
+            .then(data => {
+                setData(data)
+                localStorage.setItem('districts', JSON.stringify(data))
             })
             .catch(err => console.error(err))
     }
