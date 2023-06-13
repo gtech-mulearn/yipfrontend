@@ -168,7 +168,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                             else
                                                 setSelectedInstitute([] as selectProps[])
                                         }}
-                                        value={instituteList.filter(item => item.id === coordinator.id)}
+
                                     />
                                 </div>
                             </>
