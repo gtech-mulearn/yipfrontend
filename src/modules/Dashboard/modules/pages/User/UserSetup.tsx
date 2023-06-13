@@ -6,9 +6,9 @@ import '../../components/Setup.scss'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import * as yup from 'yup'
 import { showAlert, Error, Success } from '../../../components/Error/Alerts'
-import { createUser, fetchUserByRoles, fetchUserRoles } from './UserApi'
+import { createUser, fetchUserByRoles, fetchUserRoles, updateUserDataFn } from './UserApi'
 import { fetchDistricts } from '../School/SchoolAPI'
-import Select from 'react-select'
+import Select, { OptionProps, OptionContext } from 'react-select'
 import { UserTableProps as UserProps } from './UserTable'
 import { privateGateway } from '../../../../../services/apiGateway'
 import { campusRoutes } from '../../../../../services/urls'
@@ -19,12 +19,19 @@ import { GlobalContext } from '../../../../../utils/GlobalVariable'
 interface UserTableProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
+    updateUser?: any
+    resetUpdateUser: () => void
 }
-const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
+interface Option {
+    value: string;
+    label: string;
+    clearableValue?: boolean;
+}
+const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUser, resetUpdateUser }) => {
     const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [phone, setPhone] = useState<string>('')
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState<string>("")
+    const [password, setPassword] = useState('')
     const [role, setRole] = useState(initialState)
     const { roles } = useContext(GlobalContext)
     const [roleList, setRoleList] = useState<selectProps[]>([])
@@ -32,15 +39,12 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>(OptionDistrict)
     const [zone, setZone] = useState<selectProps>({} as selectProps)
     const [zoneList, setZoneList] = useState<selectProps[]>(OptionZone)
-    const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
-    const [errorMessage, setErrorMessage] = useState("")
-    const [successMessage, setSuccessMessage] = useState("")
-    const [coordinatorInternRole, setCoordinatorInternRole] = useState<selectProps>({} as selectProps)
     const [coordinatorRoleBasedList, setCoordinatorRoleBasedList] = useState<UserProps[]>([] as UserProps[])
     const [instituteList, setInstituteList] = useState<selectProps[]>([])
     const [selectedInstitute, setSelectedInstitute] = useState<selectProps[]>([])
     const [showPassword, setShowPassword] = useState<boolean>(false)
+
     const reset = () => {
         setName("")
         setEmail("")
@@ -48,6 +52,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         setPassword("")
         setRole(initialState)
         setViewSetup(false)
+        resetUpdateUser()
     }
 
     useEffect(() => {
@@ -57,13 +62,57 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
         if (role.id === 'IN') {
             fetchUserByRoles(setCoordinatorRoleBasedList)
         }
-        if (coordinator.id)
-            getSelectedInstitutes(coordinator.id, setInstituteList)
-    }, [coordinator, role, roles])
+        if (district.id && role.id === 'IN') {
+            getSelectedInstitutes(district.name, setInstituteList)
+        }
+    }, [coordinator, role, roles, district])
     useEffect(() => {
-        setSelectedInstitute([] as selectProps[])
-        setInstituteList([] as selectProps[])
-    }, [coordinator])
+        if (updateUser?.id) {
+            setName(updateUser.name)
+            setEmail(updateUser.email)
+            setPhone(updateUser.phone)
+            setRole(updateUser.role)
+            setDistrict(updateUser.district)
+            setZone(updateUser.zone)
+            if (updateUser?.institutes?.length) {
+                updateUser.institutes.map((institute: string) => {
+                    console.log('hi i am in session')
+                    const list = sessionStorage.getItem('Yip5CampusList')
+                    console.log(list)
+                    if (list) {
+                        const instituteAll = JSON.parse(list).list
+                        const result = instituteAll.find((item: any) => item.institute === institute)
+                        if (result) {
+                            console.log(result)
+                        }
+                    }
+                })
+            }
+        }
+    }, [updateUser])
+    useEffect(() => {
+        if (updateUser?.id) {
+            if (district === undefined) {
+                console.log('hi i found you ')
+            }
+        }
+    }, [district])
+    useEffect(() => {
+        if (instituteList.length && updateUser?.id) {
+            const listed: selectProps[] = []
+            if (updateUser?.institutes?.length) {
+                updateUser.institutes.map((institute: string) => {
+                    const result = instituteList.find((item: any) => item.name === institute)
+                    if (result) {
+                        listed.push(result)
+                    }
+
+                })
+                if (listed.length)
+                    setSelectedInstitute((selected) => [...selected, ...listed])
+            }
+        }
+    }, [instituteList])
     function validateSchema() {
         const validate = yup.object({
             name: yup.string().required('Name is required').test('only-spaces', 'Only spaces are not allowed for user name', value => {
@@ -111,11 +160,25 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
     function handleCreate() {
 
         validateSchema().then(() =>
-            createUser(name, email.trim(), phone, role.id, password.trim(), district.name, zone.name, updateUserData, setViewSetup, setSuccessMessage, setErrorMessage, coordinator.id, selectedInstitute)
+            createUser(name, email.trim(), phone, role.id, password.trim(), district.name, zone.name, updateUserData, setViewSetup, coordinator.id, selectedInstitute)
         )
             .catch(err => err.errors.map((error: string) => toast.error(error)))
 
     }
+    function handleUpdate() {
+        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, district.name, zone.name, updateUserData, setViewSetup, selectedInstitute)
+    }
+
+    const handleOptionRemove = (
+        selectedOption: any,
+        { action, removedValue }: { action: string; removedValue: any }
+    ) => {
+        if (action === 'remove') {
+            // Disable clearing of selected options
+            return !(removedValue as any).clearableValue;
+        }
+        return true;
+    };
     return (
         <div className="white-container">
             <h3>Setup a User</h3>
@@ -130,27 +193,40 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                             header='Role'
                             setData={setRole}
                             isSearchable={false}
+                            value={updateUser?.role ? role : undefined}
+                            isClearable={updateUser?.role ? false : true}
                         />
                         {(role.name === 'District Coordinator' || role.name === 'Programme Executive') && <CustomSelect
                             option={districtList}
                             header={'Coordinator District'}
                             setData={setDistrict}
                             isSearchable={true}
+                            value={updateUser?.district ? district : undefined}
                         />}
                         {(role.name === 'Zonal Coordinator') && <CustomSelect
                             option={zoneList}
                             header={'Coordinator Zone'}
                             setData={setZone}
                             isSearchable={true}
+                            value={updateUser?.zone ? zone : undefined}
                         />}
-                        {(role.name === 'Intern') &&
+                        {(role.id === 'IN') &&
                             <>
-                                <CustomSelect
-                                    option={role.name === 'Intern' ? coordinatorRoleBasedList : []}
+                                {!updateUser?.id && <CustomSelect
+                                    option={coordinatorRoleBasedList}
                                     header={'Coordinator'}
                                     setData={setCoordinator}
                                     isSearchable={true}
-                                />
+                                />}
+                                {< CustomSelect
+                                    option={districtList}
+                                    header={'District'}
+                                    setData={setDistrict}
+                                    isSearchable={true}
+                                    value={updateUser?.district ? district : undefined}
+                                    isClearable={updateUser?.district ? false : true}
+
+                                />}
                                 <div className={"setup-item"}>
                                     <p>Select Institutes</p>
                                     <Select
@@ -158,28 +234,34 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                                         options={instituteList}
                                         placeholder={'Select Institutes'}
                                         isMulti={true}
+
                                         getOptionLabel={(option) => option.name}
                                         getOptionValue={(option) => option.id}
                                         onChange={(data: any) => {
                                             if (data) {
                                                 setSelectedInstitute(data)
-                                                console.log(data)
                                             }
                                             else
-                                                setSelectedInstitute([] as selectProps[])
+                                                setSelectedInstitute([])
                                         }}
-
+                                        isClearable={false}
+                                        value={updateUser?.institutes ? selectedInstitute : undefined}
                                     />
                                 </div>
                             </>
                         }
-                        <div className={styles.password}>
+                        {!updateUser?.id && <div className={styles.password}>
                             <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className={styles.input} />
                             <i className='fas fa-eye' onMouseDown={() => setShowPassword(true)} onMouseOut={() => setShowPassword(false)}></i>
-                        </div>
+                        </div>}
                         <div className="create-btn-container">
                             <button className="black-btn"
-                                onClick={handleCreate}>Create</button>
+                                onClick={() => {
+                                    updateUser?.id ?
+                                        handleUpdate() :
+                                        handleCreate()
+                                }
+                                }>{updateUser?.id ? 'Update' : 'Create'}</button>
                             <button className="black-btn"
                                 onClick={reset}
                             >Cancel</button>
@@ -190,11 +272,11 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData }) => {
                     <img src={setupImg} alt="  " />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
-function getSelectedInstitutes(userId: string, setInstituteList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(`${campusRoutes.listInstituteByUser}${userId}/`)
+function getSelectedInstitutes(district: string, setInstituteList: Dispatch<SetStateAction<selectProps[]>>) {
+    privateGateway.get(`${campusRoutes.listInstitutes}${district}/`)
         .then((res) => {
             setInstituteList(res.data.response)
         })

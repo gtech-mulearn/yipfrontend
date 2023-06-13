@@ -12,6 +12,7 @@ export const setupRoutes = {
             list: "/api/v1/yip/list-roles/",
         },
         create: '/api/v1/yip/user-management/create-user/',
+        update: '/api/v1/yip/user-management/edit-user/',
     },
     assembly: {
         create: '/api/v1/yip/create-legislative-assembly/',

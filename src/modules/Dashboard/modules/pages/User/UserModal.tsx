@@ -4,12 +4,16 @@ import { Error, Success } from '../../../components/Error/Alerts'
 
 import { UserTableProps } from './UserTable'
 import { deleteThisUser } from './UserApi'
+import { OptionDistrict, OptionZone } from '../../../../../utils/Locations'
+import { selectProps } from '../../utils/setupUtils'
 interface UserModalProps {
     user: UserTableProps
     setUser: Dispatch<SetStateAction<UserTableProps>>
-    updateUserData: Function
+    updateUserData: Function,
+    setUpdateUser: Dispatch<SetStateAction<any>>
+
 }
-const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
+const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUser }) => {
     const [deleteUser, setDeleteUser] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
@@ -59,6 +63,7 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
 
                             }}>Confirm Delete</button>}
                             {!deleteUser && <button className="confirm-delete" onClick={() => setDeleteUser(true)}>Delete</button>}
+                            {/* <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button> */}
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>
                         </div>
                     </div>
@@ -67,6 +72,41 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData }) => {
             </div>
         </div>
     )
+}
+function setupUserUpdate(user: UserTableProps, setUpdateUser: React.Dispatch<React.SetStateAction<any>>, cancel: () => void) {
+    let X = {
+        ...user,
+        id: user.id,
+        district: user.role === 'District Coordinator' || user.role === 'Programme Executive' || user.role === 'Intern' ? getDistrict(user.location) : {} as selectProps,
+        zone: user.role === 'Zonal Coordinator' ? getZone(user.location) : {} as selectProps,
+        role: getRoleId(user.role),
+    }
+    setUpdateUser(X)
+    cancel()
+}
+function getDistrict(district: string) {
+    const x = OptionDistrict.filter((item) =>
+        item.name === district
+    )
+    if (x.length === 0) return {} as selectProps
+    return x[0]
+}
+function getZone(zone: string) {
+    let Zone = zone === 'Outside State' ? zone : zone.split(' ')[0]
+    const x = OptionZone.filter((item) =>
+        item.name === Zone
+    )
+    return x[0]
+}
+function getRoleId(role: string) {
+    switch (role) {
+        case 'Admin': return { id: 'AD', name: 'Admin' }
+        case 'HQ Staff': return { id: 'HQ', name: 'HQ Staff' }
+        case "District Coordinator": return { id: 'DC', name: 'District Coordinator' }
+        case "Zonal Coordinator": return { id: 'ZC', name: 'Zonal Coordinator' }
+        case "Programme Executive": return { id: 'PE', name: 'Programme Executive' }
+        case "Intern": return { id: 'IN', name: 'Intern' }
+    }
 }
 
 
