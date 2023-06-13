@@ -40,8 +40,6 @@ export function createUser(
     zone: string,
     updateUserData: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>,
     coordinatorId?: string,
     institutes?: selectProps[]
 ) {
@@ -56,10 +54,9 @@ export function createUser(
         coordinatorId: coordinatorId,
         institutes: institutes
     }
-
+    toast.info("Creating user...")
     // console.log(selectPostData(postData))
     privateGateway.post(setupRoutes.user.create, selectPostData(postData))
-
         .then(res => {
             updateUserData()
 
@@ -118,6 +115,65 @@ function selectPostData(postData: any) {
     }
     if (postData.role === 'IN') {
         return { ...commonPostData, districtCoordinatorId: postData.coordinatorId, instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : null }
+    }
+    return commonPostData
+}
+export function updateUserDataFn(
+    id: string,
+    name: string,
+    email: string,
+    phone: string,
+    role: string,
+    district: string,
+    zone: string,
+    updateUser: Function,
+    setViewSetup: any,
+    selectedInstitute: selectProps[]
+) {
+    const postData = {
+        name: name,
+        email: email,
+        phone: phone,
+        role: role,
+        district: district,
+        zone: zone,
+        institutes: selectedInstitute
+    }
+    toast.loading("Updating user...", {
+        toastId: id,
+        autoClose: false
+    })
+    privateGateway.put(`${setupRoutes.user.update}${id}/`, selectPostUpdateData(postData))
+        .then(res => {
+            toast.dismiss(id)
+            success();
+            updateUser()
+
+            // setViewSetup(false)
+        })
+        .catch(err => {
+            toast.dismiss(id)
+            errorMessage(err.response)
+            errorCheck(err.response)
+        })
+
+}
+function selectPostUpdateData(postData: any) {
+    const commonPostData = {
+        name: postData.name,
+        email: postData.email,
+        phone: postData.phone,
+        role: postData.role,
+        password: postData.password
+    }
+    if (postData.role === 'DC' || postData.role === 'PE') {
+        return { ...commonPostData, district: postData.district, }
+    }
+    if (postData.role === 'ZC') {
+        return { ...commonPostData, zone: postData.zone }
+    }
+    if (postData.role === 'IN') {
+        return { ...commonPostData, internId: postData.id, instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : null }
     }
     return commonPostData
 }
