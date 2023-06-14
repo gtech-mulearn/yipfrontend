@@ -1,3 +1,73 @@
+export const version = 'v1/'
+export const consumer = 'yip/'
+const header = `/api/${version}${consumer}`
+const userManagement = header + 'user-management/'
+const user = {
+    // C -Create
+    create: `${userManagement}create-user/`,
+    // R -Read
+    all: `${userManagement}list-users/`,
+    role: `${userManagement}list-users-by-roles/`,
+    campus: `${userManagement}list-campus-details/`,
+    intern: `${userManagement}list-intern-details/`,
+    district: `${userManagement}list-district-details/`,
+    zone: `${userManagement}list-zone-details/`,
+    state: `${userManagement}list-state-details/`,
+    // U -Update
+    update: `${userManagement}edit-user/`,
+    upload: `${userManagement}upload-submissions/`,
+    reset: `${userManagement}reset-password/`,
+    // D -Delete
+    delete: `${userManagement}delete-user/`,
+    // E - Export
+    submissions: `${userManagement}get-submissions/`,
+    // V - Validate
+    forgot: `${userManagement}forgot-password/`,
+    //  *** NON-MANAGEMENT *** //
+    login: `${header}login/`,
+    // R - Read
+    roles: `${header}list-roles/`,
+    info: `${header}info/`,
+}
+const instituteManagement = `${header}institute-management/`
+const count = `${header}get-clubs-count/`
+const institute = {
+    // C -Create
+    create: `${instituteManagement}create-institute/`,
+    // R -Read
+    all: `${instituteManagement}list-institutes/`,
+    district: `${instituteManagement}list-new-institutes/`,
+    user: `${instituteManagement}list-institutes-by-user/`,
+    // U -Update
+    update: `${instituteManagement}edit-institute/`,
+    // D -Delete
+    delete: `${instituteManagement}delete-institute/`,
+    // *** NON-MANAGEMENT *** //
+
+    // R - Read
+    collegeStatus: `${count}College/`,
+    schoolCount: `${count}School/`,
+}
+const location = {
+    // C -Create
+    create: {
+        assembly: `${header}create-legislative-assembly/`,
+        block: `${header}create-block/`,
+        school: `${header}create-model-school-club/`,
+        club: `${header}create-college-club/`,
+    },
+    // R -Read
+    district: `${header}district/`,
+    school: `${header}list-model-schools/`,
+    assembly: `${header}get-legislative-assembly/`,
+    block: `${header}get-blocks/`,
+}
+
+
+
+
+
+
 export const authRoutes = {
     login: "/api/v1/yip/login/"
 }
@@ -13,13 +83,14 @@ export const setupRoutes = {
         },
         create: '/api/v1/yip/user-management/create-user/',
         update: '/api/v1/yip/user-management/edit-user/',
+        instituteDisconnect: '/api/v1/yip/user-management/remove-user-institute-link/',
     },
     assembly: {
         create: '/api/v1/yip/create-legislative-assembly/',
     },
     district: {
         list: '/api/v1/yip/district/',
-        college: '/api/v1/yip/list-colleges/',
+        // college: '/api/v1/yip/list-colleges/',
         school: '/api/v1/yip/list-model-schools/',
         assembly: '/api/v1/yip/get-legislative-assembly/',
         block: '/api/v1/yip/get-blocks/',
@@ -103,9 +174,9 @@ export const yip5Routes = {
     zoneList: '/api/v1/yip/zone-management/list-zones/',
     campusList: '/api/v1/yip/user-management/list-campus-details/',
     internList: '/api/v1/yip/user-management/list-intern-details/',
-    listCoordinator: '/api/v1/yip/user-management/list-pe-or-dc-details/',
-    listPE: '/api/v1/yip/user-management/list-pe-or-dc-details/PE/',
-    listDC: '/api/v1/yip/user-management/list-pe-or-dc-details/DC/',
+    // listCoordinator: '/api/v1/yip/user-management/list-pe-or-dc-details/',
+    // listPE: '/api/v1/yip/user-management/list-pe-or-dc-details/PE/',
+    // listDC: '/api/v1/yip/user-management/list-pe-or-dc-details/DC/',
     listDistrict: '/api/v1/yip/user-management/list-district-details/',
     zoneBasedData: '/api/v1/yip/user-management/list-zone-details/',
     stateBasedData: '/api/v1/yip/user-management/list-state-details/',

@@ -6,6 +6,10 @@ import { UserTableProps } from './UserTable'
 import { deleteThisUser } from './UserApi'
 import { OptionDistrict, OptionZone } from '../../../../../utils/Locations'
 import { selectProps } from '../../utils/setupUtils'
+import { prepareDataForValidation } from 'formik'
+import { privateGateway } from '../../../../../services/apiGateway'
+import { setupRoutes } from '../../../../../services/urls'
+import { errorCheck, errorMessage, success } from '../../../components/Toastify/ToastifyConsts'
 interface UserModalProps {
     user: UserTableProps
     setUser: Dispatch<SetStateAction<UserTableProps>>
@@ -47,23 +51,36 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUse
                         <div className="title">Location</div>
                         <div className="content">{user?.location}</div>
                     </div>}
-                    {user?.institutes.length > 0 && <div className="data-box">
+                    {user?.coordinator?.id && <div className="data-box">
+                        <div className="title">Coordinator</div>
+                        <div className="content">{user?.coordinator?.name}</div>
+                    </div>
+                    }
+                    {user?.institutes.length > 0 && <div className="data-box special">
                         <div className="title">Assigned Institutes</div>
-                        {
-                            user?.institutes.map((item, index) => {
-                                return <p key={index}>{index + 1 + '.'} {item}</p>
-                            })
-                        }
+                        <div className="inside-box">
+                            {
+                                user?.institutes.map((item: selectProps, index: number) => {
+                                    return (
+                                        <div className='institutes' key={index}>
+                                            <p className='name'>{index + 1 + '.'} {item?.name}</p>
+                                            <i className='fas fa-trash'
+                                                onClick={() => disconnectInstitute(user?.id, item?.id, setUser, updateUserData)}
+                                            ></i>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>}
                     <div className='last-container'>
                         {deleteUser && <p>Are you sure you want to delete this item?</p>}
                         <div className="modal-buttons">
                             {deleteUser && <button className="confirm-delete" onClick={() => {
                                 deleteThisUser(user.id, updateUserData, setSuccessMessage, setErrorMessage, setUser)
-
                             }}>Confirm Delete</button>}
                             {!deleteUser && <button className="confirm-delete" onClick={() => setDeleteUser(true)}>Delete</button>}
-                            {/* <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button> */}
+                            <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button>
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>
                         </div>
                     </div>
@@ -72,6 +89,23 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUse
             </div>
         </div>
     )
+}
+function disconnectInstitute(userId: string, instituteId: string, setUser: Dispatch<SetStateAction<UserTableProps>>, update: Function) {
+    privateGateway.delete(`${setupRoutes.user.instituteDisconnect}${instituteId}/${userId}/`)
+        .then((res) => {
+            success()
+            setUser((user) => (
+                {
+                    ...user,
+                    institutes: user.institutes.filter((item) => item.id !== instituteId)
+                }
+            ))
+            update
+        })
+        .catch((err) => {
+            errorCheck(err.response)
+            errorMessage(err.response)
+        })
 }
 function setupUserUpdate(user: UserTableProps, setUpdateUser: React.Dispatch<React.SetStateAction<any>>, cancel: () => void) {
     let X = {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import '../../../components/Layout.scss'
 import StatusTable from '../components/StatusTable/StatusTable'
 import Identified from '../components/Identified/Identified'
@@ -14,6 +14,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ClubTableProps } from '../../Club/ClubTable'
 import { Error, Success } from '../../../../components/Error/Alerts'
 import { CampusPageProps, deleteModelSchool, formatDateStyle, getCampusInfo, getCategory } from '../utils'
+import { GlobalContext } from '../../../../../../utils/GlobalVariable'
+import roles from '../../../../../../utils/roles'
 
 const CampusLayout = () => {
     const { campusId, type } = useParams()
@@ -28,7 +30,7 @@ const CampusLayout = () => {
     const viewConnected = campus.status === 'Connection Established' || viewOrientation || viewExecom
     const viewConfirmed = campus.status === 'Visited' || viewConnected || viewOrientation || viewExecom
     const navigate = useNavigate()
-
+    const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
         getCampusInfo(campusId as string, setCampus)
     }, [updateCampus])
@@ -37,7 +39,7 @@ const CampusLayout = () => {
         <div className='dash-container'>
             <div className='white-container'>
                 <div className='campus-sub-container-1'>
-                    <div className='update-status-button' onClick={() => setDeleteCampus(true)}>Delete Campus </div>
+                    {userInfo.role !== roles.INTERN && <div className='update-status-button' onClick={() => setDeleteCampus(true)}>Delete Campus </div>}
                     <div className='update-status-button' onClick={() => setUpdateCampus(true)}>Update Status</div>
                 </div>
 

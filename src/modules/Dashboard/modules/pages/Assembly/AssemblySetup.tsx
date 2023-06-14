@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
 import setupImg from '../../../../../assets/Kindergarten student-bro 1.png'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
@@ -8,6 +8,7 @@ import { Error, Success, showAlert } from '../../../components/Error/Alerts'
 import { createAssembly, fetchDistricts } from './assemblyAPI'
 import { toast } from 'react-toastify'
 import { errorCheck, errorMessage } from '../../../components/Toastify/ToastifyConsts'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateAssemblyData: Function
@@ -16,6 +17,7 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [assembly, setAssembly] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
+    const { districts } = useContext(GlobalContext)
 
     const reset = () => {
         setAssembly("")
@@ -23,8 +25,8 @@ const AssemblySetup: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
         setViewSetup(false)
     }
     useEffect(() => {
-        fetchDistricts(setDistrictList)
-    }, [])
+        setDistrictList(districts)
+    }, [districts])
     function validateSchema() {
         const validationSchema = yup.object().shape({
             name: yup.string().required('Assembly Name is required').test('only-spaces', 'Only spaces are not allowed for Assembly name', value => {

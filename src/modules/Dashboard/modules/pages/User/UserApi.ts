@@ -54,16 +54,19 @@ export function createUser(
         coordinatorId: coordinatorId,
         institutes: institutes
     }
-    toast.info("Creating user...")
+    toast.info("Creating user...", {
+        toastId: 'userCreate',
+    })
     // console.log(selectPostData(postData))
     privateGateway.post(setupRoutes.user.create, selectPostData(postData))
         .then(res => {
-            updateUserData()
-
+            toast.dismiss('userCreate')
             success();
+            updateUserData()
+            setViewSetup(false)
         })
         .catch(err => {
-
+            toast.dismiss('userCreate')
             errorMessage(err.response)
             errorCheck(err.response)
         })
@@ -83,7 +86,8 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
                     ...item,
                     role: (item?.role?.name || item?.role || ''),
                     location: getLocation(item),
-                    institutes: item?.role?.institutes ? item?.role?.institutes : []
+                    institutes: item?.role?.institutes ? item?.role?.institutes : [],
+                    coordinator: item?.role?.district_coordinator ? { id: item?.role?.district_coordinator_id, name: item?.role?.district_coordinator } : {} as selectProps
                 }
             ))
             setUserList(newData)
@@ -124,8 +128,6 @@ export function updateUserDataFn(
     email: string,
     phone: string,
     role: string,
-    district: string,
-    zone: string,
     updateUser: Function,
     setViewSetup: any,
     selectedInstitute: selectProps[]
@@ -135,9 +137,8 @@ export function updateUserDataFn(
         email: email,
         phone: phone,
         role: role,
-        district: district,
-        zone: zone,
-        institutes: selectedInstitute
+        institutes: selectedInstitute,
+        internId: id
     }
     toast.loading("Updating user...", {
         toastId: id,
@@ -148,8 +149,7 @@ export function updateUserDataFn(
             toast.dismiss(id)
             success();
             updateUser()
-
-            // setViewSetup(false)
+            setViewSetup(false)
         })
         .catch(err => {
             toast.dismiss(id)
@@ -164,16 +164,8 @@ function selectPostUpdateData(postData: any) {
         email: postData.email,
         phone: postData.phone,
         role: postData.role,
-        password: postData.password
-    }
-    if (postData.role === 'DC' || postData.role === 'PE') {
-        return { ...commonPostData, district: postData.district, }
-    }
-    if (postData.role === 'ZC') {
-        return { ...commonPostData, zone: postData.zone }
-    }
-    if (postData.role === 'IN') {
-        return { ...commonPostData, internId: postData.id, instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : null }
+        internId: postData.internId,
+        instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : []
     }
     return commonPostData
 }

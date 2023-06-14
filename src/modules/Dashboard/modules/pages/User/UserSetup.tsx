@@ -74,45 +74,10 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
             setRole(updateUser.role)
             setDistrict(updateUser.district)
             setZone(updateUser.zone)
-            if (updateUser?.institutes?.length) {
-                updateUser.institutes.map((institute: string) => {
-                    console.log('hi i am in session')
-                    const list = sessionStorage.getItem('Yip5CampusList')
-                    console.log(list)
-                    if (list) {
-                        const instituteAll = JSON.parse(list).list
-                        const result = instituteAll.find((item: any) => item.institute === institute)
-                        if (result) {
-                            console.log(result)
-                        }
-                    }
-                })
-            }
+            setSelectedInstitute(updateUser.institutes)
         }
     }, [updateUser])
-    useEffect(() => {
-        if (updateUser?.id) {
-            if (district === undefined) {
-                console.log('hi i found you ')
-            }
-        }
-    }, [district])
-    useEffect(() => {
-        if (instituteList.length && updateUser?.id) {
-            const listed: selectProps[] = []
-            if (updateUser?.institutes?.length) {
-                updateUser.institutes.map((institute: string) => {
-                    const result = instituteList.find((item: any) => item.name === institute)
-                    if (result) {
-                        listed.push(result)
-                    }
 
-                })
-                if (listed.length)
-                    setSelectedInstitute((selected) => [...selected, ...listed])
-            }
-        }
-    }, [instituteList])
     function validateSchema() {
         const validate = yup.object({
             name: yup.string().required('Name is required').test('only-spaces', 'Only spaces are not allowed for user name', value => {
@@ -166,7 +131,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
 
     }
     function handleUpdate() {
-        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, district.name, zone.name, updateUserData, setViewSetup, selectedInstitute)
+        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, updateUserData, setViewSetup, selectedInstitute)
     }
 
     const handleOptionRemove = (
@@ -181,7 +146,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
     };
     return (
         <div className="white-container">
-            <h3>Setup a User</h3>
+            <h3>{updateUser?.id ? 'Update ' : ' Setup'} a User</h3>
             <div className="setup-club">
                 <div className="setup-filter">
                     <div className="select-container club">
@@ -191,17 +156,20 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                         <CustomSelect
                             option={roleList}
                             header='Role'
-                            setData={setRole}
+                            setData={updateUser?.role ? undefined : setRole}
                             isSearchable={false}
+                            isClearable={false}
                             value={updateUser?.role ? role : undefined}
-                            isClearable={updateUser?.role ? false : true}
+                            isDisabled={updateUser?.id ? true : false}
                         />
                         {(role.name === 'District Coordinator' || role.name === 'Programme Executive') && <CustomSelect
                             option={districtList}
                             header={'Coordinator District'}
-                            setData={setDistrict}
+                            setData={updateUser?.id ? undefined : setDistrict}
                             isSearchable={true}
                             value={updateUser?.district ? district : undefined}
+                            isClearable={false}
+                            isDisabled={updateUser?.id ? true : false}
                         />}
                         {(role.name === 'Zonal Coordinator') && <CustomSelect
                             option={zoneList}
@@ -209,6 +177,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                             setData={setZone}
                             isSearchable={true}
                             value={updateUser?.zone ? zone : undefined}
+                            isDisabled={updateUser?.id ? true : false}
                         />}
                         {(role.id === 'IN') &&
                             <>
@@ -218,15 +187,13 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                                     setData={setCoordinator}
                                     isSearchable={true}
                                 />}
-                                {< CustomSelect
+                                <CustomSelect
                                     option={districtList}
                                     header={'District'}
                                     setData={setDistrict}
                                     isSearchable={true}
                                     value={updateUser?.district ? district : undefined}
-                                    isClearable={updateUser?.district ? false : true}
-
-                                />}
+                                />
                                 <div className={"setup-item"}>
                                     <p>Select Institutes</p>
                                     <Select

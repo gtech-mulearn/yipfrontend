@@ -318,39 +318,39 @@ const InternTable = ({ update }: { update: () => void }) => {
     }
   };
 
-  useEffect(() => {
-    handleDownloadCSV();
-    // downloadCSV();
-  }, [campusTableList, internTableList, assigneetable, districttable]);
+  // useEffect(() => {
+  //   handleDownloadCSV();
+  //   // downloadCSV();
+  // }, [campusTableList, internTableList, assigneetable, districttable]);
 
-  const handleDownloadCSV = () => {
-    //check the view value and dowload the data in the corresponding state variable as a csv
-    let csvData1: any = [];
-    if (view === "Campus") {
-      csvData1 = campusTableList ? campusTableList : [];
-    } else if (view === "Intern") {
-      csvData1 = internTableList ? internTableList : [];
-    } else if (view === "District Coordinator") {
-      csvData1 = assigneeList ? assigneeList : [];
-    } else if (view === "Programme Executive") {
-      csvData1 = assigneetable ? assigneetable : [];
-      console.log(csvData1);
-    } else if (view === "District") {
-      csvData1 = districttable ? districttable : [];
-    }
-    else if (view === "Zone") {
-      csvData1 = zonetable ? zonetable : [];
-    }
-    else if (view === "State") {
-      csvData1 = stateTable ? stateTable : [];
-    }
+  // const handleDownloadCSV = () => {
+  //   //check the view value and dowload the data in the corresponding state variable as a csv
+  //   let csvData1: any = [];
+  //   if (view === "Campus") {
+  //     csvData1 = campusTableList ? campusTableList : [];
+  //   } else if (view === "Intern") {
+  //     csvData1 = internTableList ? internTableList : [];
+  //   } else if (view === "District Coordinator") {
+  //     csvData1 = assigneeList ? assigneeList : [];
+  //   } else if (view === "Programme Executive") {
+  //     csvData1 = assigneetable ? assigneetable : [];
+  //     console.log(csvData1);
+  //   } else if (view === "District") {
+  //     csvData1 = districttable ? districttable : [];
+  //   }
+  //   else if (view === "Zone") {
+  //     csvData1 = zonetable ? zonetable : [];
+  //   }
+  //   else if (view === "State") {
+  //     csvData1 = stateTable ? stateTable : [];
+  //   }
 
-    const updatedData = csvData1?.map((item: any) => {
-      const { id, ...rest } = item;
-      return rest;
-    });
-    setCsvData(updatedData);
-  };
+  //   const updatedData = csvData1?.map((item: any) => {
+  //     const { id, ...rest } = item;
+  //     return rest;
+  //   });
+  //   setCsvData(updatedData);
+  // };
   const downloadCSV = () => {
     const fileName = 'data';
     const fields = Object.keys(csvData[0]);
@@ -492,13 +492,6 @@ const InternTable = ({ update }: { update: () => void }) => {
                 />
                 <li className="fas fa-close cursor" onClick={() => setSearch("")}></li>
               </div>}
-              {/* <div
-                                className="table-fn-btn cursor"
-                                onClick={openSetup}
-                            >
-                                <i className="fa-solid fa-plus"></i>
-                                <p>Assign Campus </p>
-                            </div> */}
               {
                 (view !== "Zone" && view !== "State") &&
                 (
@@ -748,21 +741,7 @@ async function fetchCampus(
       console.log(err);
     });
 }
-function fetchDistrictCoordinator(
-  setData: Dispatch<SetStateAction<AssignViewProps[]>>,
-  setData2: Dispatch<SetStateAction<AssignViewProps[]>>
-) {
-  privateGateway
-    .get(yip5Routes.listDC)
-    .then((res) => {
-      // console.log(res)
-      setData(res.data.response);
-      setData2(res.data.response);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
+
 async function fetchDistrict(
   setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>,
   setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>
@@ -779,20 +758,6 @@ async function fetchDistrict(
       console.log(err);
     });
 }
-function fetchProgrammeExecutive(
-  setData: Dispatch<SetStateAction<AssignViewProps[]>>,
-  setData2: Dispatch<SetStateAction<AssignViewProps[]>>
-) {
-  privateGateway
-    .get(yip5Routes.listPE)
-    .then((res) => {
-      setData(res.data.response);
-      setData2(res.data.response);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
 async function fetchIntern(
   setData: Dispatch<SetStateAction<InternViewProps[]>>,
   setData2: Dispatch<SetStateAction<InternViewProps[]>>
@@ -800,19 +765,19 @@ async function fetchIntern(
   await privateGateway
     .get(yip5Routes.internList)
     .then((res) => {
-      setData(
-        res.data.response.map((intern: InternViewProps) => {
-          return {
-            ...intern,
-            districtName: intern?.district?.join(",") || intern?.district || '',
-          };
-        })
-      );
-      setData2(
-        res.data.response.map((intern: InternViewProps) => {
-          return { ...intern, districtName: intern.district.join(",") };
-        })
-      );
+      const data = res.data.response.map((intern: InternViewProps) => {
+        return {
+          ...intern,
+          districtName: intern?.district ? intern?.district?.join(",") :
+            intern?.district ? intern?.district : 'Not Assigned',
+          pre_registrations: intern?.pre_registrations ? intern?.pre_registrations : '0',
+          vos: intern?.vos ? intern?.vos : '0',
+          group_formation: intern?.group_formation ? intern?.group_formation : '0',
+          idea_submission: intern?.idea_submission ? intern?.idea_submission : '0',
+        };
+      })
+      setData(data)
+      setData2(data);
 
     })
     .catch((err) => console.log(err));

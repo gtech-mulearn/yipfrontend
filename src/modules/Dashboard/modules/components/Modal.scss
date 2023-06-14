@@ -14,7 +14,7 @@
         background-color: white;
         border-radius: 10px;
         padding: 30px;
-
+        max-width: 75%;
         font-size: 12px;
 
         .heading {
@@ -62,6 +62,8 @@
                     font-weight: 600;
                 }
 
+
+
                 .content {
                     padding: 5px 0;
                     border-radius: 5px;
@@ -69,6 +71,39 @@
                     font-weight: 400;
                 }
             }
+
+            .special {
+                .inside-box {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 25px;
+                    margin-bottom: 12px;
+                    overflow-y: scroll;
+                    max-height: 150px;
+
+                    .institutes {
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 13px;
+
+
+                        .fas {
+                            color: #000;
+                            font-size: 16px;
+
+                            &:hover {
+                                color: red;
+                            }
+
+                            &:active {
+                                transform: scale(0.9);
+                            }
+                        }
+                    }
+                }
+
+            }
+
 
             .btn-update {
                 padding: 10px;
