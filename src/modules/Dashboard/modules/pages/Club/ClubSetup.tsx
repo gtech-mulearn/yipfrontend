@@ -29,36 +29,29 @@ const typesOfCampus = [{ id: "0", name: "College" }, { id: "1", name: "School" }
 const ClubSetup: FC<ClubSetupProps> = ({ setViewSetup, updateClubData }) => {
     const notify = () => { };
     const [districtList, setDistrictList] = useState<selectProps[]>([]);
-    const [districtListEdited, setDistrictListEdited] = useState<
-        selectProps[]
-    >([]);
-    const [district, setDistrict] = useState<selectProps>(initialState);
+    const [district, setDistrict] = useState({} as selectProps);
     const [collegeList, setCollegeList] = useState<selectProps[]>([]);
-    const [collegeListEdited, setCollegeListEdited] = useState<
-        selectProps[]
-    >([]);
-    const [college, setCollege] = useState<selectProps>(initialState);
-    const [campusType, setCampusType] = useState<selectProps>(typesOfCampus[0]);
+    const [college, setCollege] = useState({} as selectProps);
     const reset = () => {
         notify();
-        setDistrict(initialState);
-        setCollege(initialState);
+        setDistrict({} as selectProps);
+        setCollege({} as selectProps);
         setDistrictList([]);
         setCollegeList([]);
         setViewSetup(false);
     };
-    useEffect(() => {
-        fetchDistricts(setDistrictListEdited, setDistrictList);
-    }, []);
 
     useEffect(() => {
+        if (!districtList.length)
+            fetchDistricts(setDistrictList);
         setCollege({} as selectProps);
         setCollegeList([]);
-        fetchcolleges(
-            setCollegeList,
-            district.name
-        );
-    }, [district.id, updateClubData]);
+        if (district?.id)
+            fetchcolleges(
+                setCollegeList,
+                district.name
+            );
+    }, [district, updateClubData]);
 
     function handleCreate() {
         type postDataProps = {

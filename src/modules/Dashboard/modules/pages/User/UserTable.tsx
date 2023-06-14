@@ -15,7 +15,8 @@ export interface UserTableProps {
     phone: string
     role: string
     location: string
-    institutes: string[]
+    institutes: selectProps[]
+    coordinator: selectProps
 }
 const TableTitleList = ["Name", "Email", "Phone", " Role", 'Location']
 const list: (keyof UserTableProps)[] = ['name', 'email', 'phone', 'role', 'location']
@@ -24,9 +25,10 @@ interface UserSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
     updateUserData: Function
     updated: boolean
+    setUpdateUser: Dispatch<SetStateAction<any>>
 }
 
-const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }) => {
+const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, setUpdateUser }) => {
     const [searchName, setSearchName] = useState("")
     const [filterBtn, setFilterBtn] = useState(false)
     const { roles } = useContext(GlobalContext)
@@ -89,6 +91,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                         user={user}
                         setUser={setUser}
                         updateUserData={updateUserData}
+                        setUpdateUser={setUpdateUser}
                     />
                 )}
 
@@ -134,7 +137,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                             <div
                                 className="table-fn-btn cursor"
                                 onClick={() =>
-                                    setViewSetup((prev: boolean) => !prev)
+                                    setViewSetup(true)
                                 }
                             >
                                 <i className="fa-solid fa-plus"></i>
@@ -196,6 +199,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
                         value: "View",
                         manageFunction: (item: UserTableProps) => {
                             setUser(item);
+                            console.log(item)
                         },
                     }}
                     countPerPage={11}
@@ -204,6 +208,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated }
         </>
     );
 }
+
 function filterUser(userList: UserTableProps[], search: string, role: selectProps) {
     let list = userList
     if (search) list = searchUser(list, search)

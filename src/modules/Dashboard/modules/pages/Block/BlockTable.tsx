@@ -1,10 +1,11 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import Modal from './BlockModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchBlocks, fetchDistricts } from './blockAPI'
 import { loading } from '../../../components/Toastify/ToastifyConsts'
+import { OptionDistrict } from '../../../../../utils/Locations'
 
 interface BlockSetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -28,18 +29,19 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const [listForTable, setListForTable] = useState<BlockTableProps[]>([])
-
+    const fetchedOnce = useRef(false)
     useEffect(() => {
-
-        fetchDistricts(setDistrictList)
+        setDistrictList(OptionDistrict)
         fetchBlocks(setBlockList, setListForTable)
     }, [])
     useEffect(() => {
-
-        fetchBlocks(setBlockList, setListForTable, updateTable)
+        if (fetchedOnce.current)
+            fetchBlocks(setBlockList, setListForTable, updateTable)
     }, [updated])
     useEffect(() => {
-        setListForTable(filterBlock(blockList, search, district))
+        if (fetchedOnce.current)
+            setListForTable(filterBlock(blockList, search, district))
+        fetchedOnce.current = true
     }, [search, district, filterBtn])
     function updateTable(blockList: BlockTableProps[]) {
         setListForTable(filterBlock(blockList, search, district))

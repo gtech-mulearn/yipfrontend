@@ -1,10 +1,12 @@
 
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
 import React, { Dispatch, SetStateAction } from "react";
 import exportFromJSON from 'export-from-json';
 import { ThreeDots, RotatingSquare } from "react-loader-spinner";
+import roles from "../../../../../utils/roles";
+import { GlobalContext } from "../../../../../utils/GlobalVariable";
 interface sortProps {
     status: string;
     updater: boolean;
@@ -81,6 +83,7 @@ function CustomTable<TableProps>({
     const [boxView, setBoxView] = useState(false)
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     const fetched = useRef(false)
+    const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
         handleDownloadCSV()
     }, [tableData, sortedTable, sort, selectedHeading])
@@ -249,10 +252,10 @@ function CustomTable<TableProps>({
     return (
         <div className="table-wrap">
             <div className="btn-wrap">
-                <button className='table-btn' onClick={() => downloadCSV()}>
+                {userInfo.role !== roles.INTERN && <button className='table-btn' onClick={() => downloadCSV()}>
                     <i className="fa-solid fa-download"></i>
                     Download CSV
-                </button>
+                </button>}
                 {gridView && <button className='table-btn grid' onClick={() => setBoxView(!boxView)}>
                     <i className={`fa-solid ${boxView ? 'fa-th-large' : 'fa-list'}`}></i>
                     {boxView ? ' Grid View' : 'List View'}

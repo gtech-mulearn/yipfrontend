@@ -1,10 +1,11 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react'
 import { initialState, selectProps } from '../../utils/setupUtils'
 import Modal from './AssemblyModal'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
 import CustomTable from '../../components/CustomTable/CustomTable'
 import { fetchAssemblys, fetchDistricts } from './assemblyAPI'
 import { loading } from '../../../components/Toastify/ToastifyConsts'
+import { OptionDistrict } from '../../../../../utils/Locations'
 
 interface AssemblySetupProps {
     setViewSetup: Dispatch<SetStateAction<boolean>>
@@ -28,16 +29,20 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [listForTable, setListForTable] = useState<AssemblyTableProps[]>([])
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
+    const fetchedOnce = useRef(false)
     useEffect(() => {
 
-        fetchDistricts(setDistrictList)
+        setDistrictList(OptionDistrict)
         fetchAssemblys(setAssemblyList, setListForTable)
     }, [])
     useEffect(() => {
-        fetchAssemblys(setAssemblyList, setListForTable, updateTable)
+        if (fetchedOnce.current)
+            fetchAssemblys(setAssemblyList, setListForTable, updateTable)
     }, [updated])
     useEffect(() => {
-        setListForTable(filterAssembly(assemblyList, search, district))
+        if (fetchedOnce.current)
+            setListForTable(filterAssembly(assemblyList, search, district))
+        fetchedOnce.current = true
     }, [search, district, filterBtn])
     function updateTable(assemblyList: AssemblyTableProps[]) {
         setListForTable(filterAssembly(assemblyList, search, district))

@@ -9,7 +9,6 @@ import { loading } from '../../../components/Toastify/ToastifyConsts'
 import { toast } from 'react-toastify'
 export interface InstituteTableProps {
     name: string
-    district: string
     ict_id: string
     id: string
 
@@ -23,8 +22,8 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
-    const TableTitleList = ['Name', 'District', 'ICT Id']
-    const list: (keyof InstituteTableProps)[] = ['name', 'district', 'ict_id']
+    const TableTitleList = ['Name', 'ICT Id']
+    const list: (keyof InstituteTableProps)[] = ['name', 'ict_id']
     function resetFilter() {
         setFilterBtn(false)
         setDistrict({} as selectProps)
@@ -142,15 +141,15 @@ function filterClub(clubList: InstituteTableProps[], search: string, district: s
     if (search) {
         list = searchClub(list, search)
     }
-    if (district.name) {
-        list = list.filter(club => club.district === district.name)
-    }
+    // if (district.name) {
+    //     list = list.filter(club => club.district === district.name)
+    // }
     return list
 }
 function searchClub(clubList: InstituteTableProps[], search: string) {
     return clubList.filter((club: InstituteTableProps) =>
         rawString(club.name).includes(rawString(search)) ||
-        rawString(club.district).includes(rawString(search)) ||
+        // rawString(club.district).includes(rawString(search)) ||
         rawString(String(club.ict_id)).includes(rawString(search))
     )
 
