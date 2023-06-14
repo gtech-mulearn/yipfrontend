@@ -235,9 +235,9 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                         </div>
                     </div>
                 </div>
-                <div className="setup-img">
+                {/* <div className="setup-img">
                     <img src={setupImg} alt="  " />
-                </div>
+                </div> */}
             </div>
         </div >
     )

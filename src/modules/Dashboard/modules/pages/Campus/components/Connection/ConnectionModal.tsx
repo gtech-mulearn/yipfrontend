@@ -57,11 +57,10 @@ const ConnectionModal = ({
 
                     return /^\d{10,12}$/.test(numericPart);
                 }),
-            status: yup.string().test('Valid Status', 'Update to Confirmed first !!!', value => {
+            status: yup.string().test('Valid Status', 'Update Visited first !!!', value => {
                 if (value === 'Identified') {
                     cancel()
                     return false;
-
                 }
                 else
                     return true

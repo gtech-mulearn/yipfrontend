@@ -95,7 +95,7 @@ function CustomTable<TableProps>({
             const interval = setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 50000)
+            }, 5000)
             return () => clearTimeout(interval)
         }
 
@@ -108,17 +108,18 @@ function CustomTable<TableProps>({
     }, [countInPage])
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
-        const updatedData = sortedTable.map((item: any) => {
-            let rest = {}
+        const updatedData = sortedTable.map((item: any, index: number) => {
+            let ict = item?.ict_id ? { ict_id: item?.ict_id } : {}
+            let rest = { Sl_no: index + 1, ...ict }
             for (let key of orderBy) {
                 rest = { ...rest, [key]: item[key] || item[key] === 0 ? item[key] : "" }
             }
             return rest;
         });
-        setCsvData(updatedData);
+        setCsvData(updatedData)
     };
     const downloadCSV = () => {
-        const fileName = 'data';
+        const fileName = 'Table';
         const fields = Object.keys(csvData[0]);
 
         exportFromJSON({
