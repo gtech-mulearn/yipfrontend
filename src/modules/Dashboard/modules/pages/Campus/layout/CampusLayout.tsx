@@ -45,7 +45,7 @@ const CampusLayout = () => {
 
                 <div className={'campus-sub-container-2'}>
                     <TitleNameTag title={'Campus'} name={campus?.campus} />
-                    <TitleNameTag title={'Category'} name={getCategory(campus?.category)} />
+                    <TitleNameTag title={'Category'} name={getCategory(type as string)} />
 
                     <TitleNameTag title={'Zone'} name={campus?.zone} />
                     <TitleNameTag title={'District'} name={campus?.district} />

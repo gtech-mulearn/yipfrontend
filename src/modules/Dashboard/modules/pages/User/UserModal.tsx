@@ -82,7 +82,12 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUse
                             {!deleteUser && <button className="confirm-delete" onClick={() => setDeleteUser(true)}>Delete</button>}
                             {user.role !== 'District Coordinator' && user.role !== 'Zonal Coordinator' &&
 
-                                <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button>
+                                <button className="cancel-delete" onClick={
+                                    () => {
+                                        window.scrollTo(0, 0)
+                                        setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))
+
+                                    }}>Update</button>
                             }
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>
                         </div>
