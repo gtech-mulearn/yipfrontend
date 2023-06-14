@@ -17,7 +17,7 @@ function paginateArray<T>(array: T[], page: number, countInPage: number): T[] {
     const endIndex = startIndex + countInPage;
     return array.slice(startIndex, endIndex);
 }
-export interface CustomTableProps<TableProps extends { ict_id: string }> {
+export interface CustomTableProps<TableProps> {
     tableHeadList: string[]
     tableData: TableProps[]
     orderBy: (keyof TableProps)[]
@@ -52,7 +52,7 @@ export interface CustomTableProps<TableProps extends { ict_id: string }> {
     countPerPage?: number,
     gridView?: boolean
 }
-function CustomTable<TableProps extends { ict_id: string }>({
+function CustomTable<TableProps>({
     tableHeadList,
     tableData,
     orderBy,
