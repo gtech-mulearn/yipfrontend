@@ -80,7 +80,10 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUse
                                 deleteThisUser(user.id, updateUserData, setSuccessMessage, setErrorMessage, setUser)
                             }}>Confirm Delete</button>}
                             {!deleteUser && <button className="confirm-delete" onClick={() => setDeleteUser(true)}>Delete</button>}
-                            <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button>
+                            {user.role !== 'District Coordinator' && user.role !== 'Zonal Coordinator' &&
+
+                                <button className="cancel-delete" onClick={() => setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))}>Update</button>
+                            }
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>
                         </div>
                     </div>
