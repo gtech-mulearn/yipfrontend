@@ -90,7 +90,6 @@ function CustomTable<TableProps>({
     useEffect(() => {
         if (fetched.current) return
         fetched.current = true
-        console.log('hi')
         if (tableData.length === 0) {
             const interval = setTimeout(() => {
                 setupLoading(false)
@@ -353,8 +352,6 @@ function CustomTable<TableProps>({
 
                         <tbody>
                             {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => {
-
-                                //console.log(item)
                                 return (
                                     <tr key={key} >
                                         <td >{(page - 1) * countInPage + key + 1}</td>

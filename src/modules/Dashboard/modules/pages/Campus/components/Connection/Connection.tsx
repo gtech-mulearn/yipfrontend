@@ -63,7 +63,6 @@ function listSubUser(setData: Dispatch<SetStateAction<FacilitatorProps[]>>, id: 
 function deleteASubUser(id: string, close: () => void) {
     privateGateway.delete(`${campusRoutes.subUser.delete}${id}/`)
         .then((res) => {
-            // console.log(res)
             close()
         }).catch((err) => {
             console.log(err)

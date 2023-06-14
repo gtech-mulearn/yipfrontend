@@ -63,7 +63,6 @@ export function createAssembly(
         .catch(err => {
             errorMessage(err.response)
             errorCheck(err.response)
-            // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
             console.log('Error :', err?.response.data.message.general[0])
         })
 }

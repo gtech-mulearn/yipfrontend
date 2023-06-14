@@ -140,11 +140,7 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
             console.log(err)
         })
 }
-function fetchZone(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    // privateGateway.get(yip5Routes.zoneList)
-    //     .then(res => setData(res.data.response))
-    //     .catch(err => console.log(err))
-}
+
 function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listDistrict}${zone}/`)
         .then(res => {

@@ -19,15 +19,12 @@ export const LeftDrawer = () => {
         filterBtns(userInfo, setNewButton, buttons)
         filterBtns(userInfo, setManagement, managementButtons)
     }, [userInfo])
-    const handleScrollClick = (url: string) => {
+    function handleScrollClick(url: string) {
         window.open(url, '_blank'); // Opens a new tab or window
     };
     return (
         <div className="left-menu">
             <img src={YIPlogo} alt="logo" />
-
-
-
             {
                 newButton.map((item: urlProps, index: number) =>
 
