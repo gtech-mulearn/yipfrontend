@@ -83,6 +83,7 @@ function CustomTable<TableProps>({
     const [boxView, setBoxView] = useState(false)
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     const fetched = useRef(false)
+    const reversed = [...sortOrder?.orderList as string[]].reverse()
     const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
         handleDownloadCSV()
@@ -173,6 +174,7 @@ function CustomTable<TableProps>({
     }
     function sortByOrder(index: number): void {
         let tempTable: TableProps[] = []
+
         let listOrder = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
         listOrder?.map((value: string) => {
             tempTable.push(
