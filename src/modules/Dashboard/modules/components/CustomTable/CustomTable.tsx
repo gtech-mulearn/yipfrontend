@@ -95,7 +95,7 @@ function CustomTable<TableProps>({
             const interval = setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 50000)
+            }, 5000)
             return () => clearTimeout(interval)
         }
 

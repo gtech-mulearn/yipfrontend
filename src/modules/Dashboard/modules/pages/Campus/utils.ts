@@ -49,10 +49,10 @@ export function formatDateStyle(value: string) {
     return formattedDate// Output: "29 May 2023"
 }
 export function getCategory(value: string) {
-    if (value === 'School') {
+    if (value === 'school') {
         return 'Model School'
     }
-    if (value === 'College') {
+    if (value === 'club') {
         return 'YIP Club'
     }
     return ''
