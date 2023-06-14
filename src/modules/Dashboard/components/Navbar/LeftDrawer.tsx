@@ -19,7 +19,9 @@ export const LeftDrawer = () => {
         filterBtns(userInfo, setNewButton, buttons)
         filterBtns(userInfo, setManagement, managementButtons)
     }, [userInfo])
-
+    const handleScrollClick = (url: string) => {
+        window.open(url, '_blank'); // Opens a new tab or window
+    };
     return (
         <div className="left-menu">
             <img src={YIPlogo} alt="logo" />
@@ -32,7 +34,9 @@ export const LeftDrawer = () => {
                 (<div className="menu-item-container " key={index} onClick={() => {
                     navigate(item.url)
                     setOpen(false)
-                }}>
+                }}
+                    onAuxClick={() => handleScrollClick(item.url)}
+                >
                     <div className="link-item" >
                         <li className="menu-item">
                             <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
@@ -48,7 +52,10 @@ export const LeftDrawer = () => {
                 <div className="menu-items" >
                     <div className="menu-item-container " onClick={() => {
                         navigate(selection); setOpen((prev: boolean) => !prev)
-                    }}>
+
+                    }}
+                        onAuxClick={() => handleScrollClick(selection)}
+                    >
                         <div className="link-item" >
                             <li className="menu-item">
                                 <div className={`menu-icon ${checkIfSelected(management) ? "active" : ""}`}>
@@ -63,7 +70,9 @@ export const LeftDrawer = () => {
                             <div className="menu-item-container " key={index} onClick={() => {
                                 setSelection(item.url)
                                 navigate(item.url)
-                            }}>
+                            }}
+                                onAuxClick={() => handleScrollClick(item.url)}
+                            >
                                 <div className="link-item" >
                                     <li className="menu-item side">
                                         <div className={`menu-icon ${window.location.pathname === item.url ? "active" : ""}`}>
