@@ -1,10 +1,12 @@
 
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import './customTable.scss'
 import { convertToNormalDate } from "../../pages/Campus/utils";
 import React, { Dispatch, SetStateAction } from "react";
 import exportFromJSON from 'export-from-json';
 import { ThreeDots, RotatingSquare } from "react-loader-spinner";
+import roles from "../../../../../utils/roles";
+import { GlobalContext } from "../../../../../utils/GlobalVariable";
 interface sortProps {
     status: string;
     updater: boolean;
@@ -81,6 +83,7 @@ function CustomTable<TableProps>({
     const [boxView, setBoxView] = useState(false)
     const lastPage = Math.floor(sortedTable.length / countInPage) + (sortedTable.length % countInPage ? 1 : 0)
     const fetched = useRef(false)
+    const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
         handleDownloadCSV()
     }, [tableData, sortedTable, sort, selectedHeading])
@@ -92,7 +95,7 @@ function CustomTable<TableProps>({
             const interval = setTimeout(() => {
                 setupLoading(false)
                 setNotLoading('No Data to Display')
-            }, 50000)
+            }, 5000)
             return () => clearTimeout(interval)
         }
 
@@ -105,17 +108,18 @@ function CustomTable<TableProps>({
     }, [countInPage])
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
-        const updatedData = sortedTable.map((item: any) => {
-            let rest = {}
+        const updatedData = sortedTable.map((item: any, index: number) => {
+            let ict = item?.ict_id ? { ict_id: item?.ict_id } : {}
+            let rest = { Sl_no: index + 1, ...ict }
             for (let key of orderBy) {
                 rest = { ...rest, [key]: item[key] || item[key] === 0 ? item[key] : "" }
             }
             return rest;
         });
-        setCsvData(updatedData);
+        setCsvData(updatedData)
     };
     const downloadCSV = () => {
-        const fileName = 'data';
+        const fileName = 'Table';
         const fields = Object.keys(csvData[0]);
 
         exportFromJSON({
@@ -145,31 +149,36 @@ function CustomTable<TableProps>({
         return capitalizedSentence;
     }
     function sortTable(index: number) {
-
-        let tempTable = sortedTable.sort((a: any, b: any) => {
-            const isNotSorted = sort.status === "Unsorted" || sort.status === "Sorted:DESC"
-            if (
-                (a[orderBy[index]] || a[orderBy[index]] === 0 ?
-                    a[orderBy[index]] : '') < (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? -1 : 1
-            if ((a[orderBy[index]] || a[orderBy[index]] === 0 ?
-                a[orderBy[index]] : '') > (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? 1 : -1
-            return 0
-        })
-        setSortedTable(tempTable)
         setSort((prev: sortProps) => {
+            const isNotSorted = prev.status === "Unsorted" || prev.status === "Sorted:DESC";
+            const tempSortStatus = sortStatusUpdater(prev.status);
+
+            const tempTable = sortedTable.slice().sort((a: any, b: any) => {
+                const aValue = a[orderBy[index]] || "";
+                const bValue = b[orderBy[index]] || "";
+
+                if (aValue < bValue) return isNotSorted ? -1 : 1;
+                if (aValue > bValue) return isNotSorted ? 1 : -1;
+                return 0;
+            });
+
+            setSortedTable(tempTable);
+
             return {
                 ...prev,
                 updater: !prev.updater,
-                status: sortStatusUpdater(sort.status)
-            }
-        })
+                status: tempSortStatus,
+            };
+        });
     }
+
     function sortOrderByRequired(index: number) {
         if (sortOrder?.sortBy === orderBy[index]) sortByOrder(index)
         else { sortTable(index) }
     }
     function sortByOrder(index: number): void {
         let tempTable: TableProps[] = []
+
         let listOrder = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
         listOrder?.map((value: string) => {
             tempTable.push(
@@ -249,10 +258,10 @@ function CustomTable<TableProps>({
     return (
         <div className="table-wrap">
             <div className="btn-wrap">
-                <button className='table-btn' onClick={() => downloadCSV()}>
+                {userInfo.role !== roles.INTERN && <button className='table-btn' onClick={() => downloadCSV()}>
                     <i className="fa-solid fa-download"></i>
                     Download CSV
-                </button>
+                </button>}
                 {gridView && <button className='table-btn grid' onClick={() => setBoxView(!boxView)}>
                     <i className={`fa-solid ${boxView ? 'fa-th-large' : 'fa-list'}`}></i>
                     {boxView ? ' Grid View' : 'List View'}

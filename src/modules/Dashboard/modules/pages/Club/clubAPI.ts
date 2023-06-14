@@ -7,6 +7,7 @@ import { Success, showAlert } from "../../../components/Error/Alerts"
 import { ClubTableProps } from "./ClubTable"
 import { toast } from "react-toastify"
 import { error, errorCheck, errorMessage, success } from "../../../components/Toastify/ToastifyConsts"
+import { Districts, OptionDistrict } from "../../../../../utils/Locations"
 
 export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAction<CountResponse>>) => {
     privateGateway.get(`${bannerRoutes.clubBanner}`)
@@ -15,22 +16,22 @@ export const fetchInstitutionStatusCount = async (setCount: Dispatch<SetStateAct
         .catch(err => console.error(err))
 }
 export function fetchDistricts(
-    setData: Dispatch<SetStateAction<selectEditedProps[]>> | Dispatch<SetStateAction<selectProps[]>>,
-    setData1?: Dispatch<SetStateAction<selectProps[]>>
+    setData: Dispatch<SetStateAction<selectProps[]>>,
 ) {
-    privateGateway
-        .get(setupRoutes.district.list)
-        .then((res) => res.data.response.districts)
-        .then((data) => {
-            if (setData1) setData1(data)
-            setData(
-                data.map((item: { id: any; name: any }) => ({
-                    id: item.id,
-                    name: item.name,
-                }))
-            );
-        })
-        .catch((err) => console.error(err));
+    setData(OptionDistrict)
+    // privateGateway
+    //     .get(setupRoutes.district.list)
+    //     .then((res) => res.data.response.districts)
+    //     .then((data) => {
+    //         if (setData1) setData1(data)
+    //         setData(
+    //             data.map((item: { id: any; name: any }) => ({
+    //                 id: item.id,
+    //                 name: item.name,
+    //             }))
+    //         );
+    //     })
+    //     .catch((err) => console.error(err));
 }
 
 export function updateResponse(data: any) {

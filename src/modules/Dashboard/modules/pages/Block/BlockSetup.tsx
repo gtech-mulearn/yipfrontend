@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
 import setupImg from '../../../../../assets/Kindergarten student-bro 1.webp'
 import { CustomInput } from '../../../components/CustomInput/CustomInput'
 import { CustomSelect } from '../../../components/CustomSelect/CustomSelect'
@@ -12,6 +12,7 @@ interface BlockSetupProps {
 import * as yup from 'yup'
 import { createBlock, fetchDistricts } from './blockAPI'
 import { toast } from 'react-toastify'
+import { GlobalContext } from '../../../../../utils/GlobalVariable'
 
 const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
@@ -19,14 +20,15 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const { districts } = useContext(GlobalContext)
     const reset = () => {
         setBlock("")
         setDistrict(initialState)
         setViewSetup(false)
     }
     useEffect(() => {
-        fetchDistricts(setDistrictList)
-    }, [])
+        setDistrictList(districts)
+    }, [districts])
     function validateSchema() {
         const validationSchema = yup.object().shape({
             name: yup.string().required('Block Name is required').test('only-spaces', 'Only spaces are not allowed for Block name', value => {

@@ -13,32 +13,42 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const [zoneList, setZoneList] = useState<selectProps[]>([])
     const [college, setCollege] = useState<selectProps>({} as selectProps)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
+    const ref = useRef(false)
     useEffect(() => {
-        if (college.id) {
-            fetchBannerData(setBanner as any, 'institute', college.id)
-        }
-        else if (district.id) {
-            fetchBannerData(setBanner as any, 'district', district.name)
-            fetchCollege(district.name, setCollegeList)
-        }
-        else if (zone.id) {
-            fetchBannerData(setBanner as any, 'zone', zone.name)
-            fetchDistrictFilter(zone.name, setDistrictList)
-        }
-        else {
+        if (!ref.current) {
+            console.log('college 1')
             fetchBannerData(setBanner as any, 'state', 'state')
             fetchZoneFilter(setZoneList)
         }
-    }, [zone, district, college, update])
+    }, [])
     useEffect(() => {
-
+        if (zone.id) {
+            console.log('college 2')
+            fetchBannerData(setBanner as any, 'zone', zone.name)
+            fetchDistrictFilter(zone.name, setDistrictList)
+        }
+        else if (ref.current) {
+            fetchBannerData(setBanner as any, 'state', 'state')
+            fetchZoneFilter(setZoneList)
+        }
+        ref.current = true
         setDistrict({} as selectProps)
         setCollege({} as selectProps)
-
     }, [zone])
     useEffect(() => {
+        if (district.id) {
+            console.log('college 3')
+            fetchBannerData(setBanner as any, 'district', district.name)
+            fetchCollege(district.name, setCollegeList)
+        }
         setCollege({} as selectProps)
     }, [district])
+    useEffect(() => {
+        if (college.id) {
+            console.log('college 4')
+            fetchBannerData(setBanner as any, 'institute', college.id)
+        }
+    }, [college])
 
     return (
         <div className='white-container'>

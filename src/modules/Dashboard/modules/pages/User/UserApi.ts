@@ -40,8 +40,6 @@ export function createUser(
     zone: string,
     updateUserData: Function,
     setViewSetup: Dispatch<SetStateAction<boolean>>,
-    setSuccessMessage: Dispatch<SetStateAction<string>>,
-    setErrorMessage: Dispatch<SetStateAction<string>>,
     coordinatorId?: string,
     institutes?: selectProps[]
 ) {
@@ -56,17 +54,19 @@ export function createUser(
         coordinatorId: coordinatorId,
         institutes: institutes
     }
-
+    toast.info("Creating user...", {
+        toastId: 'userCreate',
+    })
     // console.log(selectPostData(postData))
     privateGateway.post(setupRoutes.user.create, selectPostData(postData))
-
         .then(res => {
-            updateUserData()
-
+            toast.dismiss('userCreate')
             success();
+            updateUserData()
+            setViewSetup(false)
         })
         .catch(err => {
-
+            toast.dismiss('userCreate')
             errorMessage(err.response)
             errorCheck(err.response)
         })
@@ -86,7 +86,8 @@ export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableP
                     ...item,
                     role: (item?.role?.name || item?.role || ''),
                     location: getLocation(item),
-                    institutes: item?.role?.institutes ? item?.role?.institutes : []
+                    institutes: item?.role?.institutes ? item?.role?.institutes : [],
+                    coordinator: item?.role?.district_coordinator ? { id: item?.role?.district_coordinator_id, name: item?.role?.district_coordinator } : {} as selectProps
                 }
             ))
             setUserList(newData)
@@ -118,6 +119,53 @@ function selectPostData(postData: any) {
     }
     if (postData.role === 'IN') {
         return { ...commonPostData, districtCoordinatorId: postData.coordinatorId, instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : null }
+    }
+    return commonPostData
+}
+export function updateUserDataFn(
+    id: string,
+    name: string,
+    email: string,
+    phone: string,
+    role: string,
+    updateUser: Function,
+    setViewSetup: any,
+    selectedInstitute: selectProps[]
+) {
+    const postData = {
+        name: name,
+        email: email,
+        phone: phone,
+        role: role,
+        institutes: selectedInstitute,
+        internId: id
+    }
+    toast.loading("Updating user...", {
+        toastId: id,
+        autoClose: false
+    })
+    privateGateway.put(`${setupRoutes.user.update}${id}/`, selectPostUpdateData(postData))
+        .then(res => {
+            toast.dismiss(id)
+            success();
+            updateUser()
+            setViewSetup(false)
+        })
+        .catch(err => {
+            toast.dismiss(id)
+            errorMessage(err.response)
+            errorCheck(err.response)
+        })
+
+}
+function selectPostUpdateData(postData: any) {
+    const commonPostData = {
+        name: postData.name,
+        email: postData.email,
+        phone: postData.phone,
+        role: postData.role,
+        internId: postData.internId,
+        instituteId: postData.institutes.length > 0 ? postData.institutes.map((institute: any) => (institute.id)) : []
     }
     return commonPostData
 }
