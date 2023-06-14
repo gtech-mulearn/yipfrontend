@@ -148,31 +148,36 @@ function CustomTable<TableProps>({
         return capitalizedSentence;
     }
     function sortTable(index: number) {
-
-        let tempTable = sortedTable.sort((a: any, b: any) => {
-            const isNotSorted = sort.status === "Unsorted" || sort.status === "Sorted:DESC"
-            if (
-                (a[orderBy[index]] || a[orderBy[index]] === 0 ?
-                    a[orderBy[index]] : '') < (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? -1 : 1
-            if ((a[orderBy[index]] || a[orderBy[index]] === 0 ?
-                a[orderBy[index]] : '') > (b[orderBy[index]] || b[orderBy[index]] === 0 ? b[orderBy[index]] : '')) return isNotSorted ? 1 : -1
-            return 0
-        })
-        setSortedTable(tempTable)
         setSort((prev: sortProps) => {
+            const isNotSorted = prev.status === "Unsorted" || prev.status === "Sorted:DESC";
+            const tempSortStatus = sortStatusUpdater(prev.status);
+
+            const tempTable = sortedTable.slice().sort((a: any, b: any) => {
+                const aValue = a[orderBy[index]] || "";
+                const bValue = b[orderBy[index]] || "";
+
+                if (aValue < bValue) return isNotSorted ? -1 : 1;
+                if (aValue > bValue) return isNotSorted ? 1 : -1;
+                return 0;
+            });
+
+            setSortedTable(tempTable);
+
             return {
                 ...prev,
                 updater: !prev.updater,
-                status: sortStatusUpdater(sort.status)
-            }
-        })
+                status: tempSortStatus,
+            };
+        });
     }
+
     function sortOrderByRequired(index: number) {
         if (sortOrder?.sortBy === orderBy[index]) sortByOrder(index)
         else { sortTable(index) }
     }
     function sortByOrder(index: number): void {
         let tempTable: TableProps[] = []
+
         let listOrder = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
         listOrder?.map((value: string) => {
             tempTable.push(
