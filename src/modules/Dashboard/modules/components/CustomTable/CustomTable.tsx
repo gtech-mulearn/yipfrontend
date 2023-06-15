@@ -7,6 +7,7 @@ import exportFromJSON from 'export-from-json';
 import { ThreeDots, RotatingSquare } from "react-loader-spinner";
 import roles from "../../../../../utils/roles";
 import { GlobalContext } from "../../../../../utils/GlobalVariable";
+import { isEmptyArray } from "formik";
 interface sortProps {
     status: string;
     updater: boolean;
@@ -19,7 +20,7 @@ function paginateArray<T>(array: T[], page: number, countInPage: number): T[] {
 }
 export interface CustomTableProps<TableProps> {
     tableHeadList: string[]
-    tableData: TableProps[]
+    tableData: TableProps[] | null
     orderBy: (keyof TableProps)[]
     sortOrder?: {
         sortBy?: keyof TableProps
@@ -72,9 +73,10 @@ function CustomTable<TableProps>({
 }
     :
     CustomTableProps<TableProps>) {
-
+    const [isValidData, setIsValidData] = useState(Array.isArray(tableData))
+    const [isLoading, setIsLoading] = useState(tableData === null)
+    const [sortedTable, setSortedTable] = useState(tableData ? tableData : [])
     const [page, setPage] = useState(1)
-    const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
     const [csvData, setCsvData] = useState<any>();
@@ -85,20 +87,22 @@ function CustomTable<TableProps>({
     const fetched = useRef(false)
     const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
+        if (Array.isArray(tableData)) setIsLoading(false)
+        if (!Array.isArray(tableData)) { setIsValidData(false) }
         handleDownloadCSV()
+        if (Array.isArray(tableData) && tableData.length === 0) {
+            setNotLoading('No Data to Display')
+        }
+        else if (tableData === null) {
+            setTimeout(() => {
+                setIsLoading(false)
+                setNotLoading('Something Went Wrong!!!')
+            }, 20000);
+        }
     }, [tableData, sortedTable, sort, selectedHeading])
     useEffect(() => {
         if (fetched.current) return
         fetched.current = true
-        console.log('hi')
-        if (tableData.length === 0) {
-            const interval = setTimeout(() => {
-                setupLoading(false)
-                setNotLoading('No Data to Display')
-            }, 5000)
-            return () => clearTimeout(interval)
-        }
-
     }, [])
     useEffect(() => {
         if (countInPage === -1) {
@@ -134,9 +138,7 @@ function CustomTable<TableProps>({
     }, [countInPage])
 
     useEffect(() => {
-
-        setPage(1)
-        setSortedTable(tableData)
+        setSortedTable(tableData ? tableData : [])
         setSort({ updater: false, status: "Unsorted" })
     }, [tableData])
     function capitalizeString(sentence: string): string {
@@ -154,9 +156,10 @@ function CustomTable<TableProps>({
             const tempSortStatus = sortStatusUpdater(prev.status);
 
             const tempTable = sortedTable.slice().sort((a: any, b: any) => {
-                const aValue = a[orderBy[index]] || "";
-                const bValue = b[orderBy[index]] || "";
-
+                let aValue = (a[orderBy[index]] || "zzz")
+                aValue = isNaN(aValue) ? aValue.toLowerCase().trim() : aValue
+                let bValue = (b[orderBy[index]] || "zzz")
+                bValue = isNaN(bValue) ? bValue.toLowerCase().trim() : bValue
                 if (aValue < bValue) return isNotSorted ? -1 : 1;
                 if (aValue > bValue) return isNotSorted ? 1 : -1;
                 return 0;
@@ -353,8 +356,6 @@ function CustomTable<TableProps>({
 
                         <tbody>
                             {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => {
-
-                                //console.log(item)
                                 return (
                                     <tr key={key} >
                                         <td >{(page - 1) * countInPage + key + 1}</td>
@@ -386,8 +387,8 @@ function CustomTable<TableProps>({
                         </tbody>
                     </table >}
             </div>
-            {
-                !sortedTable.length && <div className="no-data">
+            {<>
+                {(isLoading || (!isLoading && isEmptyArray(tableData))) && <div className="no-data">
                     <ThreeDots
                         height="60"
                         width="60"
@@ -395,9 +396,15 @@ function CustomTable<TableProps>({
                         ariaLabel="three-dots-loading"
                         wrapperStyle={{}}
                         wrapperClass="no-data"
-                        visible={!notLoading}
+                        visible={isLoading}
                     />
-                    {notLoading ? notLoading : ''}</div>
+                    {!isLoading && (isEmptyArray(tableData)) ? notLoading : ''}
+                </div>}
+                {
+                    !isLoading && notLoading && tableData === null &&
+                    <div className="no-data">{notLoading}</div>
+                }
+            </>
             }
             {/* Pagination */}
 

@@ -16,14 +16,12 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const ref = useRef(false)
     useEffect(() => {
         if (!ref.current) {
-            console.log('college 1')
             fetchBannerData(setBanner as any, 'state', 'state')
             fetchZoneFilter(setZoneList)
         }
     }, [])
     useEffect(() => {
         if (zone.id) {
-            console.log('college 2')
             fetchBannerData(setBanner as any, 'zone', zone.name)
             fetchDistrictFilter(zone.name, setDistrictList)
         }
@@ -37,7 +35,6 @@ const InternBanner = ({ update }: { update: boolean }) => {
     }, [zone])
     useEffect(() => {
         if (district.id) {
-            console.log('college 3')
             fetchBannerData(setBanner as any, 'district', district.name)
             fetchCollege(district.name, setCollegeList)
         }
@@ -45,7 +42,6 @@ const InternBanner = ({ update }: { update: boolean }) => {
     }, [district])
     useEffect(() => {
         if (college.id) {
-            console.log('college 4')
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
     }, [college])
@@ -140,11 +136,7 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
             console.log(err)
         })
 }
-function fetchZone(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    // privateGateway.get(yip5Routes.zoneList)
-    //     .then(res => setData(res.data.response))
-    //     .catch(err => console.log(err))
-}
+
 function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listDistrict}${zone}/`)
         .then(res => {

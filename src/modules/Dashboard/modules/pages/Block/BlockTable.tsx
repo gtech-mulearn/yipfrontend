@@ -23,17 +23,20 @@ const list: (keyof BlockTableProps)[] = ['name', 'district',]
 const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, updated }) => {
     const [search, setSearch] = useState<string>('')
     const [block, setBlock] = useState<BlockTableProps>({} as BlockTableProps)
-    const [blockList, setBlockList] = useState<BlockTableProps[]>([])
+    const [blockList, setBlockList] = useState<BlockTableProps[] | null>(null)
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
-    const [listForTable, setListForTable] = useState<BlockTableProps[]>([])
+    const [listForTable, setListForTable] = useState<BlockTableProps[] | null>(null)
     const fetchedOnce = useRef(false)
     useEffect(() => {
         setDistrictList(OptionDistrict)
         fetchBlocks(setBlockList, setListForTable)
     }, [])
+    useEffect(() => {
+        setListForTable(filterBlock(blockList, search, district))
+    }, [blockList])
     useEffect(() => {
         if (fetchedOnce.current)
             fetchBlocks(setBlockList, setListForTable, updateTable)
@@ -146,7 +149,6 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                     tableHeadList={TableTitleList}
                     tableData={listForTable}
                     orderBy={list}
-
                     manage={{
                         value: "Delete",
                         manageFunction: (item: BlockTableProps) => {
@@ -160,7 +162,8 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
         </>
     );
 }
-function filterBlock(blockList: BlockTableProps[], search: string, district: selectProps) {
+function filterBlock(blockList: BlockTableProps[] | null, search: string, district: selectProps) {
+    if (blockList === null) return blockList
     let list = blockList
     if (search) {
         list = searchBlock(list, search)

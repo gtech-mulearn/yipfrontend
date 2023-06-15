@@ -25,7 +25,6 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
     const fetchedUserInfo = useRef(false)
     useEffect(() => {
         if (!fetchedUserInfo.current) {
-            console.log('fetchedUserInfo', fetchedUserInfo.current)
             fetchUserInfo(setUserInfo);
             fetchUserRoles(setRoles);
             fetchDistricts(setDistricts);

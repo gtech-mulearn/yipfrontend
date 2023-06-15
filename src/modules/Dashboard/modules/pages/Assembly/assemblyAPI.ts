@@ -14,8 +14,8 @@ export function fetchDistricts(setData: Dispatch<SetStateAction<selectProps[]>>)
         .catch(err => console.log('Error :', err?.response?.data?.message?.general[0]))
 }
 export function fetchAssemblys(
-    setData: Dispatch<SetStateAction<AssemblyTableProps[]>>,
-    setData2: Dispatch<SetStateAction<AssemblyTableProps[]>>,
+    setData: Dispatch<SetStateAction<AssemblyTableProps[] | null>>,
+    setData2: Dispatch<SetStateAction<AssemblyTableProps[] | null>>,
     updateTable?: Function
 ) {
     privateGateway.get(tableRoutes.assembly.list)
@@ -63,7 +63,6 @@ export function createAssembly(
         .catch(err => {
             errorMessage(err.response)
             errorCheck(err.response)
-            // showAlert(err?.response?.data?.message?.general[0], setErrorMessage)
             console.log('Error :', err?.response.data.message.general[0])
         })
 }

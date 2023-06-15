@@ -86,7 +86,6 @@ const Modal: FC<UserModalProps> = ({ user, setUser, updateUserData, setUpdateUse
                                     () => {
                                         window.scrollTo(0, 0)
                                         setupUserUpdate(user, setUpdateUser, () => setUser({} as UserTableProps))
-
                                     }}>Update</button>
                             }
                             <button className="cancel-delete" onClick={() => { setUser({} as UserTableProps) }}>Cancel</button>

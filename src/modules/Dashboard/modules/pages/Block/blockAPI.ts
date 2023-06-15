@@ -51,8 +51,8 @@ export function createBlock(
 }
 
 export function fetchBlocks(
-    setData: Dispatch<SetStateAction<BlockTableProps[]>>,
-    setData2: Dispatch<SetStateAction<BlockTableProps[]>>,
+    setData: Dispatch<SetStateAction<BlockTableProps[] | null>>,
+    setData2: Dispatch<SetStateAction<BlockTableProps[] | null>>,
     updateTable?: Function
 ) {
     privateGateway.get(tableRoutes.block.list)
