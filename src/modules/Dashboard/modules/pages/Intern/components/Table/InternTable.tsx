@@ -74,19 +74,20 @@ const InternTable = ({ update }: { update: () => void }) => {
   const [view, setView] = useState<string>("Campus");
   const [assigneeList, setAssigneeList] = useState<AssignViewProps[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [assigneetable, setAssigneetable] = useState<AssignViewProps[] | null>(null);
 
-  const [campusTableList, setCampusTableList] = useState<CampusViewProps[]>([]);
-  const [internTableList, setInternTableList] = useState<InternViewProps[]>([]);
-  const [districttable, setDistricttable] = useState<districtViewProps[]>([]);
-  const [assigneetable, setAssigneetable] = useState<AssignViewProps[]>([]);
   const [csvData, setCsvData] = useState<any>();
 
-  const [zoneList, setZoneList] = useState<zoneViewProps[]>([]);
-  const [zonetable, setZonetable] = useState<zoneViewProps[]>([]);
-  const [stateTable, setStateTable] = useState<commonViewProps[]>([]);
+  const [internTableList, setInternTableList] = useState<InternViewProps[] | null>(null);
+  const [campusTableList, setCampusTableList] = useState<CampusViewProps[] | null>(null);
+  const [districttable, setDistricttable] = useState<districtViewProps[] | null>(null);
+  const [zonetable, setZonetable] = useState<zoneViewProps[] | null>(null);
+  const [stateTable, setStateTable] = useState<commonViewProps[] | null>(null);
 
-  const [districtList, setDistrictList] = useState<districtViewProps[]>([]);
-  const [campusList, setCampusList] = useState<CampusViewProps[]>([]);
+  const [internList, setInternList] = useState<InternViewProps[] | null>([]);
+  const [campusList, setCampusList] = useState<CampusViewProps[] | null>(null);
+  const [districtList, setDistrictList] = useState<districtViewProps[] | null>(null);
+  const [zoneList, setZoneList] = useState<zoneViewProps[] | null>(null);
 
   const [menu, setMenu] = useState<boolean>(window.innerWidth > 768);
   const [districtFilterList, setDistrictFilterList] = useState<selectProps[]>(
@@ -98,7 +99,6 @@ const InternTable = ({ update }: { update: () => void }) => {
   const [zoneFilterList, setZoneFilterList] = useState<selectProps[]>([]);
   const [zoneFilter, setZoneFilter] = useState<selectProps>({} as selectProps);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [internList, setInternList] = useState<InternViewProps[]>([]);
   const [dataUploaded, setDataUploaded] = useState<boolean>(false);
 
   const { userInfo } = useContext(GlobalContext)
@@ -203,21 +203,21 @@ const InternTable = ({ update }: { update: () => void }) => {
 
     switch (view) {
       case "Campus":
-        if (campusList.length) {
+        if (Array.isArray(campusList) && campusList.length) {
           setTimeStamp(currentTime)
           const data = { list: campusList, timestamp: currentTime }
           sessionStorage.setItem("Yip5CampusList", JSON.stringify(data))
         }
         break
       case "Intern":
-        if (internList.length) {
+        if (Array.isArray(internList) && internList.length) {
           setTimeStamp(currentTime)
           const data = { list: internList, timestamp: currentTime }
           sessionStorage.setItem("Yip5InternList", JSON.stringify(data))
         }
         break
       case "District":
-        if (districtList.length) {
+        if (Array.isArray(districtList) && districtList.length) {
 
           setTimeStamp(currentTime)
           const data = { list: districtList, timestamp: currentTime }
@@ -225,14 +225,14 @@ const InternTable = ({ update }: { update: () => void }) => {
         }
         break
       case "Zone":
-        if (zoneList.length) {
+        if (Array.isArray(zoneList) && zoneList.length) {
           setTimeStamp(currentTime)
           const data = { list: zoneList, timestamp: currentTime }
           sessionStorage.setItem("Yip5ZoneList", JSON.stringify(data))
         }
         break
       case "State":
-        if (stateTable.length) {
+        if (Array.isArray(stateTable) && stateTable.length) {
           setTimeStamp(currentTime)
           const data = { list: stateTable, timestamp: currentTime }
           sessionStorage.setItem("Yip5StateList", JSON.stringify(data))
@@ -318,39 +318,22 @@ const InternTable = ({ update }: { update: () => void }) => {
     }
   };
 
-  // useEffect(() => {
-  //   handleDownloadCSV();
-  //   // downloadCSV();
-  // }, [campusTableList, internTableList, assigneetable, districttable]);
+  useEffect(() => {
+    switch (view) {
+      case "Campus":
+        setCampusTableList(filterCampus(campusList, search, districtFilter.name, zoneFilter.name));
+        break
+      case "Intern":
+        setInternTableList(filterIntern(internList, search, districtFilter.name, zoneFilter.name));
+        break
+      case "District":
+        setDistricttable(filterDistrict(districtList, search, districtFilter.name, zoneFilter.name));
+        break
+      case "Zone":
+        setZonetable(filterZone(zoneList, search));
+    }
+  }, [campusList, internList, districtList, zoneList]);
 
-  // const handleDownloadCSV = () => {
-  //   //check the view value and dowload the data in the corresponding state variable as a csv
-  //   let csvData1: any = [];
-  //   if (view === "Campus") {
-  //     csvData1 = campusTableList ? campusTableList : [];
-  //   } else if (view === "Intern") {
-  //     csvData1 = internTableList ? internTableList : [];
-  //   } else if (view === "District Coordinator") {
-  //     csvData1 = assigneeList ? assigneeList : [];
-  //   } else if (view === "Programme Executive") {
-  //     csvData1 = assigneetable ? assigneetable : [];
-  //     console.log(csvData1);
-  //   } else if (view === "District") {
-  //     csvData1 = districttable ? districttable : [];
-  //   }
-  //   else if (view === "Zone") {
-  //     csvData1 = zonetable ? zonetable : [];
-  //   }
-  //   else if (view === "State") {
-  //     csvData1 = stateTable ? stateTable : [];
-  //   }
-
-  //   const updatedData = csvData1?.map((item: any) => {
-  //     const { id, ...rest } = item;
-  //     return rest;
-  //   });
-  //   setCsvData(updatedData);
-  // };
   const downloadCSV = () => {
     const fileName = 'data';
     const fields = Object.keys(csvData[0]);
@@ -727,8 +710,8 @@ const InternTable = ({ update }: { update: () => void }) => {
 };
 
 async function fetchCampus(
-  setData: Dispatch<SetStateAction<CampusViewProps[]>>,
-  setData2: Dispatch<SetStateAction<CampusViewProps[]>>
+  setData: Dispatch<SetStateAction<CampusViewProps[] | null>>,
+  setData2: Dispatch<SetStateAction<CampusViewProps[] | null>>
 ) {
   await privateGateway
     .get(yip5Routes.campusList)
@@ -743,8 +726,8 @@ async function fetchCampus(
 }
 
 async function fetchDistrict(
-  setDistrictFilter: Dispatch<SetStateAction<districtViewProps[]>>,
-  setDistricttable: Dispatch<SetStateAction<districtViewProps[]>>
+  setDistrictFilter: Dispatch<SetStateAction<districtViewProps[] | null>>,
+  setDistricttable: Dispatch<SetStateAction<districtViewProps[] | null>>
 ) {
   await privateGateway
     .get(yip5Routes.listDistrict)
@@ -759,8 +742,8 @@ async function fetchDistrict(
     });
 }
 async function fetchIntern(
-  setData: Dispatch<SetStateAction<InternViewProps[]>>,
-  setData2: Dispatch<SetStateAction<InternViewProps[]>>
+  setData: Dispatch<SetStateAction<InternViewProps[] | null>>,
+  setData2: Dispatch<SetStateAction<InternViewProps[] | null>>
 ) {
   await privateGateway
     .get(yip5Routes.internList)
@@ -782,7 +765,8 @@ async function fetchIntern(
     })
     .catch((err) => console.log(err));
 }
-const filterIntern = (internList: InternViewProps[], search: string, district: string, zone: string) => {
+const filterIntern = (internList: InternViewProps[] | null, search: string, district: string, zone: string) => {
+  if (internList === null) return internList
   let list = internList;
   if (search) {
     list = searchIntern(list, search);
@@ -837,11 +821,12 @@ const filterCoordinator = (
   return list;
 };
 const filterDistrict = (
-  districtList: districtViewProps[],
+  districtList: districtViewProps[] | null,
   search: string,
   district: string,
   zone: string
 ) => {
+  if (districtList === null) return districtList
   let list = districtList;
   if (search) {
     list = searchDistrict(list, search);
@@ -878,11 +863,12 @@ function searchCoordinator(coordinatorList: AssignViewProps[], search: string) {
   );
 }
 function filterCampus(
-  clubList: CampusViewProps[],
+  clubList: CampusViewProps[] | null,
   search: string,
   district: string,
   zone: string
 ) {
+  if (clubList === null) return clubList
   let list = clubList;
   if (search) {
     list = searchCampus(list, search);
@@ -940,7 +926,8 @@ export function fetchDistrictFilter(
   //   .catch((err) => console.error(err));
 }
 export default InternTable;
-async function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[]>>, setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[]>>) {
+async function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneViewProps[] | null>>,
+  setZonetable: React.Dispatch<React.SetStateAction<zoneViewProps[] | null>>) {
   await privateGateway.get(yip5Routes.zoneBasedData)
     .then((res) => {
       setZoneList(res.data.response);
@@ -952,7 +939,8 @@ async function fetchZone(setZoneList: React.Dispatch<React.SetStateAction<zoneVi
     });
 }
 
-function filterZone(zoneList: zoneViewProps[], search: string) {
+function filterZone(zoneList: zoneViewProps[] | null, search: string) {
+  if (zoneList === null) return zoneList
   let list = zoneList;
   if (search) {
     list = searchZone(list, search);
@@ -967,7 +955,7 @@ function searchZone(list: zoneViewProps[], search: string): zoneViewProps[] {
   );
 }
 
-async function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[]>>) {
+async function fetchState(setStateTable: React.Dispatch<React.SetStateAction<commonViewProps[] | null>>) {
   await privateGateway.get(yip5Routes.stateBasedData)
     .then((res) => {
       setStateTable([res.data.response])

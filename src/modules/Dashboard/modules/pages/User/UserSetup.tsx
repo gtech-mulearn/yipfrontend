@@ -131,7 +131,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
 
     }
     function handleUpdate() {
-        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, updateUserData, setViewSetup, selectedInstitute)
+        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, updateUserData, setViewSetup, selectedInstitute, resetUpdateUser)
     }
 
     const handleOptionRemove = (

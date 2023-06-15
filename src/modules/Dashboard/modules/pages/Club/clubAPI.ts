@@ -103,8 +103,8 @@ export function deleteModelClub(id: string, updateClubStatus: Function, setSucce
         .catch(err => setError(err?.response?.data?.message?.general[0]))
 }
 export async function fetchClubs(
-    setData: Dispatch<SetStateAction<ClubTableProps[]>>,
-    setData2: Dispatch<SetStateAction<ClubTableProps[]>>,
+    setData: Dispatch<SetStateAction<ClubTableProps[] | null>>,
+    setData2: Dispatch<SetStateAction<ClubTableProps[] | null>>,
     updateTable?: Function
 ) {
     await privateGateway.get(tableRoutes.club.list)
