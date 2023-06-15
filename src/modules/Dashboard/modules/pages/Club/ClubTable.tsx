@@ -33,8 +33,8 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [status, setStatus] = useState<string>('')
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([])
-    const [clubList, setClubList] = useState<ClubTableProps[]>([])
-    const [listForTable, setListForTable] = useState<ClubTableProps[]>([])
+    const [clubList, setClubList] = useState<ClubTableProps[] | null>(null)
+    const [listForTable, setListForTable] = useState<ClubTableProps[] | null>(null)
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
@@ -45,7 +45,9 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
         fetchClubs(setClubList, setListForTable)
         fetchStatus(setStatusList, setOptionStatusList)
     }, [])
-
+    useEffect(() => {
+        setListForTable(filterClub(clubList, search, district, status))
+    }, [clubList])
     useEffect(() => {
         if (fetchedOnce.current)
             fetchClubs(setClubList, setListForTable, updateTable)
@@ -190,7 +192,8 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
         </>
     );
 }
-function filterClub(clubList: ClubTableProps[], search: string, district: selectProps, status: string) {
+function filterClub(clubList: ClubTableProps[] | null, search: string, district: selectProps, status: string) {
+    if (clubList === null) return clubList
     let list = clubList
     if (search) {
         list = searchClub(list, search)

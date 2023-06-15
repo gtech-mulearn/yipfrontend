@@ -124,14 +124,7 @@ const InstituteTable = ({ update, viewSetup }: { update: boolean, viewSetup: () 
                 orderBy={list}
                 capitalize={false}
                 countPerPage={15}
-            // manage={{
-            //     value: 'ICT Id',
-            //     manageFunction: (item: any) => console.log(item),
-            //     icon: 'fa-edit'
-            // }
-            // }
             />
-            {/* {open && <Modal instituteID />} */}
         </div>
     );
 }
@@ -141,15 +134,12 @@ function filterClub(clubList: InstituteTableProps[], search: string, district: s
     if (search) {
         list = searchClub(list, search)
     }
-    // if (district.name) {
-    //     list = list.filter(club => club.district === district.name)
-    // }
+
     return list
 }
 function searchClub(clubList: InstituteTableProps[], search: string) {
     return clubList.filter((club: InstituteTableProps) =>
         rawString(club.name).includes(rawString(search)) ||
-        // rawString(club.district).includes(rawString(search)) ||
         rawString(String(club.ict_id)).includes(rawString(search))
     )
 

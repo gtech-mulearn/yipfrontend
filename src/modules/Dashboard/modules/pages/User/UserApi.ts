@@ -77,7 +77,7 @@ export function fetchUserByRoles(setUserList: Dispatch<SetStateAction<UserTableP
             res => { setUserList(res.data.response) })
         .catch(err => console.log(err))
 }
-export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableProps[]>>, setListForTable: Dispatch<SetStateAction<UserTableProps[]>>, updateTable?: Function) {
+export async function fetchUsers(setUserList: Dispatch<SetStateAction<UserTableProps[] | null>>, setListForTable: Dispatch<SetStateAction<UserTableProps[] | null>>, updateTable?: Function) {
     await privateGateway.get(tableRoutes.user.list)
         .then(res => res.data.response)
         .then(data => {
@@ -130,7 +130,8 @@ export function updateUserDataFn(
     role: string,
     updateUser: Function,
     setViewSetup: any,
-    selectedInstitute: selectProps[]
+    selectedInstitute: selectProps[],
+    reset: () => void
 ) {
     const postData = {
         name: name,
@@ -150,6 +151,7 @@ export function updateUserDataFn(
             success();
             updateUser()
             setViewSetup(false)
+            reset()
         })
         .catch(err => {
             toast.dismiss(id)

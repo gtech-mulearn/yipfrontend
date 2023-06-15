@@ -61,7 +61,6 @@ export function deleteModelSchool(id: string, reRoute: () => void) {
     privateGateway.delete(`${tableRoutes.school.delete}${id}/`)
         .then(() => {
             reRoute()
-            // console.log(res?.data?.message?.general[0])
         })
         .catch(err => console.log(err?.response?.data?.message?.general[0]))
 }
