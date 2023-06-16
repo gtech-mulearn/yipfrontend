@@ -138,6 +138,7 @@ function CustomTable<TableProps>({
     }, [countInPage])
 
     useEffect(() => {
+        setPage(1)
         setSortedTable(tableData ? tableData : [])
         setSort({ updater: false, status: "Unsorted" })
     }, [tableData])
@@ -277,7 +278,7 @@ function CustomTable<TableProps>({
                         <div className="sortList">
                             {filter &&
                                 tableHeadList.map((item: string, index: number) => (
-                                    <p className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
+                                    <p key={index} className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
                                         if (filter) {
                                             setPage(1)
                                             sortOrderByRequired(index)
@@ -360,15 +361,13 @@ function CustomTable<TableProps>({
                                     <tr key={key} >
                                         <td >{(page - 1) * countInPage + key + 1}</td>
                                         {
-                                            orderBy.map((item2: keyof TableProps, index: number) => (
-                                                <>
-                                                    <td
-                                                        className={`
-                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
-                                                        key={index}>
-                                                        {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
-                                                    </td>
-                                                </>
+                                            orderBy.map((item2: keyof TableProps, something: number) => (
+                                                <td
+                                                    className={`
+                                                ${customCssByRequiredByValue(something, item[item2] as string)} `}
+                                                    key={something}>
+                                                    {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                                </td>
                                             ))
                                         }
                                         {manage?.value &&
@@ -413,7 +412,7 @@ function CustomTable<TableProps>({
                 <div className='paginator' >
                     <div className="count-in-page">
 
-                        <input className="input" type="number" value={countInPage} min={1} max={sortedTable.length} onChange={(e) => {
+                        <input className="input" name="count" id="count" type="number" value={countInPage} min={1} max={sortedTable.length} onChange={(e) => {
                             setCountInPage(Number(e.target.value))
                         }} />
                         <p> Per Page </p>
