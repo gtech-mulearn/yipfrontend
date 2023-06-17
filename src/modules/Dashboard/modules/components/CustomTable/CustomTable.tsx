@@ -9,6 +9,7 @@ import roles from "../../../../../utils/roles";
 import { GlobalContext } from "../../../../../utils/GlobalVariable";
 import { isEmptyArray } from "formik";
 interface sortProps {
+    name: string,
     status: string;
     updater: boolean;
 
@@ -77,7 +78,7 @@ function CustomTable<TableProps>({
     const [isLoading, setIsLoading] = useState(tableData === null)
     const [sortedTable, setSortedTable] = useState(tableData ? tableData : [])
     const [page, setPage] = useState(1)
-    const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
+    const [sort, setSort] = useState<sortProps>({ name: '0', updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
     const [csvData, setCsvData] = useState<any>();
     const [countInPage, setCountInPage] = useState(countPerPage)
@@ -140,7 +141,7 @@ function CustomTable<TableProps>({
     useEffect(() => {
         setPage(1)
         setSortedTable(tableData ? tableData : [])
-        setSort({ updater: false, status: "Unsorted" })
+        setSort((sort) => ({ ...sort, updater: false, status: "Unsorted" }))
     }, [tableData])
     function capitalizeString(sentence: string): string {
         if (sentence === undefined || sentence === null) return ""
@@ -279,6 +280,7 @@ function CustomTable<TableProps>({
                             {filter &&
                                 tableHeadList.map((item: string, index: number) => (
                                     <p key={index} className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
+
                                         if (filter) {
                                             setPage(1)
                                             sortOrderByRequired(index)
@@ -330,6 +332,9 @@ function CustomTable<TableProps>({
                                 </th>
                                 {tableHeadList.map((item: string, index: number) => (
                                     <th key={index} onClick={() => {
+                                        if (sort.name !== String(index)) {
+                                            setSort((sort) => ({ ...sort, name: String(index), status: 'Unsorted' }))
+                                        }
                                         if (filter) {
                                             setPage(1)
                                             sortOrderByRequired(index)
