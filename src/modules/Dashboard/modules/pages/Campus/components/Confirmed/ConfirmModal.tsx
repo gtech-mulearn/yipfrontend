@@ -18,7 +18,7 @@ const ConfirmModal = ({
     const [remarks, setRemarks] = useState("");
     const [checkDate, setCheckDate] = useState<Date | null>(null)
     const [maxDate, setMaxDate] = useState('');
-
+    const [disableBtn, setDisableBtn] = useState(false)
     function validateSchema() {
         const validationSchema = yup.object().shape({
             date: yup.date().required('Date is required').max(new Date(), 'Date and time must be before the current time'),
@@ -65,16 +65,22 @@ const ConfirmModal = ({
             </div>
             <div className="modal-buttons">
                 <button
+                    disabled={disableBtn}
                     className="btn-update "
-                    onClick={() =>
+                    onClick={() => {
+                        setDisableBtn(true)
                         validateSchema().then(() => {
                             addVisited({
                                 clubId: campusId,
                                 clubStatus: 'Visited',
                                 visited_date: date,
                                 visited_remarks: remarks
-                            }, campusId, cancel)
-                        }).catch(err => err.errors.map((error: string) => toast.error(error)))
+                            }, campusId, cancel, () => setDisableBtn(false))
+                        }).catch(err => {
+                            err.errors.map((error: string) => toast.error(error))
+                            setDisableBtn(false)
+                        })
+                    }
                     }
                 >
                     Update
@@ -92,15 +98,22 @@ interface visitedPostProps {
     visited_date: string
     visited_remarks: string
 }
-function addVisited(postData: visitedPostProps, campusId: string, cancel: () => void) {
+function addVisited(postData: visitedPostProps, campusId: string, cancel: () => void, enableBtn: () => void) {
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     privateGateway.put(tableRoutes.status.update, postData)
         .then(() => {
+            toast.dismiss('Updating')
             success()
             cancel()
         })
         .catch(err => {
+            toast.dismiss('Updating')
+
             errorMessage(err.response);
             errorCheck(err.response);
+            enableBtn()
         })
 }
 export default ConfirmModal

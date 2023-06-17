@@ -20,6 +20,7 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
     const [maxDate, setMaxDate] = useState('');
     const [eventIds, setEventIds] = useState<OrientationCompleteProps>({} as OrientationCompleteProps)
     const [list, setList] = useState<OrientationCompleteProps[]>([])
+    const [disableBtn, setDisableBtn] = useState(false)
     useEffect(() => {
         listEvent(campusId, setList)
     }, [])
@@ -98,9 +99,13 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
                     <div className="modal-buttons">
                         <button className='btn-update '
                             onClick={() => {
+                                setDisableBtn(true)
                                 validateSchema().then(() => {
-                                    updateEvent(eventIds.id, nop, date, remarks, cancel, campusId)
-                                }).catch(err => err.errors.map((error: string) => toast.error(error)))
+                                    updateEvent(eventIds.id, nop, date, remarks, cancel, campusId, () => setDisableBtn(false))
+                                }).catch(err => {
+                                    err.errors.map((error: string) => toast.error(error))
+                                    setDisableBtn(false)
+                                })
 
                             }}
                         >Add Orientation Details</button>
@@ -112,13 +117,22 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
 
     )
 }
-function updateEvent(eventId: string, nop: string, date: string, remarks: string, cancel: () => void, campusId: string) {
+function updateEvent(eventId: string, nop: string, date: string, remarks: string, cancel: () => void, campusId: string,
+    enableBtn: () => void
+) {
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     try {
         if (!isDateTimeValid(date)) {
+            enableBtn()
+            toast.dismiss('Updating')
+
             throw new Error(JSON.stringify({
                 status: 400,
                 data: { message: { general: ['Date of completion cannot be a future date',] } }
             }))
+
         }
         else {
             privateGateway
@@ -129,11 +143,15 @@ function updateEvent(eventId: string, nop: string, date: string, remarks: string
                     status: "Completed",
                 })
                 .then(() => {
+                    toast.dismiss('Updating')
                     updateCampusStatus(campusId, "Orientation Completed", cancel);
                 })
                 .catch((err) => {
+                    toast.dismiss('Updating')
+
                     errorCheck(err.response);
                     errorMessage(err.response);
+                    enableBtn()
                 });
         }
     } catch (err: any) {

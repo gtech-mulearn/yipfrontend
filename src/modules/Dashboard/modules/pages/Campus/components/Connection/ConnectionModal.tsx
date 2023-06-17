@@ -30,6 +30,7 @@ const ConnectionModal = ({
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
+    const [disableBtn, setDisableBtn] = useState(false)
     function validateSchema() {
         const validationSchema = yup.object().shape({
             designation: yup.string().required("Designation is required"),
@@ -133,8 +134,10 @@ const ConnectionModal = ({
             <div className="last-container">
                 <div className="modal-buttons">
                     <button
+                        disabled={disableBtn}
                         className="btn-update "
-                        onClick={() =>
+                        onClick={() => {
+                            setDisableBtn(true)
                             validateSchema().then(() => {
                                 assignFacilitator(
                                     campusId,
@@ -142,9 +145,14 @@ const ConnectionModal = ({
                                     name,
                                     email,
                                     mobile,
-                                    cancel
+                                    cancel,
+                                    () => setDisableBtn(false)
                                 )
-                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
+                            }).catch(err => {
+                                setDisableBtn(false)
+                                err.errors.map((error: string) => toast.error(error))
+                            })
+                        }
                         }
                     >
                         Add Facilitator
@@ -164,7 +172,8 @@ function assignFacilitator(
     name: string,
     email: string,
     mobile: string,
-    cancel: () => void
+    cancel: () => void,
+    enableBtn: () => void
 ) {
     const postData = {
         clubId: id,
@@ -174,19 +183,27 @@ function assignFacilitator(
         phone: mobile,
         role: designation,
     };
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     privateGateway
         .post(campusRoutes.subUser.create, postData)
         .then((res) => {
+            toast.dismiss('Updating')
             updateCampusStatus(id, "Connection Established", cancel);
             success();
             cancel();
         })
         .catch((err) => {
+            toast.dismiss('Updating')
             errorMessage(err.response);
             errorCheck(err.response);
-        });
+            enableBtn()
+        })
+
 }
 export function updateCampusStatus(id: string, status: string, cancel: () => void) {
+
     privateGateway
         .put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then((res) => {

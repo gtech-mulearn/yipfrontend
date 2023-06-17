@@ -13,6 +13,7 @@ import { privateGateway } from '../../../../../../../services/apiGateway'
 import { tableRoutes } from '../../../../../../../services/urls'
 import { CampusPageProps } from '../../utils'
 import ConfirmModal from '../Confirmed/ConfirmModal'
+import { toast } from 'react-toastify'
 
 const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string }) => {
     const [statusList, setStatusList] = useState<string[]>([])
@@ -96,13 +97,20 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     )
 }
 function updateStatus(id: string, status: string, cancel: () => void) {
-
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: (status) })
         .then(res => {
+            toast.dismiss('Updating')
             cancel()
             console.log('Success :', res?.data?.message?.general[0])
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+            toast.dismiss('Updating')
+            toast.error('Something Went Wrong,Please try again')
+            console.error(err)
+        })
 }
 function getNextStatus(status: string) {
     switch (status) {
