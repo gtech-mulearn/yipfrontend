@@ -2,6 +2,8 @@ import React, { Dispatch, FC, SetStateAction, createContext, useEffect, useRef }
 import { privateGateway } from '../services/apiGateway';
 import { setupRoutes } from '../services/urls';
 import { toast } from 'react-toastify';
+import { AES, enc } from 'crypto-js';
+const secretKey = import.meta.env.VITE_SECRET_KEY || 'dwsdssecret'
 interface userInfoProps {
     name: string
     role: string
@@ -37,21 +39,31 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
         </GlobalContext.Provider>
     );
 }
+function fetchData(setData: Dispatch<SetStateAction<userInfoProps>>) {
+    privateGateway.get(setupRoutes.user.info)
+        .then((res) => {
+            setData(res.data.response)
+            let encrypted = AES.encrypt(JSON.stringify(res.data.response), secretKey).toString()
+            localStorage.setItem('userRole', encrypted)
+        })
+        .catch((err: any) => {
+            toast.error('Error :', err?.response.data.message.general[0] || err.message)
+        })
+}
 function fetchUserInfo(setData: Dispatch<SetStateAction<userInfoProps>>) {
     const userRole = localStorage.getItem('userRole')
     if (userRole) {
-        const user = JSON.parse(userRole)
-        setData(user)
+        let decrypted = ''
+        try {
+            decrypted = AES.decrypt(userRole, secretKey).toString(enc.Utf8);
+            const user = JSON.parse(decrypted)
+            setData(user)
+        } catch (error) {
+            fetchData(setData)
+        }
     }
     else {
-        privateGateway.get(setupRoutes.user.info)
-            .then((res) => {
-                setData(res.data.response)
-                localStorage.setItem('userRole', JSON.stringify(res.data.response))
-            })
-            .catch((err: any) => {
-                toast.error('Error :', err?.response.data.message.general[0] || err.message)
-            })
+        fetchData(setData)
     }
 }
 function fetchUserRoles(setData: Dispatch<SetStateAction<selectProps[]>>) {

@@ -226,6 +226,7 @@ function searchUser(schoolList: UserTableProps[], search: string) {
         rawString(school.phone).includes(rawString(search)) ||
         rawString(school.role).includes(rawString(search)) ||
         rawString(school.location).includes(rawString(search)) ||
+        rawString(school?.coordinator?.name ? school.coordinator.name : '').includes(rawString(search)) ||
         (school?.institutes?.find(institute => rawString(institute?.name).includes(rawString(search))))
     )
 }
