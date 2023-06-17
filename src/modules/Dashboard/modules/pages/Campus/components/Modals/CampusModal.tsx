@@ -20,15 +20,17 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId 
     { id: "1", name: "Visited" },
     { id: "2", name: "Connection Established" },
     { id: "3", name: "Orientation Scheduled" },
+    { id: "4", name: "Orientation Completed" },
     ])
     const [view, setView] = useState('')
     const [status, setStatus] = useState<string>(getNextStatus(campuStatus ? campuStatus : campus?.status as string))
     const viewConnection = (status === 'Connection Established') || (status === 'Add Facilitator')
     const viewScheduled = (status === 'Orientation Scheduled')
-    const viewCompleted = (status === 'Orientation Update')
+    const viewCompleted = (status === 'Orientation Update' || status === 'Orientation Completed')
     const viewExecom = ((status === 'Execom Formed') || (status === 'Add Member'))
     const viewUpdateButton = (status === 'Identified')
     const viewConfirm = (status === 'Visited')
+
     useEffect(() => {
         if (viewScheduled) {
             setView('Orientation Scheduled')
@@ -109,9 +111,9 @@ function getNextStatus(status: string) {
         case 'Add Facilitator': return 'Add Facilitator'
         case 'Orientation Update': return 'Orientation Update'
         case 'Connection Established': return 'Orientation Scheduled'
-        case 'Orientation Scheduled': return ''
+        case 'Orientation Scheduled': return 'Orientation Completed'
         case 'Execom Formed': return ''
-        case 'Orientation Completed': return 'Orientation Scheduled'
+        case 'Orientation Completed': return ''
         case 'Add Member': return 'Add Member'
         default: return ''
     }

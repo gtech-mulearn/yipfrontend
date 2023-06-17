@@ -9,14 +9,27 @@ import { errorCheck, errorMessage, success } from '../../../../../components/Toa
 import { updateCampusStatus } from '../Connection/ConnectionModal'
 import * as yup from "yup";
 import { toast } from 'react-toastify'
+import { listEvent } from './OrientationScheduleModal'
+import { OrientationCompleteProps } from './Orientation'
 
-const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: { cancel: () => void, eventId: string, campusId: string, campusStatus: string }) => {
-    const [groupFormed, setGroupFormed] = useState<selectProps>({} as selectProps)
+const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: { cancel: () => void, eventId?: string, campusId: string, campusStatus: string }) => {
     const [nop, setNop] = useState('')
     const [remarks, setRemark] = useState('')
     const [date, setDate] = useState('')
     const [checkDate, setCheckDate] = useState<Date | null>(null)
     const [maxDate, setMaxDate] = useState('');
+    const [eventIds, setEventIds] = useState<OrientationCompleteProps>({} as OrientationCompleteProps)
+    const [list, setList] = useState<OrientationCompleteProps[]>([])
+    useEffect(() => {
+        listEvent(campusId, setList)
+    }, [])
+    useEffect(() => {
+        if (list.length) {
+            let event = list.find(item => item.status === 'Scheduled')
+            if (event)
+                setEventIds(event)
+        }
+    }, [list])
     function validateSchema() {
         const validationSchema = yup.object().shape({
             nop: yup.number().required("No of Participants is required").typeError("Please enter a valid number"),
@@ -53,49 +66,48 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
     }, []);
     return (
         <div className='secondary-box'>
-            <div className="data-box">
-                <div className="content">
-                    <CustomInput value={'No of Participants'} data={nop} setData={setNop} customCSS={'setup-item'} />
-                </div>
-            </div>
-            <div className="data-box">
-                <div className="content">
-                    <div className={'setup-item'}>
-                        <p>Date</p>
-                        <input
-                            type='datetime-local'
-                            name={`name-Date`}
-                            id={`id-date`}
-                            onChange={(e) => {
-                                setDate(e.target.value)
-                                setCheckDate(e.target.valueAsDate)
-                            }}
-                            max={maxDate}
-                        />
+            {<>
+                <div className="data-box">
+                    <div className="content">
+                        <CustomInput value={'No of Participants'} data={nop} setData={setNop} customCSS={'setup-item'} />
                     </div>
                 </div>
-            </div>
-            <div className="data-box">
-                <div className="content">
-                    <CustomInput value={'Remarks'} data={remarks} setData={setRemark} customCSS={'setup-item'} />
+                <div className="data-box">
+                    <div className="content">
+                        <div className={'setup-item'}>
+                            <p>Date</p>
+                            <input
+                                type='datetime-local'
+                                name={`name-Date`}
+                                id={`id-date`}
+                                onChange={(e) => {
+                                    setDate(e.target.value)
+                                    setCheckDate(e.target.valueAsDate)
+                                }}
+                                max={maxDate}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-
-
-            <div className='last-container'>
-                <div className="modal-buttons">
-                    <button className='btn-update '
-                        onClick={() => {
-                            validateSchema().then(() => {
-                                updateEvent(eventId, nop, date, remarks, cancel, campusId)
-                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
-
-                        }}
-                    >Add Orientation Details</button>
-                    <button className="cancel-btn " onClick={cancel}>Cancel</button>
+                <div className="data-box">
+                    <div className="content">
+                        <CustomInput value={'Remarks'} data={remarks} setData={setRemark} customCSS={'setup-item'} />
+                    </div>
                 </div>
-            </div>
+                <div className='last-container'>
+                    <div className="modal-buttons">
+                        <button className='btn-update '
+                            onClick={() => {
+                                validateSchema().then(() => {
+                                    updateEvent(eventIds.id, nop, date, remarks, cancel, campusId)
+                                }).catch(err => err.errors.map((error: string) => toast.error(error)))
+
+                            }}
+                        >Add Orientation Details</button>
+                        <button className="cancel-btn " onClick={cancel}>Cancel</button>
+                    </div>
+                </div>
+            </>}
         </div>
 
     )
