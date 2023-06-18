@@ -1,10 +1,12 @@
-import React, { useState, useEffect, Dispatch, SetStateAction, useRef } from 'react'
+import React, { useState, useEffect, Dispatch, SetStateAction, useRef, useContext } from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import './InternBanner.scss'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { campusRoutes, yip5Routes } from '../../../../../../../services/urls'
 import { selectProps } from '../../../../utils/setupUtils'
 import { fetchDistrictFilter, fetchZoneFilter } from '../Table/InternTable'
+import { GlobalContext } from '../../../../../../../utils/GlobalVariable'
+import roles from '../../../../../../../utils/roles'
 const InternBanner = ({ update }: { update: boolean }) => {
     const [banner, setBanner] = useState<any>({})
     const [district, setDistrict] = useState<selectProps>({} as selectProps)
@@ -14,16 +16,15 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const [college, setCollege] = useState<selectProps>({} as selectProps)
     const [collegeList, setCollegeList] = useState<selectProps[]>([])
     const ref = useRef(false)
+    const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
-        if (!ref.current) {
-            console.log('college 1')
+        if (userInfo.role !== null && userInfo.role !== undefined) {
             fetchBannerData(setBanner as any, 'state', 'state')
             fetchZoneFilter(setZoneList)
         }
-    }, [])
+    }, [userInfo])
     useEffect(() => {
         if (zone.id) {
-            console.log('college 2')
             fetchBannerData(setBanner as any, 'zone', zone.name)
             fetchDistrictFilter(zone.name, setDistrictList)
         }
@@ -37,7 +38,6 @@ const InternBanner = ({ update }: { update: boolean }) => {
     }, [zone])
     useEffect(() => {
         if (district.id) {
-            console.log('college 3')
             fetchBannerData(setBanner as any, 'district', district.name)
             fetchCollege(district.name, setCollegeList)
         }
@@ -45,7 +45,6 @@ const InternBanner = ({ update }: { update: boolean }) => {
     }, [district])
     useEffect(() => {
         if (college.id) {
-            console.log('college 4')
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
     }, [college])
@@ -53,10 +52,10 @@ const InternBanner = ({ update }: { update: boolean }) => {
     return (
         <div className='white-container'>
             <div className='banner-header'>
-                <p>{showCurrentSelected(zone, district, college)}</p>
+                {userInfo.role !== roles.INTERN && <p>{showCurrentSelected(zone, district, college)}</p>}
                 <p className='last-updated'>Last Updated : {formatDate(banner.last_update_date)}</p>
             </div>
-            <div className="filter-container">
+            {userInfo.role !== roles.INTERN && <div className="filter-container">
 
                 <div className="filter-box">
                     {/* TODO: Clear Concurrent Values, if parent is altered */}
@@ -85,7 +84,7 @@ const InternBanner = ({ update }: { update: boolean }) => {
                         value={collegeList.filter(collegeList => collegeList?.name !== "" && collegeList?.id === college?.id)}
                     />}
                 </div >
-            </div>
+            </div>}
 
             <div className="statistics">
                 {/* <div className={`box blue-box`} >
@@ -140,11 +139,7 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
             console.log(err)
         })
 }
-function fetchZone(setData: Dispatch<SetStateAction<selectProps[]>>) {
-    // privateGateway.get(yip5Routes.zoneList)
-    //     .then(res => setData(res.data.response))
-    //     .catch(err => console.log(err))
-}
+
 function fetchDistricts(zone: string, setData: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(`${campusRoutes.listDistrict}${zone}/`)
         .then(res => {

@@ -35,16 +35,16 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, 
 
     const [roleList, setRoleList] = useState<selectProps[]>([])
     const [role, setRole] = useState<selectProps>(initialState)
-    const [listForTable, setListForTable] = useState<UserTableProps[]>([])
+    const [listForTable, setListForTable] = useState<UserTableProps[] | null>(null)
     const [user, setUser] = useState<UserTableProps>({} as UserTableProps)
-    const [userList, setUserList] = useState<UserTableProps[]>([])
+    const [userList, setUserList] = useState<UserTableProps[] | null>(null)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const [refresh, setRefresh] = useState<boolean>(false)
     const [timeStamp, setTimeStamp] = useState<number>(0)
     const firstCall = useRef(false)
 
     useEffect(() => {
-        if (userList.length) {
+        if (Array.isArray(userList) && userList.length) {
             let currentTime = Date.now()
             setTimeStamp(currentTime)
             const data = { list: userList, timeStamp: currentTime }
@@ -56,7 +56,7 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, 
             const userListStorage = sessionStorage.getItem("userList")
             if (userListStorage) {
                 setUserList(JSON.parse(userListStorage).list)
-                setListForTable(JSON.parse(userListStorage).list)
+                setListForTable(filterUser(JSON.parse(userListStorage).list, searchName, role))
                 setTimeStamp(JSON.parse(userListStorage).timeStamp)
             }
             fetchUsers(setUserList, setListForTable)
@@ -64,19 +64,24 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, 
         if (roles.length) {
             setRoleList(roles)
         }
-        if (userList.length) {
+        if (Array.isArray(userList) && userList.length) {
             setListForTable(filterUser(userList, searchName, role))
         }
     }, [searchName, role, roles])
+    useEffect(() => {
+        if (Array.isArray(userList) && userList.length) {
+            setListForTable(filterUser(userList, searchName, role))
+        }
+    }, [userList])
     useEffect(() => {
         if (firstCall.current) {
             fetchUsers(setUserList, setListForTable)
         }
         firstCall.current = true
     }, [updated, refresh])
-    function updateTable(userList: UserTableProps[]) {
-        setListForTable(filterUser(userList, searchName, role))
-    }
+    // function updateTable(userList: UserTableProps[]) {
+    //     setListForTable(filterUser(userList, searchName, role))
+    // }
     function resetFilter() {
         setFilterBtn(false)
         setRole(initialState)
@@ -196,10 +201,9 @@ const UserTable: FC<UserSetupProps> = ({ setViewSetup, updateUserData, updated, 
                         },
                     }}
                     manage={{
-                        value: "View",
+                        value: "View ",
                         manageFunction: (item: UserTableProps) => {
                             setUser(item);
-                            console.log(item)
                         },
                     }}
                     countPerPage={11}
@@ -221,7 +225,9 @@ function searchUser(schoolList: UserTableProps[], search: string) {
         rawString(school.email).includes(rawString(search)) ||
         rawString(school.phone).includes(rawString(search)) ||
         rawString(school.role).includes(rawString(search)) ||
-        rawString(school.location).includes(rawString(search))
+        rawString(school.location).includes(rawString(search)) ||
+        rawString(school?.coordinator?.name ? school.coordinator.name : '').includes(rawString(search)) ||
+        (school?.institutes?.find(institute => rawString(institute?.name).includes(rawString(search))))
     )
 }
 

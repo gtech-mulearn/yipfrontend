@@ -18,8 +18,7 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
     const [block, setBlock] = useState<string>("")
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
-    const [errorMessage, setErrorMessage] = useState("")
-    const [successMessage, setSuccessMessage] = useState("")
+
     const { districts } = useContext(GlobalContext)
     const reset = () => {
         setBlock("")
@@ -69,8 +68,6 @@ const BlockSetup: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData }) => {
                     <img src={setupImg} alt="HI" />
                 </div>
             </div>
-            {errorMessage && <Error error={errorMessage} />}
-            {successMessage && <Success success={successMessage} />}
         </div>)
 }
 

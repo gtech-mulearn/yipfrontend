@@ -103,15 +103,19 @@ export function deleteModelClub(id: string, updateClubStatus: Function, setSucce
         .catch(err => setError(err?.response?.data?.message?.general[0]))
 }
 export async function fetchClubs(
-    setData: Dispatch<SetStateAction<ClubTableProps[]>>,
-    setData2: Dispatch<SetStateAction<ClubTableProps[]>>,
+    setData: Dispatch<SetStateAction<ClubTableProps[] | null>>,
+    setData2: Dispatch<SetStateAction<ClubTableProps[] | null>>,
     updateTable?: Function
 ) {
     await privateGateway.get(tableRoutes.club.list)
         .then(res => res.data.response.clubs)
         .then(data => {
-            setData(data)
-            setData2(data)
+            const reqData = data.map((item: ClubTableProps) => ({
+                ...item,
+                club_status: changeStatus(item.club_status)
+            }))
+            setData(reqData)
+            setData2(reqData)
 
             if (updateTable) updateTable(data)
         })
@@ -120,15 +124,23 @@ export async function fetchClubs(
             console.log('Error :', err?.response?.data?.message?.general[0])
         })
 }
+function changeStatus(status: string) {
+    if (status === 'Orientation Scheduled') {
+        return 'Event Scheduled'
+    } else if (status === 'Orientation Completed') {
+        return 'Event Completed'
+    }
+    return status
+}
 export function fetchStatus(setData: Dispatch<SetStateAction<string[]>>, setOptionStatusList: Dispatch<SetStateAction<selectProps[]>>) {
     privateGateway.get(tableRoutes.status.list)
         .then(res => res.data.response.clubStatus)
         .then(data => {
-            setData(data)
-            setOptionStatusList(data.map((item: selectProps, index: string) => {
+            setData(data.map((item: string) => changeStatus(item)))
+            setOptionStatusList(data.map((item: string, index: string) => {
                 return {
                     id: index,
-                    name: item
+                    name: changeStatus(item)
                 }
             }))
         })

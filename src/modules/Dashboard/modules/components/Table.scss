@@ -187,11 +187,11 @@
 
 // Table 
 
-.status-orientation-scheduled,
+.status-event-scheduled,
 .status-identified,
 .status-visited,
 .status-execom-formed,
-.status-orientation-completed,
+.status-event-completed,
 .status-connection-established {
     all: unset;
     display: flex;
@@ -210,11 +210,11 @@
     background-color: #6EFF00;
 }
 
-.status-orientation-completed {
+.status-event-completed {
     background-color: #8CFF00;
 }
 
-.status-orientation-scheduled {
+.status-event-scheduled {
     background-color: #A9FF00
 }
 

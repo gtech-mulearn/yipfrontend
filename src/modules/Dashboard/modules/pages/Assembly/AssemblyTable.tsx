@@ -23,11 +23,11 @@ const list: (keyof AssemblyTableProps)[] = ['name', 'district',]
 const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyData, updated }) => {
     const [search, setSearch] = useState<string>('')
     const [assembly, setAssembly] = useState<AssemblyTableProps>({} as AssemblyTableProps)
-    const [assemblyList, setAssemblyList] = useState<AssemblyTableProps[]>([])
+    const [assemblyList, setAssemblyList] = useState<AssemblyTableProps[] | null>(null)
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
-    const [listForTable, setListForTable] = useState<AssemblyTableProps[]>([])
+    const [listForTable, setListForTable] = useState<AssemblyTableProps[] | null>(null)
     const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const fetchedOnce = useRef(false)
     useEffect(() => {
@@ -35,6 +35,9 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
         setDistrictList(OptionDistrict)
         fetchAssemblys(setAssemblyList, setListForTable)
     }, [])
+    useEffect(() => {
+        setListForTable(filterAssembly(assemblyList, search, district))
+    }, [assemblyList])
     useEffect(() => {
         if (fetchedOnce.current)
             fetchAssemblys(setAssemblyList, setListForTable, updateTable)
@@ -157,7 +160,8 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
         </>
     );
 }
-function filterAssembly(assemblyList: AssemblyTableProps[], search: string, district: selectProps) {
+function filterAssembly(assemblyList: AssemblyTableProps[] | null, search: string, district: selectProps) {
+    if (assemblyList === null) return assemblyList
     let list = assemblyList
     if (search) {
         list = searchAssembly(list, search)

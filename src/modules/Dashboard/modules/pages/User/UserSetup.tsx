@@ -131,7 +131,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
 
     }
     function handleUpdate() {
-        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, updateUserData, setViewSetup, selectedInstitute)
+        updateUserDataFn(updateUser.id, name, email.trim(), phone, role.id, updateUserData, setViewSetup, selectedInstitute, resetUpdateUser)
     }
 
     const handleOptionRemove = (
@@ -194,7 +194,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                                     isSearchable={true}
                                     value={updateUser?.district ? district : undefined}
                                 />
-                                <div className={"setup-item"}>
+                                <div className={"setup-item"} >
                                     <p>Select Institutes</p>
                                     <Select
                                         className='react-select-container'
@@ -217,7 +217,7 @@ const UserSetup: FC<UserTableProps> = ({ setViewSetup, updateUserData, updateUse
                                 </div>
                             </>
                         }
-                        {!updateUser?.id && <div className={styles.password}>
+                        {!updateUser?.id && <div className={`${styles.password}`}>
                             <input value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} type={showPassword ? 'text' : "password"} className={styles.input} />
                             <i className='fas fa-eye' onMouseDown={() => setShowPassword(true)} onMouseOut={() => setShowPassword(false)}></i>
                         </div>}

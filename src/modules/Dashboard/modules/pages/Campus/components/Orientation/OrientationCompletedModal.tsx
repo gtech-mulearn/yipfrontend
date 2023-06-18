@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
@@ -9,14 +9,28 @@ import { errorCheck, errorMessage, success } from '../../../../../components/Toa
 import { updateCampusStatus } from '../Connection/ConnectionModal'
 import * as yup from "yup";
 import { toast } from 'react-toastify'
+import { listEvent } from './OrientationScheduleModal'
+import { OrientationCompleteProps } from './Orientation'
+import { GlobalContext } from '../../../../../../../utils/GlobalVariable'
 
-const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: { cancel: () => void, eventId: string, campusId: string, campusStatus: string }) => {
-    const [groupFormed, setGroupFormed] = useState<selectProps>({} as selectProps)
+const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: { cancel: () => void, eventId?: string, campusId: string, campusStatus: string }) => {
     const [nop, setNop] = useState('')
     const [remarks, setRemark] = useState('')
     const [date, setDate] = useState('')
     const [checkDate, setCheckDate] = useState<Date | null>(null)
     const [maxDate, setMaxDate] = useState('');
+    const [eventIds, setEventIds] = useState<OrientationCompleteProps>({} as OrientationCompleteProps)
+    const [list, setList] = useState<OrientationCompleteProps[]>([])
+    const [disableBtn, setDisableBtn] = useState(false)
+    const { clubEvents } = useContext(GlobalContext)
+
+    useEffect(() => {
+        if (clubEvents.length) {
+            let event = clubEvents.find((item: any) => item.status === 'Scheduled')
+            if (event)
+                setEventIds(event)
+        }
+    }, [clubEvents])
     function validateSchema() {
         const validationSchema = yup.object().shape({
             nop: yup.number().required("No of Participants is required").typeError("Please enter a valid number"),
@@ -25,7 +39,7 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
                 return !(/^\s+$/.test(value));
             }),
             date: yup.date().required('Date is required').max(new Date(), 'Date and time must be before the current time'),
-            status: yup.string().test('Valid Status', 'Schedule an Orientation first !!!', value => {
+            status: yup.string().test('Valid Status', 'Schedule an Event first !!!', value => {
                 console.log(value)
                 if (value === 'Identified' || value === 'Confirmed' || value === 'Connection Established') {
                     return false
@@ -53,60 +67,72 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
     }, []);
     return (
         <div className='secondary-box'>
-            <div className="data-box">
-                <div className="content">
-                    <CustomInput value={'No of Participants'} data={nop} setData={setNop} customCSS={'setup-item'} />
-                </div>
-            </div>
-            <div className="data-box">
-                <div className="content">
-                    <div className={'setup-item'}>
-                        <p>Date</p>
-                        <input
-                            type='datetime-local'
-                            name={`name-Date`}
-                            id={`id-date`}
-                            onChange={(e) => {
-                                setDate(e.target.value)
-                                setCheckDate(e.target.valueAsDate)
-                            }}
-                            max={maxDate}
-                        />
+            {<>
+                <div className="data-box">
+                    <div className="content">
+                        <CustomInput value={'No of Participants'} data={nop} setData={setNop} customCSS={'setup-item'} />
                     </div>
                 </div>
-            </div>
-            <div className="data-box">
-                <div className="content">
-                    <CustomInput value={'Remarks'} data={remarks} setData={setRemark} customCSS={'setup-item'} />
+                <div className="data-box">
+                    <div className="content">
+                        <div className={'setup-item'}>
+                            <p>Date</p>
+                            <input
+                                type='datetime-local'
+                                name={`name-Date`}
+                                id={`id-date`}
+                                onChange={(e) => {
+                                    setDate(e.target.value)
+                                    setCheckDate(e.target.valueAsDate)
+                                }}
+                                max={maxDate}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-
-
-            <div className='last-container'>
-                <div className="modal-buttons">
-                    <button className='btn-update '
-                        onClick={() => {
-                            validateSchema().then(() => {
-                                updateEvent(eventId, nop, date, remarks, cancel, campusId)
-                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
-
-                        }}
-                    >Add Orientation Details</button>
-                    <button className="cancel-btn " onClick={cancel}>Cancel</button>
+                <div className="data-box">
+                    <div className="content">
+                        <CustomInput value={'Remarks'} data={remarks} setData={setRemark} customCSS={'setup-item'} />
+                    </div>
                 </div>
-            </div>
+                <div className='last-container'>
+                    <div className="modal-buttons">
+                        <button className='btn-update '
+                            onClick={() => {
+                                setDisableBtn(true)
+                                validateSchema().then(() => {
+                                    updateEvent(eventIds.id, nop, date, remarks, cancel, campusId, () => setDisableBtn(false))
+                                }).catch(err => {
+                                    err.errors.map((error: string) => toast.error(error))
+                                    setDisableBtn(false)
+                                })
+
+                            }}
+                        >Add Orientation Details</button>
+                        <button className="cancel-btn " onClick={cancel}>Cancel</button>
+                    </div>
+                </div>
+            </>}
         </div>
 
     )
 }
-function updateEvent(eventId: string, nop: string, date: string, remarks: string, cancel: () => void, campusId: string) {
+function updateEvent(eventId: string, nop: string, date: string, remarks: string, cancel: () => void, campusId: string,
+    enableBtn: () => void
+) {
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     try {
         if (!isDateTimeValid(date)) {
+            enableBtn()
+            toast.dismiss('Updating')
+
             throw new Error(JSON.stringify({
                 status: 400,
                 data: { message: { general: ['Date of completion cannot be a future date',] } }
             }))
+
         }
         else {
             privateGateway
@@ -117,11 +143,15 @@ function updateEvent(eventId: string, nop: string, date: string, remarks: string
                     status: "Completed",
                 })
                 .then(() => {
+                    toast.dismiss('Updating')
                     updateCampusStatus(campusId, "Orientation Completed", cancel);
                 })
                 .catch((err) => {
+                    toast.dismiss('Updating')
+
                     errorCheck(err.response);
                     errorMessage(err.response);
+                    enableBtn()
                 });
         }
     } catch (err: any) {

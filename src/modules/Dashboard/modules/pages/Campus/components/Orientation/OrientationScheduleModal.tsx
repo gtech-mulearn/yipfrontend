@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: { cancel: () => void, district: string, campusId: string, campusStatus: string }) => {
     const [coordinatorList, setCoordinatorList] = useState<selectProps[]>([])
     const [coordinator, setCoordinator] = useState<selectProps>({} as selectProps)
+    const [disableBtn, setDisableBtn] = useState(false)
     const [modList, setModList] = useState<selectProps[]>([{
         id: 'Online',
         name: 'Online'
@@ -100,14 +101,20 @@ const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: 
             </div>
             <div className='last-container'>
                 <div className="modal-buttons">
-                    <button className='btn-update ' onClick={() => {
-                        validationSchema()
-                            .then(() => {
-                                createEvent(date, place, mod.id, coordinator.id, campusId, cancel)
-                            }).catch(err => err.errors.map((error: string) => toast.error(error)))
+                    <button className='btn-update '
+                        disabled={disableBtn}
+                        onClick={() => {
+                            setDisableBtn(true)
+                            validationSchema()
+                                .then(() => {
+                                    createEvent(date, place, mod.id, coordinator.id, campusId, cancel, () => setDisableBtn(false))
+                                }).catch(err => {
+                                    err.errors.map((error: string) => toast.error(error))
+                                    setDisableBtn(true)
+                                })
 
 
-                    }}>Add Orientation</button>
+                        }}>Add Orientation</button>
                     <button className="cancel-btn " onClick={cancel}>Cancel</button>
                 </div>
             </div>
@@ -122,8 +129,11 @@ function getListOfCoordinatorByDistrict(district: string, setCoordinatorList: Di
         .then(data => setCoordinatorList(data))
         .catch(err => console.error(err))
 }
-function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void) {
+function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void, enableBtn: () => void) {
     const now = new Date();
+    toast.info('Updating', {
+        toastId: 'Updating'
+    })
     privateGateway.post(campusRoutes.createEvent, {
         planned_date: date,
         scheduled_date: now,
@@ -139,8 +149,10 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
                 .then(res => {
                     updateCampusStatus(campusId, "Orientation Scheduled", cancel);
                     success()
+                    toast.dismiss('Updating')
                 })
                 .catch(err => {
+                    enableBtn()
                     errorCheck(err.response);
                     errorMessage(err.response);
                 })
@@ -148,6 +160,7 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
         ).catch(err => {
             errorCheck(err.response);
             errorMessage(err.response);
+            enableBtn()
         })
 }
 export function listEvent(campusId: string, setData: Dispatch<SetStateAction<OrientationCompleteProps[]>>) {

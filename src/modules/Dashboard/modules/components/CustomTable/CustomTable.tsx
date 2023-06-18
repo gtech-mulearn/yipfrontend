@@ -7,6 +7,7 @@ import exportFromJSON from 'export-from-json';
 import { ThreeDots, RotatingSquare } from "react-loader-spinner";
 import roles from "../../../../../utils/roles";
 import { GlobalContext } from "../../../../../utils/GlobalVariable";
+import { isEmptyArray } from "formik";
 interface sortProps {
     status: string;
     updater: boolean;
@@ -19,7 +20,7 @@ function paginateArray<T>(array: T[], page: number, countInPage: number): T[] {
 }
 export interface CustomTableProps<TableProps> {
     tableHeadList: string[]
-    tableData: TableProps[]
+    tableData: TableProps[] | null
     orderBy: (keyof TableProps)[]
     sortOrder?: {
         sortBy?: keyof TableProps
@@ -72,9 +73,10 @@ function CustomTable<TableProps>({
 }
     :
     CustomTableProps<TableProps>) {
-
+    const [isValidData, setIsValidData] = useState(Array.isArray(tableData))
+    const [isLoading, setIsLoading] = useState(tableData === null)
+    const [sortedTable, setSortedTable] = useState(tableData ? tableData : [])
     const [page, setPage] = useState(1)
-    const [sortedTable, setSortedTable] = useState(tableData)
     const [sort, setSort] = useState<sortProps>({ updater: false, status: "Unsorted" })
     const [selectedHeading, setSelectedHeading] = useState<number>(-1)
     const [csvData, setCsvData] = useState<any>();
@@ -85,20 +87,22 @@ function CustomTable<TableProps>({
     const fetched = useRef(false)
     const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
+        if (Array.isArray(tableData)) setIsLoading(false)
+        if (!Array.isArray(tableData)) { setIsValidData(false) }
         handleDownloadCSV()
+        if (Array.isArray(tableData) && tableData.length === 0) {
+            setNotLoading('No Data to Display')
+        }
+        else if (tableData === null) {
+            setTimeout(() => {
+                setIsLoading(false)
+                setNotLoading('Something Went Wrong!!!')
+            }, 20000);
+        }
     }, [tableData, sortedTable, sort, selectedHeading])
     useEffect(() => {
         if (fetched.current) return
         fetched.current = true
-        console.log('hi')
-        if (tableData.length === 0) {
-            const interval = setTimeout(() => {
-                setupLoading(false)
-                setNotLoading('No Data to Display')
-            }, 5000)
-            return () => clearTimeout(interval)
-        }
-
     }, [])
     useEffect(() => {
         if (countInPage === -1) {
@@ -134,9 +138,8 @@ function CustomTable<TableProps>({
     }, [countInPage])
 
     useEffect(() => {
-
         setPage(1)
-        setSortedTable(tableData)
+        setSortedTable(tableData ? tableData : [])
         setSort({ updater: false, status: "Unsorted" })
     }, [tableData])
     function capitalizeString(sentence: string): string {
@@ -150,13 +153,22 @@ function CustomTable<TableProps>({
     }
     function sortTable(index: number) {
         setSort((prev: sortProps) => {
-            const isNotSorted = prev.status === "Unsorted" || prev.status === "Sorted:DESC";
             const tempSortStatus = sortStatusUpdater(prev.status);
-
+            const valueType = typeof (sortedTable.find(item => item[orderBy[index]]))?.[orderBy[index]]
+            let substitute = ''
+            let isNotSorted = true
+            if (selectedHeading !== index && prev.status === 'Unsorted') isNotSorted = false
+            if (selectedHeading === index && prev.status === 'Sorted:DESC') isNotSorted = false
+            if (valueType === 'string') {
+                substitute = 'zzz'
+            } else if (valueType === 'number') {
+                substitute = '0'
+            }
             const tempTable = sortedTable.slice().sort((a: any, b: any) => {
-                const aValue = a[orderBy[index]] || "";
-                const bValue = b[orderBy[index]] || "";
-
+                let aValue = a[orderBy[index]] ? a[orderBy[index]] : substitute
+                aValue = isNaN(aValue) ? aValue.toLowerCase().trim() : aValue
+                let bValue = b[orderBy[index]] ? b[orderBy[index]] : substitute
+                bValue = isNaN(bValue) ? bValue.toLowerCase().trim() : bValue
                 if (aValue < bValue) return isNotSorted ? -1 : 1;
                 if (aValue > bValue) return isNotSorted ? 1 : -1;
                 return 0;
@@ -170,6 +182,7 @@ function CustomTable<TableProps>({
                 status: tempSortStatus,
             };
         });
+        setSelectedHeading(index)
     }
 
     function sortOrderByRequired(index: number) {
@@ -178,8 +191,12 @@ function CustomTable<TableProps>({
     }
     function sortByOrder(index: number): void {
         let tempTable: TableProps[] = []
-
-        let listOrder = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
+        let listOrder = sortOrder?.orderList
+        if (selectedHeading === index) {
+            if (sort.status === 'Sorted:ASC')
+                listOrder = [...(sortOrder?.orderList ? sortOrder?.orderList : [])].reverse()
+        }
+        //  = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
         listOrder?.map((value: string) => {
             tempTable.push(
                 ...sortedTable.filter((item: TableProps) => item[orderBy[index]] === value)
@@ -193,6 +210,7 @@ function CustomTable<TableProps>({
                 status: sortStatusUpdater(sort.status)
             }
         })
+        setSelectedHeading(index)
     }
 
     function getIconStyleForSortedHeading(index: number): string {
@@ -274,11 +292,11 @@ function CustomTable<TableProps>({
                         <div className="sortList">
                             {filter &&
                                 tableHeadList.map((item: string, index: number) => (
-                                    <p className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
+                                    <p key={index} className={`sort-btns ${index === selectedHeading ? 'selected' : ''}`} onClick={() => {
                                         if (filter) {
                                             setPage(1)
                                             sortOrderByRequired(index)
-                                            setSelectedHeading(index)
+                                            // setSelectedHeading(index)
                                         }
                                     }}>
                                         <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
@@ -353,21 +371,17 @@ function CustomTable<TableProps>({
 
                         <tbody>
                             {paginateArray(sortedTable, page, countInPage).map((item: TableProps, key: number) => {
-
-                                //console.log(item)
                                 return (
                                     <tr key={key} >
                                         <td >{(page - 1) * countInPage + key + 1}</td>
                                         {
-                                            orderBy.map((item2: keyof TableProps, index: number) => (
-                                                <>
-                                                    <td
-                                                        className={`
-                                                ${customCssByRequiredByValue(index, item[item2] as string)} `}
-                                                        key={index}>
-                                                        {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
-                                                    </td>
-                                                </>
+                                            orderBy.map((item2: keyof TableProps, something: number) => (
+                                                <td
+                                                    className={`
+                                                ${customCssByRequiredByValue(something, item[item2] as string)} `}
+                                                    key={something}>
+                                                    {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                                </td>
                                             ))
                                         }
                                         {manage?.value &&
@@ -386,8 +400,8 @@ function CustomTable<TableProps>({
                         </tbody>
                     </table >}
             </div>
-            {
-                !sortedTable.length && <div className="no-data">
+            {<>
+                {(isLoading || (!isLoading && isEmptyArray(tableData))) && <div className="no-data">
                     <ThreeDots
                         height="60"
                         width="60"
@@ -395,9 +409,15 @@ function CustomTable<TableProps>({
                         ariaLabel="three-dots-loading"
                         wrapperStyle={{}}
                         wrapperClass="no-data"
-                        visible={!notLoading}
+                        visible={isLoading}
                     />
-                    {notLoading ? notLoading : ''}</div>
+                    {!isLoading && (isEmptyArray(tableData)) ? notLoading : ''}
+                </div>}
+                {
+                    !isLoading && notLoading && tableData === null &&
+                    <div className="no-data">{notLoading}</div>
+                }
+            </>
             }
             {/* Pagination */}
 
@@ -406,7 +426,7 @@ function CustomTable<TableProps>({
                 <div className='paginator' >
                     <div className="count-in-page">
 
-                        <input className="input" type="number" value={countInPage} min={1} max={sortedTable.length} onChange={(e) => {
+                        <input className="input" name="count" id="count" type="number" value={countInPage} min={1} max={sortedTable.length} onChange={(e) => {
                             setCountInPage(Number(e.target.value))
                         }} />
                         <p> Per Page </p>
