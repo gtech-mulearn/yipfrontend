@@ -37,13 +37,13 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
             <div>
                 <div>
                     <div className='top-bar'>
-                        <p>Orientation Scheduled</p>
+                        <p>Events Scheduled</p>
                         <div className='add-button' onClick={() => {
                             setOpen(true)
                             setValue('Connection Established')
                         }}>
                             <i className='fas fa-add'></i>
-                            <p >Add Orientation</p>
+                            <p >Add Event</p>
                         </div>
                     </div>
                     <CustomTable
