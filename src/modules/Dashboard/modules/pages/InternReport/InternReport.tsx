@@ -10,14 +10,14 @@ interface reportProps {
     "no_of_events_scheduled": string,
     "no_of_events_completed": string
 }
-const TableTitleList = ["District", 
-, "No. of Active Interns",
-'No. of Pre-Registrations '
- 'No.of Visited', 'No.of Events Scheduled', 'No.of Events Completed']
-const orderBy: (keyof reportProps)[] = ['district', 
-'no_of_interns', 
-'pre_registration',
- 'no_of_club_visited', 'no_of_events_scheduled', 'no_of_events_completed']
+const TableTitleList = ["District",
+    "No. of Active Interns",
+    'No. of Pre-Registrations ',
+    'No.of Visited', 'No.of Events Scheduled', 'No.of Events Completed']
+const orderBy: (keyof reportProps)[] = ['district',
+    'no_of_interns',
+    'pre_registration',
+    'no_of_club_visited', 'no_of_events_scheduled', 'no_of_events_completed']
 const styleHead = {
     unOrder: 'fa-sort',
     asc: ' fa-sort-amount-desc',
