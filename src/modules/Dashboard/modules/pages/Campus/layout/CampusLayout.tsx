@@ -16,6 +16,7 @@ import { Error, Success } from '../../../../components/Error/Alerts'
 import { CampusPageProps, deleteModelSchool, formatDateStyle, getCampusInfo, getCategory } from '../utils'
 import { GlobalContext } from '../../../../../../utils/GlobalVariable'
 import roles from '../../../../../../utils/roles'
+import { listEvent } from '../components/Orientation/OrientationScheduleModal'
 
 const CampusLayout = () => {
     const { campusId, type } = useParams()
@@ -30,11 +31,23 @@ const CampusLayout = () => {
     const viewConnected = campus.status === 'Connection Established' || viewOrientation || viewExecom
     const viewConfirmed = campus.status === 'Visited' || viewConnected || viewOrientation || viewExecom
     const navigate = useNavigate()
-    const { userInfo } = useContext(GlobalContext)
+    const { userInfo, clubEvents, setClubEvents } = useContext(GlobalContext)
     useEffect(() => {
+        listEvent(campusId as string, setClubEvents)
         getCampusInfo(campusId as string, setCampus)
     }, [updateCampus])
-
+    useEffect(() => {
+        if (clubEvents && (campus.status === 'Connection Established' || campus.status === 'Orientation Scheduled' || campus.status === 'Orientation Completed')) {
+            let eventScheduled = clubEvents.find((item: any) => item.status === 'Scheduled')
+            let eventCompleted = clubEvents.find((item: any) => item.status === 'Completed')
+            if (eventScheduled.length) {
+                setCampus({ ...campus, status: 'Orientation Scheduled' })
+            }
+            if (eventCompleted.length) {
+                setCampus({ ...campus, status: 'Connection Established' })
+            }
+        }
+    }, [])
     return (
         <div className='dash-container'>
             <div className='white-container'>

@@ -16,6 +16,8 @@ interface GlobalState {
     userInfo: userInfoProps
     roles: selectProps[]
     districts: selectProps[]
+    clubEvents: any
+    setClubEvents: Dispatch<SetStateAction<any>>
 }
 
 export const GlobalContext = createContext<GlobalState>({} as GlobalState);
@@ -24,6 +26,7 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
     const [districts, setDistricts] = React.useState<selectProps[]>([]);
     const [userInfo, setUserInfo] = React.useState<userInfoProps>({} as userInfoProps);
     const [roles, setRoles] = React.useState<selectProps[]>([]);
+    const [clubEvents, setClubEvents] = React.useState<any>([]);
     const fetchedUserInfo = useRef(false)
     useEffect(() => {
         if (!fetchedUserInfo.current) {
@@ -34,7 +37,7 @@ const GlobalVariableProvider: FC<any> = ({ children }) => {
         }
     }, [])
     return (
-        <GlobalContext.Provider value={{ userInfo, roles, districts }}>
+        <GlobalContext.Provider value={{ userInfo, roles, districts, clubEvents, setClubEvents }}>
             {children}
         </GlobalContext.Provider>
     );
