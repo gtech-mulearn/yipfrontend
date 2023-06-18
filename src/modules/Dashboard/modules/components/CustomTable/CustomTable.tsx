@@ -153,13 +153,21 @@ function CustomTable<TableProps>({
     }
     function sortTable(index: number) {
         setSort((prev: sortProps) => {
-            const isNotSorted = prev.status === "Unsorted" || prev.status === "Sorted:DESC";
             const tempSortStatus = sortStatusUpdater(prev.status);
-
+            const valueType = typeof (sortedTable.find(item => item[orderBy[index]]))?.[orderBy[index]]
+            let substitute = ''
+            let isNotSorted = true
+            if (selectedHeading !== index && prev.status === 'Unsorted') isNotSorted = false
+            if (selectedHeading === index && prev.status === 'Sorted:DESC') isNotSorted = false
+            if (valueType === 'string') {
+                substitute = 'zzz'
+            } else if (valueType === 'number') {
+                substitute = '0'
+            }
             const tempTable = sortedTable.slice().sort((a: any, b: any) => {
-                let aValue = isNaN(a[orderBy[index]]) ? a[orderBy[index]] || 'zzz' : a[orderBy[index]] | 0
+                let aValue = a[orderBy[index]] ? a[orderBy[index]] : substitute
                 aValue = isNaN(aValue) ? aValue.toLowerCase().trim() : aValue
-                let bValue = isNaN(b[orderBy[index]]) ? b[orderBy[index]] || 'zzz' : b[orderBy[index]] | 0
+                let bValue = b[orderBy[index]] ? b[orderBy[index]] : substitute
                 bValue = isNaN(bValue) ? bValue.toLowerCase().trim() : bValue
                 if (aValue < bValue) return isNotSorted ? -1 : 1;
                 if (aValue > bValue) return isNotSorted ? 1 : -1;
@@ -174,6 +182,7 @@ function CustomTable<TableProps>({
                 status: tempSortStatus,
             };
         });
+        setSelectedHeading(index)
     }
 
     function sortOrderByRequired(index: number) {
@@ -182,8 +191,12 @@ function CustomTable<TableProps>({
     }
     function sortByOrder(index: number): void {
         let tempTable: TableProps[] = []
-
-        let listOrder = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
+        let listOrder = sortOrder?.orderList
+        if (selectedHeading === index) {
+            if (sort.status === 'Sorted:ASC')
+                listOrder = [...(sortOrder?.orderList ? sortOrder?.orderList : [])].reverse()
+        }
+        //  = sort.status === 'Unsorted' ? sortOrder?.orderList : sortOrder?.orderList.reverse()
         listOrder?.map((value: string) => {
             tempTable.push(
                 ...sortedTable.filter((item: TableProps) => item[orderBy[index]] === value)
@@ -197,6 +210,7 @@ function CustomTable<TableProps>({
                 status: sortStatusUpdater(sort.status)
             }
         })
+        setSelectedHeading(index)
     }
 
     function getIconStyleForSortedHeading(index: number): string {
@@ -282,7 +296,7 @@ function CustomTable<TableProps>({
                                         if (filter) {
                                             setPage(1)
                                             sortOrderByRequired(index)
-                                            setSelectedHeading(index)
+                                            // setSelectedHeading(index)
                                         }
                                     }}>
                                         <i className={`fa-solid ${filter ? getIconStyleForSortedHeading(index) : ''}`}></i>
