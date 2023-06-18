@@ -157,9 +157,9 @@ function CustomTable<TableProps>({
             const tempSortStatus = sortStatusUpdater(prev.status);
 
             const tempTable = sortedTable.slice().sort((a: any, b: any) => {
-                let aValue = (a[orderBy[index]] || "zzz")
+                let aValue = isNaN(a[orderBy[index]]) ? a[orderBy[index]] || 'zzz' : a[orderBy[index]] | 0
                 aValue = isNaN(aValue) ? aValue.toLowerCase().trim() : aValue
-                let bValue = (b[orderBy[index]] || "zzz")
+                let bValue = isNaN(b[orderBy[index]]) ? b[orderBy[index]] || 'zzz' : b[orderBy[index]] | 0
                 bValue = isNaN(bValue) ? bValue.toLowerCase().trim() : bValue
                 if (aValue < bValue) return isNotSorted ? -1 : 1;
                 if (aValue > bValue) return isNotSorted ? 1 : -1;
