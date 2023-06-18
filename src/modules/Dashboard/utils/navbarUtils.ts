@@ -38,7 +38,7 @@ export const buttons: urlProps[] = [
     {
         icon: "fa-people-group",
         url: "/club-dashboard",
-        title: "YIP Interns Tracking",
+        title: "YIP Intern Tracking",
         roles: [
             roles.SUPER_ADMIN,
             roles.ADMIN,
@@ -47,6 +47,19 @@ export const buttons: urlProps[] = [
             roles.DISTRICT_COORDINATOR,
             roles.PROGRAMME_EXECUTIVE,
             roles.INTERN,
+        ],
+    },
+    {
+        icon: "fa-file",
+        url: "/intern-report",
+        title: "Intern Report",
+        roles: [
+            roles.SUPER_ADMIN,
+            roles.ADMIN,
+            roles.HQ_STAFF,
+            roles.ZONAL_COORDINATOR,
+            roles.DISTRICT_COORDINATOR,
+            roles.PROGRAMME_EXECUTIVE,
         ],
     },
     // {

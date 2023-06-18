@@ -2,7 +2,7 @@ export const version = 'v1/'
 export const consumer = 'yip/'
 const header = `/api/${version}${consumer}`
 const userManagement = header + 'user-management/'
-const user = {
+export const user = {
     // C -Create
     create: `${userManagement}create-user/`,
     // R -Read
@@ -13,6 +13,7 @@ const user = {
     district: `${userManagement}list-district-details/`,
     zone: `${userManagement}list-zone-details/`,
     state: `${userManagement}list-state-details/`,
+    report: `${userManagement}list-intern-district-details/`,
     // U -Update
     update: `${userManagement}edit-user/`,
     upload: `${userManagement}upload-submissions/`,

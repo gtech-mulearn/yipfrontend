@@ -155,11 +155,17 @@ function CustomTable<TableProps>({
         setSort((prev: sortProps) => {
             const isNotSorted = prev.status === "Unsorted" || prev.status === "Sorted:DESC";
             const tempSortStatus = sortStatusUpdater(prev.status);
-
+            const valueType = typeof (sortedTable.find(item => item[orderBy[index]]))?.[orderBy[index]]
+            let substitute = ''
+            if (valueType === 'string') {
+                substitute = 'zzz'
+            } else if (valueType === 'number') {
+                substitute = '0'
+            }
             const tempTable = sortedTable.slice().sort((a: any, b: any) => {
-                let aValue = isNaN(a[orderBy[index]]) ? a[orderBy[index]] || 'zzz' : a[orderBy[index]] | 0
+                let aValue = a[orderBy[index]] ? a[orderBy[index]] : substitute
                 aValue = isNaN(aValue) ? aValue.toLowerCase().trim() : aValue
-                let bValue = isNaN(b[orderBy[index]]) ? b[orderBy[index]] || 'zzz' : b[orderBy[index]] | 0
+                let bValue = b[orderBy[index]] ? b[orderBy[index]] : substitute
                 bValue = isNaN(bValue) ? bValue.toLowerCase().trim() : bValue
                 if (aValue < bValue) return isNotSorted ? -1 : 1;
                 if (aValue > bValue) return isNotSorted ? 1 : -1;
