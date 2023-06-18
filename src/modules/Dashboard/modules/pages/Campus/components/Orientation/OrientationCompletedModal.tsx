@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
 import { privateGateway } from '../../../../../../../services/apiGateway'
 import { selectProps } from '../../../../utils/setupUtils'
@@ -11,6 +11,7 @@ import * as yup from "yup";
 import { toast } from 'react-toastify'
 import { listEvent } from './OrientationScheduleModal'
 import { OrientationCompleteProps } from './Orientation'
+import { GlobalContext } from '../../../../../../../utils/GlobalVariable'
 
 const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: { cancel: () => void, eventId?: string, campusId: string, campusStatus: string }) => {
     const [nop, setNop] = useState('')
@@ -21,16 +22,15 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
     const [eventIds, setEventIds] = useState<OrientationCompleteProps>({} as OrientationCompleteProps)
     const [list, setList] = useState<OrientationCompleteProps[]>([])
     const [disableBtn, setDisableBtn] = useState(false)
+    const { clubEvents } = useContext(GlobalContext)
+
     useEffect(() => {
-        listEvent(campusId, setList)
-    }, [])
-    useEffect(() => {
-        if (list.length) {
-            let event = list.find(item => item.status === 'Scheduled')
+        if (clubEvents.length) {
+            let event = clubEvents.find((item: any) => item.status === 'Scheduled')
             if (event)
                 setEventIds(event)
         }
-    }, [list])
+    }, [clubEvents])
     function validateSchema() {
         const validationSchema = yup.object().shape({
             nop: yup.number().required("No of Participants is required").typeError("Please enter a valid number"),
@@ -39,7 +39,7 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
                 return !(/^\s+$/.test(value));
             }),
             date: yup.date().required('Date is required').max(new Date(), 'Date and time must be before the current time'),
-            status: yup.string().test('Valid Status', 'Schedule an Orientation first !!!', value => {
+            status: yup.string().test('Valid Status', 'Schedule an Event first !!!', value => {
                 console.log(value)
                 if (value === 'Identified' || value === 'Confirmed' || value === 'Connection Established') {
                     return false

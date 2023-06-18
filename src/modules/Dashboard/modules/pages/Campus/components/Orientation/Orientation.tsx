@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
 import CampusModal from '../Modals/CampusModal'
 import { listEvent } from './OrientationScheduleModal'
 import CustomTable from '../../../../components/CustomTable/CustomTable'
+import { GlobalContext } from '../../../../../../../utils/GlobalVariable'
 export interface OrientationCompleteProps {
     id: string
     place: string
@@ -28,9 +29,20 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
     const [orientationList, setOrientationList] = React.useState<OrientationCompleteProps[]>([])
     const [eventId, setEventId] = React.useState<string>('')
     const [value, setValue] = React.useState('')
+    const [addOrientation, setAddOrientation] = React.useState(false)
+    const { clubEvents } = useContext(GlobalContext)
     useEffect(() => {
-        listEvent(campusId, setOrientationList)
-    }, [open, campusId, update])
+        let eventScheduled = clubEvents.find((item: any) => item.status === 'Scheduled')
+        let eventCompleted = clubEvents.find((item: any) => item.status === 'Completed')
+        console.log(eventCompleted)
+        setOrientationList(clubEvents)
+        if (eventCompleted?.status) {
+            setAddOrientation(true)
+        }
+        if (eventScheduled?.status) {
+            setAddOrientation(false)
+        }
+    }, [open, campusId, update, clubEvents])
     return (
         <div>
             {open && <CampusModal campuStatus={value} campusId={campusId} cancel={() => setOpen(!open)} district={district} eventId={eventId as string} />}
@@ -38,25 +50,25 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
                 <div>
                     <div className='top-bar'>
                         <p>Events Scheduled</p>
-                        <div className='add-button' onClick={() => {
+                        {/* {addOrientation && <div className='add-button' onClick={() => {
                             setOpen(true)
                             setValue('Connection Established')
                         }}>
                             <i className='fas fa-add'></i>
                             <p >Add Event</p>
-                        </div>
+                        </div>} */}
                     </div>
                     <CustomTable
                         tableHeadList={['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Scheduled On', 'Planned Date', 'Completed On', 'Status']}
                         tableData={orientationList}
                         orderBy={['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'scheduled_date', 'planned_date', 'completed_date', 'status']}
                         capitalize={false}
-                        manage={
-                            {
-                                value: 'Update',
-                                manageFunction: (item: any) => { setEventId(item.id); setOpen(true); setValue('Orientation Update') },
-                            }
-                        }
+                        // manage={
+                        //     {
+                        //         value: 'Update',
+                        //         manageFunction: (item: any) => { setEventId(item.id); setOpen(true); setValue('Orientation Update') },
+                        //     }
+                        // }
                         pagination={false}
                         filter={false}
                     />

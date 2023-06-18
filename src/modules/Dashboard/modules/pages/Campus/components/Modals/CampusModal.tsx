@@ -117,11 +117,11 @@ function getNextStatus(status: string) {
         case 'Identified': return 'Visited'
         case 'Visited': return 'Connection Established'
         case 'Add Facilitator': return 'Add Facilitator'
-        case 'Orientation Update': return 'Orientation Update'
+        case 'Orientation Update': return 'Event Completed'
         case 'Connection Established': return 'Event Scheduled'
         case 'Orientation Scheduled': return 'Event Completed'
         case 'Execom Formed': return ''
-        case 'Orientation Completed': return ''
+        case 'Orientation Completed': return 'Event Scheduled'
         case 'Add Member': return 'Add Member'
         default: return ''
     }
