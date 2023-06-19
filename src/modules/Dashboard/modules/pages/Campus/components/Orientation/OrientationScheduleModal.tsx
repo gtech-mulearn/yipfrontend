@@ -40,13 +40,7 @@ const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: 
                 // Check if the value consists only of spaces
                 return !(/^\s+$/.test(value));
             }),
-            status: yup.string().test('Valid Status', 'Update status to Connection Established first !!!', value => {
-                console.log(value)
-                if (value === 'Identified' || value === 'Visited') {
-                    return false
-                }
-                return true
-            })
+
         })
         return validationSchema.validate(
             {
@@ -54,7 +48,6 @@ const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: 
                 mod: mod.name,
                 date: date,
                 place: place,
-                status: campusStatus
             },
             { abortEarly: false }
         )

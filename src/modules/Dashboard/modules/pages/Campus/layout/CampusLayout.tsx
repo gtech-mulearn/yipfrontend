@@ -72,7 +72,7 @@ const CampusLayout = () => {
                 {/* CONFIRMED */}
                 {viewConfirmed && <Confirmed date={formatDateStyle(campus?.confirmed)} />}
                 {/* CONNECTED */}
-                {viewConnected && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} campus={campus} />}
+                {viewConnected && campus?.connection && <Connection date={formatDateStyle(campus?.connection)} campusId={campusId as string} campus={campus} />}
                 {/* ORIENTATION */}
                 {viewOrientation && <Orientation date={formatDateStyle(campus?.orientation)} campusId={campusId as string} district={campus?.district} update={updateCampus} />}
                 {/* EXECOM */}
