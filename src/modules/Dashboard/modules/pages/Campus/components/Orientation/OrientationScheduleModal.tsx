@@ -27,7 +27,6 @@ const OrientationScheduleModal = ({ cancel, district, campusId, campusStatus }: 
     const [mod, setMod] = useState<selectProps>({} as selectProps)
     const [date, setDate] = useState('')
     const [place, setPlace] = useState('')
-    console.log(district)
     useEffect(() => {
         getListOfCoordinatorByDistrict(district, setCoordinatorList)
     }, [])
@@ -127,8 +126,9 @@ function createEvent(date: string, place: string, mod: string, coordinatorId: st
     toast.info('Updating', {
         toastId: 'Updating'
     })
+    let x = new Date(date);
     privateGateway.post(campusRoutes.createEvent, {
-        planned_date: date,
+        planned_date: x,
         scheduled_date: now,
         mode_of_delivery: mod,
         place: place,
