@@ -120,6 +120,7 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
 function updateEvent(eventId: string, nop: string, date: string, remarks: string, cancel: () => void, campusId: string,
     enableBtn: () => void
 ) {
+    let x = new Date(date)
     toast.info('Updating', {
         toastId: 'Updating'
     })
@@ -139,7 +140,7 @@ function updateEvent(eventId: string, nop: string, date: string, remarks: string
                 .put(`${campusRoutes.updateEvent}${eventId}/`, {
                     no_of_participants: nop,
                     remarks: remarks,
-                    completed_date: date,
+                    completed_date: x,
                     status: "Completed",
                 })
                 .then(() => {
