@@ -109,6 +109,26 @@ export default InternReport
 function fetchReport(setData: Dispatch<SetStateAction<reportProps[] | null>>) {
     privateGateway.get(user.report)
         .then(res => res.data.response)
-        .then(data => setData(data))
+        .then(data => setData(() => ([
+            ...data,
+            getTotal(data)
+        ])))
         .catch(err => console.log(err))
+}
+function getTotal(data: reportProps[]) {
+    const total = data.reduce((acc, item) => {
+        acc.pre_registration += Number(item.pre_registration)
+        acc.no_of_interns += Number(item.no_of_interns)
+        acc.no_of_club_visited += Number(item.no_of_club_visited)
+        acc.no_of_events_scheduled += Number(item.no_of_events_scheduled)
+        acc.no_of_events_completed += Number(item.no_of_events_completed)
+        return acc
+    }, {
+        pre_registration: 0,
+        no_of_interns: 0,
+        no_of_club_visited: 0,
+        no_of_events_scheduled: 0,
+        no_of_events_completed: 0
+    })
+    return { ...total, district: 'Total' }
 }
