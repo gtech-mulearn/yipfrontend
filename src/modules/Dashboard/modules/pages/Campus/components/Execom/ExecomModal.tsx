@@ -88,7 +88,7 @@ function assignExecom(id: string, designation: string, name: string, email: stri
 
                 success();
             })
-        console.log(res)
+        // console.log(res)
         cancel()
     }).catch((err) => {
         errorCheck(err.response)

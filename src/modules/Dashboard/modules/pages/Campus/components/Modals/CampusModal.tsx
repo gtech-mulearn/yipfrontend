@@ -104,7 +104,7 @@ function updateStatus(id: string, status: string, cancel: () => void) {
         .then(res => {
             toast.dismiss('Updating')
             cancel()
-            console.log('Success :', res?.data?.message?.general[0])
+            // console.log('Success :', res?.data?.message?.general[0])
         })
         .catch(err => {
             toast.dismiss('Updating')
