@@ -34,7 +34,6 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
     useEffect(() => {
         let eventScheduled = clubEvents.find((item: any) => item.status === 'Scheduled')
         let eventCompleted = clubEvents.find((item: any) => item.status === 'Completed')
-        console.log(eventCompleted)
         setOrientationList(clubEvents)
         if (eventCompleted?.status) {
             setAddOrientation(true)

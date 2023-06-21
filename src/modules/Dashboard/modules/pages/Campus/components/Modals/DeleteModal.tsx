@@ -29,7 +29,7 @@ export function deleteModelSchool(id: string, cancel: () => void, reRoute: () =>
         .then(res => {
             cancel()
             reRoute()
-            console.log(res?.data?.message?.general[0])
+            // console.log(res?.data?.message?.general[0])
         })
         .catch(err => console.log(err?.response?.data?.message?.general[0]))
 }

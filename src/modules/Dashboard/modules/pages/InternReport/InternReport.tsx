@@ -98,6 +98,7 @@ const InternReport = () => {
                     capitalize={false}
                     customCSS={customStyles.alignNumbersCenter}
                     customHeaderCssSort={customStyles.headerStyle as any}
+                    Total={true}
                 />
             </div>
         </div>

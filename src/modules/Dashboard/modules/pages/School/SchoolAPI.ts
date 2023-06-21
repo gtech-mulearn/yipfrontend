@@ -20,7 +20,7 @@ export function updateSchoolStatus(id: string, status: string, setSchool: Dispat
 ) {
     privateGateway.put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then(res => {
-            console.log('Success :', res?.data?.message?.general[0])
+            // console.log('Success :', res?.data?.message?.general[0])
             setSuccess(res?.data?.message?.general[0])
             setTimeout(() => {
                 setSchool({} as SchoolTableProps)
@@ -78,7 +78,7 @@ export function createSchool<postDataProps>(postData: postDataProps, update: Fun
     privateGateway.post(setupRoutes.school.create, postData)
         .then(res => {
             update()
-            console.log('Success :', res?.data?.message?.general[0])
+            // console.log('Success :', res?.data?.message?.general[0])
             success();
         })
         .catch(err => {
