@@ -48,8 +48,7 @@ export interface CustomTableProps<TableProps> {
     capitalize?: boolean,
     pagination?: boolean,
     filter?: boolean,
-    loading?: boolean,
-    setupLoading?: (item: boolean) => void
+    Total?: boolean,
     countPerPage?: number,
     gridView?: boolean
 }
@@ -64,10 +63,7 @@ function CustomTable<TableProps>({
     capitalize = true,
     pagination = true,
     filter = true,
-    loading = true,
-    setupLoading = (item: boolean) => {
-        return item
-    },
+    Total = false,
     countPerPage = 10,
     gridView = false
 }
@@ -139,7 +135,7 @@ function CustomTable<TableProps>({
 
     useEffect(() => {
         setPage(1)
-        setSortedTable(tableData ? tableData : [])
+        handleTableData()
         setSort({ updater: false, status: "Unsorted" })
     }, [tableData])
     function capitalizeString(sentence: string): string {
@@ -150,6 +146,14 @@ function CustomTable<TableProps>({
             if (capitalizedSentence.charAt(i).match(/[^\w\']/))
                 capitalizedSentence = capitalizedSentence.slice(0, i + 1) + capitalizedSentence.charAt(i + 1).toUpperCase() + capitalizedSentence.slice(i + 2);
         return capitalizedSentence;
+    }
+    function handleTableData() {
+        if (Total) {
+            setSortedTable(tableData ? tableData.slice(0, tableData.length - 1) : [])
+        }
+        else {
+            setSortedTable(tableData ? tableData : [])
+        }
     }
     function sortTable(index: number) {
         setSort((prev: sortProps) => {
@@ -397,6 +401,29 @@ function CustomTable<TableProps>({
                                     </tr>
                                 )
                             })}
+                            {
+                                Total && <>
+                                    <tr>
+                                        <td></td>
+                                        {
+                                            tableData?.slice(tableData?.length - 1,).map((item: TableProps, key: number) => (
+                                                <>
+                                                    {
+                                                        orderBy.map((item2: keyof TableProps, something: number) => (
+                                                            <td
+                                                                className={`
+                                                        ${customCssByRequiredByValue(something, item[item2] as string)} bold`}
+                                                                key={something}>
+                                                                {capitalize ? capitalizeString(item[item2] as string) : item[item2] as string}
+                                                            </td>
+                                                        ))
+                                                    }
+                                                </>
+                                            ))
+                                        }
+                                    </tr>
+                                </>
+                            }
                         </tbody>
                     </table >}
             </div>
@@ -451,4 +478,5 @@ function CustomTable<TableProps>({
         </div >
     )
 }
+
 export default CustomTable
