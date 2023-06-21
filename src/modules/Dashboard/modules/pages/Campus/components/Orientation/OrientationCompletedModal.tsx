@@ -40,7 +40,7 @@ const OrientationCompletedModal = ({ cancel, eventId, campusId, campusStatus }: 
             }),
             date: yup.date().required('Date is required').max(new Date(), 'Date and time must be before the current time'),
             status: yup.string().test('Valid Status', 'Schedule an Event first !!!', value => {
-                console.log(value)
+                // console.log(value)
                 if (value === 'Identified' || value === 'Confirmed' || value === 'Connection Established') {
                     return false
                 }
