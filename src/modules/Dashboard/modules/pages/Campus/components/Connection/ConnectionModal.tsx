@@ -207,7 +207,7 @@ export function updateCampusStatus(id: string, status: string, cancel: () => voi
     privateGateway
         .put(tableRoutes.status.update, { clubId: id, clubStatus: status })
         .then((res) => {
-            console.log("Success :", res?.data?.message?.general[0]);
+            // console.log("Success :", res?.data?.message?.general[0]);
             cancel();
         })
         .catch((err) => console.error(err));

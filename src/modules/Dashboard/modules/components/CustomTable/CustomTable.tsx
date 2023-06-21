@@ -108,20 +108,19 @@ function CustomTable<TableProps>({
     }, [countInPage])
     const handleDownloadCSV = () => {
         //check the view value and dowload the data in the corresponding state variable as a csv
-        const updatedData = sortedTable.map((item: any, index: number) => {
+        const updatedData = [...sortedTable.map((item: any, index: number) => {
             let ict = item?.ict_id ? { ict_id: item?.ict_id } : {}
-            let rest = { Sl_no: index + 1, ...ict }
+            let rest = { Sl_no: String(index + 1), ...ict }
             for (let key of orderBy) {
                 rest = { ...rest, [key]: item[key] || item[key] === 0 ? item[key] : "" }
             }
             return rest;
-        });
+        }), Total ? ({ Sl_no: '', ...(tableData ? tableData?.slice(tableData.length - 1)[0] : []) }) : {}]
         setCsvData(updatedData)
     };
     const downloadCSV = () => {
         const fileName = 'Table';
         const fields = Object.keys(csvData[0]);
-
         exportFromJSON({
             data: csvData,
             fileName,
