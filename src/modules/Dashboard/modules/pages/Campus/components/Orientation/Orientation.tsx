@@ -1,9 +1,14 @@
-import React, { useContext, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useEffect } from 'react'
 import StatusTable from '../StatusTable/StatusTable'
 import CampusModal from '../Modals/CampusModal'
 import { listEvent } from './OrientationScheduleModal'
 import CustomTable from '../../../../components/CustomTable/CustomTable'
 import { GlobalContext } from '../../../../../../../utils/GlobalVariable'
+import DeleteModal from '../Modals/DeleteModal'
+import { privateGateway } from '../../../../../../../services/apiGateway'
+import { campusRoutes } from '../../../../../../../services/urls'
+import { toast } from 'react-toastify'
+import { errorCheck, errorMessage, success } from '../../../../../components/Toastify/ToastifyConsts'
 export interface OrientationCompleteProps {
     id: string
     place: string
@@ -26,6 +31,7 @@ export interface OrientationProps {
 
 const Orientation = ({ date = '', campusId, district, update }: { date: string, campusId: string, district: string, update: boolean }) => {
     const [open, setOpen] = React.useState(false)
+    const [openDelete, setOpenDelete] = React.useState(false)
     const [orientationList, setOrientationList] = React.useState<OrientationCompleteProps[]>([])
     const [eventId, setEventId] = React.useState<string>('')
     const [value, setValue] = React.useState('')
@@ -45,6 +51,12 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
     return (
         <div>
             {open && <CampusModal campuStatus={value} campusId={campusId} cancel={() => setOpen(!open)} district={district} eventId={eventId as string} />}
+            {eventId.length && <DeleteModal
+                id={eventId} cancel={() => setEventId('')}
+                customFunction={() => {
+                    deleteEvent(eventId, setEventId)
+                }}
+            />}
             <div>
                 <div>
                     <div className='top-bar'>
@@ -62,12 +74,13 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
                         tableData={orientationList}
                         orderBy={['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'scheduled_date', 'planned_date', 'completed_date', 'status']}
                         capitalize={false}
-                        // manage={
-                        //     {
-                        //         value: 'Update',
-                        //         manageFunction: (item: any) => { setEventId(item.id); setOpen(true); setValue('Orientation Update') },
-                        //     }
-                        // }
+                        manage={
+                            {
+                                value: 'Delete',
+                                manageFunction: (item: any) => { setEventId(item.id); },
+                                icon: 'fa-trash'
+                            }
+                        }
                         pagination={false}
                         filter={false}
                     />
@@ -75,6 +88,20 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
             </div >
         </div>
     )
+}
+function deleteEvent(eventId: string, setEventId: Dispatch<SetStateAction<string>>) {
+    privateGateway.delete(`${campusRoutes.deleteEvent}${eventId}/`)
+        .then((res) => {
+            success()
+            setEventId('')
+            setTimeout(() => {
+                location.reload()
+            }, 1000);
+        })
+        .catch((err) => {
+            errorCheck(err.response)
+            errorMessage(err.response)
+        })
 }
 
 export default Orientation
