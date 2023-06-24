@@ -147,6 +147,7 @@ export const campusRoutes = {
         }
 
     },
+    deleteEvent: '/api/v1/yip/delete-event/',
     subUser: {
         create: '/api/v1/yip/create-sub-user/',
         list: '/api/v1/yip/list-sub-user/',
