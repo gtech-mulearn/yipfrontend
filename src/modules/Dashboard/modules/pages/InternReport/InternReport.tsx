@@ -8,16 +8,17 @@ interface reportProps {
     "no_of_interns": string,
     "no_of_club_visited": string,
     "no_of_events_scheduled": string,
-    "no_of_events_completed": string
+    "no_of_events_completed": string,
+    "no_of_participants": string
 }
 const TableTitleList = ["District",
     "No. of Active Interns",
     'No. of Pre-Registrations ',
-    'No.of Visited', 'No.of Events Scheduled', 'No.of Events Completed']
+    'No.of Visited', 'No.of Events Scheduled', 'No.of Events Completed', 'No.of Participants']
 const orderBy: (keyof reportProps)[] = ['district',
     'no_of_interns',
     'pre_registration',
-    'no_of_club_visited', 'no_of_events_scheduled', 'no_of_events_completed']
+    'no_of_club_visited', 'no_of_events_scheduled', 'no_of_events_completed', 'no_of_participants']
 const styleHead = {
     unOrder: 'fa-sort',
     asc: ' fa-sort-amount-desc',
@@ -50,8 +51,11 @@ const customStyles = {
         {
             title: 'no_of_events_completed',
             ...styleHead
+        },
+        {
+            title: 'no_of_participants',
+            ...styleHead
         }
-
 
     ],
     alignNumbersCenter: [
@@ -74,14 +78,20 @@ const customStyles = {
         {
             name: 'no_of_events_completed',
             css: 'center-align'
+        },
+        {
+            name: 'no_of_participants',
+            css: 'center-align'
         }
     ]
 }
 const InternReport = () => {
     const [list, setList] = React.useState<reportProps[] | null>(null)
-    const fetchOnce = useRef(false)
+    const fetchOnce = useRef(true)
     useEffect(() => {
-        fetchReport(setList)
+        if (fetchOnce.current)
+            fetchReport(setList)
+        fetchOnce.current = false
     }, [])
     return (
         <div className='dash-container'>
@@ -123,13 +133,15 @@ function getTotal(data: reportProps[]) {
         acc.no_of_club_visited += Number(item.no_of_club_visited)
         acc.no_of_events_scheduled += Number(item.no_of_events_scheduled)
         acc.no_of_events_completed += Number(item.no_of_events_completed)
+        acc.no_of_participants += Number(item.no_of_participants)
         return acc
     }, {
         pre_registration: 0,
         no_of_interns: 0,
         no_of_club_visited: 0,
         no_of_events_scheduled: 0,
-        no_of_events_completed: 0
+        no_of_events_completed: 0,
+        no_of_participants: 0
     })
     return { ...total, district: 'Total' }
 }
