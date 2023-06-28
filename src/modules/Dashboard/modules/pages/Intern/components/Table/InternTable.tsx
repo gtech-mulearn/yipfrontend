@@ -89,7 +89,6 @@ const InternTable = ({ update }: { update: () => void }) => {
   const [districtList, setDistrictList] = useState<districtViewProps[] | null>(null);
   const [zoneList, setZoneList] = useState<zoneViewProps[] | null>(null);
 
-  const [menu, setMenu] = useState<boolean>(window.innerWidth > 768);
   const [districtFilterList, setDistrictFilterList] = useState<selectProps[]>(
     []
   );
@@ -454,14 +453,12 @@ const InternTable = ({ update }: { update: () => void }) => {
             <h3>{view} View</h3>
             <div className='table-sub-container'>
               <li className='fas fa-rotate-right' onClick={() => setRefresh(!refresh)}></li>
-              <div className="table-header-btn">
-                <li className="fas fa-bars " onClick={() => setMenu(!menu)}></li>
-              </div>
+
             </div>
 
           </div>
           {/* Filter Opener */}
-          {menu && (
+          {(
             <div className="table-fn">
               {view !== 'State' && <div className="search-bar">
                 <input
