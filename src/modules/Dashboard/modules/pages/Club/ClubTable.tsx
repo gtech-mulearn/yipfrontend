@@ -38,7 +38,6 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
     const [search, setSearch] = useState<string>('')
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [club, setClub] = useState<ClubTableProps>({} as ClubTableProps)
-    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const fetchedOnce = useRef(false)
     useEffect(() => {
         fetchDistricts(setDistrictList)
@@ -82,14 +81,9 @@ const ClubTable: FC<ClubSetupProps> = ({ setViewSetup, updateClubData, updated }
                 <div className="table-top">
                     <div className="table-header">
                         <h3>YIP Campus List</h3>
-                        <div className="table-header-btn">
-                            <li
-                                className="fas fa-bars "
-                                onClick={() => setMenu(!menu)}
-                            ></li>
-                        </div>
+
                     </div>
-                    {menu && (
+                    {(
                         <div className="table-fn">
                             <div className="search-bar">
                                 <input

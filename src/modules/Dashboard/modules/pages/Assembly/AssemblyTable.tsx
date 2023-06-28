@@ -28,7 +28,6 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
     const [listForTable, setListForTable] = useState<AssemblyTableProps[] | null>(null)
-    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const fetchedOnce = useRef(false)
     useEffect(() => {
 
@@ -70,14 +69,9 @@ const AssemblyTable: FC<AssemblySetupProps> = ({ setViewSetup, updateAssemblyDat
                 <div className="table-top">
                     <div className="table-header">
                         <h3>Assembly List</h3>
-                        <div
-                            className="table-header-btn"
-                            onClick={() => setMenu(!menu)}
-                        >
-                            <li className="fas fa-bars "></li>
-                        </div>
+
                     </div>
-                    {menu && (
+                    {(
                         <div className="table-fn">
                             <div className="search-bar">
                                 <input
