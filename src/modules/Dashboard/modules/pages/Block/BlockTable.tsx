@@ -27,7 +27,6 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
     const [filterBtn, setFilterBtn] = useState<boolean>(false)
     const [districtList, setDistrictList] = useState<selectProps[]>([])
     const [district, setDistrict] = useState<selectProps>(initialState)
-    const [menu, setMenu] = useState<boolean>(window.innerWidth > 768)
     const [listForTable, setListForTable] = useState<BlockTableProps[] | null>(null)
     const fetchedOnce = useRef(false)
     useEffect(() => {
@@ -69,14 +68,8 @@ const BlockTable: FC<BlockSetupProps> = ({ setViewSetup, updateBlockData, update
                 <div className="table-top">
                     <div className="table-header">
                         <h3>Block List</h3>
-                        <div
-                            className="table-header-btn"
-                            onClick={() => setMenu(!menu)}
-                        >
-                            <li className="fas fa-bars "></li>
-                        </div>
                     </div>
-                    {menu && (
+                    {(
                         <div className="table-fn">
                             <div className="search-bar">
                                 <input
