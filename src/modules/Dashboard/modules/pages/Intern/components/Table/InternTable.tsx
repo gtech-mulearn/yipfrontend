@@ -629,6 +629,7 @@ const InternTable = ({ update }: { update: () => void }) => {
             capitalize={false}
             customCSS={customStyles.alignNumbersCenter}
             customHeaderCssSort={customStyles.headerStyle as any}
+            countPerPage={14}
           />
         )}
         {view === "Intern" && (
