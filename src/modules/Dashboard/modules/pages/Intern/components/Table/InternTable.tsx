@@ -28,6 +28,7 @@ import { selectProps } from "../../../../utils/setupUtils";
 import { CentralZone, CentralZoneOptions, Districts, NorthZone, NorthZoneOptions, OptionDistrict, OptionOutsideState, OptionZone, SouthZone, SouthZoneOptions, Zones } from "../../../../../../../utils/Locations";
 import { errorCheck, loading } from "../../../../../components/Toastify/ToastifyConsts";
 import { GlobalContext } from "../../../../../../../utils/GlobalVariable";
+import handleReport, { downloadCSVReport } from "./utils";
 
 interface commonViewProps {
   pre_registrations: string;
@@ -344,6 +345,7 @@ const InternTable = ({ update }: { update: () => void }) => {
       exportType: 'csv',
     });
   };
+  const [report, setReport] = useState<string | null>(null);
   const handleUpload = () => {
     if (selectedFile) {
       const formData = new FormData();
@@ -367,15 +369,14 @@ const InternTable = ({ update }: { update: () => void }) => {
           }
         )
         .then((response) => {
-          // console.log(response);
           toast.success("File Uploaded Successfully");
           setDataUploaded(!dataUploaded);
           setSelectedFile(null);
           update()
         })
         .catch((error) => {
-          toast.error(error.response.status === 500 ? 'Wrong format' : error.response.data.message.general[0]);
-          toast.error(error.response.data.message.general[0]);
+          toast.error(error.response.status === 500 ? 'Wrong format' : 'error');
+          setReport(handleReport(error.response.data.message.general[0]))
         });
     }
   };
@@ -443,7 +444,12 @@ const InternTable = ({ update }: { update: () => void }) => {
             </div>
           )}
         </div>
-
+        {report && <button className="table-fn-btn cursor cancel-upload" onClick={() => downloadCSVReport(report as string, setReport)}>
+          <p>
+            Download Report
+          </p>
+          <i className="fa-solid fa-close"></i>
+        </button>}
       </div>
       {/* //table box */}
 
