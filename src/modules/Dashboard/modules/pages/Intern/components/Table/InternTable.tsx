@@ -375,6 +375,7 @@ const InternTable = ({ update }: { update: () => void }) => {
           update()
         })
         .catch((error) => {
+          toast.error(error.response.status === 500 ? 'Wrong format' : 'error');
           setReport(handleReport(error.response.data.message.general[0]))
         });
     }
