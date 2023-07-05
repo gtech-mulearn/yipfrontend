@@ -16,9 +16,9 @@ axios.interceptors.response.use(
         return response;
     },
     function (error) {
-        console.log(error);
+        // console.log(error);
         if (error.response.data.statusCode === 1000) {
-			//TODO: show toast that the session has expired
+            //TODO: show toast that the session has expired
             localStorage.clear();
             window.location.href = "/";
         }
