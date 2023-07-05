@@ -19,10 +19,14 @@ const InternBanner = ({ update }: { update: boolean }) => {
     const { userInfo } = useContext(GlobalContext)
     useEffect(() => {
         if (userInfo.role !== null && userInfo.role !== undefined) {
+            const first = sessionStorage.getItem('state')
+            if (first) {
+                setBanner(JSON.parse(first))
+            }
             fetchBannerData(setBanner as any, 'state', 'state')
             fetchZoneFilter(setZoneList)
         }
-    }, [userInfo])
+    }, [userInfo, update])
     useEffect(() => {
         if (zone.id) {
             fetchBannerData(setBanner as any, 'zone', zone.name)
@@ -35,19 +39,19 @@ const InternBanner = ({ update }: { update: boolean }) => {
         ref.current = true
         setDistrict({} as selectProps)
         setCollege({} as selectProps)
-    }, [zone])
+    }, [zone, update])
     useEffect(() => {
         if (district.id) {
             fetchBannerData(setBanner as any, 'district', district.name)
             fetchCollege(district.name, setCollegeList)
         }
         setCollege({} as selectProps)
-    }, [district])
+    }, [district, update])
     useEffect(() => {
         if (college.id) {
             fetchBannerData(setBanner as any, 'institute', college.id)
         }
-    }, [college])
+    }, [college, update])
 
     return (
         <div className='white-container'>
@@ -133,6 +137,8 @@ function fetchBannerData(setBanner: Dispatch<SetStateAction<any>>, type: string,
         url = `?${type}=${value}`
     privateGateway.get(`${yip5Routes.bannerData}${url}`)
         .then((res: any) => {
+            if (type === 'state')
+                sessionStorage.setItem('state', JSON.stringify(res.data.response))
             setBanner(res.data.response)
         })
         .catch((err: any) => {
