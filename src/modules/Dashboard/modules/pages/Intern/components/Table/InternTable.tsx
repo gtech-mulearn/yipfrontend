@@ -252,6 +252,10 @@ const InternTable = ({ update }: { update: () => void }) => {
     fetchDistrictFilter(zoneFilter.name, setDistrictFilterList);
   }, [zoneFilter])
   useEffect(() => {
+    setDistrictFilter({} as selectProps)
+    setZoneFilter({} as selectProps)
+  }, [filterBtn])
+  useEffect(() => {
     if (view === "Campus")
       setCampusTableList(
         filterCampus(campusList, search, districtFilter.name, zoneFilter.name)
