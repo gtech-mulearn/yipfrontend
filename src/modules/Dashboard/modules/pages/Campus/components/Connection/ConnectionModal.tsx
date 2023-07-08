@@ -29,6 +29,7 @@ const ConnectionModal = ({
     const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
         {} as selectProps
     );
+    console.log(campusStatus);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
@@ -148,6 +149,7 @@ const ConnectionModal = ({
                                     email,
                                     mobile,
                                     design,
+                                    campusStatus,
                                     cancel,
                                     () => setDisableBtn(false)
                                 )
@@ -176,6 +178,7 @@ function assignFacilitator(
     email: string,
     mobile: string,
     type: string,
+    status: string,
     cancel: () => void,
     enableBtn: () => void
 ) {
@@ -186,6 +189,7 @@ function assignFacilitator(
         email: email,
         phone: mobile,
         role: designation,
+        campusStatus: status
     };
     toast.info('Updating', {
         toastId: 'Updating'
