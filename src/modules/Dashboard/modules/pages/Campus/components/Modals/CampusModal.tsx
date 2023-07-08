@@ -15,7 +15,7 @@ import { CampusPageProps } from '../../utils'
 import ConfirmModal from '../Confirmed/ConfirmModal'
 import { toast } from 'react-toastify'
 
-const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId, designation }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, district?: string, eventId?: string, designation?: string }) => {
+const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId, designation }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, designation: string, district?: string, eventId?: string }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([{ id: '0', name: "Identified" },
     { id: "1", name: "Visited" },
@@ -124,6 +124,7 @@ function getNextStatus(status: string) {
         case 'Orientation Completed': return 'Event Scheduled'
         case 'Add Member': return 'Add Member'
         case 'Add PTA': return 'Add PTA'
+        case 'Add Alumni': return 'Add Alumni'
         default: return ''
     }
 }
