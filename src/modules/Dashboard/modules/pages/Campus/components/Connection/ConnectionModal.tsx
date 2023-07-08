@@ -23,7 +23,7 @@ const ConnectionModal = ({
     cancel: () => void;
     campusId: string;
     campusStatus: string;
-    design?: string;
+    design: string;
 }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([]);
     const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
@@ -81,7 +81,7 @@ const ConnectionModal = ({
         )
     }
     useEffect(() => {
-        getPocRoles(setDesignationList, design ? 'PTA' : 'POC');
+        getPocRoles(setDesignationList, design);
     }, []);
     return (
         <div className="secondary-box">
@@ -147,7 +147,7 @@ const ConnectionModal = ({
                                     name,
                                     email,
                                     mobile,
-                                    design ? "PTA" : 'POC',
+                                    design,
                                     cancel,
                                     () => setDisableBtn(false)
                                 )
