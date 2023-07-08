@@ -29,7 +29,6 @@ const ConnectionModal = ({
     const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
         {} as selectProps
     );
-    console.log(campusStatus);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
@@ -160,7 +159,7 @@ const ConnectionModal = ({
                         }
                         }
                     >
-                        Add Facilitator
+                        Add
                     </button>
                     <button className="cancel-btn " onClick={cancel}>
                         Cancel
