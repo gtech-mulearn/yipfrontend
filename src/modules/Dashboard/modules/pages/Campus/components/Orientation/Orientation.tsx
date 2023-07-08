@@ -51,7 +51,7 @@ const Orientation = ({ date = '', campusId, district, update }: { date: string, 
     return (
         <div>
             {open && <CampusModal campuStatus={value} campusId={campusId} cancel={() => setOpen(!open)} district={district} eventId={eventId as string} />}
-            {eventId.length && <DeleteModal
+            {eventId.length > 0 && <DeleteModal
                 id={eventId} cancel={() => setEventId('')}
                 customFunction={() => {
                     deleteEvent(eventId, setEventId)

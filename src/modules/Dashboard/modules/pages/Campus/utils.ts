@@ -64,8 +64,8 @@ export function deleteModelSchool(id: string, reRoute: () => void) {
         })
         .catch(err => console.log(err?.response?.data?.message?.general[0]))
 }
-export function getPocRoles(setDesignationList: Dispatch<SetStateAction<selectProps[]>>) {
-    privateGateway.get(campusRoutes.designation.list.facilitator)
+export function getPocRoles(setDesignationList: Dispatch<SetStateAction<selectProps[]>>, data: string) {
+    privateGateway.get(`${campusRoutes.designation.list.facilitator}${data}/`)
         .then((res) => (res.data.response.sub_user_roles))
         .then((data) =>
             setDesignationList(
