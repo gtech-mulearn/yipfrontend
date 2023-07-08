@@ -15,7 +15,7 @@ import { CampusPageProps } from '../../utils'
 import ConfirmModal from '../Confirmed/ConfirmModal'
 import { toast } from 'react-toastify'
 
-const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId, designation }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, designation: string, district?: string, eventId?: string }) => {
+const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId, designation }: { campuStatus?: string, campusId: string, campus?: CampusPageProps, cancel: () => void, designation?: string, district?: string, eventId?: string }) => {
     const [statusList, setStatusList] = useState<string[]>([])
     const [optionStatusList, setOptionStatusList] = useState<selectProps[]>([{ id: '0', name: "Identified" },
     { id: "1", name: "Visited" },
@@ -78,7 +78,7 @@ const CampusModal = ({ campuStatus, campusId, campus, cancel, district, eventId,
                         </div>
                     </div>}
                     {viewConfirm && <ConfirmModal cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
-                    {viewConnection && <ConnectionModal design={designation} cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
+                    {viewConnection && <ConnectionModal design={designation as string} cancel={cancel} campusId={campusId as string} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewScheduled && <OrientationScheduleModal cancel={cancel} district={district as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {viewCompleted && <OrientationCompletedModal cancel={cancel} eventId={eventId as string} campusId={campusId} campusStatus={campuStatus ? campuStatus : campus?.status as string} />}
                     {/* {viewExecom && <ExecomModal cancel={cancel} campusId={campusId} />} */}
