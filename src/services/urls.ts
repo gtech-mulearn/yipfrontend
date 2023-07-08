@@ -142,7 +142,7 @@ export const tableRoutes = {
 export const campusRoutes = {
     designation: {
         list: {
-            facilitator: '/api/v1/yip/sub-user-role-choices/POC/',
+            facilitator: '/api/v1/yip/sub-user-role-choices/',
             execom: '/api/v1/yip/sub-user-role-choices/Execom/',
         }
 
