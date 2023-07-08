@@ -18,13 +18,15 @@ const ConnectionModal = ({
     cancel,
     campusId,
     campusStatus,
+    design,
 }: {
     cancel: () => void;
     campusId: string;
     campusStatus: string;
+    design?: string;
 }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([]);
-    const [designation, setDesignation] = useState<selectProps>(
+    const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
         {} as selectProps
     );
     const [name, setName] = useState("");
@@ -79,7 +81,7 @@ const ConnectionModal = ({
         )
     }
     useEffect(() => {
-        getPocRoles(setDesignationList);
+        getPocRoles(setDesignationList, design ? 'PTA' : 'POC');
     }, []);
     return (
         <div className="secondary-box">
@@ -145,6 +147,7 @@ const ConnectionModal = ({
                                     name,
                                     email,
                                     mobile,
+                                    design ? "PTA" : 'POC',
                                     cancel,
                                     () => setDisableBtn(false)
                                 )
@@ -172,12 +175,13 @@ function assignFacilitator(
     name: string,
     email: string,
     mobile: string,
+    type: string,
     cancel: () => void,
     enableBtn: () => void
 ) {
     const postData = {
         clubId: id,
-        type: "POC",
+        type: type,
         name: name,
         email: email,
         phone: mobile,
