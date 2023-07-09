@@ -18,13 +18,15 @@ const ConnectionModal = ({
     cancel,
     campusId,
     campusStatus,
+    design,
 }: {
     cancel: () => void;
     campusId: string;
     campusStatus: string;
+    design: string;
 }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([]);
-    const [designation, setDesignation] = useState<selectProps>(
+    const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
         {} as selectProps
     );
     const [name, setName] = useState("");
@@ -79,7 +81,7 @@ const ConnectionModal = ({
         )
     }
     useEffect(() => {
-        getPocRoles(setDesignationList);
+        getPocRoles(setDesignationList, design);
     }, []);
     return (
         <div className="secondary-box">
@@ -145,6 +147,8 @@ const ConnectionModal = ({
                                     name,
                                     email,
                                     mobile,
+                                    design,
+                                    campusStatus,
                                     cancel,
                                     () => setDisableBtn(false)
                                 )
@@ -155,7 +159,7 @@ const ConnectionModal = ({
                         }
                         }
                     >
-                        Add Facilitator
+                        Add
                     </button>
                     <button className="cancel-btn " onClick={cancel}>
                         Cancel
@@ -172,16 +176,19 @@ function assignFacilitator(
     name: string,
     email: string,
     mobile: string,
+    type: string,
+    status: string,
     cancel: () => void,
     enableBtn: () => void
 ) {
     const postData = {
         clubId: id,
-        type: "POC",
+        type: type,
         name: name,
         email: email,
         phone: mobile,
         role: designation,
+        campusStatus: status
     };
     toast.info('Updating', {
         toastId: 'Updating'

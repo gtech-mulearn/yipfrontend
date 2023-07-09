@@ -11,15 +11,16 @@ interface StatusTableProps<TableProps> extends CustomTableProps<TableProps> {
     AddOption?: string
     TableHeading: string
     headingSwitch?: boolean
+    hideStatus?: boolean
 }
 
-function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHeading, AddOption, headingSwitch = true, ...props }: StatusTableProps<TableProps>) {
+function StatusTable<TableProps>({ title1, name, title2, date, setAdd, TableHeading, AddOption, headingSwitch = true, hideStatus = false, ...props }: StatusTableProps<TableProps>) {
     return (
         <div>
-            <div className='status-table'>
+            {!hideStatus && <div className='status-table'>
                 <TitleNameTag title={title1} name={name} />
                 <TitleNameTag title={title2} name={date} />
-            </div>
+            </div>}
             <div>
                 <div className='top-bar'>
                     <p>{TableHeading}</p>
