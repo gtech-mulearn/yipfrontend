@@ -99,7 +99,7 @@ const CampusLayout = () => {
                     </div>
                 </div >}
                 {/* CAMPUS UPDATE MODAL */}
-                {updateCampus && <CampusModal campusId={campusId as string} campus={campus} cancel={() => setUpdateCampus(!updateCampus)} district={campus?.district} />}
+                {updateCampus && <CampusModal designation='POC' campusId={campusId as string} campus={campus} cancel={() => setUpdateCampus(!updateCampus)} district={campus?.district} />}
             </div >
         </div >
     )

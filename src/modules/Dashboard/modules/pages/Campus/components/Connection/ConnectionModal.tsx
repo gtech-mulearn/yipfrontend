@@ -26,9 +26,7 @@ const ConnectionModal = ({
     design: string;
 }) => {
     const [designationList, setDesignationList] = useState<selectProps[]>([]);
-    const [designation, setDesignation] = useState<selectProps>(design ? { id: 'PTA', name: 'PTA' } :
-        {} as selectProps
-    );
+    const [designation, setDesignation] = useState<selectProps>({} as selectProps);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
@@ -197,7 +195,8 @@ function assignFacilitator(
         .post(campusRoutes.subUser.create, postData)
         .then((res) => {
             toast.dismiss('Updating')
-            updateCampusStatus(id, "Connection Established", cancel);
+            if (status === 'Identified' || status === 'Visited')
+                updateCampusStatus(id, "Connection Established", cancel);
             success();
             cancel();
         })
