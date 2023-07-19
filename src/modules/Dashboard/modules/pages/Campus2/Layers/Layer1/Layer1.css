@@ -1,0 +1,26 @@
+.layer1,.sub-layer{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.layer1{
+    width: 100%;
+}
+@media screen and (max-width: 631px) {
+    .sub-layer{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;    
+        flex:100% fit-content auto ;    
+    }
+}
+
+.delete-campus-modal{
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    padding:0px;
+    width: 100%;
+}
+    

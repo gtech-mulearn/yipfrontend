@@ -15,6 +15,7 @@ import Reset from './modules/Login/pages/Reset'
 import ResetReq from './modules/Login/pages/ResetReq';
 import GlobalVariableProvider from './utils/GlobalVariable';
 import InternReport from './modules/Dashboard/modules/pages/InternReport/InternReport';
+import Layout from './modules/Dashboard/modules/pages/Campus2/Layout/Layout';
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
           { path: 'legislative-assembly', element: <AssemblyLayout /> },
           { path: 'block', element: <BlockLayout /> },
           { path: 'intern-dashboard', element: <InternLayout /> },
-          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> },
+          { path: 'campus-dashboard/:type/:campusId', element: <Layout /> },
           { path: 'institute-management', element: <InstituteSetup /> },
           { path: '/intern-report', element: <InternReport /> }
         ]

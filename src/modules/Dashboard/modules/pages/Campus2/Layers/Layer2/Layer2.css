@@ -1,0 +1,31 @@
+.layer2{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+@media screen and (max-width: 550px){
+    .layer2{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (min-width: 1110px){
+    .layer2{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media screen and (min-width: 1250px){
+    .layer2{
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+@media screen and (min-width: 1450px){
+    .layer2{
+        grid-template-columns: repeat(6, 1fr);
+    }
+}   
+.layer2 .campus-modal .layer2 input{
+    width: 100%;
+}
