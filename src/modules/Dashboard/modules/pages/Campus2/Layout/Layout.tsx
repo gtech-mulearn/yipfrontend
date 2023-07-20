@@ -14,7 +14,6 @@ import { listEvent } from '../Utils/Event'
 import listSubUser, { FacilitatorProps } from '../Utils/ListSubUser'
 
 const Layout = () => {
-    console.log('Layout')
     const { campusId, type } = useParams()
     const [isUpdate, setIsUpdate] = useState(false)
     const [campus, setCampus] = useState<CampusPageProps>({} as CampusPageProps)
@@ -30,7 +29,6 @@ const Layout = () => {
         listEvent(campusId as string, setEventList)
     }
     function updateSubUserList(setList: Dispatch<SetStateAction<FacilitatorProps[]>>, campusId: string, type: string) {
-        console.log(setList, campusId, type)
         listSubUser(setList, campusId as string, type)
     }
     useEffect(() => {

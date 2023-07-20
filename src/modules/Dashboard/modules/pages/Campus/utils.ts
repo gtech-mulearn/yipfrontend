@@ -26,7 +26,6 @@ export function getCampusInfo(
         .then(res => res.data.response)
         .then(data => {
             setUpdate((prev) => !prev)
-            console.log('updating campus in in function getcampus info');
             setCampus(campusData => ({
                 ...campusData,
                 name: data.name,

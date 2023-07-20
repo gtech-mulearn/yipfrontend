@@ -32,7 +32,6 @@ const Modes = [
 ]
 const emptyObject = { id: '', name: '' }
 const Layer1 = ({ status, category, campusId, updateCampus, district, isUpdate, eventList, eventUpdate }: Layer1Props) => {
-    console.log('Layer1')
     const navigate = useNavigate()
     const [openModal, setOpenModal] = useState(false)
     const [eventModal, setEventModal] = useState(false)
@@ -49,7 +48,6 @@ const Layer1 = ({ status, category, campusId, updateCampus, district, isUpdate, 
     }
     useEffect(() => {
         if (eventList.length > 0) {
-            console.log('event Listed')
             let eventScheduled = eventList.find((item: any) => item.status === 'Scheduled')
             if (eventScheduled) {
                 console.log('Scheduled event found')
@@ -57,13 +55,15 @@ const Layer1 = ({ status, category, campusId, updateCampus, district, isUpdate, 
                 setEvent(eventScheduled)
             }
             else {
+                console.log('Scheduled event not found')
                 setIsAddEvent(true)
-                console.log('No Scheduled event found')
             }
+        }
+        else {
+            setIsAddEvent(true)
         }
     }, [eventList.length])
 
-    console.log('render the layer1')
     return (
         <>
             <div className='layer1'>
@@ -128,7 +128,8 @@ const Layer1 = ({ status, category, campusId, updateCampus, district, isUpdate, 
                                 clear()
                                 setEventModal(false)
                             }, () => {
-                            })
+                            }),
+                                true
                         }
                     }}
                 >

@@ -1,5 +1,4 @@
 import { toast } from "react-toastify"
-import { CampusModalProps } from "../../Layout/Layout"
 import { privateGateway } from "../../../../../../../services/apiGateway"
 import { campusRoutes } from "../../../../../../../services/urls"
 import { errorCheck, errorMessage, success } from "../../../../../components/Toastify/ToastifyConsts"

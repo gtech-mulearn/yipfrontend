@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Table from '../../Components/Table/Table'
 import SmallStatus from '../../Components/SmallBox/SmallStatus'
 import Modal from '../../Components/Modal/Modal'
@@ -10,22 +10,20 @@ const emptyObject = { id: '', name: '' }
 const eventHeadings = ['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Planned Date', 'Completed On', 'Status']
 const eventColumns = ['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'planned_date', 'completed_date', 'status']
 const Layer4 = ({ ...props }) => {
-    const { campusId, district, updateCampus, eventUpdate, eventList } = props
+    const { campusId, district, eventUpdate, eventList } = props
     const [eventModal, setEventModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [coordinatorList, setCoordinatorList] = useState<any>([])
-    const [isAddEvent, setIsAddEvent] = useState(false)
+    const [isAddEvent, setIsAddEvent] = useState(true)
     const [event, setEvent] = useState<any>(emptyObject)
     const clear = () => {
         setEventModal(false)
         setDeleteModal(false)
         setEvent(emptyObject)
-        setCoordinatorList([])
-        setEvent(emptyObject)
     }
     const Modes = [
-        { id: '1', name: 'Online' },
-        { id: '2', name: 'Offline' },
+        { id: '0', name: 'Online' },
+        { id: '1', name: 'Offline' },
     ]
 
     return (
@@ -64,25 +62,29 @@ const Layer4 = ({ ...props }) => {
             {eventModal &&
                 <Modal header={isAddEvent ? 'Add Event' : 'Update Event'}
                     close={clear}
-                    onSubmit={(e) => {
+                    onSubmit={(e: any) => {
                         if (isAddEvent) {
-                            createEvent(e?.planned_date, e?.place, Modes[e?.mode].name,
+                            createEvent(
+                                e?.planned,
+                                e?.place,
+                                Modes[e?.mode].name,
                                 e?.coordinator,
                                 campusId, () => {
-                                    eventUpdate()
+                                    eventUpdate();
                                     clear()
                                     setEventModal(false)
-                                }, () => { })
+                                }, () => {
+                                })
                         }
                         else {
                             updateEvent(event.id, e?.nop, e?.completed_date, e.remarks, e?.place, () => {
                                 eventUpdate()
                                 clear()
                                 setEventModal(false)
-                            }, () => {
-                            })
+                            }, () => { }, true)
                         }
-                    }} >
+                    }}
+                >
                     <>
                         {isAddEvent && <>
                             <Select
@@ -97,7 +99,7 @@ const Layer4 = ({ ...props }) => {
                             />
                             <Input
                                 header={'Date'}
-                                name={'planned_date'}
+                                name={'planned'}
                                 type='datetime-local'
                             />
                         </>}
@@ -110,7 +112,6 @@ const Layer4 = ({ ...props }) => {
                             }}
                         />
                         {!isAddEvent && <>
-
                             <Input
                                 header={'No of Participants'}
                                 name={'nop'}
@@ -138,8 +139,6 @@ const Layer4 = ({ ...props }) => {
                                 }}
                             />
                         </>}
-
-
                     </>
                 </Modal >
             }

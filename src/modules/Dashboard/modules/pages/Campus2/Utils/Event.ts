@@ -35,7 +35,6 @@ export function listEvent(campusId: string, setData: Dispatch<SetStateAction<Eve
     privateGateway.get(`${campusRoutes.listEvent}${campusId}/`, { signal: eventController.signal })
         .then(res => res.data.response)
         .then(data => {
-            console.log('event listed in function');
             setData(data.map((item: any) => (
                 {
                     ...item,
@@ -49,11 +48,12 @@ export function listEvent(campusId: string, setData: Dispatch<SetStateAction<Eve
     }
 }
 export function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void, enableBtn: () => void) {
-    console.log(date, place, mod, coordinatorId, campusId)
+    const controller = new AbortController();
     const now = new Date();
     toast.info('Updating', {
         toastId: 'Updating'
     })
+    console.log(date, place, mod, coordinatorId, campusId)
     const planned_date = new Date(date);
     privateGateway.post(campusRoutes.createEvent, {
         planned_date: planned_date,
@@ -64,7 +64,7 @@ export function createEvent(date: string, place: string, mod: string, coordinato
         status: 'Scheduled',
         districtCordinator: coordinatorId,
         clubId: campusId
-    })
+    }, { signal: controller.signal })
         .then(res => {
             success()
             toast.dismiss('Updating')
@@ -75,7 +75,9 @@ export function createEvent(date: string, place: string, mod: string, coordinato
             errorMessage(err.response);
             enableBtn()
         })
-
+    return () => {
+        controller.abort()
+    }
 }
 
 export function updateEvent(
