@@ -3,12 +3,13 @@ interface Props {
     value: string
     style: string
     run?: (props: any) => void,
-    edit?: (props: any) => void
+    edit?: (props: any) => void,
+    type?: "button" | "submit" | "reset" | undefined
 }
 import Edit from '../../Assets/Edit.svg'
-const SmallStatus = ({ value, style, run, edit }: Props) => {
+const SmallStatus = ({ value, style, run, edit, ...props }: Props) => {
     return (
-        <div className={`small-box small-${style}`} onClick={run ? run : () => { }}>
+        <button className={`small-box small-${style}`} onClick={run ? run : () => { }} {...props} >
             {style === 'image' ? <img src={value} alt="image" /> : value}
             {edit ?
                 <div className='edit'>
@@ -16,7 +17,7 @@ const SmallStatus = ({ value, style, run, edit }: Props) => {
                 </div>
                 : <></>
             }
-        </div>
+        </button>
     );
 };
 export default SmallStatus

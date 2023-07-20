@@ -1,13 +1,18 @@
-import { SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import MediumStatusBox from '../../Components/MidBox/MediumStatusBox'
 import { DateConverter } from '../../Utils/Date'
 import './Layer2.css'
 import Modal, { listElementProps } from '../../Components/Modal/Modal'
 import { getPocRoles } from '../../../Campus/utils'
-import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
-import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import AddConnect from '../../Utils/Add Data/Connect'
 import AddVisit from '../../Utils/Add Data/Visit'
+import Select from '../../Components/Select/Select'
+import Input from '../../Components/Input/Input'
+const Types = [
+    { id: 'POC', name: 'Facilitator' },
+    { id: 'PTA', name: 'PTA Member' },
+    { id: 'ALUMNI', name: 'Alumni' },
+]
 interface Layer2Props {
     zone: string
     district: string
@@ -23,33 +28,22 @@ const emptyObject = { id: '', name: '' }
 const Layer2 = ({ ...props }: Layer2Props) => {
     const { visit, connection, execom, campusId, status } = props
     const [openModal, setOpenModal] = useState(false)
-    const [selected, setSelected] = useState('')
+    const [selectedBtn, setSelectedBtn] = useState('')
     const [designationList, setDesignationList] = useState<listElementProps[]>([])
-    const [email, setEmail] = useState('')
-    const [name, setName] = useState('')
-    const [designation, setDesignation] = useState(emptyObject)
-    const [mobile, setMobile] = useState('')
-    const [remarks, setRemarks] = useState('')
-    const [date, setDate] = useState('')
     const [type, setType] = useState(emptyObject)
     const [visitModal, setVisitModal] = useState(false)
     const [openConnectModal, setOpenConnectModal] = useState(false)
     function clear() {
-        setSelected('')
+        setSelectedBtn('')
         setOpenModal(false)
         setDesignationList([])
-        setEmail('')
-        setName('')
-        setDesignation(emptyObject)
-        setMobile('')
-        setRemarks('')
-        setDate('')
         setType(emptyObject)
         setVisitModal(false)
         setOpenConnectModal(false)
     }
     useEffect(() => {
         if (type.id !== '') {
+            console.log(type)
             setDesignationList({} as listElementProps[])
             getPocRoles(setDesignationList, type.id)
         }
@@ -67,7 +61,7 @@ const Layer2 = ({ ...props }: Layer2Props) => {
                     status={visit !== null}
                     onClick={() => {
                         setVisitModal(true)
-                        setSelected('Visit')
+                        setSelectedBtn('Visit')
                     }}
                     editOption={true} />
                 <MediumStatusBox
@@ -76,7 +70,7 @@ const Layer2 = ({ ...props }: Layer2Props) => {
                     status={connection !== null}
                     onClick={() => {
                         setOpenModal(true)
-                        setSelected('Connect')
+                        setSelectedBtn('Connect')
                         setOpenConnectModal(true)
                     }}
                     editOption={false} />
@@ -87,104 +81,70 @@ const Layer2 = ({ ...props }: Layer2Props) => {
                     onClick={() => {
                         setOpenModal(true)
                         setOpenConnectModal(false)
-                        setSelected('Execom')
+                        setSelectedBtn('Execom')
                         setType({ id: 'Execom', name: 'Execom' })
                     }} editOption={false} />
             </div >
             {openModal &&
                 <Modal
-                    header={selected === 'Connect' ? 'Add Connection' : selected === 'Execom' ? 'Add Execom Member' : ''}
-                    close={clear}
-                    functionName={selected === 'Connect' ? 'Add' : selected === 'Execom' ? 'Add Member' : ''}
-                    runFunction={() => {
+                    onSubmit={(e: any) => {
                         AddConnect({
                             postData: {
                                 clubId: campusId as string,
-                                type: type.id,
-                                name: name,
-                                email: email,
-                                phone: mobile,
-                                status: selected === 'Connect' ? 'Connection Established' : selected === 'Execom' ? 'Execom Formed' : '',
-                                role: designation.id,
+                                type: e.Type || 'Execom',
+                                name: e.Name,
+                                email: e.Email,
+                                phone: e.Mobile,
+                                status: selectedBtn === 'Connect' ? 'Connection Established' : selectedBtn === 'Execom' ? 'Execom Formed' : '',
+                                role: e.Role,
                             },
                             close: clear,
                             updateCampus: props.updateCampus,
                         }
                         )
-                    }}>
+                    }}
+                    header={selectedBtn === 'Connect' ? 'Add Connection' : selectedBtn === 'Execom' ? 'Add Execom Member' : ''}
+                    close={clear}
+                    functionName={selectedBtn === 'Connect' ? 'Add' : selectedBtn === 'Execom' ? 'Add Member' : ''}
+                >
                     <>
-                        {openConnectModal && <CustomSelect
-                            option={[
-                                { id: 'POC', name: 'Facilitator' },
-                                { id: 'PTA', name: 'PTA Member' },
-                                { id: 'ALUMNI', name: 'Alumni' },
-                            ]}
+                        {openConnectModal && <Select
+                            options={Types}
                             placeholder={'Select a connection'}
-                            header={'Connection Designation'}
-                            setData={setType} />}
-                        <CustomSelect
-                            option={designationList}
-                            header={'Role'}
-                            setData={setDesignation}
-                        />
-                        <CustomInput
-                            value={'Name'}
-                            data={name}
-                            setData={setName}
-                        />
-                        <CustomInput
-                            value={'Email'}
-                            data={email}
-                            setData={setEmail}
-                            type='email'
-                        />
-                        <CustomInput
-                            value={'Mobile'}
-                            data={mobile}
-                            setData={setMobile}
-                        />
+                            header={'Connection Type'}
+                            name='Type'
+                            onChange={(e: any) => {
+                                setType(e)
+                            }}
+                        />}
+                        <Select options={designationList} name='Role' />
+                        <Input name={'Name'} />
+                        <Input name={'Email'} type='email' />
+                        <Input name={'Mobile'} />
                     </>
                 </Modal >
             }
             {
                 visitModal &&
                 <Modal
-                    header={'Add Visit'}
-                    close={clear}
-                    runFunction={() => AddVisit({
+                    onSubmit={(e: any) => AddVisit({
                         clubId: campusId as string,
                         clubStatus: 'Visited',
-                        visited_date: new Date(date).toISOString(),
-                        visited_remarks: remarks
-                    }, () => setVisitModal(false), props.updateCampus)}>
+                        visited_date: new Date(e.Date).toISOString(),
+                        visited_remarks: e.Remarks
+                    }, () => setVisitModal(false), props.updateCampus)}
+                    header={'Add Visit'}
+                    close={clear}
+                >
                     <>
-                        <CustomInput
-                            value={'Remarks'}
-                            data={remarks}
-                            setData={setRemarks}
-
-                        />
-                        <CustomInput
-                            value={'Date'}
-                            data={date}
-                            setData={setDate}
-                            type='date'
-                        />
+                        <Input name={'Remarks'} />
+                        <Input name={'Date'} type='date' />
                     </>
                 </Modal>
             }
         </>
     )
 }
-function selectModalTitle(value: string): string {
-    switch (value) {
-        case 'Visit': return 'Add Visit'
-        case 'Facilitator': return 'Add Facilitator'
-        case 'PTA': return 'Add PTA'
-        case 'Alumni': return 'Add Alumni'
-        case 'Execom': return 'Add Execom Member'
-    }
-    return ''
-}
+
 
 export default Layer2

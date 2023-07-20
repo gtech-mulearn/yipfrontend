@@ -13,6 +13,8 @@ import Table from "../../Components/Table/Table"
 import listSubUser from "../../Utils/ListSubUser"
 import { deleteSubUser } from "../../Utils/SubUser"
 import { toast } from "react-toastify"
+import Select from "../../Components/Select/Select"
+import Input from "../../Components/Input/Input"
 interface Layer3Props {
     campusId: string
     updateCampus: () => void
@@ -27,10 +29,6 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
     const [openConnect, setOpenConnect] = useState(true)
     const [openModal, setOpenModal] = useState(false)
     const [designationList, setDesignationList] = useState<listElementProps[]>([])
-    const [email, setEmail] = useState('')
-    const [name, setName] = useState('')
-    const [designation, setDesignation] = useState(emptyObject)
-    const [mobile, setMobile] = useState('')
     const [type, setType] = useState(emptyObject)
     const [pocList, setPocList] = useState<any>([])
     const [ptaList, setPtaList] = useState<any>([])
@@ -53,10 +51,6 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
     const clear = () => {
         setOpenModal(false)
         setDesignationList([])
-        setEmail('')
-        setName('')
-        setDesignation(emptyObject)
-        setMobile('')
         setType(emptyObject)
         setUser('')
         setDeleteModal(false)
@@ -95,7 +89,6 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                     />
                 </>
             </InfoTab>
-
             {openConnect &&
                 <Table title={"Facilitator List"}
                     opener={true}
@@ -128,58 +121,47 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                     }}
                 />}
             {openModal && <Modal
-                header={`Add ${type.name}`}
-                close={clear}
-                runFunction={() => {
+                onSubmit={(e: any) => {
+                    console.log(e)
                     AddConnect({
                         postData: {
                             clubId: campusId as string,
                             type: type.id,
-                            name: name,
-                            email: email,
-                            phone: mobile,
-                            role: designation.id,
+                            name: e.Name,
+                            email: e.Email,
+                            phone: e.Mobile,
                             status: '',
+                            role: e.Role,
                         },
-                        close: () => clear(),
+                        close: clear,
                         updateCampus: updateCampus,
                     })
-                }}>
+                }}
+                header={`Add ${type.name}`}
+                close={clear}
+            >
                 <>
-                    <CustomSelect
-                        option={designationList}
-                        header={'Role'}
-                        setData={setDesignation}
-                    />
-                    <CustomInput
-                        value={'Name'}
-                        data={name}
-                        setData={setName}
-                    />
-                    <CustomInput
-                        value={'Email'}
-                        data={email}
-                        setData={setEmail}
-                        type='email'
-                    />
-                    <CustomInput
-                        value={'Mobile'}
-                        data={mobile}
-                        setData={setMobile}
-                    />
+                    <Select options={designationList} name='Role' />
+                    <Input name={'Name'} />
+                    <Input name={'Email'} type='email' />
+                    <Input name={'Mobile'} />
                 </>
             </Modal>
             }
             {
                 deleteModal &&
-                <Modal header={'Delete User'}
+                <Modal
+                    onSubmit={(e: any) => {
+                        deleteSubUser(user.id, () => {
+                            clear()
+                            toast.success('User Successfully Deleted')
+                        })
+                    }}
+                    header={'Delete User'}
                     DeleteBtn={true}
                     functionName="Confirm Delete"
                     close={() => setDeleteModal(false)}
-                    runFunction={() => deleteSubUser(user.id, () => {
-                        clear()
-                        toast.success('User Successfully Deleted')
-                    })} >
+                >
                     <>
                         <div className='delete-campus-modal'>
                             Are you sure you want to delete user <br /> {user.name}?

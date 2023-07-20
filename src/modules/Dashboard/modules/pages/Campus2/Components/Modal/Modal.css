@@ -19,6 +19,7 @@
     padding: 30px;
 }
 .campus-modal .modal-buttons{
+    margin-top: 16px;
     display: flex;
     flex:1 1 auto; 
     justify-content: center;

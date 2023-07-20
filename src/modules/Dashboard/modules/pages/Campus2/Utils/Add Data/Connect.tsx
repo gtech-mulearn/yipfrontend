@@ -8,7 +8,7 @@ import { listElementProps } from "../../Components/Modal/Modal"
 
 export interface ConnectDataProps {
     clubId: string,
-    type: string,
+    type: string | undefined,
     name: string,
     email: string,
     phone: string,

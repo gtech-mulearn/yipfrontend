@@ -6,6 +6,8 @@ import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelec
 import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import { createEvent, deleteEvent, listEvent, updateEvent } from '../../Utils/Event'
 import { getListOfCoordinatorByDistrict } from '../../Utils/User'
+import Select from '../../Components/Select/Select'
+import Input from '../../Components/Input/Input'
 const emptyObject = { id: '', name: '' }
 const eventHeadings = ['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Planned Date', 'Completed On', 'Status']
 const eventColumns = ['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'planned_date', 'completed_date', 'status']
@@ -14,35 +16,19 @@ const Layer4 = ({ ...props }) => {
     const [openModal, setOpenModal] = useState(false)
     const [eventModal, setEventModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
-    const [selectedStatus, setSelectedStatus] = useState(emptyObject)
-    const [coordinator, setCoordinator] = useState(emptyObject)
     const [coordinatorList, setCoordinatorList] = useState<any>([])
-    const [place, setPlace] = useState('')
-    const [date, setDate] = useState('')
-    const [mod, setMod] = useState(emptyObject)
     const [eventList, setEventList] = useState<any>([])
     const [isAddEvent, setIsAddEvent] = useState(false)
     const [event, setEvent] = useState<any>(emptyObject)
-    const [nop, setNop] = useState('')
-    const [remarks, setRemark] = useState('')
-
+    const f = useRef()
     const firstCall = useRef(true)
     const clear = () => {
         setOpenModal(false)
         setEventModal(false)
         setDeleteModal(false)
-        setSelectedStatus(emptyObject)
-        setCoordinator(emptyObject)
         setEvent(emptyObject)
-        setNop('')
-        setRemark('')
-        setDate('')
-        setMod(emptyObject)
-        setPlace('')
         setCoordinatorList([])
         setEvent(emptyObject)
-        setNop('')
-        setRemark('')
     }
     const Modes = [
         { id: '1', name: 'Online' },
@@ -51,14 +37,6 @@ const Layer4 = ({ ...props }) => {
     useEffect(() => {
         listEvent(campusId, setEventList)
     }, [updateCampus])
-    useEffect(() => {
-        if (event.id) {
-            console.log(event)
-            setPlace(event.place)
-            setNop(event.no_of_participants)
-            setRemark(event.remarks)
-        }
-    }, [event])
     return (
         <>
             <div className="layer-3">
@@ -95,69 +73,87 @@ const Layer4 = ({ ...props }) => {
             {eventModal &&
                 <Modal header={isAddEvent ? 'Add Event' : 'Update Event'}
                     close={clear}
-                    runFunction={
-                        () => {
-                            if (isAddEvent) {
-                                createEvent(date, place, mod.name, coordinator.id, campusId, () => {
+                    onSubmit={(e) => {
+                        // console.log(e.planned_date)
+                        if (isAddEvent) {
+                            createEvent(e?.planned_date, e?.place, Modes[e?.mode].name,
+                                e?.coordinator,
+                                campusId, () => {
                                     updateCampus();
                                     clear()
                                     setEventModal(false)
                                     firstCall.current = true
-                                }, () => { })
-                            }
-                            else {
-                                updateEvent(event.id, nop, date, remarks, place, () => {
-                                    updateCampus()
-                                    clear()
-                                    setEventModal(false)
-                                    firstCall.current = true
                                 }, () => {
-                                }, !isAddEvent)
-                            }
+                                })
                         }
-                    } >
+                        else {
+                            updateEvent(event.id, e?.nop, e?.completed_date, e.remarks, e?.place, () => {
+                                updateCampus()
+                                clear()
+                                setEventModal(false)
+                            }, () => {
+                            }),
+                                false
+                        }
+                    }} >
                     <>
                         {isAddEvent && <>
-                            <CustomSelect
-                                option={coordinatorList}
-                                value={coordinator.id ? coordinator : undefined}
-                                setData={setCoordinator}
+                            <Select
+                                options={coordinatorList}
+                                name='coordinator'
                                 header={'Coordinator'} />
-                            <CustomSelect
-                                option={Modes}
-                                value={mod.id ? mod : undefined}
-                                setData={setMod}
+                            <Select
+                                options={Modes}
+                                name={'mode'}
                                 header={'Mode of Delivery'}
                                 placeholder={'Online/Offline'}
                             />
+                            <Input
+                                header={'Date'}
+                                name={'planned_date'}
+                                type='datetime-local'
+                            />
                         </>}
-                        <CustomInput
-                            value={'Place'}
-                            data={place}
-                            setData={setPlace}
+                        <Input
+                            header={'Place'}
+                            name={'place'}
+                            value={event?.place || ''}
+                            onChange={(e: any) => {
+                                setEvent({ ...event, place: e.target.value })
+                            }}
                         />
-
                         {!isAddEvent && <>
 
-                            <CustomInput
-                                value={'No of Participants'}
-                                data={nop}
-                                setData={setNop}
+                            <Input
+                                header={'No of Participants'}
+                                name={'nop'}
                                 type='number'
+                                value={event?.no_of_participants}
+                                onChange={(e: any) => {
+                                    f.current = e.target.value
+                                    setEvent({ ...event, no_of_participants: e.target.value })
+                                }}
                             />
-                            <CustomInput
-                                value={'Remarks'}
-                                data={remarks}
-                                setData={setRemark}
+                            <Input
+                                header={'Remarks'}
+                                name={'remarks'}
+                                value={event?.remarks}
+                                onChange={(e: any) => {
+                                    setEvent({ ...event, remarks: e.target.value })
+                                }}
+                            />
+                            <Input
+                                header={'Completed Date'}
+                                value={convertDateTime(event?.completed_date)}
+                                name={'completed_date'}
+                                type='datetime-local'
+                                onChange={(e: any) => {
+                                    setEvent({ ...event, completed_date: e.target.value })
+                                }}
                             />
                         </>}
 
-                        <CustomInput
-                            value={` ${isAddEvent ? 'Date' : 'Date of Completion'}`}
-                            data={date}
-                            setData={setDate}
-                            type='datetime-local'
-                        />
+
                     </>
                 </Modal >
             }
@@ -165,7 +161,8 @@ const Layer4 = ({ ...props }) => {
                 <Modal
                     header={'Delete Event'}
                     close={clear}
-                    runFunction={() => {
+                    DeleteBtn={true}
+                    onSubmit={(e: any) => {
                         deleteEvent(event.id, () => {
                             updateCampus();
                             clear()
@@ -181,6 +178,31 @@ const Layer4 = ({ ...props }) => {
             }
         </>
     )
+}
+function convertDateTime(input: string) {
+
+    const dateTimeRegex = /^(January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2},\s\d{4}\sat\s\d{1,2}:\d{2}\s(AM|PM)$/;
+
+    if (!input?.match(dateTimeRegex))
+        return input
+    const months: { [key: string]: string } = {
+        January: '01', February: '02', March: '03', April: '04', May: '05', June: '06',
+        July: '07', August: '08', September: '09', October: '10', November: '11', December: '12',
+    };
+    const [month, day, year, time, hour12] = input.replace(',', '').replace('at ', '').split(' ')
+    let hour24 = '', [hour, minute] = time.split(':')
+    if (hour12 === 'PM') {
+        const temp = parseInt(hour) + 12
+        hour24 = `${temp}:${minute}:00`
+    }
+    if (hour12 === 'AM' && hour === '12') {
+        hour24 = `00:${minute}:00`
+    }
+    else {
+        hour24 = time
+    }
+    console.log(`${year}-${months[month]}-${day} ${hour24}`)
+    return `${year}-${months[month]}-${day} ${hour24}`
 }
 
 export default Layer4

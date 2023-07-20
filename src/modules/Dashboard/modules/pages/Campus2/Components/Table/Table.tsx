@@ -56,7 +56,9 @@ const Table = <T,>({
     useEffect(() => {
         handleDownloadCSV(table as T[], props.columns, setCsvData)
     }, [table])
-
+    useEffect(() => {
+        setOpenTable(opener)
+    }, [opener])
     return (
         <div className={`ux-table ${openTable ? 'ux-table-open' : ''}`}>
             <InfoTab

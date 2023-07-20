@@ -16,7 +16,6 @@ import ResetReq from './modules/Login/pages/ResetReq';
 import GlobalVariableProvider from './utils/GlobalVariable';
 import InternReport from './modules/Dashboard/modules/pages/InternReport/InternReport';
 import Layout from './modules/Dashboard/modules/pages/Campus2/Layout/Layout';
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -64,7 +63,7 @@ const router = createBrowserRouter([
           { path: 'intern-dashboard', element: <InternLayout /> },
           { path: 'campus-dashboard/:type/:campusId', element: <Layout /> },
           { path: 'institute-management', element: <InstituteSetup /> },
-          { path: '/intern-report', element: <InternReport /> }
+          { path: '/intern-report', element: <InternReport /> },
         ]
       }
     ]

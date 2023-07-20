@@ -3,6 +3,7 @@ import { CustomInput } from "../../../../../components/CustomInput/CustomInput"
 import { CustomSelect } from "../../../../../components/CustomSelect/CustomSelect"
 import SmallStatus from "../SmallBox/SmallStatus"
 import './Modal.css'
+import Form from "../../../../components/Form/Form"
 export interface listElementProps {
     id: string
     name: string
@@ -14,11 +15,11 @@ interface Layer1Props {
 }
 
 interface Layer3Props {
-    runFunction: ((props: any) => void)
     functionName?: string
 }
 export interface ModalProps extends Layer1Props, Layer3Props {
     children: JSX.Element
+    onSubmit: (props: any) => void
 }
 
 const Modal = ({ ...props }: ModalProps) => {
@@ -27,10 +28,12 @@ const Modal = ({ ...props }: ModalProps) => {
             <div className="modal-overlay">
                 <div className='modal'>
                     <Layer1 {...props} />
-                    <div className="input-box">
-                        {props.children}
-                    </div>
-                    <Layer3 {...props} />
+                    <Form onSubmit={props.onSubmit}>
+                        <div className="input-box">
+                            {props.children}
+                        </div>
+                        <Layer3  {...props} />
+                    </Form>
                 </div>
             </div>
         </div>
@@ -47,13 +50,13 @@ const Layer1 = ({ ...props }: Layer1Props) => {
         </div>
     )
 }
-const Layer3 = ({ close, header, runFunction, functionName, DeleteBtn }: ModalProps) => {
+const Layer3 = ({ close, header, functionName, DeleteBtn }: ModalProps) => {
     return (
         <div className="modal-buttons">
             <SmallStatus
                 value={functionName ? functionName : header}
                 style={DeleteBtn ? 'button-alert' : 'button'}
-                run={runFunction}
+                type={'submit'}
             />
             <SmallStatus
                 value='Cancel'

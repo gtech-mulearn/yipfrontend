@@ -21,23 +21,41 @@ export function getCampusInfo(
     setCampus: React.Dispatch<React.SetStateAction<CampusPageProps>>,
 
 ) {
+    let camp = {}
     privateGateway.get(`${campusRoutes.campus.info}${id}/`)
         .then(res => res.data.response)
-        .then(data => setCampus(campusData => ({
-            ...campusData,
-            campus: data.name,
-            category: data.institute_type,
-            district: data.district,
-            status: data.club_status,
-            zone: data.zone,
-            legislativeAssembly: data.legislative_assembly,
-            block: data.block,
-            identified: data.date_of_identification,
-            confirmed: data.date_of_visited,
-            connection: data.date_of_connection,
-            orientation: data.date_of_orientaion,
-            execom: data.date_of_execom_formation,
-        })))
+        .then(data => {
+
+            console.log('updating campus in in function getcampus info'); setCampus(campusData => ({
+                ...campusData,
+                campus: data.name,
+                category: data.institute_type,
+                district: data.district,
+                status: data.club_status,
+                zone: data.zone,
+                legislativeAssembly: data.legislative_assembly,
+                block: data.block,
+                identified: data.date_of_identification,
+                confirmed: data.date_of_visited,
+                connection: data.date_of_connection,
+                orientation: data.date_of_orientaion,
+                execom: data.date_of_execom_formation,
+            }))
+            return ({
+                campus: data.name,
+                category: data.institute_type,
+                district: data.district,
+                status: data.club_status,
+                zone: data.zone,
+                legislativeAssembly: data.legislative_assembly,
+                block: data.block,
+                identified: data.date_of_identification,
+                confirmed: data.date_of_visited,
+                connection: data.date_of_connection,
+                orientation: data.date_of_orientaion,
+                execom: data.date_of_execom_formation,
+            })
+        })
         .catch(err => console.error(err))
 }
 export function formatDateStyle(value: string) {

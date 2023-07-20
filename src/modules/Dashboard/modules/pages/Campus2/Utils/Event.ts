@@ -30,8 +30,9 @@ export function deleteEvent(eventId: string, close: () => void) {
             })
     }
 }
+const eventController = new AbortController();
 export function listEvent(campusId: string, setData: Dispatch<SetStateAction<EventPostDataProps[]>>) {
-    privateGateway.get(`${campusRoutes.listEvent}${campusId}/`)
+    privateGateway.get(`${campusRoutes.listEvent}${campusId}/`, { signal: eventController.signal })
         .then(res => res.data.response)
         .then(data =>
             setData(data.map((item: any) => (
@@ -41,12 +42,16 @@ export function listEvent(campusId: string, setData: Dispatch<SetStateAction<Eve
                     planned_date: formatDate(item.planned_date), completed_date: formatDate(item.completed_date)
                 }))))
         .catch(err => console.error(err))
+    return () => {
+        eventController.abort()
+    }
 }
 export function createEvent(date: string, place: string, mod: string, coordinatorId: string, campusId: string, cancel: () => void, enableBtn: () => void) {
     const now = new Date();
     toast.info('Updating', {
         toastId: 'Updating'
     })
+    const controller = new AbortController();
     const planned_date = new Date(date);
     privateGateway.post(campusRoutes.createEvent, {
         planned_date: planned_date,
@@ -57,7 +62,7 @@ export function createEvent(date: string, place: string, mod: string, coordinato
         status: 'Scheduled',
         districtCordinator: coordinatorId,
         clubId: campusId
-    })
+    }, { signal: controller.signal })
         .then(res => {
             success()
             toast.dismiss('Updating')
@@ -68,6 +73,9 @@ export function createEvent(date: string, place: string, mod: string, coordinato
             errorMessage(err.response);
             enableBtn()
         })
+    return () => {
+        controller.abort()
+    }
 }
 
 export function updateEvent(

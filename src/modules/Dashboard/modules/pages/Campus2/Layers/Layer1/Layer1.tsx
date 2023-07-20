@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import Modal from '../../Components/Modal/Modal'
 import SmallStatus from '../../Components/SmallBox/SmallStatus'
 import './Layer1.css'
-import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
-import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
 import { deleteModelSchool } from '../../../Campus/utils'
 import { useNavigate } from 'react-router-dom'
 import { createEvent, listEvent, updateEvent } from '../../Utils/Event'
 import { getListOfCoordinatorByDistrict } from '../../Utils/User'
 import { updateCampusStatus } from '../../Utils/Campus'
+import Input from '../../Components/Input/Input'
+import Select from '../../Components/Select/Select'
 interface Layer1Props {
     status: string
     category: string
@@ -16,46 +16,36 @@ interface Layer1Props {
     updateCampus: () => void
     district: string
 }
+const statusList = [
+    { id: '0', name: 'Connection Established' },
+    { id: '1', name: 'Orientation Scheduled' },
+    { id: '2', name: 'Orientation Completed' },
+    { id: '3', name: 'Execom Formed' },
+]
+const Modes = [
+    { id: '0', name: 'Online' },
+    { id: '1', name: 'Offline' },
+]
 const emptyObject = { id: '', name: '' }
 const Layer1 = ({ status, category, campusId, updateCampus, district }: Layer1Props) => {
     const navigate = useNavigate()
     const [openModal, setOpenModal] = useState(false)
     const [eventModal, setEventModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
-    const [selectedStatus, setSelectedStatus] = useState(emptyObject)
-    const [coordinator, setCoordinator] = useState(emptyObject)
     const [coordinatorList, setCoordinatorList] = useState<any>([])
-    const [place, setPlace] = useState('')
-    const [date, setDate] = useState('')
-    const [mod, setMod] = useState(emptyObject)
     const [eventList, setEventList] = useState<any>([])
     const [isAddEvent, setIsAddEvent] = useState(false)
     const [event, setEvent] = useState(emptyObject)
-    const [nop, setNop] = useState('')
-    const [remarks, setRemark] = useState('')
     const firstCall = useRef(true)
     const clear = () => {
         setOpenModal(false)
         setEventModal(false)
         setDeleteModal(false)
-        setSelectedStatus(emptyObject)
-        setCoordinator(emptyObject)
         setEvent(emptyObject)
-        setNop('')
-        setRemark('')
-        setDate('')
-        setMod(emptyObject)
-        setPlace('')
         setCoordinatorList([])
         setEventList([])
         setEvent(emptyObject)
-        setNop('')
-        setRemark('')
     }
-    const Modes = [
-        { id: '1', name: 'Online' },
-        { id: '2', name: 'Offline' },
-    ]
     useEffect(() => {
         listEvent(campusId, setEventList)
     }, [updateCampus])
@@ -99,87 +89,80 @@ const Layer1 = ({ status, category, campusId, updateCampus, district }: Layer1Pr
                 </div>
             </div>
             {openModal && <Modal
+                onSubmit={(e) => {
+                    updateCampusStatus(campusId, statusList[e.status].name, () => { setOpenModal(false); updateCampus(); clear() })
+                }}
                 header={'Update Status'}
                 close={() => { setOpenModal(false) }}
-                runFunction={() => {
-                    updateCampusStatus(campusId, selectedStatus.name, () => { setOpenModal(false); updateCampus(); clear() })
-                }}>
+            >
                 <>
-                    <CustomSelect
-                        option={[
-                            { id: '1', name: 'Connection Established' },
-                            { id: '2', name: 'Orientation Scheduled' },
-                            { id: '3', name: 'Orientation Completed' },
-                            { id: '4', name: 'Execom Formed' },
-                        ]}
-                        value={selectedStatus?.id ? selectedStatus : undefined}
-                        setData={setSelectedStatus}
+                    <Select
+                        options={statusList}
+                        id={'status'}
+                        name={'status'}
                         header={'Status'} />
 
                 </>
             </Modal>}
             {eventModal &&
                 <Modal header={isAddEvent ? 'Add Event' : 'Update Event'}
+
                     close={() => setEventModal(false)}
-                    runFunction={
-                        () => {
-                            if (isAddEvent) {
-                                createEvent(date, place, mod.name, coordinator.id, campusId, () => {
+                    onSubmit={(e) => {
+                        console.log(e)
+                        if (isAddEvent) {
+                            createEvent(e?.date, e?.place, Modes[e?.mode].name,
+                                coordinatorList.find((item: any) => item.id === e?.coordinator)?.id
+                                , campusId, () => {
                                     updateCampus();
                                     clear()
                                     setEventModal(false)
                                     firstCall.current = true
                                 }, () => {
                                 })
-                            }
-                            else {
-                                updateEvent(event.id, nop, date, remarks, place, () => {
-                                    updateCampus()
-                                    clear()
-                                    setEventModal(false)
-                                }, () => {
-                                })
-                            }
                         }
-                    } >
+                        else {
+                            updateEvent(event.id, e?.nop, e?.date, e.remarks, e?.place, () => {
+                                updateCampus()
+                                clear()
+                                setEventModal(false)
+                            }, () => {
+                            })
+                        }
+                    }}
+                >
                     <>
                         {isAddEvent ?
                             <>
-                                <CustomSelect
-                                    option={coordinatorList}
-                                    value={coordinator.id ? coordinator : undefined}
-                                    setData={setCoordinator}
+                                <Select
+                                    options={coordinatorList}
+                                    name='coordinator'
                                     header={'Coordinator'} />
-                                <CustomSelect
-                                    option={Modes}
-                                    value={mod.id ? mod : undefined}
-                                    setData={setMod}
+                                <Select
+                                    options={Modes}
+                                    name={'mode'}
                                     header={'Mode of Delivery'}
                                     placeholder={'Online/Offline'}
                                 />
-                                <CustomInput
-                                    value={'Place'}
-                                    data={place}
-                                    setData={setPlace}
+                                <Input
+                                    header={'Place'}
+                                    name={'place'}
                                 />
                             </> :
-                            <><CustomInput
-                                value={'No of Participants'}
-                                data={nop}
-                                setData={setNop}
+                            <><Input
+                                header={'No of Participants'}
+                                name={'nop'}
                                 type='number'
                             />
-                                <CustomInput
-                                    value={'Remarks'}
-                                    data={remarks}
-                                    setData={setRemark}
+                                <Input
+                                    header={'Remarks'}
+                                    name={'remarks'}
                                 />
                             </>
                         }
-                        <CustomInput
-                            value={'Date'}
-                            data={date}
-                            setData={setDate}
+                        <Input
+                            header={'Date'}
+                            name={'date'}
                             type='datetime-local'
                         />
                     </>
@@ -188,10 +171,13 @@ const Layer1 = ({ status, category, campusId, updateCampus, district }: Layer1Pr
             {
                 deleteModal &&
                 <Modal header={'Delete Campus'}
+                    onSubmit={() => {
+                        deleteModelSchool(campusId, () => { navigate('/club-dashboard') })
+                    }}
                     DeleteBtn={true}
                     functionName="Confirm Delete"
                     close={() => setDeleteModal(false)}
-                    runFunction={() => deleteModelSchool(campusId, () => { navigate('/club-dashboard') })} >
+                >
                     <>
                         <div className='delete-campus-modal'>
                             Are you sure you want to delete this campus?
