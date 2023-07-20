@@ -15,33 +15,23 @@ import { deleteSubUser } from "../../Utils/SubUser"
 import { toast } from "react-toastify"
 import Select from "../../Components/Select/Select"
 import Input from "../../Components/Input/Input"
-interface Layer3Props {
-    campusId: string
-    updateCampus: () => void
-}
+
 interface listElementProps {
     id: string
     name: string
 }
-const emptyObject = { id: '', name: '' }
 const FacilitatorHeading = ['Name', 'Email', 'Phone', 'Designation']
-const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
+const Layer3 = ({ ...props }) => {
+    const { campusId, pocState, updateSubUserList, ptaState, alumniState } = props
+    const emptyObject = { id: '', name: '', state: pocState.setPocList }
+
     const [openConnect, setOpenConnect] = useState(true)
     const [openModal, setOpenModal] = useState(false)
     const [designationList, setDesignationList] = useState<listElementProps[]>([])
     const [type, setType] = useState(emptyObject)
-    const [pocList, setPocList] = useState<any>([])
-    const [ptaList, setPtaList] = useState<any>([])
-    const [alumniList, setAlumniList] = useState<any>([])
     const [user, setUser] = useState<any>({})
     const [deleteModal, setDeleteModal] = useState(false)
     const [update, setUpdate] = useState(false)
-    useEffect(() => {
-        listSubUser(setPocList, campusId, 'POC')
-        listSubUser(setPtaList, campusId, 'PTA')
-        listSubUser(setAlumniList, campusId, 'ALUMNI')
-    }, [openConnect, update, updateCampus])
-
     useEffect(() => {
         if (type.id !== '') {
             getPocRoles(setDesignationList, type.id)
@@ -68,7 +58,7 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                         style={"button"}
                         run={() => {
                             setOpenModal(true)
-                            setType({ id: 'POC', name: 'Facilitator' })
+                            setType({ id: 'POC', name: 'Facilitator', state: pocState.setList })
                         }}
                     />
                     <SmallStatus
@@ -76,7 +66,7 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                         style={"button"}
                         run={() => {
                             setOpenModal(true)
-                            setType({ id: 'PTA', name: 'PTA Members' })
+                            setType({ id: 'PTA', name: 'PTA Members', state: ptaState.setList })
                         }}
                     />
                     <SmallStatus
@@ -84,7 +74,7 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                         style={"button"}
                         run={() => {
                             setOpenModal(true)
-                            setType({ id: 'ALUMNI', name: 'Alumni Members' })
+                            setType({ id: 'ALUMNI', name: 'Alumni Members', state: alumniState.setList })
                         }}
                     />
                 </>
@@ -93,31 +83,43 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                 <Table title={"Facilitator List"}
                     opener={true}
                     headings={FacilitatorHeading}
-                    table={pocList}
+                    table={pocState.list}
                     columns={['name', 'email', 'phone', 'role']}
                     type={""}
                     buttons={{
-                        delete: (userId: string) => { setUser(userId); setDeleteModal(true) },
+                        delete: (userId: string) => {
+                            setUser(userId)
+                            setDeleteModal(true)
+                            setType({ id: 'POC', name: 'Facilitator', state: pocState.setList })
+                        },
                     }}
                 />}
             {openConnect &&
                 <Table title={"PTA List"}
                     headings={FacilitatorHeading}
-                    table={ptaList}
+                    table={ptaState.list}
                     columns={['name', 'email', 'phone', 'role']}
                     type={""}
                     buttons={{
-                        delete: (userId: string) => { setUser(userId); setDeleteModal(true) },
+                        delete: (userId: string) => {
+                            setUser(userId)
+                            setDeleteModal(true)
+                            setType({ id: 'PTA', name: 'PTA Members', state: ptaState.setList })
+                        }
                     }}
                 />}
             {openConnect &&
                 <Table title={"Alumni List"}
                     headings={FacilitatorHeading}
-                    table={alumniList}
+                    table={alumniState.list}
                     columns={['name', 'email', 'phone', 'role']}
                     type={""}
                     buttons={{
-                        delete: (userId: string) => { setUser(userId); setDeleteModal(true) },
+                        delete: (userId: string) => {
+                            setUser(userId)
+                            setDeleteModal(true)
+                            setType({ id: 'ALUMNI', name: 'Alumni Members', state: alumniState.setList })
+                        }
                     }}
                 />}
             {openModal && <Modal
@@ -134,7 +136,7 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                             role: e.Role,
                         },
                         close: clear,
-                        updateCampus: updateCampus,
+                        updateCampus: () => updateSubUserList(type.state, campusId, type.id),
                     })
                 }}
                 header={`Add ${type.name}`}
@@ -155,6 +157,7 @@ const Layer3 = ({ campusId, updateCampus }: Layer3Props) => {
                         deleteSubUser(user.id, () => {
                             clear()
                             toast.success('User Successfully Deleted')
+                            updateSubUserList(type.state, campusId, type.id)
                         })
                     }}
                     header={'Delete User'}

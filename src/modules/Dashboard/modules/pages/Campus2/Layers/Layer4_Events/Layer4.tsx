@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Table from '../../Components/Table/Table'
 import SmallStatus from '../../Components/SmallBox/SmallStatus'
 import Modal from '../../Components/Modal/Modal'
-import { CustomSelect } from '../../../../../components/CustomSelect/CustomSelect'
-import { CustomInput } from '../../../../../components/CustomInput/CustomInput'
-import { createEvent, deleteEvent, listEvent, updateEvent } from '../../Utils/Event'
+import { createEvent, deleteEvent, updateEvent } from '../../Utils/Event'
 import { getListOfCoordinatorByDistrict } from '../../Utils/User'
 import Select from '../../Components/Select/Select'
 import Input from '../../Components/Input/Input'
@@ -12,18 +10,13 @@ const emptyObject = { id: '', name: '' }
 const eventHeadings = ['Mode of Delivery', 'Coordinator', 'Place', 'No of Participants', 'Remarks', 'Planned Date', 'Completed On', 'Status']
 const eventColumns = ['mode_of_delivery', 'districtCordinator', 'place', 'no_of_participants', 'remarks', 'planned_date', 'completed_date', 'status']
 const Layer4 = ({ ...props }) => {
-    const { campusId, district, updateCampus } = props
-    const [openModal, setOpenModal] = useState(false)
+    const { campusId, district, updateCampus, eventUpdate, eventList } = props
     const [eventModal, setEventModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [coordinatorList, setCoordinatorList] = useState<any>([])
-    const [eventList, setEventList] = useState<any>([])
     const [isAddEvent, setIsAddEvent] = useState(false)
     const [event, setEvent] = useState<any>(emptyObject)
-    const f = useRef()
-    const firstCall = useRef(true)
     const clear = () => {
-        setOpenModal(false)
         setEventModal(false)
         setDeleteModal(false)
         setEvent(emptyObject)
@@ -34,9 +27,7 @@ const Layer4 = ({ ...props }) => {
         { id: '1', name: 'Online' },
         { id: '2', name: 'Offline' },
     ]
-    useEffect(() => {
-        listEvent(campusId, setEventList)
-    }, [updateCampus])
+
     return (
         <>
             <div className="layer-3">
@@ -74,26 +65,22 @@ const Layer4 = ({ ...props }) => {
                 <Modal header={isAddEvent ? 'Add Event' : 'Update Event'}
                     close={clear}
                     onSubmit={(e) => {
-                        // console.log(e.planned_date)
                         if (isAddEvent) {
                             createEvent(e?.planned_date, e?.place, Modes[e?.mode].name,
                                 e?.coordinator,
                                 campusId, () => {
-                                    updateCampus();
+                                    eventUpdate()
                                     clear()
                                     setEventModal(false)
-                                    firstCall.current = true
-                                }, () => {
-                                })
+                                }, () => { })
                         }
                         else {
                             updateEvent(event.id, e?.nop, e?.completed_date, e.remarks, e?.place, () => {
-                                updateCampus()
+                                eventUpdate()
                                 clear()
                                 setEventModal(false)
                             }, () => {
-                            }),
-                                false
+                            })
                         }
                     }} >
                     <>
@@ -130,7 +117,6 @@ const Layer4 = ({ ...props }) => {
                                 type='number'
                                 value={event?.no_of_participants}
                                 onChange={(e: any) => {
-                                    f.current = e.target.value
                                     setEvent({ ...event, no_of_participants: e.target.value })
                                 }}
                             />
@@ -164,10 +150,9 @@ const Layer4 = ({ ...props }) => {
                     DeleteBtn={true}
                     onSubmit={(e: any) => {
                         deleteEvent(event.id, () => {
-                            updateCampus();
+                            eventUpdate()
                             clear()
                             setEventModal(false)
-                            firstCall.current = true
                         })
                     }
                     }>
@@ -193,9 +178,10 @@ function convertDateTime(input: string) {
     let hour24 = '', [hour, minute] = time.split(':')
     if (hour12 === 'PM') {
         const temp = parseInt(hour) + 12
+        console.log(temp)
         hour24 = `${temp}:${minute}:00`
     }
-    if (hour12 === 'AM' && hour === '12') {
+    else if (hour12 === 'AM' && hour === '12') {
         hour24 = `00:${minute}:00`
     }
     else {

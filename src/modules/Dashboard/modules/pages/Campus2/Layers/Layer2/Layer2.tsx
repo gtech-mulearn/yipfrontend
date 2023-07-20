@@ -1,18 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import MediumStatusBox from '../../Components/MidBox/MediumStatusBox'
 import { DateConverter } from '../../Utils/Date'
 import './Layer2.css'
-import Modal, { listElementProps } from '../../Components/Modal/Modal'
-import { getPocRoles } from '../../../Campus/utils'
-import AddConnect from '../../Utils/Add Data/Connect'
-import AddVisit from '../../Utils/Add Data/Visit'
-import Select from '../../Components/Select/Select'
+import Modal from '../../Components/Modal/Modal'
 import Input from '../../Components/Input/Input'
-const Types = [
-    { id: 'POC', name: 'Facilitator' },
-    { id: 'PTA', name: 'PTA Member' },
-    { id: 'ALUMNI', name: 'Alumni' },
-]
+import { updateCampusStatus } from '../../Utils/Campus'
+
 interface Layer2Props {
     zone: string
     district: string
@@ -24,31 +17,20 @@ interface Layer2Props {
     status: string
     updateCampus: () => void
 }
-const emptyObject = { id: '', name: '' }
+const emptyObject = { id: '', name: '', date: '', key: '', status: '' }
+const TYPES = {
+    visit: { id: 'Visit', name: 'Add Visit', date: 'Visit Date', key: 'visited_date', status: 'Visited' },
+    connect: { id: 'Connect', name: 'Add Connect', date: 'Add Connect Date', key: 'connection_established_date', status: 'Connection Established' },
+    execom: { id: 'Execom', name: 'Add Date', date: 'Date of Execom Formation', key: 'date_of_execom_formed', status: 'Execom Formed' }
+}
 const Layer2 = ({ ...props }: Layer2Props) => {
     const { visit, connection, execom, campusId, status } = props
     const [openModal, setOpenModal] = useState(false)
-    const [selectedBtn, setSelectedBtn] = useState('')
-    const [designationList, setDesignationList] = useState<listElementProps[]>([])
     const [type, setType] = useState(emptyObject)
-    const [visitModal, setVisitModal] = useState(false)
-    const [openConnectModal, setOpenConnectModal] = useState(false)
     function clear() {
-        setSelectedBtn('')
         setOpenModal(false)
-        setDesignationList([])
         setType(emptyObject)
-        setVisitModal(false)
-        setOpenConnectModal(false)
     }
-    useEffect(() => {
-        if (type.id !== '') {
-            console.log(type)
-            setDesignationList({} as listElementProps[])
-            getPocRoles(setDesignationList, type.id)
-        }
-    }, [type])
-
     return (
         <>
             <div className='layer2'>
@@ -60,87 +42,56 @@ const Layer2 = ({ ...props }: Layer2Props) => {
                     content={visit ? DateConverter(visit) : 'Visit'}
                     status={visit !== null}
                     onClick={() => {
-                        setVisitModal(true)
-                        setSelectedBtn('Visit')
+                        setOpenModal(true)
+                        setType(TYPES.visit)
                     }}
                     editOption={true} />
                 <MediumStatusBox
                     title={connection ? 'Connect Date' : 'Add'}
-                    content={connection ? DateConverter(connection) : 'Connect'}
+                    content={connection ? DateConverter(connection) : 'Connected Date'}
                     status={connection !== null}
                     onClick={() => {
                         setOpenModal(true)
-                        setSelectedBtn('Connect')
-                        setOpenConnectModal(true)
+                        setType(TYPES.connect)
                     }}
-                    editOption={false} />
+                    editOption={true} />
                 <MediumStatusBox
                     title={execom ? 'Date Execom Formed' : 'Add'}
-                    content={execom ? DateConverter(execom) : 'Execom '}
+                    content={execom ? DateConverter(execom) : 'Execom Formed Date'}
                     status={execom !== null}
                     onClick={() => {
                         setOpenModal(true)
-                        setOpenConnectModal(false)
-                        setSelectedBtn('Execom')
-                        setType({ id: 'Execom', name: 'Execom' })
-                    }} editOption={false} />
+                        setType(TYPES.execom)
+                    }} editOption={true} />
             </div >
             {openModal &&
                 <Modal
                     onSubmit={(e: any) => {
-                        AddConnect({
-                            postData: {
-                                clubId: campusId as string,
-                                type: e.Type || 'Execom',
-                                name: e.Name,
-                                email: e.Email,
-                                phone: e.Mobile,
-                                status: selectedBtn === 'Connect' ? 'Connection Established' : selectedBtn === 'Execom' ? 'Execom Formed' : '',
-                                role: e.Role,
-                            },
-                            close: clear,
-                            updateCampus: props.updateCampus,
+                        const postData: any = {
+                            currentStatus: status
                         }
-                        )
+                        if (e?.Remarks)
+                            postData.remarks = e.Remarks
+                        if (e?.date)
+                            postData[type.key] = new Date(e.date)
+                        updateCampusStatus(
+                            campusId as string,
+                            type.status,
+                            () => { clear(); props.updateCampus() },
+                            postData)
                     }}
-                    header={selectedBtn === 'Connect' ? 'Add Connection' : selectedBtn === 'Execom' ? 'Add Execom Member' : ''}
-                    close={clear}
-                    functionName={selectedBtn === 'Connect' ? 'Add' : selectedBtn === 'Execom' ? 'Add Member' : ''}
+                    header={type.name}
+                    close={() => {
+                        clear()
+                        props.updateCampus()
+                    }}
+                    functionName={`Update`}
                 >
                     <>
-                        {openConnectModal && <Select
-                            options={Types}
-                            placeholder={'Select a connection'}
-                            header={'Connection Type'}
-                            name='Type'
-                            onChange={(e: any) => {
-                                setType(e)
-                            }}
-                        />}
-                        <Select options={designationList} name='Role' />
-                        <Input name={'Name'} />
-                        <Input name={'Email'} type='email' />
-                        <Input name={'Mobile'} />
+                        {/* {type.id === 'Visit' && <Input name='Remarks' />} */}
+                        <Input name='date' header={type.date} type='date' />
                     </>
                 </Modal >
-            }
-            {
-                visitModal &&
-                <Modal
-                    onSubmit={(e: any) => AddVisit({
-                        clubId: campusId as string,
-                        clubStatus: 'Visited',
-                        visited_date: new Date(e.Date).toISOString(),
-                        visited_remarks: e.Remarks
-                    }, () => setVisitModal(false), props.updateCampus)}
-                    header={'Add Visit'}
-                    close={clear}
-                >
-                    <>
-                        <Input name={'Remarks'} />
-                        <Input name={'Date'} type='date' />
-                    </>
-                </Modal>
             }
         </>
     )

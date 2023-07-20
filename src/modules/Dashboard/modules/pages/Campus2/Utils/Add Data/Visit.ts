@@ -2,7 +2,6 @@ import { toast } from "react-toastify"
 import { privateGateway } from "../../../../../../../services/apiGateway"
 import { tableRoutes } from "../../../../../../../services/urls"
 import { errorCheck, errorMessage, success } from "../../../../../components/Toastify/ToastifyConsts"
-import { CampusModalProps } from "../../Layout/Layout"
 export interface VisitDataProps {
     clubId: string
     clubStatus: string
@@ -37,11 +36,8 @@ export function getVisitPostData(campusId: string): VisitDataProps {
         visited_remarks: ''
     })
 }
-interface VisitModalProps extends CampusModalProps {
-    confirmed: string,
-}
 export function getVisitModalData(
-    { ...props }: VisitModalProps
+    { ...props }
 ) {
     console.log('visiting...')
 

@@ -13,8 +13,7 @@ import Select from '../../Components/Select/Select'
 import Input from '../../Components/Input/Input'
 const emptyObject = { id: '', name: '' }
 const Layer5 = ({ ...props }) => {
-    const { campusId, updateCampus } = props
-    const [execomList, setExecomList] = useState<FacilitatorProps[]>([])
+    const { campusId, updateCampus, updateSubUserList, execomState } = props
     const [user, setUser] = useState(emptyObject)
     const [deleteModal, setDeleteModal] = useState(false)
     const [openModal, setOpenModal] = useState(false)
@@ -25,9 +24,6 @@ const Layer5 = ({ ...props }) => {
         setUser(emptyObject)
     }
     useEffect(() => {
-        listSubUser(setExecomList, campusId, 'Execom')
-    }, [updateCampus])
-    useEffect(() => {
         if (openModal)
             getPocRoles(setDesignationList, 'Execom')
     }, [openModal])
@@ -36,7 +32,7 @@ const Layer5 = ({ ...props }) => {
             <Table
                 title={"Execom Members"}
                 headings={['Name', 'Email', 'Phone', 'Designation']}
-                table={execomList}
+                table={execomState.list}
                 columns={['name', 'email', 'phone', 'role']}
                 type={""}
                 buttons={{
@@ -63,7 +59,7 @@ const Layer5 = ({ ...props }) => {
                             status: '',
                         },
                         close: () => clear(),
-                        updateCampus: updateCampus,
+                        updateCampus: updateSubUserList(execomState.setList, campusId, 'Execom'),
                     })
                 }}>
                 <>
@@ -82,7 +78,7 @@ const Layer5 = ({ ...props }) => {
                     close={() => setDeleteModal(false)}
                     onSubmit={(e: any) => deleteSubUser(user.id, () => {
                         clear()
-                        updateCampus()
+                        updateSubUserList(execomState.setList, campusId, 'Execom')
                         toast.success('User Successfully Deleted')
                     })} >
                     <>

@@ -7,15 +7,19 @@ export interface FacilitatorProps {
     phone: string
     type: string
     role: string
+    status?: string
 }
-const controller = new AbortController()
 
 function listSubUser(setData: Dispatch<SetStateAction<FacilitatorProps[]>>, id: string = '', data: string) {
+    const controller = new AbortController()
     privateGateway.get(`/api/v1/yip/sub-user-management/list-sub-user/${id}/${data}/`, { signal: controller.signal })
         .then((res) => {
             setData(res.data.response)
         }).catch((err) => {
             console.log(err)
         })
+    return () => {
+        controller.abort()
+    }
 }
 export default listSubUser

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Modal from '../../Components/Modal/Modal'
 import SmallStatus from '../../Components/SmallBox/SmallStatus'
 import './Layer1.css'
@@ -14,53 +14,56 @@ interface Layer1Props {
     category: string
     campusId: string
     updateCampus: () => void
+    eventUpdate: () => void
     district: string
+    isUpdate: boolean
+    eventList: any[]
 }
 const statusList = [
     { id: '0', name: 'Connection Established' },
     { id: '1', name: 'Orientation Scheduled' },
     { id: '2', name: 'Orientation Completed' },
     { id: '3', name: 'Execom Formed' },
+    { id: '4', name: 'Visited' },
 ]
 const Modes = [
     { id: '0', name: 'Online' },
     { id: '1', name: 'Offline' },
 ]
 const emptyObject = { id: '', name: '' }
-const Layer1 = ({ status, category, campusId, updateCampus, district }: Layer1Props) => {
+const Layer1 = ({ status, category, campusId, updateCampus, district, isUpdate, eventList, eventUpdate }: Layer1Props) => {
+    console.log('Layer1')
     const navigate = useNavigate()
     const [openModal, setOpenModal] = useState(false)
     const [eventModal, setEventModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [coordinatorList, setCoordinatorList] = useState<any>([])
-    const [eventList, setEventList] = useState<any>([])
     const [isAddEvent, setIsAddEvent] = useState(false)
     const [event, setEvent] = useState(emptyObject)
-    const firstCall = useRef(true)
     const clear = () => {
         setOpenModal(false)
         setEventModal(false)
         setDeleteModal(false)
         setEvent(emptyObject)
         setCoordinatorList([])
-        setEventList([])
-        setEvent(emptyObject)
     }
     useEffect(() => {
-        listEvent(campusId, setEventList)
-    }, [updateCampus])
-    useEffect(() => {
-        if (eventList) {
+        if (eventList.length > 0) {
+            console.log('event Listed')
             let eventScheduled = eventList.find((item: any) => item.status === 'Scheduled')
             if (eventScheduled) {
+                console.log('Scheduled event found')
                 setIsAddEvent(false)
                 setEvent(eventScheduled)
             }
             else {
                 setIsAddEvent(true)
+                console.log('No Scheduled event found')
             }
         }
-    }, [eventList])
+    }, [eventList.length])
+
+    console.log('render the layer1')
     return (
         <>
             <div className='layer1'>
@@ -109,21 +112,19 @@ const Layer1 = ({ status, category, campusId, updateCampus, district }: Layer1Pr
 
                     close={() => setEventModal(false)}
                     onSubmit={(e) => {
-                        console.log(e)
                         if (isAddEvent) {
                             createEvent(e?.date, e?.place, Modes[e?.mode].name,
                                 coordinatorList.find((item: any) => item.id === e?.coordinator)?.id
                                 , campusId, () => {
-                                    updateCampus();
+                                    eventUpdate();
                                     clear()
                                     setEventModal(false)
-                                    firstCall.current = true
                                 }, () => {
                                 })
                         }
                         else {
                             updateEvent(event.id, e?.nop, e?.date, e.remarks, e?.place, () => {
-                                updateCampus()
+                                eventUpdate()
                                 clear()
                                 setEventModal(false)
                             }, () => {
