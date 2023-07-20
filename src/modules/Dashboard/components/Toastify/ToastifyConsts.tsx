@@ -34,6 +34,7 @@ export const loading = (id: string) => {
 }
 
 export const errorCheck = (err: any) => {
+    console.log(err)
     if (err?.status === 400) {
         err.data.message.general.map((msg: string) => error(msg));
     } else if (err?.status === 500) {

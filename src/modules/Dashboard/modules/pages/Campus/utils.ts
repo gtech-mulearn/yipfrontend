@@ -3,7 +3,7 @@ import { privateGateway } from "../../../../../services/apiGateway"
 import { campusRoutes, tableRoutes } from "../../../../../services/urls"
 import { selectProps } from "../../utils/setupUtils"
 export interface CampusPageProps {
-    campus: string
+    name: string
     category: string
     zone: string
     district: string
@@ -19,25 +19,30 @@ export interface CampusPageProps {
 export function getCampusInfo(
     id: string,
     setCampus: React.Dispatch<React.SetStateAction<CampusPageProps>>,
+    setUpdate: React.Dispatch<React.SetStateAction<boolean>>,
 
 ) {
     privateGateway.get(`${campusRoutes.campus.info}${id}/`)
         .then(res => res.data.response)
-        .then(data => setCampus(campusData => ({
-            ...campusData,
-            campus: data.name,
-            category: data.institute_type,
-            district: data.district,
-            status: data.club_status,
-            zone: data.zone,
-            legislativeAssembly: data.legislative_assembly,
-            block: data.block,
-            identified: data.date_of_identification,
-            confirmed: data.date_of_visited,
-            connection: data.date_of_connection,
-            orientation: data.date_of_orientaion,
-            execom: data.date_of_execom_formation,
-        })))
+        .then(data => {
+            setUpdate((prev) => !prev)
+            setCampus(campusData => ({
+                ...campusData,
+                name: data.name,
+                category: data.institute_type,
+                district: data.district,
+                status: data.club_status,
+                zone: data.zone,
+                legislativeAssembly: data.legislative_assembly,
+                block: data.block,
+                identified: data.date_of_identification,
+                confirmed: data.date_of_visited,
+                connection: data.date_of_connection,
+                orientation: data.date_of_orientaion,
+                execom: data.date_of_execom_formation,
+            }))
+            return
+        })
         .catch(err => console.error(err))
 }
 export function formatDateStyle(value: string) {

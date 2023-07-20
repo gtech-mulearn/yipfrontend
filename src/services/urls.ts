@@ -142,17 +142,17 @@ export const tableRoutes = {
 export const campusRoutes = {
     designation: {
         list: {
-            facilitator: '/api/v1/yip/sub-user-role-choices/',
+            facilitator: '/api/v1/yip/sub-user-management/sub-user-role-choices/',
             execom: '/api/v1/yip/sub-user-role-choices/Execom/',
         }
 
     },
-    deleteEvent: '/api/v1/yip/delete-event/',
+    deleteEvent: '/api/v1/yip/events-management/delete-event/',
     subUser: {
-        create: '/api/v1/yip/create-sub-user/',
-        list: '/api/v1/yip/list-sub-user/',
-        listExecom: '/api/v1/yip/list-sub-user/',
-        delete: '/api/v1/yip/delete-sub-user/',
+        create: '/api/v1/yip/sub-user-management/create-sub-user/',
+        list: '/api/v1/yip/sub-user-management/list-sub-user/',
+        listExecom: '/api/v1/yip/sub-user-management/list-sub-user/',
+        delete: '/api/v1/yip/sub-user-management/delete-sub-user/',
     },
     districtCoordinator: {
         listByDistrict: '/api/v1/yip/list-district-cordinator/',
@@ -160,9 +160,9 @@ export const campusRoutes = {
     campus: {
         info: '/api/v1/yip/club-info/',
     },
-    createEvent: '/api/v1/yip/create-event/',
-    listEvent: '/api/v1/yip/list-events/',
-    updateEvent: '/api/v1/yip/edit-event/',
+    createEvent: '/api/v1/yip/events-management/create-event/',
+    listEvent: '/api/v1/yip/events-management/list-events/',
+    updateEvent: '/api/v1/yip/events-management/edit-event/',
     listInstitutesByDistrict: '/api/v1/yip/institute-management/list-new-institutes/',
     connectIctToInstitute: "api/v1/yip/institute-management/create-institute/",
     listInstitutes: '/api/v1/yip/institute-management/list-institutes/',
