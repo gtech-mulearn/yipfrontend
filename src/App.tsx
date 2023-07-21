@@ -9,13 +9,13 @@ import UserLayout from './modules/Dashboard/modules/pages/User/UserLayout';
 import AssemblyLayout from './modules/Dashboard/modules/pages/Assembly/AssemblyLayout';
 import BlockLayout from './modules/Dashboard/modules/pages/Block/BlockLayout';
 import InternLayout from './modules/Dashboard/modules/pages/Intern/layout/InternLayout';
-import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/CampusLayout';
+// import CampusLayout from './modules/Dashboard/modules/pages/Campus/layout/CampusLayout';
 import InstituteSetup from './modules/Dashboard/modules/pages/InstituteManagement/InstituteSetup';
 import Reset from './modules/Login/pages/Reset'
 import ResetReq from './modules/Login/pages/ResetReq';
 import GlobalVariableProvider from './utils/GlobalVariable';
 import InternReport from './modules/Dashboard/modules/pages/InternReport/InternReport';
-
+import Layout from './modules/Dashboard/modules/pages/Campus2/Layout/Layout';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -61,9 +61,9 @@ const router = createBrowserRouter([
           { path: 'legislative-assembly', element: <AssemblyLayout /> },
           { path: 'block', element: <BlockLayout /> },
           { path: 'intern-dashboard', element: <InternLayout /> },
-          { path: 'campus-dashboard/:type/:campusId', element: <CampusLayout /> },
+          { path: 'campus-dashboard/:type/:campusId', element: <Layout /> },
           { path: 'institute-management', element: <InstituteSetup /> },
-          { path: '/intern-report', element: <InternReport /> }
+          { path: '/intern-report', element: <InternReport /> },
         ]
       }
     ]

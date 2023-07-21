@@ -1,6 +1,4 @@
 import axios from "axios";
-import { Navigate } from "react-router-dom";
-
 export const privateGateway = axios.create({
     baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
     headers: {
