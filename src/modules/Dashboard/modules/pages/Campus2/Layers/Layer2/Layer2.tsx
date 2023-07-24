@@ -17,6 +17,8 @@ interface Layer2Props {
     status: string
     updateCampus: () => void
 }
+const today = new Date().toISOString().split('T')[0]
+
 const emptyObject = { id: '', name: '', date: '', key: '', status: '' }
 const TYPES = {
     visit: { id: 'Visit', name: 'Add Visit', date: 'Visit Date', key: 'visited_date', status: 'Visited' },
@@ -88,8 +90,7 @@ const Layer2 = ({ ...props }: Layer2Props) => {
                     functionName={`Update`}
                 >
                     <>
-                        {/* {type.id === 'Visit' && <Input name='Remarks' />} */}
-                        <Input name='date' header={type.date} type='date' />
+                        <Input name='date' header={type.date} type='date' max={today} />
                     </>
                 </Modal >
             }
