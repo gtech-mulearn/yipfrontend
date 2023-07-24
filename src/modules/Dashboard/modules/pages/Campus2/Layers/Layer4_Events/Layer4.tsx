@@ -25,7 +25,7 @@ const Layer4 = ({ ...props }) => {
         { id: '0', name: 'Online' },
         { id: '1', name: 'Offline' },
     ]
-    const now = getDateLimit(new Date())
+    const now = getDateLimit()
     return (
         <>
             <div className="layer-3">
@@ -193,7 +193,8 @@ function convertDateTime(input: string) {
 
 export default Layer4
 
-function getDateLimit(dateObject) {
+function getDateLimit() {
+    const dateObject = new Date()
     dateObject.setHours(dateObject.getHours() + 5)
     dateObject.setMinutes(dateObject.getMinutes() + 30)
     const result = dateObject.toISOString().slice(0, 16)
