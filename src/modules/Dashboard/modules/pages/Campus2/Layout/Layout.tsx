@@ -38,7 +38,7 @@ const Layout = () => {
         updateSubUserList(setPtaList, campusId as string, 'PTA')
         updateSubUserList(setAlumniList, campusId as string, 'ALUMNI')
         updateSubUserList(setExecomList, campusId as string, 'EXECOM')
-    }, [false])
+    }, [])
 
     const layer3 = {
         updateSubUserList: updateSubUserList,
