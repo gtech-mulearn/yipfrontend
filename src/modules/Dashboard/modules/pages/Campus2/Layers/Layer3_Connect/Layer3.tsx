@@ -51,33 +51,7 @@ const Layer3 = ({ ...props }) => {
             <InfoTab title="Connections"
                 openLayer={openConnect}
                 closer={() => setOpenConnect(!openConnect)}
-            >
-                <>
-                    <SmallStatus
-                        value={"Add Facilitator"}
-                        style={"button"}
-                        run={() => {
-                            setOpenModal(true)
-                            setType({ id: 'POC', name: 'Facilitator', state: pocState.setList })
-                        }}
-                    />
-                    <SmallStatus
-                        value={"Add PTA"}
-                        style={"button"}
-                        run={() => {
-                            setOpenModal(true)
-                            setType({ id: 'PTA', name: 'PTA Members', state: ptaState.setList })
-                        }}
-                    />
-                    <SmallStatus
-                        value={"Add Alumni"}
-                        style={"button"}
-                        run={() => {
-                            setOpenModal(true)
-                            setType({ id: 'ALUMNI', name: 'Alumni Members', state: alumniState.setList })
-                        }}
-                    />
-                </>
+            ><></>
             </InfoTab>
             {openConnect &&
                 <Table title={"Facilitator List"}
@@ -93,7 +67,16 @@ const Layer3 = ({ ...props }) => {
                             setType({ id: 'POC', name: 'Facilitator', state: pocState.setList })
                         },
                     }}
-                />}
+                ><SmallStatus
+                        value={"Add Facilitator"}
+                        style={"button"}
+                        run={() => {
+                            setOpenModal(true)
+                            setType({ id: 'POC', name: 'Facilitator', state: pocState.setList })
+                        }}
+                    />
+                </Table >
+            }
             {openConnect &&
                 <Table title={"PTA List"}
                     headings={FacilitatorHeading}
@@ -107,7 +90,16 @@ const Layer3 = ({ ...props }) => {
                             setType({ id: 'PTA', name: 'PTA Members', state: ptaState.setList })
                         }
                     }}
-                />}
+                >
+                    <SmallStatus
+                        value={"Add PTA"}
+                        style={"button"}
+                        run={() => {
+                            setOpenModal(true)
+                            setType({ id: 'PTA', name: 'PTA Members', state: ptaState.setList })
+                        }}
+                    />
+                </Table>}
             {openConnect &&
                 <Table title={"Alumni List"}
                     headings={FacilitatorHeading}
@@ -121,7 +113,16 @@ const Layer3 = ({ ...props }) => {
                             setType({ id: 'ALUMNI', name: 'Alumni Members', state: alumniState.setList })
                         }
                     }}
-                />}
+                >
+                    <SmallStatus
+                        value={"Add Alumni"}
+                        style={"button"}
+                        run={() => {
+                            setOpenModal(true)
+                            setType({ id: 'ALUMNI', name: 'Alumni Members', state: alumniState.setList })
+                        }}
+                    />
+                </Table>}
             {openModal && <Modal
                 onSubmit={(e: any) => {
                     console.log(e)
